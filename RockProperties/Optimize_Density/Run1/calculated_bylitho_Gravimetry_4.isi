@@ -1,0 +1,12 @@
+MetaData Begin
+	Name	= calculated_bylitho_Gravimetry_4.ers
+	Version	= "Intrepid 3D GeoModeller v2.1.0 geomodeller_2013 for Linux (x86_64) by seneca debug build 46d2b42d974a+ "
+	calculated_bylitho_Gravimetry_4 Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "MGA50"
+		Datum	= "GDA94"
+	calculated_bylitho_Gravimetry_4 End
+MetaData End

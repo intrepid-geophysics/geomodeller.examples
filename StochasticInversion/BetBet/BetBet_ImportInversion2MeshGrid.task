@@ -1,0 +1,56 @@
+name: "Bet Bet Victoria,  gravity/TMI Harvest Results of joint inversion "
+description: "LITHOLOGICALLY CONSTRAINED INVERSION OF MAGNETIC AND GRAVITY DATA SETS"
+	"By D. FitzGerald, A. Guillen, R. Lane, R. Seikel & P. McInerney,  KEGS 2007."
+  "This variation has a density vs depth law for Castlemaine_Group,"
+  "and also uses an sgrid instead of a regular 3D grid, to bias near surface responses"
+  "The top part of the model will be discretized with the cell size set in NewCase. Starting from topo_part_boundary_at, the lower_z_cell_size"
+  "will be used, multiplied by geometric_factor for increasing cell size with depth"
+auditfile: "Bet_Bet_inversion.audit"
+
+# (c) 2017 Intrepid Geophysics
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+  }
+}
+
+
+# re-import the Inversion results Sgrid to a mesh grid
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "Case_Joint/run2/final.sg"; # 
+		MeshGrid_Name: "3DInversion";
+		FileType: FT_VOXET;
+	#	header_records: 2;
+		Field_Name: "Density";
+		log: "source_meshgrid.rpt";
+    }
+}
+GeomodellerTask {
+    SaveProject{
+    }
+}
+
+GeomodellerTask {
+  ExportMeshGrid {
+      MeshGrid_Source {
+        SourceType: Project  # we want the surface shape!
+        MeshGrid_Name: "3DInversion"; # sgrid semi-regular 3d grid
+        FileType: FT_IGMESH;  # export these     
+      }
+	OutputMeshType: ODT_SemiRegularMesh3D
+	OutFileType: FT_ASCII;  # FT_VOXET?
+#	OutDataFormat: DF_GOCADSGRID
+	OutDataFormat: DF_CSV
+	OutFileName: "BetBet_VariableDepthDensity.csv"
+  }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./export/basement_geology_withInversionResults.xml";
+    }
+}
+

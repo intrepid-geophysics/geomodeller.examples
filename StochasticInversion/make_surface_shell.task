@@ -1,0 +1,11 @@
+InversionTask {
+	MakeSurfaceShells {
+		inputvoxet: "StatsReports/Case2/Run1/SuperSummaryStats_Case_2_Run_1_iterations_4000000_10000000_80_super";
+		inputfield: "MeanDensity";
+ 	 	operand:  GE;  # eg "> < >= <= or LE, GE, INSIDERANGE"
+   		value1: 0.1;
+		Do_Tops: true;
+		output: "tmpdes1_GE_Opt1";
+		ReportFile: "SurfaceShell.rpt";
+		}
+}

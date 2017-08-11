@@ -1,0 +1,594 @@
+name: "Geomodeller Write Protobuf Task file"
+description: "Sections, Pile, Interface, Foliations, no meshgrids (except DTM), or computed geology"
+GeomodellerTask {
+  CreateProject {
+    HorizontalDTM {
+      name: "SurfaceTopography"
+      elevation: 0
+    }
+    name: "Simple Faulted Fold example"
+    author: "gaby"
+    date: "22/ 2/2007 13:55:58"
+    projection {
+      geographic2DCS: "Local"
+      map_projection: "Local"
+    }
+    version: "1.0"
+    precision: 1
+    Extents {
+      xmin: 0
+      ymin: 0
+      zmin: -1000
+      xmax: 1000
+      ymax: 1000
+      zmax: 0
+    }
+    deflection2d: 0.001
+    deflection3d: 0.001
+    discretisation: 10
+    referenceTop: false
+  }
+  CreateFormation {
+    name: "H1"
+    red: 124
+    green: 251
+    blue: 0
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "H2"
+    red: 205
+    green: 15
+    blue: 117
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "H1_Series"
+    position: 1
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "H1_Series"
+    formation: "H2"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "H1_Series"
+    formation: "H1"
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "F1"
+    red: 154
+    green: 255
+    blue: 154
+  }
+}
+GeomodellerTask {
+  LinkFaultsWithSeries {
+    FaultSeriesLinks {
+      fault: "F1"
+      series: "H1_Series"
+    }
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "Section900"
+    PointList {
+      Point {
+        x: 0
+        y: 0
+        z: -900
+      }
+      Point {
+        x: 1000
+        y: 1000
+        z: -900
+      }
+    }
+    degrees: 1
+    dip: 0
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "Section500"
+    PointList {
+      Point {
+        x: 0
+        y: 0
+        z: -500
+      }
+      Point {
+        x: 1000
+        y: 1000
+        z: -500
+      }
+    }
+    degrees: 1
+    dip: 0
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "Section_NS"
+    PointList {
+      Point {
+        x: 476.66537475585943
+        y: 967.10626220703159
+        z: 0
+      }
+      Point {
+        x: 462.577392578125
+        y: 13.819060325622559
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 996.33599206505528
+      y: 333.5556358170943
+      z: -212.69987469940449
+    }
+    point {
+      x: 804.314539948284
+      y: 358.13461534429291
+      z: -251.07425703730019
+    }
+    point {
+      x: 582.20488913275142
+      y: 497.682059488019
+      z: -491.15650959726378
+    }
+    point {
+      x: 440.89045330645462
+      y: 530.82255391278773
+      z: -547.43332335171181
+    }
+    point {
+      x: 321.47104141960511
+      y: 501.97534923845063
+      z: -496.9527637027137
+    }
+    point {
+      x: 127.42603519368895
+      y: 557.33201948438011
+      z: -590.87666898385658
+    }
+    point {
+      x: 39.955182171785154
+      y: 610.88427745056333
+      z: -682.21071602642655
+    }
+    point {
+      x: 6.3791643486594012
+      y: 662.48356234233893
+      z: -771.00901425421569
+    }
+    formation: "H2"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 577.14048484467526
+      y: 450.68538733410162
+      z: -409.844542210649
+    }
+    point {
+      x: 478.62886170115934
+      y: 421.133415771887
+      z: -358.14559166267406
+    }
+    point {
+      x: 329.1374912639389
+      y: 421.51155597720259
+      z: -357.69873289334987
+    }
+    point {
+      x: 197.85872491056682
+      y: 452.16664064176092
+      z: -409.84454221064914
+    }
+    point {
+      x: 30.946087038280091
+      y: 545.177321824943
+      z: -568.52454912717371
+    }
+    point {
+      x: 901.98842112451825
+      y: 282.81118957776039
+      z: -122.9695320184003
+    }
+    point {
+      x: 818.72006384620306
+      y: 289.89688666546454
+      z: -133.88989594528391
+    }
+    point {
+      x: 709.67809453415214
+      y: 307.66568010129566
+      z: -163.1856819298263
+    }
+    formation: "H1"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 742.43645179026942
+      y: 225.0835282004976
+      z: -21.684504184324911
+    }
+    point {
+      x: 692.46624230804264
+      y: 305.61399741341938
+      z: -159.53188422636475
+    }
+    point {
+      x: 642.24887769555437
+      y: 383.171636055589
+      z: -293.23458138947177
+    }
+    point {
+      x: 588.8351068140804
+      y: 446.45044318584456
+      z: -402.587314851972
+    }
+    point {
+      x: 464.06082240492015
+      y: 524.116863002604
+      z: -535.97733006062413
+    }
+    point {
+      x: 354.98633249530997
+      y: 576.25428648058676
+      z: -625.61827894331441
+    }
+    point {
+      x: 64.755348878225959
+      y: 677.33110055813927
+      z: -797.566615583878
+    }
+    formation: "F1"
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "H2"
+    foliation {
+      Point3D {
+        x: 1013.2833486297137
+        y: 314.87622989681586
+        z: -309.46695019482183
+      }
+      dip: 80.7559869817736
+      direction: 189.14306472925526
+      azimuth: 189.14306472925526
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 1014.7242568305683
+        y: 426.27882914132948
+        z: -245.32319670483341
+      }
+      dip: 22.320345388747064
+      direction: 338.423292892944
+      azimuth: 338.423292892944
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 863.82095691010727
+        y: 326.06506620003779
+        z: -324.7663893042515
+      }
+      dip: 88.096710526538985
+      direction: 30.397475559403336
+      azimuth: 30.397475559403336
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 864.451084560915
+        y: 437.46214479217292
+        z: -260.599962982204
+      }
+      dip: 42.988284920780238
+      direction: 313.05733772453823
+      azimuth: 313.05733772453823
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 614.10259512499658
+        y: 476.734971521427
+        z: -583.58894902278223
+      }
+      dip: 82.9784848764124
+      direction: 195.93539510403724
+      azimuth: 195.93539510403724
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 614.57931070157053
+        y: 588.03078813920661
+        z: -519.24572566319284
+      }
+      dip: 27.245297087995251
+      direction: 324.351267042735
+      azimuth: 324.351267042735
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 407.19684822667756
+        y: 509.73123601959742
+        z: -639.19332164212381
+      }
+      dip: 83.3125396381832
+      direction: 163.65818900591671
+      azimuth: 163.65818900591671
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 407.518905045732
+        y: 621.01928126969585
+        z: -574.83569808066261
+      }
+      dip: 27.940131623221433
+      direction: 37.201021057705447
+      azimuth: 37.201021057705447
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 358.72406877766593
+        y: 479.70440472197595
+        z: -587.04281300342
+      }
+      dip: 84.173855895662726
+      direction: 198.64451093445322
+      azimuth: 198.64451093445322
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 359.26119216388417
+        y: 590.93857113300942
+        z: -522.5935448309117
+      }
+      dip: 29.589350823303331
+      direction: 320.86595142536714
+      azimuth: 320.86595142536714
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 186.06216375523363
+        y: 525.82809839342781
+        z: -665.50446128142528
+      }
+      dip: 88.395991650670155
+      direction: 30.047278622307285
+      azimuth: 30.047278622307285
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 186.89951693761128
+        y: 637.07421065084361
+        z: -601.07901759711842
+      }
+      dip: 42.285536001594814
+      direction: 313.19126945472152
+      azimuth: 313.19126945472152
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 112.31829687828093
+        y: 566.7102059296808
+        z: -735.24118873073576
+      }
+      dip: 77.977266358689718
+      direction: 39.057333698460582
+      azimuth: 39.057333698460582
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 113.21229867516095
+        y: 678.00800346179187
+        z: -670.90583708057557
+      }
+      dip: 56.053462768802412
+      direction: 313.10913944240195
+      azimuth: 313.10913944240195
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 78.723690305836328
+        y: 618.2865886010477
+        z: -824.04576638085859
+      }
+      dip: 77.986635422449524
+      direction: 39.072177542801192
+      azimuth: 39.072177542801192
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 79.6545416706802
+        y: 729.59018854652231
+        z: -759.72097643502434
+      }
+      dip: 56.05110977215616
+      direction: 313.12977491543933
+      azimuth: 313.12977491543933
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "F1"
+    foliation {
+      Point3D {
+        x: 703.89914991102887
+        y: 243.36887604159614
+        z: -52.61244361310095
+      }
+      dip: 67.262
+      direction: 256.282
+      azimuth: 256.282
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  CreateAxialSeries {
+    AxialSeries: "axser1"
+    red: 170
+    green: 130
+    blue: 255
+  }
+}
+GeomodellerTask {
+  CreateAxialSurface {
+    AxialSeries: "axser1"
+    AxialSurface: "axsur1"
+    red: 0
+    green: 103
+    blue: 138
+    type: Anticline
+  }
+}
+GeomodellerTask {
+  AddAxialTraceLine {
+    AxialSurface: "axsur1"
+    PointList3D {
+      Point {
+        x: 53.1967735290527
+        y: 605.086303710938
+        z: -500
+      }
+      Point {
+        x: 959.3837890625
+        y: 605.121826171875
+        z: -500
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddAxialSurfaceOrientation {
+    AxialSeries: "axser1"
+    DefiningSection: "Section500"
+    Point3D {
+      x: 541.297912597656
+      y: 629.793518066406
+      z: -500
+    }
+    Dip: 50
+    DipDirection: 0
+    Pitch: 0
+    Polarity: Normal_Polarity
+  }
+}
+
+GeomodellerTask {
+  AddHingeLine {
+    AxialSurface: "axsur1"
+    Formation: "H2"
+    PointList3D {
+      Point {
+        x: 996.33599206505528
+        y: 333.5556358170943
+        z: -212.69987469940449
+      }
+      Point {
+        x: 804.314539948284
+        y: 358.13461534429291
+        z: -251.07425703730019
+      }
+      Point {
+        x: 582.20488913275142
+        y: 497.682059488019
+        z: -491.15650959726378
+      }
+      Point {
+        x: 440.89045330645462
+        y: 530.82255391278773
+        z: -547.43332335171181
+      }
+      Point {
+        x: 321.47104141960511
+        y: 501.97534923845063
+        z: -496.9527637027137
+      }
+      Point {
+        x: 127.42603519368895
+        y: 557.33201948438011
+        z: -590.87666898385658
+      }
+      Point {
+        x: 39.955182171785154
+        y: 610.88427745056333
+        z: -682.21071602642655
+      }
+      Point {
+        x: 6.3791643486594012
+        y: 662.48356234233893
+        z: -771.00901425421569
+      }
+    }
+    DistanceAtOrigin: 100
+    DistanceAtExtremity: 100
+    Constant_Fold_Shape: true
+    ApertureAtOrigin: 40
+    ApertureAtExtremity: 40
+    Polarity: Hinge_Right
+  }
+}
+GeomodellerTask {
+  CreateSectionFromAxialSurface {
+    AxialSectionName: "axser1_axsur1"
+    AxialSurface: "axsur1"
+    GridNodes: 10
+    Extents {
+      xmin: 0
+      ymin: 0
+      zmin: -1000
+      xmax: 1000
+      ymax: 1000
+      zmax: 0
+    }
+  }
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "EXPORT/re-folded-FOLD44_exported.xml"
+  }
+}

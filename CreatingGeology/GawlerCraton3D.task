@@ -1,0 +1,8387 @@
+name: "Geomodeller Writen Protobuf Task for Project: \"Gawler Craton 3D\" "
+description: "Sections, Pile, Interface, Foliations, Litho Properties, no meshgrids (except DTM), or computed geology"
+GeomodellerTask {
+  CreateProject {
+    HorizontalDTM {
+      name: "SurfaceTopography"
+      elevation: 250
+    }
+    name: "GawlerCraton3D"
+    author: "LJF & PC"
+    date: "18/10/2005 14:30:30"
+    description: "update of exisiting 3d model from Discover 3d"
+    version: "1.0"
+    precision: 1
+    Extents {
+      xmin: 100000
+      ymin: 6000000
+      zmin: -100000
+      xmax: 900000
+      ymax: 7050000
+      zmax: 2000
+    }
+    deflection2d: 0.001
+    deflection3d: 1e-005
+    discretisation: 10
+    referenceTop: true
+  }
+  CreateFormation {
+    name: "Ante_Donnington"
+    red: 255
+    green: 246
+    blue: 142
+    LithologyProperty {
+      lithology: "Ante_Donnington"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "BarossaComplex"
+    red: 255
+    green: 0
+    blue: 0
+    LithologyProperty {
+      lithology: "BarossaComplex"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "BitcheraRidge"
+    red: 237
+    green: 117
+    blue: 0
+    LithologyProperty {
+      lithology: "BitcheraRidge"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "BosanquetVolcanics"
+    red: 0
+    green: 138
+    blue: 0
+    LithologyProperty {
+      lithology: "BosanquetVolcanics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "CornyPointParagneiss"
+    red: 0
+    green: 0
+    blue: 128
+    LithologyProperty {
+      lithology: "CornyPointParagneiss"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "CorunnaConglomerate"
+    red: 205
+    green: 133
+    blue: 63
+    LithologyProperty {
+      lithology: "CorunnaConglomerate"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "DoningtonSuite"
+    red: 237
+    green: 117
+    blue: 0
+    LithologyProperty {
+      lithology: "DoningtonSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Draw"
+    red: 255
+    green: 255
+    blue: 255
+    LithologyProperty {
+      lithology: "Draw"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "DuttonSuite"
+    red: 0
+    green: 177
+    blue: 237
+    LithologyProperty {
+      lithology: "DuttonSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "GawlerRangeVolcanics"
+    red: 255
+    green: 130
+    blue: 249
+    LithologyProperty {
+      lithology: "GawlerRangeVolcanics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.5
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "GlenlothGranite"
+    red: 0
+    green: 138
+    blue: 0
+    LithologyProperty {
+      lithology: "GlenlothGranite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "HallBayVolcanics"
+    red: 24
+    green: 24
+    blue: 112
+    LithologyProperty {
+      lithology: "HallBayVolcanics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "HarrisGreenstoneBelts"
+    red: 0
+    green: 205
+    blue: 0
+    LithologyProperty {
+      lithology: "HarrisGreenstoneBelts"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "HiltabaSuite"
+    red: 205
+    green: 0
+    blue: 0
+    LithologyProperty {
+      lithology: "HiltabaSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.2
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "HutchinsonGroup"
+    red: 138
+    green: 138
+    blue: 0
+    LithologyProperty {
+      lithology: "HutchinsonGroup"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.89
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "HutchinsonGroup2"
+    red: 0
+    green: 103
+    blue: 138
+    LithologyProperty {
+      lithology: "HutchinsonGroup2"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "IfouldSuite"
+    red: 237
+    green: 117
+    blue: 0
+    LithologyProperty {
+      lithology: "IfouldSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.5
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "McgregorVolcanics"
+    red: 0
+    green: 205
+    blue: 0
+    LithologyProperty {
+      lithology: "McgregorVolcanics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MiltalieGneiss"
+    red: 138
+    green: 0
+    blue: 138
+    LithologyProperty {
+      lithology: "MiltalieGneiss"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MoodySuite"
+    red: 237
+    green: 161
+    blue: 172
+    LithologyProperty {
+      lithology: "MoodySuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MoondrahGneiss"
+    red: 255
+    green: 235
+    blue: 138
+    LithologyProperty {
+      lithology: "MoondrahGneiss"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MountWoodsComplex"
+    red: 138
+    green: 138
+    blue: 0
+    LithologyProperty {
+      lithology: "MountWoodsComplex"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MuckanippieSuite"
+    red: 138
+    green: 36
+    blue: 0
+    LithologyProperty {
+      lithology: "MuckanippieSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MugathingComplex"
+    red: 0
+    green: 100
+    blue: 0
+    LithologyProperty {
+      lithology: "MugathingComplex"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MulgathingComplex"
+    red: 204
+    green: 204
+    blue: 204
+    LithologyProperty {
+      lithology: "MulgathingComplex"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MunjeelaGranite"
+    red: 138
+    green: 0
+    blue: 138
+    LithologyProperty {
+      lithology: "MunjeelaGranite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "MyolaVolcanics"
+    red: 138
+    green: 100
+    blue: 8
+    LithologyProperty {
+      lithology: "MyolaVolcanics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "NWterritories"
+    red: 138
+    green: 36
+    blue: 0
+    LithologyProperty {
+      lithology: "NWterritories"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Nawa"
+    red: 0
+    green: 138
+    blue: 68
+    LithologyProperty {
+      lithology: "Nawa"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "NuytsVolcanics"
+    red: 0
+    green: 103
+    blue: 138
+    LithologyProperty {
+      lithology: "NuytsVolcanics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "OorlanoMetasomatite"
+    red: 255
+    green: 191
+    blue: 202
+    LithologyProperty {
+      lithology: "OorlanoMetasomatite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "PandurraFormation"
+    red: 154
+    green: 255
+    blue: 154
+    LithologyProperty {
+      lithology: "PandurraFormation"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "PeakeMetamorphics"
+    red: 205
+    green: 205
+    blue: 179
+    LithologyProperty {
+      lithology: "PeakeMetamorphics"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "PriceMetasediments"
+    red: 237
+    green: 161
+    blue: 172
+    LithologyProperty {
+      lithology: "PriceMetasediments"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "SleafordComplex"
+    red: 153
+    green: 153
+    blue: 153
+    LithologyProperty {
+      lithology: "SleafordComplex"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "StPeterSuite"
+    red: 237
+    green: 179
+    blue: 179
+    LithologyProperty {
+      lithology: "StPeterSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "TarcoolaFormation"
+    red: 205
+    green: 102
+    blue: 0
+    LithologyProperty {
+      lithology: "TarcoolaFormation"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "TunkilliaSuite"
+    red: 0
+    green: 138
+    blue: 68
+    LithologyProperty {
+      lithology: "TunkilliaSuite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "ULMiddlebackJaspelite"
+    red: 33
+    green: 33
+    blue: 33
+    LithologyProperty {
+      lithology: "ULMiddlebackJaspelite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "UnknownFormation"
+    red: 0
+    green: 100
+    blue: 0
+    LithologyProperty {
+      lithology: "UnknownFormation"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Unnamed"
+    red: 84
+    green: 26
+    blue: 138
+    LithologyProperty {
+      lithology: "Unnamed"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Unnamed2"
+    red: 138
+    green: 10
+    blue: 79
+    LithologyProperty {
+      lithology: "Unnamed2"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "WallarooGroup"
+    red: 138
+    green: 100
+    blue: 8
+    LithologyProperty {
+      lithology: "WallarooGroup"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "WillgenaHillJaspillite"
+    red: 255
+    green: 47
+    blue: 47
+    LithologyProperty {
+      lithology: "WillgenaHillJaspillite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "WirriecurrieGranite"
+    red: 0
+    green: 138
+    blue: 68
+    LithologyProperty {
+      lithology: "WirriecurrieGranite"
+      property: Density
+      ProbabilityDistributionFunction {
+        type: NormalDistribution
+        mean: 2.67
+        stddev: 0.1
+      }
+    }
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_MulgathingComplex"
+    position: 1
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_MulgathingComplex"
+    formation: "MulgathingComplex"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_HarrisGreenstoneBelts"
+    position: 2
+    relation: "channel"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_HarrisGreenstoneBelts"
+    formation: "HarrisGreenstoneBelts"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_SleafordComplex"
+    position: 3
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_SleafordComplex"
+    formation: "SleafordComplex"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_Ante_Donnington"
+    position: 4
+    relation: "any"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Ante_Donnington"
+    formation: "Ante_Donnington"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_HutchinsonGroup"
+    position: 5
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_HutchinsonGroup"
+    formation: "HutchinsonGroup"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_DoningtonSuite"
+    position: 6
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_DoningtonSuite"
+    formation: "DoningtonSuite"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_WallarooGroup"
+    position: 7
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_WallarooGroup"
+    formation: "WallarooGroup"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_MoondrahGneiss"
+    position: 8
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_MoondrahGneiss"
+    formation: "MoondrahGneiss"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_MountWoodsComplex"
+    position: 9
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_MountWoodsComplex"
+    formation: "MountWoodsComplex"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_PeakeMetamorphics"
+    position: 10
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_PeakeMetamorphics"
+    formation: "PeakeMetamorphics"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_IfouldSuite"
+    position: 11
+    relation: "channel"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_IfouldSuite"
+    formation: "IfouldSuite"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_StPeterSuite"
+    position: 12
+    relation: "channel"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_StPeterSuite"
+    formation: "StPeterSuite"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_GawlerRangeVolcanics"
+    position: 13
+    relation: "channel"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_GawlerRangeVolcanics"
+    formation: "GawlerRangeVolcanics"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_CorunnaConglomerate"
+    position: 14
+    relation: "channel"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_CorunnaConglomerate"
+    formation: "CorunnaConglomerate"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_HiltabaSuite"
+    position: 15
+    relation: "channel"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_HiltabaSuite"
+    formation: "HiltabaSuite"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_PandurraFormation"
+    position: 16
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_PandurraFormation"
+    formation: "PandurraFormation"
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "BulgunniaFaultZone"
+    red: 0
+    green: 177
+    blue: 237
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "CooberPedyShearZone"
+    red: 0
+    green: 177
+    blue: 237
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "DonningtonFaultZone"
+    red: 0
+    green: 0
+    blue: 255
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "HarrisFaultZone"
+    red: 0
+    green: 138
+    blue: 68
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "KalinjalaMyloniteZone"
+    red: 255
+    green: 0
+    blue: 0
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "KarariFaultZone"
+    red: 255
+    green: 0
+    blue: 0
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "MiddleBoreFaultZone"
+    red: 29
+    green: 144
+    blue: 255
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "NEFaultZone"
+    red: 237
+    green: 43
+    blue: 43
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "NWFaultZone"
+    red: 255
+    green: 0
+    blue: 0
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "OolabinnaShearZone"
+    red: 255
+    green: 0
+    blue: 0
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "YarlbrindaFault"
+    red: 0
+    green: 177
+    blue: 237
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "YerdaShearZone"
+    red: 28
+    green: 133
+    blue: 237
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  LinkFaultsWithFaults {
+    FaultStopsOnFaults {
+      fault: "CooberPedyShearZone"
+      stopson: "BulgunniaFaultZone"
+      stopson: "KarariFaultZone"
+      stopson: "MiddleBoreFaultZone"
+      stopson: "NWFaultZone"
+    }
+    FaultStopsOnFaults {
+      fault: "DonningtonFaultZone"
+      stopson: "BulgunniaFaultZone"
+      stopson: "KalinjalaMyloniteZone"
+      stopson: "KarariFaultZone"
+    }
+    FaultStopsOnFaults {
+      fault: "HarrisFaultZone"
+      stopson: "DonningtonFaultZone"
+      stopson: "KalinjalaMyloniteZone"
+      stopson: "OolabinnaShearZone"
+      stopson: "YerdaShearZone"
+    }
+    FaultStopsOnFaults {
+      fault: "KalinjalaMyloniteZone"
+      stopson: "BulgunniaFaultZone"
+    }
+    FaultStopsOnFaults {
+      fault: "KarariFaultZone"
+      stopson: "BulgunniaFaultZone"
+      stopson: "NWFaultZone"
+    }
+    FaultStopsOnFaults {
+      fault: "NWFaultZone"
+      stopson: "BulgunniaFaultZone"
+      stopson: "MiddleBoreFaultZone"
+    }
+    FaultStopsOnFaults {
+      fault: "OolabinnaShearZone"
+      stopson: "BulgunniaFaultZone"
+      stopson: "DonningtonFaultZone"
+      stopson: "KalinjalaMyloniteZone"
+    }
+    FaultStopsOnFaults {
+      fault: "YarlbrindaFault"
+      stopson: "BulgunniaFaultZone"
+      stopson: "KarariFaultZone"
+      stopson: "OolabinnaShearZone"
+    }
+    FaultStopsOnFaults {
+      fault: "YerdaShearZone"
+      stopson: "BulgunniaFaultZone"
+      stopson: "KalinjalaMyloniteZone"
+      stopson: "OolabinnaShearZone"
+    }
+  }
+}
+GeomodellerTask {
+  LinkFaultsWithSeries {
+    FaultSeriesLinks {
+      fault: "BulgunniaFaultZone"
+      series: "Serie_MulgathingComplex"
+      series: "Serie_SleafordComplex"
+      series: "Serie_HutchinsonGroup"
+      series: "Serie_DoningtonSuite"
+      series: "Serie_WallarooGroup"
+    }
+    FaultSeriesLinks {
+      fault: "CooberPedyShearZone"
+      series: "Serie_MountWoodsComplex"
+    }
+    FaultSeriesLinks {
+      fault: "DonningtonFaultZone"
+      series: "Serie_HutchinsonGroup"
+      series: "Serie_DoningtonSuite"
+    }
+    FaultSeriesLinks {
+      fault: "HarrisFaultZone"
+      series: "Serie_HarrisGreenstoneBelts"
+    }
+    FaultSeriesLinks {
+      fault: "KalinjalaMyloniteZone"
+      series: "Serie_HutchinsonGroup"
+      series: "Serie_DoningtonSuite"
+    }
+    FaultSeriesLinks {
+      fault: "KarariFaultZone"
+      series: "Serie_MulgathingComplex"
+    }
+    FaultSeriesLinks {
+      fault: "NWFaultZone"
+      series: "Serie_MountWoodsComplex"
+    }
+    FaultSeriesLinks {
+      fault: "OolabinnaShearZone"
+      series: "Serie_MulgathingComplex"
+      series: "Serie_HarrisGreenstoneBelts"
+    }
+    FaultSeriesLinks {
+      fault: "YerdaShearZone"
+      series: "Serie_HarrisGreenstoneBelts"
+    }
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "Corruna_section"
+    PointList {
+      Point {
+        x: 103099.9921875
+        y: 6323400
+        z: 0
+      }
+      Point {
+        x: 673249.99999999942
+        y: 6244650.0000000009
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW1"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6150000
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6150000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW2"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6260000
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6260000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW3"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6370000
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6370000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW4"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6480000
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6480000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW5"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6590000.0000000009
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6590000.0000000009
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW6"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6700000
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6700000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW7"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6809999.9999999981
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6809999.9999999981
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW8"
+    PointList {
+      Point {
+        x: 99999.999999999985
+        y: 6919999.9999999981
+        z: 0
+      }
+      Point {
+        x: 900000
+        y: 6919999.9999999981
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS1"
+    PointList {
+      Point {
+        x: 200000
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 200000
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS2"
+    PointList {
+      Point {
+        x: 300000.00000000006
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 300000.00000000006
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS3"
+    PointList {
+      Point {
+        x: 399999.99999999988
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 399999.99999999988
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS4"
+    PointList {
+      Point {
+        x: 499999.99999999965
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 499999.99999999965
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS5"
+    PointList {
+      Point {
+        x: 599999.99999999953
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 599999.99999999953
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS6"
+    PointList {
+      Point {
+        x: 699999.99999999953
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 699999.99999999953
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NS7"
+    PointList {
+      Point {
+        x: 799999.9999999993
+        y: 6000000
+        z: 0
+      }
+      Point {
+        x: 799999.9999999993
+        y: 7050000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "SectionName"
+    PointList {
+      Point {
+        x: 891419.31250000023
+        y: 7040139.4999999991
+        z: 0
+      }
+      Point {
+        x: 509405.65624999959
+        y: 6487377.5
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "Sue_test"
+    PointList {
+      Point {
+        x: 131776.99999999977
+        y: 6712914
+        z: 0
+      }
+      Point {
+        x: 415277.03124999988
+        y: 6264310
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "model1"
+    PointList {
+      Point {
+        x: 341143.56249999994
+        y: 6913173.4999999981
+        z: 0
+      }
+      Point {
+        x: 384700.96874999983
+        y: 6466069
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "model2"
+    PointList {
+      Point {
+        x: 774155.49999999942
+        y: 6914454.4999999981
+        z: 0
+      }
+      Point {
+        x: 571741.62499999953
+        y: 6469912.5
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "model3"
+    PointList {
+      Point {
+        x: 876643.56249999988
+        y: 6423793
+        z: 0
+      }
+      Point {
+        x: 435944.99999999977
+        y: 6412263
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "model4"
+    PointList {
+      Point {
+        x: 830523.93749999942
+        y: 6075333.5
+        z: 0
+      }
+      Point {
+        x: 384700.96874999942
+        y: 6414825
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "Corruna_section"
+    topFormation: "CorunnaConglomerate"
+    PointList {
+      Point {
+        u: 47295.5
+        v: -2409.87
+      }
+      Point {
+        u: 75603.5
+        v: -6538.1
+      }
+      Point {
+        u: 105091
+        v: -9486.84
+      }
+      Point {
+        u: 164214
+        v: -6661.94
+      }
+      Point {
+        u: 173502
+        v: -5358.6
+      }
+      Point {
+        u: 202989
+        v: -7127.85
+      }
+      Point {
+        u: 233123
+        v: -8176.42
+      }
+      Point {
+        u: 254887
+        v: -8307.35
+      }
+      Point {
+        u: 280072
+        v: -8555.04
+      }
+      Point {
+        u: 300887
+        v: -9486.84
+      }
+      Point {
+        u: 317400
+        v: -8897.09
+      }
+      Point {
+        u: 352785
+        v: -8307.35
+      }
+      Point {
+        u: 375196
+        v: -7717.6
+      }
+      Point {
+        u: 404683
+        v: -7127.85
+      }
+      Point {
+        u: 428273
+        v: -5358.6
+      }
+      Point {
+        u: 455402
+        v: -5948.35
+      }
+      Point {
+        u: 484889
+        v: -8307.35
+      }
+      Point {
+        u: 508479
+        v: -7717.6
+      }
+      Point {
+        u: 541505
+        v: -7127.85
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Normal_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 509394
+        v: 6777870
+      }
+      Point {
+        u: 520875
+        v: 6778450
+      }
+      Point {
+        u: 525468
+        v: 6774810
+      }
+      Point {
+        u: 516665
+        v: 6770030
+      }
+      Point {
+        u: 507480
+        v: 6769070
+      }
+      Point {
+        u: 505567
+        v: 6773470
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 550344
+        v: 6711470
+      }
+      Point {
+        u: 536566
+        v: 6718940
+      }
+      Point {
+        u: 525468
+        v: 6733670
+      }
+      Point {
+        u: 512456
+        v: 6742660
+      }
+      Point {
+        u: 513221
+        v: 6756250
+      }
+      Point {
+        u: 532357
+        v: 6759890
+      }
+      Point {
+        u: 553023
+        v: 6754340
+      }
+      Point {
+        u: 558381
+        v: 6741130
+      }
+      Point {
+        u: 558381
+        v: 6716450
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 246090
+        v: 6728890
+      }
+      Point {
+        u: 253744
+        v: 6734050
+      }
+      Point {
+        u: 265991
+        v: 6736920
+      }
+      Point {
+        u: 267904
+        v: 6731370
+      }
+      Point {
+        u: 258337
+        v: 6723530
+      }
+      Point {
+        u: 249534
+        v: 6721420
+      }
+      Point {
+        u: 246855
+        v: 6726210
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 268287
+        v: 6823220
+      }
+      Point {
+        u: 301583
+        v: 6824940
+      }
+      Point {
+        u: 301200
+        v: 6804850
+      }
+      Point {
+        u: 285126
+        v: 6803130
+      }
+      Point {
+        u: 266373
+        v: 6819010
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 308854
+        v: 6796620
+      }
+      Point {
+        u: 324545
+        v: 6818250
+      }
+      Point {
+        u: 328755
+        v: 6818820
+      }
+      Point {
+        u: 322632
+        v: 6804470
+      }
+      Point {
+        u: 312299
+        v: 6795090
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 342915
+        v: 6821310
+      }
+      Point {
+        u: 349039
+        v: 6839490
+      }
+      Point {
+        u: 364730
+        v: 6851160
+      }
+      Point {
+        u: 382334
+        v: 6849440
+      }
+      Point {
+        u: 391902
+        v: 6839300
+      }
+      Point {
+        u: 368557
+        v: 6822270
+      }
+      Point {
+        u: 353248
+        v: 6819780
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 728061
+        v: 6118280
+      }
+      Point {
+        u: 713591
+        v: 6132250
+      }
+      Point {
+        u: 700108
+        v: 6146560
+      }
+      Point {
+        u: 709316
+        v: 6163500
+      }
+      Point {
+        u: 720168
+        v: 6155440
+      }
+      Point {
+        u: 735954
+        v: 6159550
+      }
+      Point {
+        u: 736283
+        v: 6174510
+      }
+      Point {
+        u: 714907
+        v: 6197700
+      }
+      Point {
+        u: 730363
+        v: 6227130
+      }
+      Point {
+        u: 747793
+        v: 6231900
+      }
+      Point {
+        u: 761934
+        v: 6226470
+      }
+      Point {
+        u: 766538
+        v: 6200660
+      }
+      Point {
+        u: 764894
+        v: 6169580
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 720826
+        v: 6235680
+      }
+      Point {
+        u: 692215
+        v: 6249990
+      }
+      Point {
+        u: 683993
+        v: 6276130
+      }
+      Point {
+        u: 700108
+        v: 6309180
+      }
+      Point {
+        u: 726746
+        v: 6323820
+      }
+      Point {
+        u: 746477
+        v: 6319050
+      }
+      Point {
+        u: 755357
+        v: 6301120
+      }
+      Point {
+        u: 775088
+        v: 6276620
+      }
+      Point {
+        u: 773115
+        v: 6257390
+      }
+      Point {
+        u: 767525
+        v: 6249660
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 616248
+        v: 6359000
+      }
+      Point {
+        u: 624140
+        v: 6358670
+      }
+      Point {
+        u: 625127
+        v: 6349630
+      }
+      Point {
+        u: 618550
+        v: 6340260
+      }
+      Point {
+        u: 609342
+        v: 6343050
+      }
+      Point {
+        u: 607368
+        v: 6348150
+      }
+      Point {
+        u: 614932
+        v: 6356870
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 566918
+        v: 6378240
+      }
+      Point {
+        u: 579415
+        v: 6369530
+      }
+      Point {
+        u: 578757
+        v: 6366730
+      }
+      Point {
+        u: 567905
+        v: 6366400
+      }
+      Point {
+        u: 557052
+        v: 6369200
+      }
+      Point {
+        u: 558697
+        v: 6377260
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 541696
+        v: 6341470
+      }
+      Point {
+        u: 550504
+        v: 6350380
+      }
+      Point {
+        u: 556709
+        v: 6346270
+      }
+      Point {
+        u: 570322
+        v: 6354080
+      }
+      Point {
+        u: 585135
+        v: 6368490
+      }
+      Point {
+        u: 603352
+        v: 6371390
+      }
+      Point {
+        u: 609357
+        v: 6369290
+      }
+      Point {
+        u: 603752
+        v: 6362390
+      }
+      Point {
+        u: 589539
+        v: 6353880
+      }
+      Point {
+        u: 575326
+        v: 6342570
+      }
+      Point {
+        u: 567119
+        v: 6339070
+      }
+      Point {
+        u: 545499
+        v: 6340170
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 535290
+        v: 6320950
+      }
+      Point {
+        u: 541095
+        v: 6319450
+      }
+      Point {
+        u: 538893
+        v: 6308740
+      }
+      Point {
+        u: 531887
+        v: 6309240
+      }
+      Point {
+        u: 530686
+        v: 6315340
+      }
+      Point {
+        u: 532688
+        v: 6317450
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 518875
+        v: 6313140
+      }
+      Point {
+        u: 508666
+        v: 6323650
+      }
+      Point {
+        u: 513870
+        v: 6332760
+      }
+      Point {
+        u: 525281
+        v: 6338870
+      }
+      Point {
+        u: 534689
+        v: 6334960
+      }
+      Point {
+        u: 536491
+        v: 6327860
+      }
+      Point {
+        u: 529485
+        v: 6320350
+      }
+      Point {
+        u: 522678
+        v: 6313440
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 400167
+        v: 6369190
+      }
+      Point {
+        u: 398165
+        v: 6377700
+      }
+      Point {
+        u: 406973
+        v: 6383810
+      }
+      Point {
+        u: 413779
+        v: 6383710
+      }
+      Point {
+        u: 417983
+        v: 6376200
+      }
+      Point {
+        u: 409575
+        v: 6371500
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 458220
+        v: 6355180
+      }
+      Point {
+        u: 447210
+        v: 6357280
+      }
+      Point {
+        u: 442806
+        v: 6368790
+      }
+      Point {
+        u: 448611
+        v: 6372100
+      }
+      Point {
+        u: 457619
+        v: 6367390
+      }
+      Point {
+        u: 461823
+        v: 6358680
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 470631
+        v: 6352980
+      }
+      Point {
+        u: 467228
+        v: 6370790
+      }
+      Point {
+        u: 477838
+        v: 6379100
+      }
+      Point {
+        u: 492851
+        v: 6380400
+      }
+      Point {
+        u: 495454
+        v: 6371100
+      }
+      Point {
+        u: 491450
+        v: 6360390
+      }
+      Point {
+        u: 481841
+        v: 6352680
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 410576
+        v: 6317250
+      }
+      Point {
+        u: 416582
+        v: 6333660
+      }
+      Point {
+        u: 419584
+        v: 6345670
+      }
+      Point {
+        u: 434798
+        v: 6347170
+      }
+      Point {
+        u: 446009
+        v: 6345870
+      }
+      Point {
+        u: 452815
+        v: 6342770
+      }
+      Point {
+        u: 462424
+        v: 6351880
+      }
+      Point {
+        u: 471232
+        v: 6351180
+      }
+      Point {
+        u: 478838
+        v: 6346270
+      }
+      Point {
+        u: 484043
+        v: 6350380
+      }
+      Point {
+        u: 498456
+        v: 6350080
+      }
+      Point {
+        u: 490649
+        v: 6337970
+      }
+      Point {
+        u: 485244
+        v: 6336060
+      }
+      Point {
+        u: 479439
+        v: 6336560
+      }
+      Point {
+        u: 473233
+        v: 6322650
+      }
+      Point {
+        u: 461423
+        v: 6316950
+      }
+      Point {
+        u: 437601
+        v: 6315440
+      }
+      Point {
+        u: 419184
+        v: 6315440
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 497588
+        v: 6417680
+      }
+      Point {
+        u: 491828
+        v: 6421460
+      }
+      Point {
+        u: 477248
+        v: 6428120
+      }
+      Point {
+        u: 483728
+        v: 6437030
+      }
+      Point {
+        u: 484088
+        v: 6445580
+      }
+      Point {
+        u: 485528
+        v: 6458000
+      }
+      Point {
+        u: 491288
+        v: 6454490
+      }
+      Point {
+        u: 488588
+        v: 6449810
+      }
+      Point {
+        u: 503167
+        v: 6436040
+      }
+      Point {
+        u: 501727
+        v: 6429470
+      }
+      Point {
+        u: 499208
+        v: 6425060
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 529735
+        v: 6345500
+      }
+      Point {
+        u: 513776
+        v: 6359080
+      }
+      Point {
+        u: 511619
+        v: 6380430
+      }
+      Point {
+        u: 497817
+        v: 6399630
+      }
+      Point {
+        u: 490053
+        v: 6415370
+      }
+      Point {
+        u: 498679
+        v: 6416020
+      }
+      Point {
+        u: 512913
+        v: 6401140
+      }
+      Point {
+        u: 522833
+        v: 6393370
+      }
+      Point {
+        u: 538361
+        v: 6386260
+      }
+      Point {
+        u: 539655
+        v: 6369870
+      }
+      Point {
+        u: 550007
+        v: 6358000
+      }
+      Point {
+        u: 546556
+        v: 6351320
+      }
+      Point {
+        u: 539655
+        v: 6350670
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 524559
+        v: 6431330
+      }
+      Point {
+        u: 499111
+        v: 6444920
+      }
+      Point {
+        u: 475819
+        v: 6464540
+      }
+      Point {
+        u: 466761
+        v: 6473820
+      }
+      Point {
+        u: 468055
+        v: 6479640
+      }
+      Point {
+        u: 477113
+        v: 6481580
+      }
+      Point {
+        u: 495660
+        v: 6469720
+      }
+      Point {
+        u: 510756
+        v: 6463680
+      }
+      Point {
+        u: 514207
+        v: 6456990
+      }
+      Point {
+        u: 506012
+        v: 6455480
+      }
+      Point {
+        u: 525853
+        v: 6438450
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 690188
+        v: 6702210
+      }
+      Point {
+        u: 701402
+        v: 6701990
+      }
+      Point {
+        u: 708304
+        v: 6695740
+      }
+      Point {
+        u: 708735
+        v: 6682580
+      }
+      Point {
+        u: 707010
+        v: 6668130
+      }
+      Point {
+        u: 701402
+        v: 6661440
+      }
+      Point {
+        u: 686306
+        v: 6660370
+      }
+      Point {
+        u: 682424
+        v: 6666190
+      }
+      Point {
+        u: 679405
+        v: 6671150
+      }
+      Point {
+        u: 686737
+        v: 6683010
+      }
+      Point {
+        u: 687169
+        v: 6693580
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 745398
+        v: 6652390
+      }
+      Point {
+        u: 722969
+        v: 6666400
+      }
+      Point {
+        u: 723400
+        v: 6679560
+      }
+      Point {
+        u: 732458
+        v: 6684520
+      }
+      Point {
+        u: 738928
+        v: 6673950
+      }
+      Point {
+        u: 747123
+        v: 6663390
+      }
+      Point {
+        u: 755318
+        v: 6661880
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 770846
+        v: 6614650
+      }
+      Point {
+        u: 779472
+        v: 6612700
+      }
+      Point {
+        u: 783354
+        v: 6605160
+      }
+      Point {
+        u: 781198
+        v: 6594160
+      }
+      Point {
+        u: 773865
+        v: 6586610
+      }
+      Point {
+        u: 764376
+        v: 6590280
+      }
+      Point {
+        u: 769552
+        v: 6602140
+      }
+      Point {
+        u: 763513
+        v: 6607530
+      }
+      Point {
+        u: 769121
+        v: 6613780
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 667328
+        v: 6633410
+      }
+      Point {
+        u: 685012
+        v: 6646560
+      }
+      Point {
+        u: 694933
+        v: 6651090
+      }
+      Point {
+        u: 724263
+        v: 6641820
+      }
+      Point {
+        u: 741084
+        v: 6640740
+      }
+      Point {
+        u: 756181
+        v: 6648290
+      }
+      Point {
+        u: 769121
+        v: 6646350
+      }
+      Point {
+        u: 772140
+        v: 6638800
+      }
+      Point {
+        u: 759631
+        v: 6626080
+      }
+      Point {
+        u: 746260
+        v: 6615510
+      }
+      Point {
+        u: 746260
+        v: 6607960
+      }
+      Point {
+        u: 745398
+        v: 6592860
+      }
+      Point {
+        u: 716068
+        v: 6595670
+      }
+      Point {
+        u: 697089
+        v: 6603650
+      }
+      Point {
+        u: 674229
+        v: 6616800
+      }
+      Point {
+        u: 663877
+        v: 6629960
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 453390
+        v: 6609040
+      }
+      Point {
+        u: 440450
+        v: 6619180
+      }
+      Point {
+        u: 447351
+        v: 6625860
+      }
+      Point {
+        u: 457272
+        v: 6628450
+      }
+      Point {
+        u: 464173
+        v: 6626940
+      }
+      Point {
+        u: 468486
+        v: 6618960
+      }
+      Point {
+        u: 477544
+        v: 6617020
+      }
+      Point {
+        u: 480995
+        v: 6627590
+      }
+      Point {
+        u: 497385
+        v: 6632120
+      }
+      Point {
+        u: 499973
+        v: 6622840
+      }
+      Point {
+        u: 507737
+        v: 6603000
+      }
+      Point {
+        u: 509031
+        v: 6596320
+      }
+      Point {
+        u: 491347
+        v: 6593080
+      }
+      Point {
+        u: 478838
+        v: 6597610
+      }
+      Point {
+        u: 459860
+        v: 6610330
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 405944
+        v: 6598040
+      }
+      Point {
+        u: 423629
+        v: 6604730
+      }
+      Point {
+        u: 433118
+        v: 6605810
+      }
+      Point {
+        u: 443038
+        v: 6601280
+      }
+      Point {
+        u: 438725
+        v: 6591140
+      }
+      Point {
+        u: 428373
+        v: 6587040
+      }
+      Point {
+        u: 416296
+        v: 6589420
+      }
+      Point {
+        u: 405944
+        v: 6593080
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 503855
+        v: 6527090
+      }
+      Point {
+        u: 498248
+        v: 6534210
+      }
+      Point {
+        u: 498248
+        v: 6545210
+      }
+      Point {
+        u: 490484
+        v: 6542400
+      }
+      Point {
+        u: 480564
+        v: 6549520
+      }
+      Point {
+        u: 476250
+        v: 6555340
+      }
+      Point {
+        u: 499973
+        v: 6555560
+      }
+      Point {
+        u: 509462
+        v: 6550600
+      }
+      Point {
+        u: 529735
+        v: 6551240
+      }
+      Point {
+        u: 528009
+        v: 6541540
+      }
+      Point {
+        u: 534911
+        v: 6537010
+      }
+      Point {
+        u: 530166
+        v: 6530320
+      }
+      Point {
+        u: 521971
+        v: 6539170
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 436137
+        v: 6550380
+      }
+      Point {
+        u: 414139
+        v: 6551890
+      }
+      Point {
+        u: 401631
+        v: 6550810
+      }
+      Point {
+        u: 398180
+        v: 6558360
+      }
+      Point {
+        u: 406375
+        v: 6569580
+      }
+      Point {
+        u: 415002
+        v: 6572380
+      }
+      Point {
+        u: 433118
+        v: 6568710
+      }
+      Point {
+        u: 444764
+        v: 6567630
+      }
+      Point {
+        u: 452527
+        v: 6561380
+      }
+      Point {
+        u: 451665
+        v: 6554690
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 362812
+        v: 6544990
+      }
+      Point {
+        u: 349872
+        v: 6546500
+      }
+      Point {
+        u: 342108
+        v: 6554910
+      }
+      Point {
+        u: 348147
+        v: 6562670
+      }
+      Point {
+        u: 362380
+        v: 6567640
+      }
+      Point {
+        u: 369282
+        v: 6563970
+      }
+      Point {
+        u: 372301
+        v: 6554700
+      }
+    }
+    OrientationMethod: LINEORIENTATION
+    dip: 0
+    azimuth: 0
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 347715
+        v: 6516950
+      }
+      Point {
+        u: 341677
+        v: 6518030
+      }
+      Point {
+        u: 345990
+        v: 6528170
+      }
+      Point {
+        u: 353322
+        v: 6528820
+      }
+      Point {
+        u: 357204
+        v: 6522560
+      }
+      Point {
+        u: 354185
+        v: 6517170
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 313209
+        v: 6503580
+      }
+      Point {
+        u: 325718
+        v: 6511560
+      }
+      Point {
+        u: 326580
+        v: 6509620
+      }
+      Point {
+        u: 323130
+        v: 6502940
+      }
+      Point {
+        u: 321836
+        v: 6499270
+      }
+      Point {
+        u: 309758
+        v: 6499050
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 286898
+        v: 6480080
+      }
+      Point {
+        u: 286898
+        v: 6498840
+      }
+      Point {
+        u: 283879
+        v: 6507250
+      }
+      Point {
+        u: 278703
+        v: 6520840
+      }
+      Point {
+        u: 283879
+        v: 6531400
+      }
+      Point {
+        u: 298113
+        v: 6534640
+      }
+      Point {
+        u: 310190
+        v: 6530540
+      }
+      Point {
+        u: 314934
+        v: 6521480
+      }
+      Point {
+        u: 323130
+        v: 6513930
+      }
+      Point {
+        u: 311484
+        v: 6504230
+      }
+      Point {
+        u: 301995
+        v: 6491510
+      }
+      Point {
+        u: 294662
+        v: 6478780
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 268783
+        v: 6459800
+      }
+      Point {
+        u: 254549
+        v: 6461310
+      }
+      Point {
+        u: 253255
+        v: 6464980
+      }
+      Point {
+        u: 260156
+        v: 6468430
+      }
+      Point {
+        u: 266195
+        v: 6470800
+      }
+      Point {
+        u: 273096
+        v: 6468860
+      }
+      Point {
+        u: 273527
+        v: 6464330
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 245922
+        v: 6442770
+      }
+      Point {
+        u: 243766
+        v: 6442550
+      }
+      Point {
+        u: 244628
+        v: 6450960
+      }
+      Point {
+        u: 245922
+        v: 6455920
+      }
+      Point {
+        u: 253686
+        v: 6455270
+      }
+      Point {
+        u: 251529
+        v: 6448160
+      }
+      Point {
+        u: 247216
+        v: 6443200
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "CorunnaConglomerate"
+    PointList {
+      Point {
+        u: 154743
+        v: 6321930
+      }
+      Point {
+        u: 176546
+        v: 6328330
+      }
+      Point {
+        u: 199772
+        v: 6335200
+      }
+      Point {
+        u: 216361
+        v: 6342070
+      }
+      Point {
+        u: 233899
+        v: 6334250
+      }
+      Point {
+        u: 247644
+        v: 6327380
+      }
+      Point {
+        u: 259020
+        v: 6320980
+      }
+      Point {
+        u: 272766
+        v: 6314580
+      }
+      Point {
+        u: 300257
+        v: 6313400
+      }
+      Point {
+        u: 317321
+        v: 6322170
+      }
+      Point {
+        u: 334384
+        v: 6323830
+      }
+      Point {
+        u: 346234
+        v: 6323110
+      }
+      Point {
+        u: 365193
+        v: 6316240
+      }
+      Point {
+        u: 383679
+        v: 6308420
+      }
+      Point {
+        u: 399794
+        v: 6307240
+      }
+      Point {
+        u: 410222
+        v: 6315290
+      }
+      Point {
+        u: 429656
+        v: 6324060
+      }
+      Point {
+        u: 458569
+        v: 6326670
+      }
+      Point {
+        u: 471367
+        v: 6318610
+      }
+      Point {
+        u: 504546
+        v: 6310080
+      }
+      Point {
+        u: 526823
+        v: 6302500
+      }
+      Point {
+        u: 547205
+        v: 6286620
+      }
+      Point {
+        u: 596973
+        v: 6284480
+      }
+      Point {
+        u: 620199
+        v: 6285200
+      }
+      Point {
+        u: 643898
+        v: 6280220
+      }
+      Point {
+        u: 658592
+        v: 6263870
+      }
+      Point {
+        u: 658118
+        v: 6253200
+      }
+      Point {
+        u: 624938
+        v: 6233530
+      }
+      Point {
+        u: 593181
+        v: 6223810
+      }
+      Point {
+        u: 571378
+        v: 6248700
+      }
+      Point {
+        u: 565690
+        v: 6266000
+      }
+      Point {
+        u: 547679
+        v: 6276190
+      }
+      Point {
+        u: 532037
+        v: 6271450
+      }
+      Point {
+        u: 517817
+        v: 6269790
+      }
+      Point {
+        u: 525875
+        v: 6282830
+      }
+      Point {
+        u: 496962
+        v: 6280690
+      }
+      Point {
+        u: 472788
+        v: 6281400
+      }
+      Point {
+        u: 450037
+        v: 6275950
+      }
+      Point {
+        u: 417332
+        v: 6280460
+      }
+      Point {
+        u: 390789
+        v: 6289700
+      }
+      Point {
+        u: 363297
+        v: 6293250
+      }
+      Point {
+        u: 329170
+        v: 6290170
+      }
+      Point {
+        u: 295043
+        v: 6287570
+      }
+      Point {
+        u: 268500
+        v: 6284960
+      }
+      Point {
+        u: 249066
+        v: 6281400
+      }
+      Point {
+        u: 221101
+        v: 6267890
+      }
+      Point {
+        u: 203564
+        v: 6284480
+      }
+      Point {
+        u: 178442
+        v: 6293730
+      }
+      Point {
+        u: 157587
+        v: 6314350
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "StPeterSuite"
+    PointList {
+      Point {
+        u: 437472
+        v: 6140050
+      }
+      Point {
+        u: 421414
+        v: 6124000
+      }
+      Point {
+        u: 400004
+        v: 6115080
+      }
+      Point {
+        u: 371457
+        v: 6118640
+      }
+      Point {
+        u: 350047
+        v: 6132920
+      }
+      Point {
+        u: 319716
+        v: 6145410
+      }
+      Point {
+        u: 285817
+        v: 6159680
+      }
+      Point {
+        u: 260838
+        v: 6170380
+      }
+      Point {
+        u: 239428
+        v: 6190010
+      }
+      Point {
+        u: 219802
+        v: 6214990
+      }
+      Point {
+        u: 219802
+        v: 6248890
+      }
+      Point {
+        u: 221586
+        v: 6270300
+      }
+      Point {
+        u: 216234
+        v: 6347020
+      }
+      Point {
+        u: 221586
+        v: 6380920
+      }
+      Point {
+        u: 241212
+        v: 6429090
+      }
+      Point {
+        u: 257270
+        v: 6443360
+      }
+      Point {
+        u: 284033
+        v: 6461210
+      }
+      Point {
+        u: 309011
+        v: 6479050
+      }
+      Point {
+        u: 332205
+        v: 6504030
+      }
+      Point {
+        u: 341126
+        v: 6523650
+      }
+      Point {
+        u: 364321
+        v: 6532570
+      }
+      Point {
+        u: 396436
+        v: 6539710
+      }
+      Point {
+        u: 421414
+        v: 6543280
+      }
+      Point {
+        u: 441040
+        v: 6548630
+      }
+      Point {
+        u: 464235
+        v: 6553980
+      }
+      Point {
+        u: 491338
+        v: 6554460
+      }
+      Point {
+        u: 505235
+        v: 6535010
+      }
+      Point {
+        u: 512878
+        v: 6500960
+      }
+      Point {
+        u: 514963
+        v: 6476640
+      }
+      Point {
+        u: 517418
+        v: 6450160
+      }
+      Point {
+        u: 534650
+        v: 6412820
+      }
+      Point {
+        u: 546138
+        v: 6388410
+      }
+      Point {
+        u: 557627
+        v: 6368300
+      }
+      Point {
+        u: 542739
+        v: 6336310
+      }
+      Point {
+        u: 528465
+        v: 6327390
+      }
+      Point {
+        u: 521329
+        v: 6309550
+      }
+      Point {
+        u: 496350
+        v: 6284570
+      }
+      Point {
+        u: 496350
+        v: 6272080
+      }
+      Point {
+        u: 480292
+        v: 6259590
+      }
+      Point {
+        u: 460666
+        v: 6250670
+      }
+      Point {
+        u: 448177
+        v: 6236400
+      }
+      Point {
+        u: 430335
+        v: 6220340
+      }
+      Point {
+        u: 421414
+        v: 6202500
+      }
+      Point {
+        u: 417846
+        v: 6182870
+      }
+      Point {
+        u: 424983
+        v: 6156110
+      }
+      Point {
+        u: 437472
+        v: 6143620
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "KarariFaultZone"
+    PointList {
+      Point {
+        u: 589810
+        v: 6696580
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 800000
+        v: 6000000
+      }
+      Point {
+        u: 800000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 700000
+        v: 6000000
+      }
+      Point {
+        u: 700000
+        v: 7050000
+      }
+      Point {
+        u: 700000
+        v: 6000000
+      }
+      Point {
+        u: 700000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 700000
+        v: 6000000
+      }
+      Point {
+        u: 700000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 600000
+        v: 6000000
+      }
+      Point {
+        u: 600000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 500000
+        v: 6000000
+      }
+      Point {
+        u: 500000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 400000
+        v: 6000000
+      }
+      Point {
+        u: 400000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 300000
+        v: 6000000
+      }
+      Point {
+        u: 300000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 200000
+        v: 6000000
+      }
+      Point {
+        u: 200000
+        v: 7050000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "KalinjalaMyloniteZone"
+    PointList {
+      Point {
+        u: 707224
+        v: 6628610
+      }
+      Point {
+        u: 713379
+        v: 6572190
+      }
+      Point {
+        u: 686707
+        v: 6526030
+      }
+      Point {
+        u: 713379
+        v: 6465500
+      }
+      Point {
+        u: 733897
+        v: 6421390
+      }
+      Point {
+        u: 711008
+        v: 6385410
+      }
+      Point {
+        u: 691544
+        v: 6323240
+      }
+      Point {
+        u: 669918
+        v: 6289170
+      }
+      Point {
+        u: 639642
+        v: 6237810
+      }
+      Point {
+        u: 606122
+        v: 6196180
+      }
+      Point {
+        u: 582333
+        v: 6168610
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "YarlbrindaFault"
+    PointList {
+      Point {
+        u: 476777
+        v: 6548160
+      }
+      Point {
+        u: 483080
+        v: 6526100
+      }
+      Point {
+        u: 479298
+        v: 6505300
+      }
+      Point {
+        u: 480559
+        v: 6473160
+      }
+      Point {
+        u: 479298
+        v: 6453620
+      }
+      Point {
+        u: 478038
+        v: 6426520
+      }
+      Point {
+        u: 479298
+        v: 6408240
+      }
+      Point {
+        u: 478038
+        v: 6384920
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 326801
+        v: 6531570
+      }
+      Point {
+        u: 350164
+        v: 6534950
+      }
+      Point {
+        u: 374047
+        v: 6540400
+      }
+      Point {
+        u: 394295
+        v: 6541700
+      }
+      Point {
+        u: 416101
+        v: 6544550
+      }
+      Point {
+        u: 441541
+        v: 6546890
+      }
+      Point {
+        u: 456598
+        v: 6549750
+      }
+      Point {
+        u: 469058
+        v: 6547410
+      }
+      Point {
+        u: 489826
+        v: 6545590
+      }
+      Point {
+        u: 507997
+        v: 6545330
+      }
+      Point {
+        u: 525649
+        v: 6550260
+      }
+      Point {
+        u: 539667
+        v: 6553120
+      }
+      Point {
+        u: 552128
+        v: 6554940
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 207971
+        v: 6442290
+      }
+      Point {
+        u: 223730
+        v: 6463060
+      }
+      Point {
+        u: 280363
+        v: 6515000
+      }
+      Point {
+        u: 325354
+        v: 6553150
+      }
+      Point {
+        u: 394217
+        v: 6600600
+      }
+      Point {
+        u: 418572
+        v: 6611340
+      }
+      Point {
+        u: 451523
+        v: 6627820
+      }
+      Point {
+        u: 478744
+        v: 6648590
+      }
+      Point {
+        u: 491176
+        v: 6664220
+      }
+      Point {
+        u: 506546
+        v: 6679000
+      }
+      Point {
+        u: 529719
+        v: 6697560
+      }
+      Point {
+        u: 541542
+        v: 6705960
+      }
+      Point {
+        u: 574732
+        v: 6713060
+      }
+      Point {
+        u: 619992
+        v: 6719500
+      }
+      Point {
+        u: 653433
+        v: 6717560
+      }
+      Point {
+        u: 677540
+        v: 6714830
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "KarariFaultZone"
+    PointList {
+      Point {
+        u: 173612
+        v: 6587280
+      }
+      Point {
+        u: 189197
+        v: 6597900
+      }
+      Point {
+        u: 203366
+        v: 6619870
+      }
+      Point {
+        u: 217535
+        v: 6641830
+      }
+      Point {
+        u: 237371
+        v: 6665210
+      }
+      Point {
+        u: 257207
+        v: 6681500
+      }
+      Point {
+        u: 274209
+        v: 6700630
+      }
+      Point {
+        u: 302547
+        v: 6718340
+      }
+      Point {
+        u: 328050
+        v: 6737470
+      }
+      Point {
+        u: 349304
+        v: 6745260
+      }
+      Point {
+        u: 381892
+        v: 6753050
+      }
+      Point {
+        u: 403145
+        v: 6749510
+      }
+      Point {
+        u: 424398
+        v: 6753050
+      }
+      Point {
+        u: 455569
+        v: 6755880
+      }
+      Point {
+        u: 475405
+        v: 6755180
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "CooberPedyShearZone"
+    PointList {
+      Point {
+        u: 339072
+        v: 6723210
+      }
+      Point {
+        u: 356388
+        v: 6754460
+      }
+      Point {
+        u: 371974
+        v: 6763670
+      }
+      Point {
+        u: 391810
+        v: 6774300
+      }
+      Point {
+        u: 415897
+        v: 6782090
+      }
+      Point {
+        u: 442817
+        v: 6785640
+      }
+      Point {
+        u: 468321
+        v: 6782090
+      }
+      Point {
+        u: 489676
+        v: 6788070
+      }
+      Point {
+        u: 510248
+        v: 6789790
+      }
+      Point {
+        u: 531084
+        v: 6788070
+      }
+      Point {
+        u: 575320
+        v: 6795640
+      }
+      Point {
+        u: 601507
+        v: 6796260
+      }
+      Point {
+        u: 622760
+        v: 6813970
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "NWFaultZone"
+    PointList {
+      Point {
+        u: 536331
+        v: 6905360
+      }
+      Point {
+        u: 554750
+        v: 6897570
+      }
+      Point {
+        u: 581694
+        v: 6888590
+      }
+      Point {
+        u: 613980
+        v: 6868250
+      }
+      Point {
+        u: 636580
+        v: 6835640
+      }
+      Point {
+        u: 655348
+        v: 6802640
+      }
+      Point {
+        u: 675184
+        v: 6790600
+      }
+      Point {
+        u: 697854
+        v: 6781390
+      }
+      Point {
+        u: 719107
+        v: 6756590
+      }
+      Point {
+        u: 733276
+        v: 6741710
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6920000
+      }
+      Point {
+        u: 900000
+        v: 6920000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6810000
+      }
+      Point {
+        u: 900000
+        v: 6810000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6700000
+      }
+      Point {
+        u: 900000
+        v: 6700000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6590000
+      }
+      Point {
+        u: 900000
+        v: 6590000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6480000
+      }
+      Point {
+        u: 900000
+        v: 6480000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6370000
+      }
+      Point {
+        u: 900000
+        v: 6370000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6260000
+      }
+      Point {
+        u: 900000
+        v: 6260000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 100000
+        v: 6150000
+      }
+      Point {
+        u: 900000
+        v: 6150000
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "DonningtonFaultZone"
+    PointList {
+      Point {
+        u: 662764
+        v: 6381160
+      }
+      Point {
+        u: 651904
+        v: 6459350
+      }
+      Point {
+        u: 641043
+        v: 6539720
+      }
+      Point {
+        u: 649940
+        v: 6608490
+      }
+      Point {
+        u: 661992
+        v: 6665300
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Ante_Donnington"
+    PointList {
+      Point {
+        u: 671460
+        v: 6608440
+      }
+      Point {
+        u: 701395
+        v: 6633390
+      }
+      Point {
+        u: 762929
+        v: 6653350
+      }
+      Point {
+        u: 847744
+        v: 6665820
+      }
+      Point {
+        u: 888489
+        v: 6669980
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Normal_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "PeakeMetamorphics"
+    PointList {
+      Point {
+        u: 479807
+        v: 6803980
+      }
+      Point {
+        u: 486641
+        v: 6841570
+      }
+      Point {
+        u: 532201
+        v: 6865490
+      }
+      Point {
+        u: 575484
+        v: 6900800
+      }
+      Point {
+        u: 611932
+        v: 6945220
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 128220
+        v: 6494300
+      }
+      Point {
+        u: 117987
+        v: 6395390
+      }
+      Point {
+        u: 155506
+        v: 6327170
+      }
+      Point {
+        u: 237644
+        v: 6352370
+      }
+      Point {
+        u: 310795
+        v: 6416600
+      }
+      Point {
+        u: 362537
+        v: 6473700
+      }
+      Point {
+        u: 401788
+        v: 6521870
+      }
+      Point {
+        u: 417846
+        v: 6550420
+      }
+      Point {
+        u: 457098
+        v: 6575390
+      }
+      Point {
+        u: 455659
+        v: 6627330
+      }
+      Point {
+        u: 401086
+        v: 6647790
+      }
+      Point {
+        u: 366978
+        v: 6620500
+      }
+      Point {
+        u: 326048
+        v: 6627330
+      }
+      Point {
+        u: 295350
+        v: 6613680
+      }
+      Point {
+        u: 247599
+        v: 6589810
+      }
+      Point {
+        u: 223723
+        v: 6559110
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "GawlerRangeVolcanics"
+    PointList {
+      Point {
+        u: 540578
+        v: 6373960
+      }
+      Point {
+        u: 519244
+        v: 6394980
+      }
+      Point {
+        u: 501675
+        v: 6432940
+      }
+      Point {
+        u: 485988
+        v: 6446110
+      }
+      Point {
+        u: 479713
+        v: 6455840
+      }
+      Point {
+        u: 483478
+        v: 6459920
+      }
+      Point {
+        u: 470928
+        v: 6467140
+      }
+      Point {
+        u: 461516
+        v: 6466820
+      }
+      Point {
+        u: 457752
+        v: 6472470
+      }
+      Point {
+        u: 454614
+        v: 6479060
+      }
+      Point {
+        u: 448339
+        v: 6481250
+      }
+      Point {
+        u: 439555
+        v: 6485020
+      }
+      Point {
+        u: 435163
+        v: 6490980
+      }
+      Point {
+        u: 439555
+        v: 6493180
+      }
+      Point {
+        u: 447712
+        v: 6494740
+      }
+      Point {
+        u: 456497
+        v: 6488160
+      }
+      Point {
+        u: 471556
+        v: 6480940
+      }
+      Point {
+        u: 482850
+        v: 6493800
+      }
+      Point {
+        u: 484733
+        v: 6507920
+      }
+      Point {
+        u: 484105
+        v: 6528000
+      }
+      Point {
+        u: 484733
+        v: 6544000
+      }
+      Point {
+        u: 434535
+        v: 6626200
+      }
+      Point {
+        u: 420103
+        v: 6638430
+      }
+      Point {
+        u: 435163
+        v: 6643770
+      }
+      Point {
+        u: 444575
+        v: 6647850
+      }
+      Point {
+        u: 450222
+        v: 6651300
+      }
+      Point {
+        u: 456497
+        v: 6654750
+      }
+      Point {
+        u: 460889
+        v: 6658830
+      }
+      Point {
+        u: 453987
+        v: 6666040
+      }
+      Point {
+        u: 450222
+        v: 6674200
+      }
+      Point {
+        u: 452104
+        v: 6681420
+      }
+      Point {
+        u: 456497
+        v: 6683610
+      }
+      Point {
+        u: 479713
+        v: 6681420
+      }
+      Point {
+        u: 525519
+        v: 6678590
+      }
+      Point {
+        u: 536813
+        v: 6664480
+      }
+      Point {
+        u: 545598
+        v: 6661020
+      }
+      Point {
+        u: 548735
+        v: 6659460
+      }
+      Point {
+        u: 540578
+        v: 6657260
+      }
+      Point {
+        u: 543715
+        v: 6642510
+      }
+      Point {
+        u: 546225
+        v: 6639060
+      }
+      Point {
+        u: 553755
+        v: 6636240
+      }
+      Point {
+        u: 560030
+        v: 6635930
+      }
+      Point {
+        u: 568814
+        v: 6644400
+      }
+      Point {
+        u: 573834
+        v: 6647220
+      }
+      Point {
+        u: 577599
+        v: 6656000
+      }
+      Point {
+        u: 587011
+        v: 6652550
+      }
+      Point {
+        u: 600815
+        v: 6653490
+      }
+      Point {
+        u: 605835
+        v: 6646280
+      }
+      Point {
+        u: 617129
+        v: 6646590
+      }
+      Point {
+        u: 628424
+        v: 6639380
+      }
+      Point {
+        u: 632816
+        v: 6627770
+      }
+      Point {
+        u: 654150
+        v: 6627450
+      }
+      Point {
+        u: 653523
+        v: 6617100
+      }
+      Point {
+        u: 647876
+        v: 6611140
+      }
+      Point {
+        u: 644111
+        v: 6605810
+      }
+      Point {
+        u: 652268
+        v: 6596080
+      }
+      Point {
+        u: 662935
+        v: 6582590
+      }
+      Point {
+        u: 676112
+        v: 6574430
+      }
+      Point {
+        u: 688034
+        v: 6578510
+      }
+      Point {
+        u: 698701
+        v: 6592630
+      }
+      Point {
+        u: 733839
+        v: 6586670
+      }
+      Point {
+        u: 747016
+        v: 6565020
+      }
+      Point {
+        u: 745134
+        v: 6552470
+      }
+      Point {
+        u: 738859
+        v: 6540860
+      }
+      Point {
+        u: 722545
+        v: 6537410
+      }
+      Point {
+        u: 715015
+        v: 6536470
+      }
+      Point {
+        u: 730074
+        v: 6518590
+      }
+      Point {
+        u: 748271
+        v: 6495690
+      }
+      Point {
+        u: 777762
+        v: 6477800
+      }
+      Point {
+        u: 784037
+        v: 6460550
+      }
+      Point {
+        u: 778390
+        v: 6435760
+      }
+      Point {
+        u: 773998
+        v: 6405330
+      }
+      Point {
+        u: 765840
+        v: 6385880
+      }
+      Point {
+        u: 762703
+        v: 6378030
+      }
+      Point {
+        u: 765213
+        v: 6355760
+      }
+      Point {
+        u: 735094
+        v: 6352620
+      }
+      Point {
+        u: 722545
+        v: 6369560
+      }
+      Point {
+        u: 723172
+        v: 6397170
+      }
+      Point {
+        u: 718153
+        v: 6393090
+      }
+      Point {
+        u: 706858
+        v: 6395290
+      }
+      Point {
+        u: 703093
+        v: 6386190
+      }
+      Point {
+        u: 688034
+        v: 6375840
+      }
+      Point {
+        u: 653523
+        v: 6378030
+      }
+      Point {
+        u: 629051
+        v: 6375840
+      }
+      Point {
+        u: 612737
+        v: 6386190
+      }
+      Point {
+        u: 590148
+        v: 6390270
+      }
+      Point {
+        u: 571951
+        v: 6388700
+      }
+      Point {
+        u: 566304
+        v: 6381490
+      }
+      Point {
+        u: 556892
+        v: 6373640
+      }
+      Point {
+        u: 553127
+        v: 6369560
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HiltabaSuite"
+    PointList {
+      Point {
+        u: 307829
+        v: 6784100
+      }
+      Point {
+        u: 314703
+        v: 6789310
+      }
+      Point {
+        u: 322826
+        v: 6794930
+      }
+      Point {
+        u: 328867
+        v: 6800560
+      }
+      Point {
+        u: 333241
+        v: 6802430
+      }
+      Point {
+        u: 338448
+        v: 6807640
+      }
+      Point {
+        u: 348238
+        v: 6811180
+      }
+      Point {
+        u: 357611
+        v: 6813890
+      }
+      Point {
+        u: 364902
+        v: 6816590
+      }
+      Point {
+        u: 373858
+        v: 6820140
+      }
+      Point {
+        u: 382398
+        v: 6823260
+      }
+      Point {
+        u: 388439
+        v: 6828050
+      }
+      Point {
+        u: 393438
+        v: 6830130
+      }
+      Point {
+        u: 400728
+        v: 6833260
+      }
+      Point {
+        u: 407602
+        v: 6836800
+      }
+      Point {
+        u: 414476
+        v: 6838670
+      }
+      Point {
+        u: 420933
+        v: 6841380
+      }
+      Point {
+        u: 425724
+        v: 6842840
+      }
+      Point {
+        u: 432597
+        v: 6846380
+      }
+      Point {
+        u: 439471
+        v: 6847010
+      }
+      Point {
+        u: 447386
+        v: 6845340
+      }
+      Point {
+        u: 453010
+        v: 6845130
+      }
+      Point {
+        u: 459884
+        v: 6843260
+      }
+      Point {
+        u: 463008
+        v: 6842630
+      }
+      Point {
+        u: 465299
+        v: 6840340
+      }
+      Point {
+        u: 465924
+        v: 6834720
+      }
+      Point {
+        u: 463425
+        v: 6826390
+      }
+      Point {
+        u: 462800
+        v: 6819930
+      }
+      Point {
+        u: 461758
+        v: 6815560
+      }
+      Point {
+        u: 458009
+        v: 6808470
+      }
+      Point {
+        u: 456967
+        v: 6804100
+      }
+      Point {
+        u: 452802
+        v: 6799520
+      }
+      Point {
+        u: 444470
+        v: 6797020
+      }
+      Point {
+        u: 433847
+        v: 6794730
+      }
+      Point {
+        u: 423432
+        v: 6793060
+      }
+      Point {
+        u: 415934
+        v: 6791390
+      }
+      Point {
+        u: 408643
+        v: 6789100
+      }
+      Point {
+        u: 397604
+        v: 6788480
+      }
+      Point {
+        u: 387189
+        v: 6788900
+      }
+      Point {
+        u: 377816
+        v: 6788270
+      }
+      Point {
+        u: 369692
+        v: 6788900
+      }
+      Point {
+        u: 361569
+        v: 6788270
+      }
+      Point {
+        u: 353862
+        v: 6788060
+      }
+      Point {
+        u: 345739
+        v: 6787850
+      }
+      Point {
+        u: 339489
+        v: 6784940
+      }
+      Point {
+        u: 334282
+        v: 6782650
+      }
+      Point {
+        u: 327825
+        v: 6780360
+      }
+      Point {
+        u: 322618
+        v: 6777650
+      }
+      Point {
+        u: 314494
+        v: 6774530
+      }
+      Point {
+        u: 307204
+        v: 6771410
+      }
+      Point {
+        u: 301580
+        v: 6769110
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "YerdaShearZone"
+    PointList {
+      Point {
+        u: 347569
+        v: 6564540
+      }
+      Point {
+        u: 362625
+        v: 6568440
+      }
+      Point {
+        u: 377681
+        v: 6562980
+      }
+      Point {
+        u: 390661
+        v: 6566360
+      }
+      Point {
+        u: 404160
+        v: 6570250
+      }
+      Point {
+        u: 420255
+        v: 6572070
+      }
+      Point {
+        u: 444137
+        v: 6568700
+      }
+      Point {
+        u: 457117
+        v: 6561690
+      }
+      Point {
+        u: 472692
+        v: 6555200
+      }
+      Point {
+        u: 482557
+        v: 6547670
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "HarrisFaultZone"
+    PointList {
+      Point {
+        u: 610644
+        v: 6554910
+      }
+      Point {
+        u: 590345
+        v: 6574450
+      }
+      Point {
+        u: 564784
+        v: 6592500
+      }
+      Point {
+        u: 520427
+        v: 6595500
+      }
+      Point {
+        u: 471560
+        v: 6594000
+      }
+      Point {
+        u: 444495
+        v: 6592500
+      }
+      Point {
+        u: 420796
+        v: 6584730
+      }
+      Point {
+        u: 393931
+        v: 6572790
+      }
+      Point {
+        u: 381493
+        v: 6560350
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 351561
+        v: 6419610
+      }
+      Point {
+        u: 351561
+        v: 6652780
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 230850
+        v: 6612850
+      }
+      Point {
+        u: 234537
+        v: 6628650
+      }
+      Point {
+        u: 232957
+        v: 6634970
+      }
+      Point {
+        u: 229270
+        v: 6635500
+      }
+      Point {
+        u: 235590
+        v: 6647090
+      }
+      Point {
+        u: 240858
+        v: 6644460
+      }
+      Point {
+        u: 248758
+        v: 6652360
+      }
+      Point {
+        u: 250339
+        v: 6650250
+      }
+      Point {
+        u: 246652
+        v: 6639720
+      }
+      Point {
+        u: 241911
+        v: 6631290
+      }
+      Point {
+        u: 237697
+        v: 6619700
+      }
+      Point {
+        u: 233483
+        v: 6612330
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 303538
+        v: 6634450
+      }
+      Point {
+        u: 302485
+        v: 6641300
+      }
+      Point {
+        u: 307225
+        v: 6646560
+      }
+      Point {
+        u: 308279
+        v: 6655520
+      }
+      Point {
+        u: 304065
+        v: 6657100
+      }
+      Point {
+        u: 305645
+        v: 6663420
+      }
+      Point {
+        u: 314599
+        v: 6669210
+      }
+      Point {
+        u: 326714
+        v: 6672900
+      }
+      Point {
+        u: 324607
+        v: 6666580
+      }
+      Point {
+        u: 319340
+        v: 6657620
+      }
+      Point {
+        u: 317233
+        v: 6647620
+      }
+      Point {
+        u: 310912
+        v: 6639720
+      }
+      Point {
+        u: 305645
+        v: 6635500
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 322500
+        v: 6659200
+      }
+      Point {
+        u: 325661
+        v: 6662360
+      }
+      Point {
+        u: 328294
+        v: 6666580
+      }
+      Point {
+        u: 337775
+        v: 6666580
+      }
+      Point {
+        u: 336722
+        v: 6662360
+      }
+      Point {
+        u: 332508
+        v: 6659200
+      }
+      Point {
+        u: 323554
+        v: 6659200
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 343043
+        v: 6668690
+      }
+      Point {
+        u: 344623
+        v: 6666580
+      }
+      Point {
+        u: 344623
+        v: 6661310
+      }
+      Point {
+        u: 341989
+        v: 6656570
+      }
+      Point {
+        u: 340409
+        v: 6653410
+      }
+      Point {
+        u: 339355
+        v: 6650780
+      }
+      Point {
+        u: 336195
+        v: 6652360
+      }
+      Point {
+        u: 336722
+        v: 6658680
+      }
+      Point {
+        u: 340936
+        v: 6663420
+      }
+      Point {
+        u: 341989
+        v: 6669740
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 257713
+        v: 6624440
+      }
+      Point {
+        u: 270354
+        v: 6638130
+      }
+      Point {
+        u: 272988
+        v: 6636030
+      }
+      Point {
+        u: 270881
+        v: 6632340
+      }
+      Point {
+        u: 276148
+        v: 6631290
+      }
+      Point {
+        u: 272461
+        v: 6626550
+      }
+      Point {
+        u: 266140
+        v: 6623390
+      }
+      Point {
+        u: 258240
+        v: 6621810
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 281415
+        v: 6642350
+      }
+      Point {
+        u: 282996
+        v: 6648670
+      }
+      Point {
+        u: 285103
+        v: 6658150
+      }
+      Point {
+        u: 289316
+        v: 6658150
+      }
+      Point {
+        u: 288263
+        v: 6649720
+      }
+      Point {
+        u: 286683
+        v: 6643930
+      }
+      Point {
+        u: 282996
+        v: 6640770
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 208200
+        v: 6621280
+      }
+      Point {
+        u: 214521
+        v: 6632340
+      }
+      Point {
+        u: 220315
+        v: 6642880
+      }
+      Point {
+        u: 224002
+        v: 6650250
+      }
+      Point {
+        u: 227689
+        v: 6650250
+      }
+      Point {
+        u: 225056
+        v: 6641820
+      }
+      Point {
+        u: 221895
+        v: 6637080
+      }
+      Point {
+        u: 218208
+        v: 6631290
+      }
+      Point {
+        u: 210834
+        v: 6622330
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 274041
+        v: 6696600
+      }
+      Point {
+        u: 295110
+        v: 6713980
+      }
+      Point {
+        u: 296164
+        v: 6711880
+      }
+      Point {
+        u: 288263
+        v: 6704500
+      }
+      Point {
+        u: 275095
+        v: 6694490
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 309859
+        v: 6626020
+      }
+      Point {
+        u: 323554
+        v: 6631290
+      }
+      Point {
+        u: 330928
+        v: 6638130
+      }
+      Point {
+        u: 338302
+        v: 6644460
+      }
+      Point {
+        u: 340409
+        v: 6642350
+      }
+      Point {
+        u: 335142
+        v: 6636030
+      }
+      Point {
+        u: 333035
+        v: 6631810
+      }
+      Point {
+        u: 324080
+        v: 6627070
+      }
+      Point {
+        u: 314073
+        v: 6623390
+      }
+      Point {
+        u: 308279
+        v: 6625490
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 206094
+        v: 6570710
+      }
+      Point {
+        u: 236117
+        v: 6594940
+      }
+      Point {
+        u: 241384
+        v: 6590730
+      }
+      Point {
+        u: 243491
+        v: 6583880
+      }
+      Point {
+        u: 238751
+        v: 6581250
+      }
+      Point {
+        u: 236644
+        v: 6584410
+      }
+      Point {
+        u: 213994
+        v: 6567550
+      }
+      Point {
+        u: 206620
+        v: 6568080
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "DTM"
+    topFormation: "IfouldSuite"
+    PointList {
+      Point {
+        u: 375173
+        v: 6639200
+      }
+      Point {
+        u: 380967
+        v: 6655000
+      }
+      Point {
+        u: 385181
+        v: 6656050
+      }
+      Point {
+        u: 387288
+        v: 6651840
+      }
+      Point {
+        u: 386761
+        v: 6644460
+      }
+      Point {
+        u: 383074
+        v: 6638140
+      }
+      Point {
+        u: 375700
+        v: 6635510
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW1"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 592788
+        v: -1039.17
+      }
+      Point {
+        u: 609914
+        v: -3673.94
+      }
+      Point {
+        u: 628357
+        v: -4991.32
+      }
+      Point {
+        u: 643727
+        v: -5869.58
+      }
+      Point {
+        u: 663927
+        v: -6308.71
+      }
+      Point {
+        u: 685883
+        v: -7626.09
+      }
+      Point {
+        u: 705644
+        v: -8065.22
+      }
+      Point {
+        u: 726722
+        v: -8065.22
+      }
+      Point {
+        u: 746922
+        v: -8065.22
+      }
+      Point {
+        u: 767122
+        v: -8065.22
+      }
+      Point {
+        u: 787761
+        v: -8065.22
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW1"
+    topFormation: "Ante_Donnington"
+    PointList {
+      Point {
+        u: 453290
+        v: -594.073
+      }
+      Point {
+        u: 459183
+        v: -10906
+      }
+      Point {
+        u: 468021
+        v: -20481.3
+      }
+      Point {
+        u: 495274
+        v: -21954.5
+      }
+      Point {
+        u: 531366
+        v: -21954.5
+      }
+      Point {
+        u: 568931
+        v: -21954.5
+      }
+      Point {
+        u: 609442
+        v: -21954.5
+      }
+      Point {
+        u: 651426
+        v: -21217.9
+      }
+      Point {
+        u: 688255
+        v: -21217.9
+      }
+      Point {
+        u: 719190
+        v: -21217.9
+      }
+      Point {
+        u: 744970
+        v: -20481.3
+      }
+      Point {
+        u: 761911
+        v: -20481.3
+      }
+      Point {
+        u: 784008
+        v: -21217.9
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW1"
+    topFormation: "KalinjalaMyloniteZone"
+    PointList {
+      Point {
+        u: 472553
+        v: -515.883
+      }
+      Point {
+        u: 471071
+        v: -10557.4
+      }
+      Point {
+        u: 470248
+        v: -19611.3
+      }
+      Point {
+        u: 468767
+        v: -28006.6
+      }
+      Point {
+        u: 466956
+        v: -34755.9
+      }
+      Point {
+        u: 463828
+        v: -40846.6
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW2"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 631628
+        v: -2717.67
+      }
+      Point {
+        u: 641172
+        v: -6452.23
+      }
+      Point {
+        u: 654450
+        v: -7282.13
+      }
+      Point {
+        u: 671878
+        v: -7697.08
+      }
+      Point {
+        u: 692211
+        v: -7697.08
+      }
+      Point {
+        u: 711299
+        v: -8112.04
+      }
+      Point {
+        u: 732046
+        v: -8112.04
+      }
+      Point {
+        u: 753209
+        v: -8526.99
+      }
+      Point {
+        u: 774371
+        v: -8526.99
+      }
+      Point {
+        u: 791384
+        v: -8526.99
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW2"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 353213
+        v: -88844.9
+      }
+      Point {
+        u: 439149
+        v: -88844.9
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW2"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 558773
+        v: 1900
+      }
+      Point {
+        u: 714145
+        v: 1900
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW2"
+    topFormation: "Ante_Donnington"
+    PointList {
+      Point {
+        u: 465996
+        v: -1616.45
+      }
+      Point {
+        u: 470104
+        v: -11593.5
+      }
+      Point {
+        u: 481842
+        v: -20396.7
+      }
+      Point {
+        u: 505904
+        v: -20983.6
+      }
+      Point {
+        u: 528206
+        v: -20396.7
+      }
+      Point {
+        u: 543465
+        v: -20396.7
+      }
+      Point {
+        u: 562832
+        v: -20396.7
+      }
+      Point {
+        u: 589829
+        v: -20983.6
+      }
+      Point {
+        u: 611543
+        v: -21570.5
+      }
+      Point {
+        u: 635605
+        v: -20396.7
+      }
+      Point {
+        u: 666123
+        v: -21570.5
+      }
+      Point {
+        u: 691946
+        v: -20983.6
+      }
+      Point {
+        u: 714248
+        v: -20983.6
+      }
+      Point {
+        u: 735963
+        v: -20983.6
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW2"
+    topFormation: "KalinjalaMyloniteZone"
+    PointList {
+      Point {
+        u: 554761
+        v: 373.757
+      }
+      Point {
+        u: 550597
+        v: -7809.15
+      }
+      Point {
+        u: 545286
+        v: -17427.7
+      }
+      Point {
+        u: 539974
+        v: -25036.3
+      }
+      Point {
+        u: 532365
+        v: -31209.4
+      }
+      Point {
+        u: 521311
+        v: -38530.9
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW3"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 607928
+        v: -2064.56
+      }
+      Point {
+        u: 621735
+        v: -4188.72
+      }
+      Point {
+        u: 641914
+        v: -5250.8
+      }
+      Point {
+        u: 667935
+        v: -6312.88
+      }
+      Point {
+        u: 692363
+        v: -6312.88
+      }
+      Point {
+        u: 719446
+        v: -6312.88
+      }
+      Point {
+        u: 743874
+        v: -6312.88
+      }
+      Point {
+        u: 772550
+        v: -6843.91
+      }
+      Point {
+        u: 790074
+        v: -7374.95
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW3"
+    topFormation: "Ante_Donnington"
+    PointList {
+      Point {
+        u: 503824
+        v: -2029.03
+      }
+      Point {
+        u: 510880
+        v: -8541.97
+      }
+      Point {
+        u: 522820
+        v: -14512.2
+      }
+      Point {
+        u: 535846
+        v: -18854.1
+      }
+      Point {
+        u: 555928
+        v: -21567.8
+      }
+      Point {
+        u: 573296
+        v: -21025.1
+      }
+      Point {
+        u: 589578
+        v: -22110.6
+      }
+      Point {
+        u: 605318
+        v: -21567.8
+      }
+      Point {
+        u: 623771
+        v: -21567.8
+      }
+      Point {
+        u: 644938
+        v: -21567.8
+      }
+      Point {
+        u: 674789
+        v: -22110.6
+      }
+      Point {
+        u: 697042
+        v: -22110.6
+      }
+      Point {
+        u: 720380
+        v: -22653.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW3"
+    topFormation: "YarlbrindaFault"
+    PointList {
+      Point {
+        u: 389597
+        v: -172.791
+      }
+      Point {
+        u: 390751
+        v: -8252.33
+      }
+      Point {
+        u: 390879
+        v: -17614.3
+      }
+      Point {
+        u: 391264
+        v: -27745.8
+      }
+      Point {
+        u: 391136
+        v: -39159.8
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW3"
+    topFormation: "HutchinsonGroup"
+    PointList {
+      Point {
+        u: 507469
+        v: 1900
+      }
+      Point {
+        u: 554412
+        v: 1900
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW3"
+    topFormation: "HutchinsonGroup"
+    PointList {
+      Point {
+        u: 588282
+        v: -87729.6
+      }
+      Point {
+        u: 667047
+        v: -87729.6
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW3"
+    topFormation: "HutchinsonGroup"
+    PointList {
+      Point {
+        u: 566926
+        v: -6240.96
+      }
+      Point {
+        u: 588066
+        v: -6240.96
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 606260
+        v: -9204.48
+      }
+      Point {
+        u: 622954
+        v: -11986.9
+      }
+      Point {
+        u: 647995
+        v: -14769.2
+      }
+      Point {
+        u: 669141
+        v: -16438.7
+      }
+      Point {
+        u: 692513
+        v: -17551.6
+      }
+      Point {
+        u: 717555
+        v: -16995.2
+      }
+      Point {
+        u: 749274
+        v: -16438.7
+      }
+      Point {
+        u: 771533
+        v: -16438.7
+      }
+      Point {
+        u: 794905
+        v: -17551.6
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "Ante_Donnington"
+    PointList {
+      Point {
+        u: 462315
+        v: -7494.13
+      }
+      Point {
+        u: 473427
+        v: -10669
+      }
+      Point {
+        u: 494858
+        v: -17018.8
+      }
+      Point {
+        u: 507558
+        v: -19400
+      }
+      Point {
+        u: 529782
+        v: -22574.9
+      }
+      Point {
+        u: 559150
+        v: -21781.2
+      }
+      Point {
+        u: 580580
+        v: -21781.2
+      }
+      Point {
+        u: 609155
+        v: -20987.5
+      }
+      Point {
+        u: 644078
+        v: -20987.5
+      }
+      Point {
+        u: 675827
+        v: -20987.5
+      }
+      Point {
+        u: 702814
+        v: -20987.5
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "KalinjalaMyloniteZone"
+    PointList {
+      Point {
+        u: 600681
+        v: 61.0517
+      }
+      Point {
+        u: 599188
+        v: -8200.33
+      }
+      Point {
+        u: 597496
+        v: -16859.9
+      }
+      Point {
+        u: 595406
+        v: -24524
+      }
+      Point {
+        u: 593117
+        v: -31790.1
+      }
+      Point {
+        u: 590429
+        v: -39653.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "YarlbrindaFault"
+    PointList {
+      Point {
+        u: 378918
+        v: 259.995
+      }
+      Point {
+        u: 378818
+        v: -9394.88
+      }
+      Point {
+        u: 379714
+        v: -19248.8
+      }
+      Point {
+        u: 380610
+        v: -28505.6
+      }
+      Point {
+        u: 380510
+        v: -39155.8
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "DonningtonFaultZone"
+    PointList {
+      Point {
+        u: 551717
+        v: -923.721
+      }
+      Point {
+        u: 552950
+        v: -37310
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 88.0592
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 567147
+        v: 1900
+      }
+      Point {
+        u: 595366
+        v: 1900
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW4"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 418142
+        v: -87607.9
+      }
+      Point {
+        u: 460807
+        v: -87607.9
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 360
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW5"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 633424
+        v: -835.157
+      }
+      Point {
+        u: 643130
+        v: -3954.92
+      }
+      Point {
+        u: 657342
+        v: -4994.84
+      }
+      Point {
+        u: 673634
+        v: -6034.76
+      }
+      Point {
+        u: 691313
+        v: -6728.04
+      }
+      Point {
+        u: 708298
+        v: -6728.04
+      }
+      Point {
+        u: 720084
+        v: -7421.33
+      }
+      Point {
+        u: 738802
+        v: -6381.41
+      }
+      Point {
+        u: 751628
+        v: -6728.04
+      }
+      Point {
+        u: 778157
+        v: -7391.29
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW5"
+    topFormation: "KalinjalaMyloniteZone"
+    PointList {
+      Point {
+        u: 603729
+        v: 258.751
+      }
+      Point {
+        u: 603643
+        v: -7751.88
+      }
+      Point {
+        u: 603040
+        v: -15590.2
+      }
+      Point {
+        u: 601748
+        v: -22395
+      }
+      Point {
+        u: 600628
+        v: -27649.3
+      }
+      Point {
+        u: 598992
+        v: -31697.6
+      }
+      Point {
+        u: 597097
+        v: -38588.5
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "EW5"
+    topFormation: "Ante_Donnington"
+    PointList {
+      Point {
+        u: 566014
+        v: -2114.88
+      }
+      Point {
+        u: 575204
+        v: -10095.8
+      }
+      Point {
+        u: 586329
+        v: -13723.5
+      }
+      Point {
+        u: 596487
+        v: -15174.6
+      }
+      Point {
+        u: 613416
+        v: -15416.4
+      }
+      Point {
+        u: 633731
+        v: -14690.9
+      }
+      Point {
+        u: 655014
+        v: -16867.5
+      }
+      Point {
+        u: 676780
+        v: -16141.9
+      }
+      Point {
+        u: 686937
+        v: -16383.8
+      }
+      Point {
+        u: 719344
+        v: -24364.7
+      }
+      Point {
+        u: 758040
+        v: -30894.5
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS1"
+    topFormation: "NEFaultZone"
+    PointList {
+      Point {
+        u: 794365
+        v: -381.178
+      }
+      Point {
+        u: 806211
+        v: -11071
+      }
+      Point {
+        u: 822679
+        v: -25227.8
+      }
+      Point {
+        u: 837413
+        v: -39384.6
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS1"
+    topFormation: "MiddleBoreFaultZone"
+    PointList {
+      Point {
+        u: 720376
+        v: -1946.23
+      }
+      Point {
+        u: 726730
+        v: -6206.74
+      }
+      Point {
+        u: 732784
+        v: -10168.3
+      }
+      Point {
+        u: 738241
+        v: -14279.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS1"
+    topFormation: "KarariFaultZone"
+    PointList {
+      Point {
+        u: 609707
+        v: -1597.84
+      }
+      Point {
+        u: 615758
+        v: -9900.52
+      }
+      Point {
+        u: 624061
+        v: -19047.5
+      }
+      Point {
+        u: 631238
+        v: -27913.1
+      }
+      Point {
+        u: 640385
+        v: -40156.1
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS1"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 437239
+        v: -3099.38
+      }
+      Point {
+        u: 442942
+        v: -10184.8
+      }
+      Point {
+        u: 448299
+        v: -18307.1
+      }
+      Point {
+        u: 454002
+        v: -26775.1
+      }
+      Point {
+        u: 461779
+        v: -34551.8
+      }
+      Point {
+        u: 467827
+        v: -40254.7
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS2"
+    topFormation: "MulgathingComplex"
+    PointList {
+      Point {
+        u: 532831
+        v: 1797.99
+      }
+      Point {
+        u: 712217
+        v: 1797.99
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS2"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 520668
+        v: -1780.73
+      }
+      Point {
+        u: 523159
+        v: -5933.35
+      }
+      Point {
+        u: 526406
+        v: -11294
+      }
+      Point {
+        u: 528294
+        v: -16201.6
+      }
+      Point {
+        u: 531389
+        v: -21562.3
+      }
+      Point {
+        u: 534636
+        v: -28886
+      }
+      Point {
+        u: 539694
+        v: -38021.8
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS2"
+    topFormation: "NEFaultZone"
+    PointList {
+      Point {
+        u: 893120
+        v: -1097.4
+      }
+      Point {
+        u: 904174
+        v: -15367.2
+      }
+      Point {
+        u: 918846
+        v: -27225.3
+      }
+      Point {
+        u: 935126
+        v: -38279.4
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS2"
+    topFormation: "MiddleBoreFaultZone"
+    PointList {
+      Point {
+        u: 834164
+        v: -711.076
+      }
+      Point {
+        u: 840784
+        v: -10747.7
+      }
+      Point {
+        u: 849540
+        v: -21211.4
+      }
+      Point {
+        u: 860003
+        v: -29539.7
+      }
+      Point {
+        u: 871321
+        v: -39149.2
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS2"
+    topFormation: "KarariFaultZone"
+    PointList {
+      Point {
+        u: 720881
+        v: -1305.9
+      }
+      Point {
+        u: 723152
+        v: -9898.46
+      }
+      Point {
+        u: 725819
+        v: -19478.7
+      }
+      Point {
+        u: 727498
+        v: -27281.1
+      }
+      Point {
+        u: 730165
+        v: -38244.1
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS2"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 521861
+        v: -1609.43
+      }
+      Point {
+        u: 526768
+        v: -9786.95
+      }
+      Point {
+        u: 531674
+        v: -20300.9
+      }
+      Point {
+        u: 536114
+        v: -29413
+      }
+      Point {
+        u: 540553
+        v: -38057.8
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 552640
+        v: -1149.83
+      }
+      Point {
+        u: 554155
+        v: -13437.5
+      }
+      Point {
+        u: 556343
+        v: -25051.8
+      }
+      Point {
+        u: 561561
+        v: -38686.1
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "NEFaultZone"
+    PointList {
+      Point {
+        u: 985428
+        v: -1156.78
+      }
+      Point {
+        u: 989890
+        v: -9959.86
+      }
+      Point {
+        u: 996040
+        v: -20692.4
+      }
+      Point {
+        u: 1005080
+        v: -30701.4
+      }
+      Point {
+        u: 1013400
+        v: -39504.4
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "MiddleBoreFaultZone"
+    PointList {
+      Point {
+        u: 888644
+        v: -529.594
+      }
+      Point {
+        u: 896060
+        v: -11563.6
+      }
+      Point {
+        u: 907456
+        v: -25853.5
+      }
+      Point {
+        u: 920660
+        v: -39419.9
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "CooberPedyShearZone"
+    PointList {
+      Point {
+        u: 778665
+        v: -891.503
+      }
+      Point {
+        u: 778846
+        v: -12287.3
+      }
+      Point {
+        u: 778304
+        v: -23683.1
+      }
+      Point {
+        u: 777761
+        v: -39420.1
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "KarariFaultZone"
+    PointList {
+      Point {
+        u: 750938
+        v: -971.161
+      }
+      Point {
+        u: 752738
+        v: -9106.91
+      }
+      Point {
+        u: 754250
+        v: -16090.7
+      }
+      Point {
+        u: 756194
+        v: -23650.5
+      }
+      Point {
+        u: 757562
+        v: -30778.2
+      }
+      Point {
+        u: 759650
+        v: -39058
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 606511
+        v: -238.99
+      }
+      Point {
+        u: 610355
+        v: -10866
+      }
+      Point {
+        u: 613746
+        v: -20588.6
+      }
+      Point {
+        u: 618947
+        v: -31215.6
+      }
+      Point {
+        u: 623695
+        v: -38677.1
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "YerdaShearZone"
+    PointList {
+      Point {
+        u: 568128
+        v: -1437.19
+      }
+      Point {
+        u: 568328
+        v: -12837.4
+      }
+      Point {
+        u: 568128
+        v: -25437.6
+      }
+      Point {
+        u: 566728
+        v: -37637.8
+      }
+      Point {
+        u: 566528
+        v: -47838
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "HarrisFaultZone"
+    PointList {
+      Point {
+        u: 574128
+        v: -2237.2
+      }
+      Point {
+        u: 576728
+        v: -20037.5
+      }
+      Point {
+        u: 577728
+        v: -38637.8
+      }
+      Point {
+        u: 578328
+        v: -52038.1
+      }
+      Point {
+        u: 579528
+        v: -67638.3
+      }
+      Point {
+        u: 578928
+        v: -81038.6
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 570334
+        v: -25000
+      }
+      Point {
+        u: 575096
+        v: -25000
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 555571
+        v: 1604.06
+      }
+      Point {
+        u: 565526
+        v: 1604.06
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 577667
+        v: 1800
+      }
+      Point {
+        u: 590971
+        v: 1800
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS3"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 503790
+        v: 1800
+      }
+      Point {
+        u: 532887
+        v: 1800
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 619357
+        v: 1800
+      }
+      Point {
+        u: 639789
+        v: 1800
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 516608
+        v: 1800
+      }
+      Point {
+        u: 535046
+        v: 1800
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "HarrisGreenstoneBelts"
+    PointList {
+      Point {
+        u: 564522
+        v: -25000
+      }
+      Point {
+        u: 577824
+        v: -25000
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Normal_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "SleafordComplex"
+    PointList {
+      Point {
+        u: 709415
+        v: -90747.3
+      }
+      Point {
+        u: 738820
+        v: -90747.3
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "SleafordComplex"
+    PointList {
+      Point {
+        u: 634759
+        v: 1900
+      }
+      Point {
+        u: 664951
+        v: 1900
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "MulgathingComplex"
+    PointList {
+      Point {
+        u: 679444
+        v: 1900
+      }
+      Point {
+        u: 740905
+        v: 1900
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "MulgathingComplex"
+    PointList {
+      Point {
+        u: 599385
+        v: 1900
+      }
+      Point {
+        u: 669409
+        v: 1900
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "MulgathingComplex"
+    PointList {
+      Point {
+        u: 506.475
+        v: -45073
+      }
+      Point {
+        u: 53188.5
+        v: -43609.6
+      }
+      Point {
+        u: 111724
+        v: -41170.6
+      }
+      Point {
+        u: 206357
+        v: -43609.6
+      }
+      Point {
+        u: 280502
+        v: -38732.2
+      }
+      Point {
+        u: 317574
+        v: -40195.6
+      }
+      Point {
+        u: 374158
+        v: -39707.8
+      }
+      Point {
+        u: 412207
+        v: -42146.8
+      }
+      Point {
+        u: 459035
+        v: -37756.7
+      }
+      Point {
+        u: 512693
+        v: -40195.7
+      }
+      Point {
+        u: 546838
+        v: -37756.7
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "MulgathingComplex"
+    PointList {
+      Point {
+        u: 764004
+        v: -85186
+      }
+      Point {
+        u: 1026300
+        v: -85186
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 558755
+        v: -905.009
+      }
+      Point {
+        u: 558567
+        v: -12775.6
+      }
+      Point {
+        u: 558755
+        v: -27661
+      }
+      Point {
+        u: 561581
+        v: -40285.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "NEFaultZone"
+    PointList {
+      Point {
+        u: 1010990
+        v: -479.362
+      }
+      Point {
+        u: 1023740
+        v: -14118.6
+      }
+      Point {
+        u: 1037380
+        v: -25969.1
+      }
+      Point {
+        u: 1048330
+        v: -36478.1
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "MiddleBoreFaultZone"
+    PointList {
+      Point {
+        u: 915284
+        v: -734.03
+      }
+      Point {
+        u: 923668
+        v: -11971.5
+      }
+      Point {
+        u: 934905
+        v: -22852.3
+      }
+      Point {
+        u: 944716
+        v: -30879.1
+      }
+      Point {
+        u: 954526
+        v: -39619.4
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "CooberPedyShearZone"
+    PointList {
+      Point {
+        u: 789246
+        v: -1177.5
+      }
+      Point {
+        u: 789824
+        v: -10307.2
+      }
+      Point {
+        u: 789708
+        v: -18281.2
+      }
+      Point {
+        u: 796180
+        v: -31686.8
+      }
+      Point {
+        u: 805310
+        v: -39198.6
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "KarariFaultZone"
+    PointList {
+      Point {
+        u: 745478
+        v: -796.995
+      }
+      Point {
+        u: 745332
+        v: -11725.5
+      }
+      Point {
+        u: 745769
+        v: -22945.4
+      }
+      Point {
+        u: 744166
+        v: -30959.6
+      }
+      Point {
+        u: 743584
+        v: -39411
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS4"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 673994
+        v: -1032.67
+      }
+      Point {
+        u: 677596
+        v: -11569.6
+      }
+      Point {
+        u: 680930
+        v: -22640.1
+      }
+      Point {
+        u: 683998
+        v: -31309.7
+      }
+      Point {
+        u: 686799
+        v: -39979.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "MountWoodsComplex"
+    PointList {
+      Point {
+        u: 721071
+        v: 1587.46
+      }
+      Point {
+        u: 788143
+        v: 1587.46
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "NWFaultZone"
+    PointList {
+      Point {
+        u: 879372
+        v: -747.64
+      }
+      Point {
+        u: 878896
+        v: -8737.68
+      }
+      Point {
+        u: 878737
+        v: -18632.6
+      }
+      Point {
+        u: 877309
+        v: -27680.9
+      }
+      Point {
+        u: 876409
+        v: -34295.2
+      }
+      Point {
+        u: 874980
+        v: -39745.4
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 549712
+        v: -2115.61
+      }
+      Point {
+        u: 549531
+        v: -15702.8
+      }
+      Point {
+        u: 549712
+        v: -28565.4
+      }
+      Point {
+        u: 550255
+        v: -38891.7
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 792331
+        v: -730.993
+      }
+      Point {
+        u: 794552
+        v: -9222.56
+      }
+      Point {
+        u: 795205
+        v: -17714.1
+      }
+      Point {
+        u: 796120
+        v: -26467
+      }
+      Point {
+        u: 801215
+        v: -39922.8
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "CooberPedyShearZone"
+    PointList {
+      Point {
+        u: 793613
+        v: -582.3
+      }
+      Point {
+        u: 796221
+        v: -7772.4
+      }
+      Point {
+        u: 799618
+        v: -15910.6
+      }
+      Point {
+        u: 802858
+        v: -22152.6
+      }
+      Point {
+        u: 806887
+        v: -29500.7
+      }
+      Point {
+        u: 810917
+        v: -34162.4
+      }
+      Point {
+        u: 815105
+        v: -39298.2
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 715821
+        v: -1880.85
+      }
+      Point {
+        u: 715109
+        v: -8899.52
+      }
+      Point {
+        u: 715821
+        v: -14087.2
+      }
+      Point {
+        u: 715923
+        v: -20699
+      }
+      Point {
+        u: 715618
+        v: -29345.2
+      }
+      Point {
+        u: 715516
+        v: -39212
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "HutchinsonGroup"
+    PointList {
+      Point {
+        u: 743604
+        v: -89807.2
+      }
+      Point {
+        u: 795813
+        v: -89807.2
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "DoningtonSuite"
+    PointList {
+      Point {
+        u: 752842
+        v: -85163.4
+      }
+      Point {
+        u: 804324
+        v: -85163.4
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "MountWoodsComplex"
+    PointList {
+      Point {
+        u: 902023
+        v: -89303.9
+      }
+      Point {
+        u: 949461
+        v: -89303.9
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "MountWoodsComplex"
+    PointList {
+      Point {
+        u: 819219
+        v: -32225.7
+      }
+      Point {
+        u: 869088
+        v: -32225.7
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS5"
+    topFormation: "GawlerRangeVolcanics"
+    PointList {
+      Point {
+        u: 395865
+        v: -2052.85
+      }
+      Point {
+        u: 414814
+        v: -11933.1
+      }
+      Point {
+        u: 446214
+        v: -11527.1
+      }
+      Point {
+        u: 473283
+        v: -10038.3
+      }
+      Point {
+        u: 499811
+        v: -8955.48
+      }
+      Point {
+        u: 530129
+        v: -8414.08
+      }
+      Point {
+        u: 563423
+        v: -8278.73
+      }
+      Point {
+        u: 585620
+        v: -8143.38
+      }
+      Point {
+        u: 621080
+        v: -3541.59
+      }
+      Point {
+        u: 645442
+        v: -2052.79
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Normal_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "WallarooGroup"
+    PointList {
+      Point {
+        u: 764345
+        v: -95928.4
+      }
+      Point {
+        u: 801826
+        v: -95928.4
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "WallarooGroup"
+    PointList {
+      Point {
+        u: 667900
+        v: 1541.48
+      }
+      Point {
+        u: 700687
+        v: 1541.48
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "MulgathingComplex"
+    PointList {
+      Point {
+        u: 547730
+        v: 1984.69
+      }
+      Point {
+        u: 698254
+        v: 1984.69
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "Draw"
+    PointList {
+      Point {
+        u: 718690
+        v: -9816.43
+      }
+      Point {
+        u: 775044
+        v: -9816.43
+      }
+    }
+    OrientationMethod: DIPAZIMUTH
+    dip: 0.01
+    azimuth: 90
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated dip and azmiuth foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "NWFaultZone"
+    PointList {
+      Point {
+        u: 782962
+        v: -628.782
+      }
+      Point {
+        u: 779981
+        v: -12079.6
+      }
+      Point {
+        u: 776373
+        v: -24785.3
+      }
+      Point {
+        u: 770570
+        v: -39059.7
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 544122
+        v: -670.958
+      }
+      Point {
+        u: 543399
+        v: -14418.2
+      }
+      Point {
+        u: 543640
+        v: -28647.9
+      }
+      Point {
+        u: 545328
+        v: -38536.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS6"
+    topFormation: "BulgunniaFaultZone"
+    PointList {
+      Point {
+        u: 705020
+        v: -980.055
+      }
+      Point {
+        u: 707547
+        v: -6502.19
+      }
+      Point {
+        u: 710074
+        v: -11462.8
+      }
+      Point {
+        u: 712227
+        v: -16048.9
+      }
+      Point {
+        u: 714286
+        v: -21290.3
+      }
+      Point {
+        u: 715316
+        v: -26063.7
+      }
+      Point {
+        u: 716252
+        v: -29620.3
+      }
+      Point {
+        u: 719902
+        v: -32521.8
+      }
+      Point {
+        u: 721680
+        v: -35984.8
+      }
+      Point {
+        u: 722710
+        v: -39822.2
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "NS7"
+    topFormation: "OolabinnaShearZone"
+    PointList {
+      Point {
+        u: 556052
+        v: -2173.99
+      }
+      Point {
+        u: 558728
+        v: -9487.28
+      }
+      Point {
+        u: 562474
+        v: -20011.3
+      }
+      Point {
+        u: 566933
+        v: -29465
+      }
+      Point {
+        u: 570679
+        v: -39632.3
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+    polarity: Reverse_Polarity
+    location: true
+    log: "associated foliations with these interface points"
+  }
+}
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "out/GawlerCraton3D.xml"
+  }
+}
+GeomodellerTask {
+  CloseProjectNoGUI {
+    filename: "Gawler Craton 3D"
+  }
+}

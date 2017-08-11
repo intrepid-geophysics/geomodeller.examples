@@ -1,0 +1,33 @@
+name: "import 3D polyline"
+description: "Import a vtp polyline surface into Geomodeller"
+auditfile: "audit_surface.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA6.xml"
+    }
+}
+#   supports the VTK formats  vtp, vtu, vtr
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "./data/tutorialA_triple.vtp";
+		MeshGrid_Name: "triple_line";
+		FileType: FT_POLYGON;
+		Field_Name: "something";
+		log: "source_meshgrid.rpt";
+    }
+}
+
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./data/TutA_geological_model.xml"
+    }
+}

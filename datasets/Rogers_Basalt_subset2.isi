@@ -1,0 +1,13 @@
+MetaData Begin
+	Name	= Rogers_Basalt_subset2.ers
+	Version	= "Intrepid Project Manager Tool v5.6.0 intrepid_v5 for Windows (x64) by PELAGIAN optimised build 8f5f7d4e16ed+ "
+	Rogers_Basalt_subset2 Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "MGA53"
+		Datum	= "GDA94"
+		BandId	= "Pseudo Layer"
+	Rogers_Basalt_subset2 End
+MetaData End

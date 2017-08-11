@@ -1,0 +1,99 @@
+# here we start to push hi-fidelity mesh grid rendering of your geology model
+# this is done via the CGAL interface, we can open up teraheral rendering
+# triple point lines, Delauny adaptive remeshing etc.
+# updated to V3.4 syntax and the release version of CGAL, but also designed to run quickly in the auto test system
+# continues on to do a mesh quality check, designed to be simple and quickly run
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./data/infinite_fault/infinite_fault.xml"
+    log: "Opening project for meshing"
+  }
+}
+# project is 1000*1000*1000
+GeomodellerTask {
+  BuildMeshCGAL {
+      geomodeller_output {
+        formations: true
+        faults: true
+        volumes: true;  # export these
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true
+        smooth: 0
+      }
+    build_triple_lines {
+   		topolimited: false  # no topo
+	    borderline: true  # required to get a mesh in the older mesh scheme
+	    insideline: true
+	    point_spacing: 200.0; # Ball Radius, to protect the break lines
+    	precision: 3
+    	divide_model_using_regular_sections: true
+        export_triple_lines {
+            output_directory: "."
+    	    format: TripleLine_VTK;
+        }
+    }
+    mesh_criteria {
+        min_facet_angle: 20.0
+        min_facet_radii: 20.0
+        radius_edge_ratio: 3.0
+        min_protect_ball_radius: 20
+        default_discretization {
+            precision: 50.0
+            max_facet_radii: 100.0
+            max_tet_radii: 200.0
+            max_edge_length: 50
+        }
+    }
+
+  	export_mesh {
+  # now dump to vtk, then use that tool's mesh quality capability.. not working
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+  		output_directory: "."
+  	}
+   	export_mesh{
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: FEFLOW;
+  		output_directory: "."
+  	}
+  	export_mesh {
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: MEDIT;
+  		output_directory: "."
+  	}
+    log: "Building simple 2 formation model tetrahedrons"
+  }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./data/infinite_fault2/infinite_fault2.xml"
+    }
+}
+
+# now for a formal mesh quality report
+GeomodellerTask {
+  GenerateMeshReport {
+    #output_report_file: "infinite_report.rpt"; #commented beacuase there is another output file
+    # do a vtk polydata hull report
+    input_mesh_file: "./New Project50.vtu";
+    vtk: true;
+    sharp_angle_threshold: 20;
+    facet_angle_threshold { first: 20; second: 70;}
+    facet_size_threshold { first: 50; second: 1000;}
+
+    vtp_dir: ".";
+    write_vtp_files: false;
+    output_mesh_report: "mesh_quality.rpt";
+
+    report_vertices: true;
+    report_edges: true;
+    report_facets: true;
+    tolerance: 0.0001;
+	log: "writing mesh quality report"
+	}
+}

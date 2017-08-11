@@ -1,0 +1,214 @@
+name: "Capel Faust gravity inversion Case 5 revisited"
+description: "large scale marine frontier gravity inversion project"
+  "Petkovic, P. Lane R.J.L, Rollet, N, 2011"
+  "3D gravity models of the Capel and Faust Basins, Lord Howe Rise"
+  "Geoscience Australia Record 2011."
+auditfile: "Capel_Faust_inversion.audit"
+  
+
+InversionTask {
+	NewCase {
+		filename: "InputGeology/CF83/CF83.xml";	
+		case: "C5";
+		z_cell_size: 200;
+		elevation_minimum_voxet: -28000;
+		elevation_maximum_voxet: 0;
+		
+		ObservedGridList {
+			ObservedGrid {
+				type: Gravimetry;
+				mean_elevation: 0;
+				precision: 3.0; #  estimated accuracy of marine data
+				Match_Trend: true;
+				Match_Trend_Degree: 1;
+				Match_Trend_Rate: 1;  # allow the option to try and adjust the trend between obs and model
+				grid: "InputGrids/grv_CAP_BA2000_fully_corrected_mgal_3km_UTM57_20081118.ers";
+				}
+			}
+	}
+}
+ 
+InversionTask {
+	CaseControl {
+		filename: "InputGeology/CF83/CF83.xml";	
+		case: "C5";
+	#	SetUseTopo: false;
+		SetReferenceDensity: 2.00;
+		IncludeBorderEffect: true;
+		SetAboveTopoDensity: 2.0; 
+		SetReferenceMagneticField {
+			Magnitude:	50000;
+			Inclination: -65.0;
+			Declination: 25; 
+			}
+SetLaw {
+	LithologyProperty {	lithology: "Air";	property: Movable;	fixed: true;}
+	LithologyProperty {	lithology: "Water"; property: Movable;	fixed: true;}
+	LithologyProperty {	lithology: "SedUpper";property: Movable;fixed: true;}
+	LithologyProperty {	lithology: "SedMiddle";	property: Movable;fixed: true;}
+	LithologyProperty {	lithology: "SedLower";property: Movable;fixed: false;}
+	LithologyProperty {	lithology: "Basement";property: Movable;fixed: false;}
+	LithologyProperty {	lithology: "Mantle";property: Movable;	fixed: false;}
+
+	LithologyProperty {	lithology: "Air";property: Density;	ProbabilityDistributionFunction {type: LogNormal;mean: 2.00;stddev: 0.0001;}}
+	LithologyProperty {	lithology: "Water";property: Density;ProbabilityDistributionFunction {type: LogNormal;mean: 2.0;stddev: 0.0001;}}
+	LithologyProperty {	lithology: "SedUpper";property: Density;ProbabilityDistributionFunction {type: LogNormal;mean: 1.85;stddev: 0.0001;}}
+	LithologyProperty {	lithology: "SedMiddle";property: Density;ProbabilityDistributionFunction {type: LogNormal;mean: 2.13;stddev: 0.0001;}}
+	LithologyProperty {lithology: "SedLower";property: Density;ProbabilityDistributionFunction {type: LogNormal;mean: 2.31;stddev: 0.0001;}}
+	LithologyProperty {	lithology: "Basement";property: Density;ProbabilityDistributionFunction {type: LogNormal;mean: 2.70;stddev: 0.0001;}}
+	LithologyProperty {lithology: "Mantle";property: Density;ProbabilityDistributionFunction {type: LogNormal;mean: 3.10;stddev: 0.0001;}}
+		
+	LithologyProperty {lithology: "Air";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}
+	LithologyProperty {lithology: "Water";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}
+	LithologyProperty {lithology: "SedUpper";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}								
+	LithologyProperty {lithology: "SedMiddle";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}
+	LithologyProperty {lithology: "SedLower";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}
+	LithologyProperty {lithology: "Basement";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}
+	LithologyProperty {lithology: "Mantle";property: CommonalityVolume;ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.00;stddev: 0;}}				
+		
+	LithologyProperty {lithology: "Air";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}
+	LithologyProperty {lithology: "Water";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}
+	LithologyProperty {lithology: "SedUpper";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}
+	LithologyProperty {lithology: "SedMiddle";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}
+	LithologyProperty {lithology: "SedLower";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}
+	LithologyProperty {lithology: "Basement";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}
+	LithologyProperty {lithology: "Mantle";property: Commonality;ProbabilityDistributionFunction {type: Weibull;mean: 0.001;stddev: 1;}}						
+		
+		
+	LithologyProperty {lithology: "Air";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}
+	LithologyProperty {lithology: "Water";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}
+	LithologyProperty {lithology: "SedUpper";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}
+	LithologyProperty {lithology: "SedMiddle";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}
+	LithologyProperty {lithology: "SedLower";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}
+	LithologyProperty {lithology: "Basement";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}
+	LithologyProperty {lithology: "Mantle";property: ShapeRatio;ProbabilityDistributionFunction {type: LogNormal;mean: 0.0;stddev: 0.05;}}				
+			}
+	}
+}
+InversionTask {
+	NewRun {
+		filename: "InputGeology/CF83/CF83.xml";	
+		run: "R1";
+		case: "C5";		
+		NumberOfIterations:	10000;
+	}
+}
+InversionTask {
+	SetFixedCells  {
+		filename: "InputGeology/CF83/CF83.xml";	
+		case: "C5";
+		run: "R1";	
+		CLEAR: true;
+		SURFACE: true;
+	}
+}
+# set all the paramters for this run
+InversionTask {
+	RunControl {
+		filename: "InputGeology/CF83/CF83.xml";	
+		case: "C5";
+		run: "R1";		
+		NumberOfIterations:	10000;
+		LithologyInitialiseStyle: FromModel;
+		DensityInitialiseStyle: FromLawMean;
+		SusceptibilityInitialiseStyle: FromLawMean;
+		RemenantMagnetizationInitialiseStyle: FromLawMean;
+		PropertyChangeOnFixedCell: true;
+		AllowNeighbourPropertyDifferentCheck: false;
+		Seed:	1135314798;
+		ProbabilityOfPropertyChangeOnly: 0;
+#		SetLargeMisfitRMSThresholdFactor:	1.0;
+#		SetLargeMisfitTemperature:	1.0;
+		SetDualTemperatureMode: true
+		Mode1TemperatureFactor: 100;  
+		Mode1Duration: 500;
+		Mode2TemperatureFactor: 1;
+		Mode2Duration: 4500; 
+		PreserveTopology: false;
+				
+		CommonalityVolumeTest {
+			SetWeights: LocalAbundance;
+			}		
+		CommonalityTest {
+			SetWeights: none;
+			}
+		ShapeRatioTest {
+			SetWeights:	LocalAbundance;
+			IncludeAboveTopoFaces: true;
+			IncludeOutsideFaces: true;
+			}
+		PreserveVerticalRelationshipTest: true;
+		SetOutputMisfits: true;
+		SetOutputCommonality: false;	
+		SetOutputTrendGrids: false;	# allow the use to see the trend fitting
+	}
+}
+
+
+
+InversionTask {
+	Run {
+		filename: "InputGeology/CF83/CF83.xml";	
+		run: "R1";
+		case: "C5";	
+		checkpoint_iteration: 10000;	
+	}
+}
+
+InversionTask {
+	MakeSuperSummaryStats {
+		filename: "InputGeology/CF83/CF83.xml";
+		RunInterval {
+			run: "R1";
+			case: "C5";
+			start_iterations: 10000000;
+			end_iterations: 20000000;
+		}
+		threshold_percentage: 90;
+	}
+}
+# VertSections=302-17, 21, 19, 07, 16
+InversionTask {
+	MakeEvolutionMovie  {
+		filename: "InputGeology/CF83/CF83.xml";
+		RunInterval {
+			run: "R1";
+			case: "C5";
+			start_iterations: 10000000;
+			end_iterations: 20000000;
+			}
+		IterationIncrement: 40000;
+		show: Geology;
+		MaxPixelCols: 900;
+		MaxPixelRows: 900;
+		VerticalExaggeration: 3;
+		FramesPerSecond: 6; 
+		QualityPercentage: 100;
+		lut: LithologyColours;
+		Scaling {doLog: false; 	}
+		Section: "302-17";
+		movie: "EvolutionMovie_C5_R1_302-17";
+	}
+}	
+
+InversionTask {
+	MakeSectionImage   {
+		filename: "InputGeology/CF83/CF83.xml";
+		run: "R1";
+		case: "C5";
+		get_function {  # use default super summary voxet created above
+			statistical_field: MeanDensity;
+			transform: GetField;
+			threshold: 90;
+		}
+		Section: "302-17";
+		MaxPixelCols: 900;
+		MaxPixelRows: 900;
+		VerticalExaggeration: 3;
+		QualityPercentage: 100;
+		lut: Colours;
+		Scaling {doLog: false; 	}	
+		image: "section_C5_R1_302-17";	
+	}
+}		
+	

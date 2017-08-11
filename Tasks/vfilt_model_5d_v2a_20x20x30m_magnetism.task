@@ -1,0 +1,32 @@
+# transform a 3D block model that has susceptibility properties and predict the observed TMI signal at the surface
+# use the 3D FFT method
+InversionTask {
+	ForwardModelFromVoxet {  #  uses FFTW,  new V5.0 syntax, compatible with the Geomodeller as well
+        input_voxet:				"./data/Model-5d_v2a/Case1/run1/initial.vo";
+        fields {        			node: "Lithology";   }
+        POSC_CoordinateSystem: 		"WGS84/NUTM22";
+        drape_elevation_grid:		"./data/Avaanna_GDB_G_Alt_SplineRot61_DC_RotBck.ers";
+        output_gridname:			"ComputedTMIGrid.ers"
+        PropertyValuesVoxelName:	"./data/outputdensity.vo"
+        ExpandedVoxelName:			"./data/expandedPaddedVoxet.vo"
+        OutputVoxelName:			"./data/magnetism.vo"
+        InputVoxetAlreadyProperty: 	false;	#  is the voxet a litho model, or a density model
+        LanczosTaper:  				true;			
+        product:  					Magnetism;
+        coordsys: 					END;
+        mean_elevation:				670;		# height to calculate forward model at
+        #IGRF {					
+        #     Magnitude: 50000
+     	#	 Inclination: 90
+     	#	 Declination: 0
+ 		# }
+      	IGRF {	Date: "10/11/2006";	} 
+        method: 					FastFourierTransform;
+#BIF1,BIF2,BIF3,BIF4,BIF4b,BIF4c,BIF5,BIF5b,BIF6,BIF6b,BIF6c,BIF6d,BIF7,BIF7b,BIF8,BIF8b,BIF9,BIF9b,BIF10,BIF10b,BIF10c,BIF11,BIF12,BIF13,BIF13b,BIF14,BIF15,BIF16,Geology
+        Susceptibility  {  # idea here is that each lithology has a corresponding susceptibility starts from litho = 0,1,2 etc.
+        node:[0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 0.36,0.36, 0.36, 0.36, 0.36, 0.36, 0.36, 
+       			 0.36, 0.36, 0.36, 0.36, 0.36, 0.36,0.36, 0.36, 0.36, 0.36, 0.36, 0.0001, 0.0001];
+         }
+	}
+}
+

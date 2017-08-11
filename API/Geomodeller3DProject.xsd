@@ -1,0 +1,2145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns="http://www.geomodeller.com/geo" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:gml="http://www.opengis.net/gml" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" targetNamespace="http://www.geomodeller.com/geo" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://www.opengis.net/gml" schemaLocation="feature.xsd"/>
+	<xs:element name="Project3DEdit">
+		<xs:annotation>
+			<xs:documentation>Describe a 3D geomodeller project</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Extent3DOfProject">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="ExtentBox3D">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Extent3D"/>
+										<xs:element name="GraphicTitle" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+													<xs:element name="Location" type="gml:PointType"/>
+												</xs:sequence>
+												<xs:attribute name="Title" type="xs:string"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="GraphicBox3d" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="GraphicTick" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+												<xs:attribute name="OnOff" type="xs:boolean" use="optional"/>
+												<xs:attribute name="DensityAlongX" type="xs:nonNegativeInteger" use="optional"/>
+												<xs:attribute name="DensityAlongY" type="xs:nonNegativeInteger" use="optional"/>
+												<xs:attribute name="DensityAlongZ" type="xs:nonNegativeInteger" use="optional"/>
+												<xs:attribute name="TickLength" type="xs:double" use="optional"/>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="GraphicLabel" minOccurs="0">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+												<xs:attribute name="OnOff" type="xs:boolean" use="optional"/>
+												<xs:attribute name="LabelFormat" type="xs:string" use="optional" default="%.1f"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="TriAxis" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Axis3DDefinition"/>
+										<xs:element name="GraphicOrigin">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="GraphicAxisX">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="GraphicAxisY">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+										<xs:element name="GraphicAxisZ">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element ref="Graphic"/>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="DigitalTerrainModelGroup" minOccurs="0"/>
+				<xs:element name="Formations" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Represent the set of geological formations. These formations are referenced by their name (Attribute aName).</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Formation" maxOccurs="unbounded"/>
+							<xs:element ref="DummyFormation" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element ref="Dyke" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Faults" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Represent the set of geological faults. These faults are referenced by their name (Attribute aName).</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Fault" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AxialFamilies" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Represent the set of geological axial families. These axial families are referenced by their name (Attribute aName).</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="AxialFamily" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="AxialSurfaces" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Represent the set of axial surfaces. These axial surfaces are referenced by their name, they are linked to an AxialFamily.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="AxialSurface" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Sections">
+					<xs:annotation>
+						<xs:documentation>Represent the set of cross-sections. These formations are referenced by their name (Attribute aName). There is at least one cross-section and these one is the DTM. Here all the coordinates are 2D coordinates and are in the UV local system of the sections.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Section" maxOccurs="unbounded" ecore:ordered="false"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="DrillHoles" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>The drillholes define data along a line. These data are only interface data.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Graphic" minOccurs="0"/>
+							<xs:element name="VerticalDrillHole" minOccurs="0" maxOccurs="unbounded" ecore:ordered="false">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CollarLocation" type="gml:PointType"/>
+										<xs:element name="Interval" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension base="DataType">
+														<xs:attribute name="DepthFromCollar" type="xs:double" use="required"/>
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="Name" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="GeneralDrillholes" minOccurs="0" ecore:ordered="false">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="CollarTable" type="TableType"/>
+										<xs:element name="SurveyTable" type="TableType"/>
+										<xs:element name="GeologyTable" type="TableType"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element ref="DrillholeWithFields" minOccurs="0" maxOccurs="unbounded" ecore:ordered="false"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="Structural3DData" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>They are two kind of 3D structural data, interfaces point and foliations data. The coordinates of these data are 3D coordinates. These data are not a section.</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="Interfaces3D" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Interface3D" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension base="DataType">
+														<xs:choice>
+															<xs:element ref="gml:Point" maxOccurs="unbounded"/>
+															<xs:element ref="gml:LineString"/>
+														</xs:choice>
+														<!-- <xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>  TODO implement gui & engine support -->
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="Foliations3D" minOccurs="0">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="Foliation3D" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:complexContent>
+													<xs:extension base="DataType">
+														<xs:sequence>
+															<xs:element name="Foliation3DObservation" type="FoliationElementaryType" maxOccurs="unbounded"/>
+														</xs:sequence>
+													</xs:extension>
+												</xs:complexContent>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="GeologicalModel" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Extent3D"/>
+							<xs:element name="ModelSections" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contains the references to the cross-sections used to build the last model.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Data" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ModelFaults" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contains the references to the faults used to build the last model.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="PotentialFault" maxOccurs="unbounded">
+											<xs:complexType>
+												<xs:all>
+													<xs:element ref="Data"/>
+													<xs:element ref="PotentialField"/>
+												</xs:all>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="ModelDrillholes" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contains the references to the drillholes used to build the last model.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Data" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element ref="ProjectStratigraphicColumn" minOccurs="0"/>
+							<xs:element name="ModelStratigraphicColumn" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Contains the set of series used to build the last model.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element ref="Data" maxOccurs="unbounded"/>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+							<xs:element name="OutputShape3DOfFormations" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Name of the BRep file which contains the 3D representation of the formations shape for the last model.</xs:documentation>
+								</xs:annotation>
+								<xs:complexType>
+									<xs:sequence maxOccurs="unbounded">
+										<xs:element ref="Data"/>
+										<xs:element name="Shape3DOfFormation">
+											<xs:complexType>
+												<xs:attribute name="FileName" type="xs:anyURI" use="required"/>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="SimplificationRadius" type="xs:double" use="optional" default="10"/>
+						<xs:attribute name="Inequalities" type="xs:boolean" use="optional" default="true"/>
+						<xs:attribute name="MinimumDykeThickness" type="xs:double" use="optional" default="2"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="GridsMeshs" minOccurs="0">
+					<xs:complexType>
+						<xs:sequence maxOccurs="unbounded">
+							<xs:element ref="GridMesh"/>
+						</xs:sequence>
+						<xs:attribute name="persistenceFormat" type="GridsMeshesPersistenceFashion" use="optional" default="Intrepid"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="ProvenanceTable" type="TableType" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>DEPRECATED, use ProvenanceGroup instead</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="ProvenanceGroup" minOccurs="0"/>
+				<xs:element ref="GeophysicalReferenceType" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="projectName" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:whiteSpace value="collapse"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="author" type="xs:string" use="required"/>
+			<xs:attribute name="version" type="xs:string" use="optional" default="1"/>
+			<xs:attribute name="description" type="xs:string" use="optional"/>
+			<xs:attribute name="date" type="xs:string" use="required"/>
+			<xs:attribute name="CoordSystem" type="xs:string" use="optional" default="Local"/>
+			<xs:attribute name="unit" type="xs:string" use="required"/>
+			<xs:attribute name="precision" type="xs:double" use="required"/>
+			<xs:attribute name="deflection2d" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:maxInclusive value="0.001"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="deflection3d" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:maxInclusive value="0.001"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="discretisation" type="xs:double" use="required"/>
+			<xs:attribute name="dynamicSelection" type="xs:boolean" use="optional" default="true"/>
+			<xs:attribute name="pickingFactor" use="optional" default="1">
+				<xs:simpleType>
+					<xs:restriction base="xs:nonNegativeInteger">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProjectStratigraphicColumn" type="PileType">
+		<xs:annotation>
+			<xs:documentation>Contains the pile (set of series) of the project.
+				If the model had been built for some series their potential field
+				description is associated.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Extent3D" type="Box3DType">
+		<xs:annotation>
+			<xs:documentation>Describe a Box 3D</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Geophysics" type="GeophysicalPropertyType"/>
+	<xs:complexType name="TableType">
+		<xs:annotation>
+			<xs:documentation>Describe a table</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="Source" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="Connection" type="xs:anyURI" use="required"/>
+					<xs:attribute name="Query" type="xs:string" use="optional"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Head">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Variable" type="VariableType" maxOccurs="unbounded"/>
+						<xs:element name="Alias" minOccurs="0" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="aName" type="xs:string" use="required"/>
+								<xs:attribute name="aVariable" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Result">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="Row" type="RowType" maxOccurs="unbounded"/>
+					</xs:sequence>
+					<xs:attribute name="aSeparator" type="xs:string" use="optional" default=","/>
+					<xs:attribute name="aQuote" type="xs:string" use="optional" default='"'/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:element name="Graphic" type="GraphicAttributeType"/>
+	<xs:element name="PotentialField" type="PotentielFieldType">
+		<xs:annotation>
+			<xs:documentation>User must not modify the elements of this block.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="FoliationObservation">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="FoliationElementaryType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ApparentDipObservation">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ApparentDipBaseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="BSplineCurve2DType">
+		<xs:sequence>
+			<xs:element name="Pole-Weight" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="U" type="xs:decimal" use="required"/>
+					<xs:attribute name="V" type="xs:decimal" use="required"/>
+					<xs:attribute name="Weight" type="xs:decimal" use="required"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Knot-Multiplicity" minOccurs="2" maxOccurs="unbounded">
+				<xs:complexType>
+					<xs:attribute name="Knot" type="xs:decimal" use="required"/>
+					<xs:attribute name="Multiplicity" type="xs:integer" use="required"/>
+				</xs:complexType>
+			</xs:element>
+		</xs:sequence>
+		<xs:attribute name="Degree" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:nonNegativeInteger">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="9"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="Data_AxialSurfaceType">
+		<xs:complexContent>
+			<xs:extension base="DataType">
+				<xs:sequence>
+					<xs:element ref="Graphic"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="Data" type="DataType">
+		<xs:annotation>
+			<xs:documentation>Reference a data (Formation  or AxialFamily or AxialSurface or Fault or Section or Serie in function of the context).</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Data_AxialFamilyType">
+		<xs:complexContent>
+			<xs:extension base="DataType">
+				<xs:sequence>
+					<xs:element ref="Graphic"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="SerieTrajectoriesType">
+		<xs:annotation>
+			<xs:documentation>Describe the trajectorie drawing in ploylines for a serie in a cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element ref="Data"/>
+			<xs:element ref="gml:MultiLineString"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FormationBoundaryPolygonesType">
+		<xs:annotation>
+			<xs:documentation>Describe the boundaries of formation and faults (using polylines) in a cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element ref="Data"/>
+			<xs:element ref="gml:MultiPolygon"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="FormationBoundaryPolylinesType">
+		<xs:annotation>
+			<xs:documentation>Describe the polygones of the formations in a cross secxtion (using polygones)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence maxOccurs="unbounded">
+			<xs:element ref="Data"/>
+			<xs:element ref="gml:MultiLineString"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PotentielFieldType">
+		<xs:annotation>
+			<xs:documentation>Describe the solution of the model for a formation. The order in all the contained elements must be preserved. These elements doesn't must be changed by hand.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="covariance"/>
+			<xs:element name="Gradients">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Gradient" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Tangents" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Tangent" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Points">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="gml:coord" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Constraints" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Constraint" minOccurs="0" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InterfacePoints">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="InterfacePoint" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="Solutions">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element ref="Solution" maxOccurs="unbounded"/>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element ref="FaultsValue" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="maxValue" type="xs:double" use="required"/>
+		<xs:attribute name="Xmin" type="xs:double" use="required"/>
+		<xs:attribute name="Xmax" type="xs:double" use="required"/>
+		<xs:attribute name="Ymin" type="xs:double" use="required"/>
+		<xs:attribute name="Ymax" type="xs:double" use="required"/>
+		<xs:attribute name="Zmin" type="xs:double" use="required"/>
+		<xs:attribute name="Zmax" type="xs:double" use="required"/>
+		<xs:attribute name="IsBounded" type="xs:boolean" use="optional" default="0">
+			<xs:annotation>
+				<xs:documentation>A field for a dyke is bounded (need to isoValues to know we are inside).</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="FaultValues">
+		<xs:attribute name="value" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="SolutionType">
+		<xs:attribute name="sol" type="xs:decimal" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="InterfacePotentialType">
+		<xs:attribute name="pnt" type="xs:decimal" use="required"/>
+		<xs:attribute name="npnt" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ConstraintsPotentialType">
+		<xs:annotation>
+			<xs:documentation>Describe constraints on potential field.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="value" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PotentialTangentesType">
+		<xs:annotation>
+			<xs:documentation>Describe the tangentes for potential field</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="XTg" type="xs:decimal" use="required"/>
+		<xs:attribute name="YTg" type="xs:decimal" use="required"/>
+		<xs:attribute name="ZTg" type="xs:decimal" use="required"/>
+		<xs:attribute name="Tx" type="xs:decimal" use="required"/>
+		<xs:attribute name="Ty" type="xs:decimal" use="required"/>
+		<xs:attribute name="Tz" type="xs:decimal" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="PotentialGradientType">
+		<xs:annotation>
+			<xs:documentation>Describe the gradients for potential field.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="XGr" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="YGr" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="ZGr" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Gx" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Gy" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Gz" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:decimal"/>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="CovarianceType">
+		<xs:annotation>
+			<xs:documentation>Describe a Covariance model.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="covarianceModel" type="xs:positiveInteger" use="required"/>
+		<xs:attribute name="isotropic" type="xs:boolean" use="required"/>
+		<xs:attribute name="anisotropyA1" type="xs:double" use="required"/>
+		<xs:attribute name="anisotropyA2" type="xs:double" use="required"/>
+		<xs:attribute name="anisotropyA3" type="xs:double" use="required"/>
+		<xs:attribute name="anisotropyV1" type="xs:double" use="required"/>
+		<xs:attribute name="anisotropyV2" type="xs:double" use="required"/>
+		<xs:attribute name="anisotropyV3" type="xs:double" use="required"/>
+		<xs:attribute name="range" type="xs:double" use="required"/>
+		<xs:attribute name="gradient" type="xs:double" use="required"/>
+		<xs:attribute name="nuggetGradient" type="xs:double" use="required"/>
+		<xs:attribute name="tangentVariance" type="xs:double" use="required"/>
+		<xs:attribute name="nuggetPotentiel" type="xs:double" use="required"/>
+		<xs:attribute name="degreDrift" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer"/>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="ListOf2DPoints">
+		<xs:annotation>
+			<xs:documentation>Describe a set point in 2d space.</xs:documentation>
+		</xs:annotation>
+	</xs:complexType>
+	<xs:complexType name="InterfaceType">
+		<xs:annotation>
+			<xs:documentation>Describe an interface in a cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="Data"/>
+			<xs:element ref="gml:LineString"/>
+			<xs:element ref="FoliationObservation" minOccurs="0" maxOccurs="unbounded" ecore:ordered="false"/>
+			<xs:element ref="AssociatedFoliationType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AxialTraceType">
+		<xs:annotation>
+			<xs:documentation>Describe an axial trace in a cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element ref="Data"/>
+			<xs:element ref="gml:LineString"/>
+		</xs:all>
+		<xs:attribute name="IsAnticline" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="AxialPlaneType">
+		<xs:annotation>
+			<xs:documentation>Describe an axial plane data.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="Foliation"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="HingelineType">
+		<xs:annotation>
+			<xs:documentation>Describe an hingeline in a cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:all>
+			<xs:element ref="Data"/>
+			<xs:element ref="gml:LineString"/>
+		</xs:all>
+		<xs:attribute name="DistanceAtOrigin" type="xs:double" use="required"/>
+		<xs:attribute name="DistanceAtExtremity" type="xs:double" use="required"/>
+		<xs:attribute name="ApertureAtOrigin" type="xs:double" use="required"/>
+		<xs:attribute name="ApertureAtExtremity" type="xs:double" use="required"/>
+		<xs:attribute name="LeftPolarity" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="Segment3D">
+		<xs:annotation>
+			<xs:documentation>Describe a Segment (X, Y, Z)</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="LengthX" type="xs:double" use="required"/>
+		<xs:attribute name="LengthY" type="xs:double" use="required"/>
+		<xs:attribute name="LengthZ" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ApparentDipBaseType">
+		<xs:annotation>
+			<xs:documentation>Describes an apparent dip</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="gml:Point"/>
+		</xs:sequence>
+		<xs:attribute name="Dip" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="FoliationElementaryType">
+		<xs:annotation>
+			<xs:documentation>Describe direction and dip of a foliation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="gml:Point"/>
+		</xs:sequence>
+		<xs:attribute name="Azimuth" type="xs:double" use="required"/>
+		<xs:attribute name="Dip" type="xs:double" use="required"/>
+		<xs:attribute name="NormalPolarity" type="xs:boolean" use="required"/>
+		<xs:attribute name="Intensity" type="xs:double" use="optional" default="1.">
+			<xs:annotation>
+				<xs:documentation>A way to have thickness in the dyke for example</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Axis3DType">
+		<xs:annotation>
+			<xs:documentation>Describe the 3dAxis of the project.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="gml:Point"/>
+			<xs:element name="Length" type="Segment3D"/>
+		</xs:sequence>
+		<xs:attribute name="OnOff" type="xs:boolean" use="optional" default="true"/>
+		<xs:attribute name="Radius" type="xs:double" use="required"/>
+		<xs:attribute name="Step" type="xs:double" use="required"/>
+		<xs:attribute name="Size" type="xs:double" use="required"/>
+		<xs:attribute name="LabelOrigin" type="xs:string" use="optional" default="Origin"/>
+		<xs:attribute name="LabelX" type="xs:string" use="optional" default="X"/>
+		<xs:attribute name="LabelY" type="xs:string" use="optional" default="Y"/>
+		<xs:attribute name="LabelZ" type="xs:string" use="optional" default="Z"/>
+	</xs:complexType>
+	<xs:complexType name="SectionAttributeType">
+		<xs:annotation>
+			<xs:documentation>Describe attribute of a cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="DESCRIPTION" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="FaultAttributeType">
+		<xs:annotation>
+			<xs:documentation>Describe the geological attribute of a formation.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="RADIUS_OF_INFLUENCE" type="xs:double" use="optional" default="0"/>
+		<xs:attribute name="THICKNESS" type="xs:double" use="optional" default="0"/>
+		<xs:attribute name="DIP" type="xs:double" use="optional" default="90"/>
+		<xs:attribute name="BEARING" type="xs:double" use="optional" default="0"/>
+		<xs:attribute name="RHEOLOGY" type="xs:short" use="optional"/>
+		<xs:attribute name="TYPE_NOT_IN_USE" type="xs:string" use="optional" default='""'/>
+		<xs:attribute name="LATERAL_EXTENT" type="xs:double" use="optional"/>
+		<xs:attribute name="VERTICAL_EXTENT" type="xs:double" use="optional"/>
+		<xs:attribute name="FAULT_TYPE" use="optional" default="0">
+			<xs:annotation>
+				<xs:documentation>0 is Infinite and 1 is Elliptical</xs:documentation>
+			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:enumeration value="0">
+						<xs:annotation>
+							<xs:documentation>Infinite Fault</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+					<xs:enumeration value="1">
+						<xs:annotation>
+							<xs:documentation>Elliptical Fault</xs:documentation>
+						</xs:annotation>
+					</xs:enumeration>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="CENTERX" type="xs:double" use="optional">
+			<xs:annotation>
+				<xs:documentation>If this point exists it has been defined by user else auto calculate.  Used for both infinite and elliptical faults</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="CENTERY" type="xs:double" use="optional"/>
+		<xs:attribute name="CENTERZ" type="xs:double" use="optional"/>
+		<xs:attribute name="CENTER_TYPE" type="xs:short" use="optional" default="0"/>
+	</xs:complexType>
+	<xs:complexType name="GeologicalAttributeType">
+		<xs:annotation>
+			<xs:documentation>Describe the geological attribute of a formation.</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="AbsoluteAge" type="xs:string" use="optional" default="0"/>
+		<xs:attribute name="StratigraphicAge" type="xs:string" use="optional" default="0"/>
+		<xs:attribute name="MineralComposition" type="xs:string" use="optional"/>
+		<xs:attribute name="DatingTechnique" type="xs:short" use="optional"/>
+		<xs:attribute name="Genesis" type="xs:short" use="optional"/>
+		<xs:attribute name="Description" type="xs:short" use="optional"/>
+		<xs:attribute name="Texture" type="xs:string" use="optional"/>
+		<xs:attribute name="Lithology" type="xs:string" use="optional"/>
+		<xs:attribute name="ExtraComment" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="GraphicAttributeType">
+		<xs:annotation>
+			<xs:documentation>Describe the graphic attributes for the data.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element ref="ColorShading" minOccurs="0"/>
+			<xs:element ref="ColorWireFrame" minOccurs="0"/>
+			<xs:element name="ColorMapTable" type="ColorLookUpTable" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="TEXT_FONT_FACE" type="xs:short" use="optional"/>
+		<xs:attribute name="TEXT_FONT_NAME" type="xs:string" use="optional"/>
+		<xs:attribute name="TEXT_SIZE" type="xs:double" use="optional"/>
+		<xs:attribute name="TEXT_ASPECT_RATIO" type="xs:positiveInteger" use="optional" default="1"/>
+		<xs:attribute name="SURFACE_TRANSPARENCY" use="optional" default="0">
+			<xs:simpleType>
+				<xs:restriction base="xs:double">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="1"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="SURFACE_CONTOUR_DENSITY_U" type="xs:nonNegativeInteger" use="optional" default="1"/>
+		<xs:attribute name="SURFACE_CONTOUR_DENSITY_V" type="xs:nonNegativeInteger" use="optional" default="1"/>
+		<xs:attribute name="SURFACE_CONTOUR_DENSITY" type="xs:nonNegativeInteger" use="optional" default="1"/>
+		<xs:attribute name="SURFACE_TEXTURE_EFFECT" type="xs:short" use="optional"/>
+		<xs:attribute name="LINE_WIDTH" type="xs:double" use="optional" default="1"/>
+		<xs:attribute name="LINE_TYPE" type="xs:short" use="optional"/>
+		<xs:attribute name="MARKER_SYMBOL_SIZE" type="xs:integer" use="optional" default="1"/>
+		<xs:attribute name="MARKER_SYMBOL_SIZE_DEC" type="xs:decimal" use="optional" default="1.0"/>
+		<xs:attribute name="MARKER_SYMBOL" type="xs:short" use="optional"/>
+		<xs:attribute name="ORIENTATION_SCALE" type="xs:double" use="optional"/>
+		<xs:attribute name="SURFACE_SHADING_COLOR" type="xs:short" use="optional"/>
+		<xs:attribute name="SURFACE_RENDERING_MODE" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:short"/>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="SURFACE_WIREFRAME_COLOR" type="xs:short" use="optional"/>
+		<xs:attribute name="radius" type="xs:double" use="optional" default="30"/>
+		<xs:attribute name="wireframeRadius" type="xs:double" use="optional" default="30"/>
+		<xs:anyAttribute processContents="lax"/>
+	</xs:complexType>
+	<xs:complexType name="ZBoxType">
+		<xs:annotation>
+			<xs:documentation>Represent the extension along Z od a Box</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Zmin" type="xs:double" use="required"/>
+		<xs:attribute name="Zmax" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:element name="ExtentZ" type="ZBoxType">
+		<xs:annotation>
+			<xs:documentation>Define a box in a 1D space.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="BoxUVType">
+		<xs:attribute name="Umin" type="xs:double" use="required"/>
+		<xs:attribute name="Umax" type="xs:double" use="required"/>
+		<xs:attribute name="Vmin" type="xs:double" use="required"/>
+		<xs:attribute name="Vmax" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="Box2DType">
+		<xs:annotation>
+			<xs:documentation>Represent the a box in a 2D (X,Y)  or (U,V) space</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Xmin" type="xs:double" use="required"/>
+		<xs:attribute name="Ymin" type="xs:double" use="required"/>
+		<xs:attribute name="Xmax" type="xs:double" use="required"/>
+		<xs:attribute name="Ymax" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:element name="ExtentUV" type="BoxUVType"/>
+	<xs:element name="ExtentXY" type="Box2DType">
+		<xs:annotation>
+			<xs:documentation>Define a box with 2 points in a 2D space.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="Box3DType">
+		<xs:annotation>
+			<xs:documentation>Represent a Box in 3D space (X,Y,Z)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="ExtentXY"/>
+			<xs:element ref="ExtentZ"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="PetrophysicalPropertyAtomAttributeType">
+		<xs:annotation>
+			<xs:documentation>Descrive an atom</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="LawType" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Normal"/>
+					<xs:enumeration value="LogNormal"/>
+					<xs:enumeration value="Log-normal"/>
+					<xs:enumeration value="Poisson"/>
+					<xs:enumeration value="Rayleigh"/>
+					<xs:enumeration value="Uniform"/>
+					<xs:enumeration value="Uniform_Plus"/>
+					<xs:enumeration value="Uniform_Minus"/>
+					<xs:enumeration value="Weibull"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Mean" type="xs:double" use="required"/>
+		<xs:attribute name="Deviation" type="xs:double" use="required"/>
+		<xs:attribute name="PercentageContribution" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:integer">
+					<xs:minInclusive value="1"/>
+					<xs:maxInclusive value="100"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="SpatialType" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="Constant"/>
+					<xs:enumeration value="XY"/>
+					<xs:enumeration value="XYDrape"/>
+					<xs:enumeration value="Voxet"/>
+					<xs:enumeration value="Depth"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="DepthValuePairs" type="xs:string" use="optional"/>
+		<xs:attribute name="XYSource" type="xs:string" use="optional"/>
+		<xs:attribute name="XYDrape" type="xs:string" use="optional"/>
+		<xs:attribute name="Voxet" type="xs:string" use="optional"/>
+		<xs:attribute name="VoxetField" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="DataType">
+		<xs:annotation>
+			<xs:documentation>Represent a data (formation, dyke, fault, axial surfaces, sections, ...)</xs:documentation>
+		</xs:annotation>
+		<xs:attribute name="Name" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:minLength value="1"/>
+					<xs:whiteSpace value="collapse"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:complexType name="Data_FaultType">
+		<xs:annotation>
+			<xs:documentation>Describe a geological Fault.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="DataType">
+				<xs:sequence>
+					<xs:element ref="FaultGeology"/>
+					<xs:element ref="Graphic"/>
+					<xs:element name="StopsOnFault" type="DataType" minOccurs="0" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Data_SectionType">
+		<xs:annotation>
+			<xs:documentation>Describe a geological cross-section.</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="DataType">
+				<xs:all>
+					<xs:element name="OutputGraphicalData" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>These objects represent the model (boundaries or polygons of formation or the iso values of the potentiel field for a serie). </xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence minOccurs="0" maxOccurs="4">
+								<xs:element ref="FormationBoundaryList" minOccurs="0"/>
+								<xs:element ref="FormationPolygonList" minOccurs="0"/>
+								<xs:element ref="SeriesPotentialCountoursList" minOccurs="0"/>
+								<xs:element ref="Presentation2D" minOccurs="0"/>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Structural2DData" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>These objects represent the basic objects for modelling computation bind to a cross-section.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:all minOccurs="0">
+								<xs:element name="Interfaces" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="Interface" maxOccurs="unbounded" ecore:ordered="false"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="HingeLines" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="HingeLine" maxOccurs="unbounded"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="Foliations" minOccurs="0" ecore:ordered="false">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="Foliation" maxOccurs="unbounded"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="ApparentDips" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="ApparentDip" maxOccurs="unbounded"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="AxialPlanes" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="AxialPlane" maxOccurs="unbounded"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="AxialTraces" minOccurs="0">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="AxialTrace" maxOccurs="unbounded"/>
+										</xs:sequence>
+									</xs:complexType>
+								</xs:element>
+							</xs:all>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="Shape3DOfSection">
+						<xs:annotation>
+							<xs:documentation>The shape of the cross-section describe in a OpenCascade BRep representation in a file.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:simpleContent>
+								<xs:extension base="xs:string">
+									<xs:attribute name="FileName" type="xs:anyURI" use="optional" default=""/>
+									<xs:attribute name="Precision" type="xs:decimal" use="optional" default="0.0"/>
+									<xs:attribute name="Thickness" type="xs:decimal" use="optional" default="0.0"/>
+								</xs:extension>
+							</xs:simpleContent>
+						</xs:complexType>
+					</xs:element>
+					<xs:element name="ImageUnderLays" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation>The images bind to the section with their transformation.</xs:documentation>
+						</xs:annotation>
+						<xs:complexType>
+							<xs:sequence maxOccurs="unbounded">
+								<xs:element name="ImageUnderLay">
+									<xs:complexType>
+										<xs:sequence>
+											<xs:element ref="ExtentUV"/>
+										</xs:sequence>
+										<xs:attribute name="Filename" type="xs:anyURI" use="required"/>
+										<xs:attribute name="Show" type="xs:boolean" use="optional" default="false"/>
+									</xs:complexType>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+					<xs:element ref="Graphic" minOccurs="0"/>
+					<xs:element name="Intersections" minOccurs="0">
+						<xs:complexType>
+							<xs:sequence>
+								<xs:element name="Curve" type="BSplineCurve2DType" maxOccurs="unbounded">
+									<xs:annotation>
+										<xs:documentation>Define the intersection beetween this section and the section named "Name". The intersection is a spline curve of degree "Degree".</xs:documentation>
+									</xs:annotation>
+								</xs:element>
+							</xs:sequence>
+						</xs:complexType>
+					</xs:element>
+				</xs:all>
+				<xs:attribute name="IsAxialSurface" type="xs:boolean" use="required"/>
+				<xs:attribute name="IsAnticline" type="xs:boolean" use="optional"/>
+				<xs:attribute name="IsTopography" type="xs:boolean" use="optional"/>
+				<xs:attribute name="IsCurrentTopography" type="xs:boolean" use="optional"/>
+				<xs:attribute name="Description" type="xs:string" use="optional"/>
+				<xs:attribute name="AxialFamilyName" type="xs:string" use="optional"/>
+				<xs:attribute name="Grid2DName" type="xs:string" use="optional"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="Data_FormationType">
+		<xs:annotation>
+			<xs:documentation>Describe a geological formation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="DataType">
+				<xs:sequence>
+					<xs:element ref="FormationGeology" minOccurs="0"/>
+					<xs:element ref="Geophysics" minOccurs="0"/>
+					<xs:element ref="Graphic" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="CompoundDistribution" abstract="true"/>
+	<xs:complexType name="VectorCompoundDistribution">
+		<xs:complexContent>
+			<xs:extension base="CompoundDistribution">
+				<xs:sequence>
+					<xs:element ref="SimpleDistributionVector" maxOccurs="3"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ScalarCompoundDistribution">
+		<xs:complexContent>
+			<xs:extension base="CompoundDistribution">
+				<xs:sequence>
+					<xs:element ref="SimpleDistribution" maxOccurs="3"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="GeophysicalPropertyType">
+		<xs:annotation>
+			<xs:documentation>Represent the geophysical attributes of a geological formation.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence minOccurs="0">
+			<xs:element name="DensityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:choice minOccurs="0">
+				<xs:element name="SusceptibilityCompoundDistribution"
+					type="ScalarCompoundDistribution" minOccurs="0" />
+				<xs:element name="MagnetizationCompoundDistribution"
+					type="ScalarCompoundDistribution" minOccurs="0" />
+			</xs:choice>
+			<xs:element name="RemanantMagnetizationCompoundDistribution"
+				type="VectorCompoundDistribution" minOccurs="0" >
+				<xs:annotation>
+					<xs:documentation>Deprecated</xs:documentation>
+				</xs:annotation></xs:element>
+			<xs:element name="RemanentMagnetizationCompoundDistribution"
+				type="VectorCompoundDistribution" minOccurs="0" maxOccurs="1">
+			</xs:element>
+			<xs:element name="FluidVelocityCompoundDistribution"
+				type="VectorCompoundDistribution" minOccurs="0" />
+			<xs:element name="VelocityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="ThermalConductivityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="HeatProductionRateCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="AdvectionRateCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="SpecificHeatCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />	
+			<xs:element name="ResistivityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="ConductivityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="PorosityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="ChargeabilityCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+			<xs:element name="InducedPolarizationTimeDecayCompoundDistribution"
+				type="ScalarCompoundDistribution" minOccurs="0" />
+		</xs:sequence>
+		<xs:anyAttribute processContents="lax"/>
+	</xs:complexType>
+	<xs:complexType name="PileType">
+		<xs:annotation>
+			<xs:documentation>Represent a geological pile. (list of series)</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element ref="Series" maxOccurs="unbounded"/>
+		</xs:sequence>
+		<xs:attribute name="IsBase" type="xs:boolean" use="required"/>
+	</xs:complexType>
+	<xs:element name="Series" type="SeriesType">
+		<xs:annotation>
+			<xs:documentation>The order is important and must be preserved when
+				processing the array.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="SeriesPotentialCountoursList" type="SerieTrajectoriesType"/>
+	<xs:element name="FormationPolygonList" type="FormationBoundaryPolygonesType"/>
+	<xs:element name="FormationBoundaryList" type="FormationBoundaryPolylinesType"/>
+	<xs:element name="SectionDescription" type="SectionAttributeType"/>
+	<xs:element name="FormationGeology" type="GeologicalAttributeType"/>
+	<xs:element name="FaultGeology">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="FaultAttributeType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Interface">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="InterfaceType">
+					<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+					<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="HingeLine">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="HingelineType">
+					<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+					<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Foliation">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="Data"/>
+				<xs:element ref="FoliationObservation"/>
+			</xs:all>
+			<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+			<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ApparentDip">
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="Data"/>
+				<xs:element ref="ApparentDipObservation"/>
+			</xs:all>
+			<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+			<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AxialPlane">
+		<xs:annotation>
+			<xs:documentation>For an axial plane the data must reference an axial family.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AxialPlaneType">
+					<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+					<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AxialTrace">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AxialTraceType">
+					<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+					<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Formation" type="Data_FormationType"/>
+	<xs:element name="DummyFormation" type="Data_FormationType"/>
+	<xs:element name="Fault" type="Data_FaultType"/>
+	<xs:element name="AxialSurface">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="Data_AxialSurfaceType">
+					<xs:attribute name="AssociatedAxialFamily" type="xs:string" use="required"/>
+					<xs:attribute name="IsAnticline" type="xs:boolean" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AxialFamily" type="Data_AxialFamilyType"/>
+	<xs:element name="Section" type="Data_SectionType">
+		<xs:annotation>
+			<xs:documentation>All the 2D coordinates are in the local coordinate system of the section. The bottom left corner is the origin.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="SimpleDistributionVector">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="PetrophysicalPropertyAtomAttributeType">
+					<xs:attribute name="Dip" type="xs:double" use="required"/>
+					<xs:attribute name="Declinaison" type="xs:double" use="required"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SimpleDistribution" type="PetrophysicalPropertyAtomAttributeType"/>
+	<xs:element name="Gradient" type="PotentialGradientType"/>
+	<xs:element name="Tangent" type="PotentialTangentesType"/>
+	<xs:element name="Constraint" type="ConstraintsPotentialType"/>
+	<xs:element name="InterfacePoint" type="InterfacePotentialType"/>
+	<xs:element name="Solution" type="SolutionType"/>
+	<xs:element name="covariance" type="CovarianceType"/>
+	<xs:element name="FaultsValue" type="FaultValues"/>
+	<xs:element name="Axis3DDefinition" type="Axis3DType"/>
+	<xs:complexType name="ColorType">
+		<xs:attribute name="Red" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Green" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="Blue" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:element name="ColorShading" type="ColorType">
+		<xs:annotation>
+			<xs:documentation>If this color is defined we use it instead of the attribute: SURFACE_SHADING_COLOR.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="ColorWireFrame" type="ColorType">
+		<xs:annotation>
+			<xs:documentation>If this color is defined we use it instead of the attribute :SURFACE_WIREFRAME_COLOR.</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:complexType name="RowType">
+		<xs:simpleContent>
+			<xs:extension base="xs:string"/>
+		</xs:simpleContent>
+	</xs:complexType>
+	<xs:complexType name="VariableType">
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+		<xs:attribute name="DataType" type="xs:string" use="optional"/>
+	</xs:complexType>
+	<xs:complexType name="SeriesType">
+		<xs:sequence>
+			<xs:element ref="Data" maxOccurs="unbounded"/>
+			<xs:element name="ExtraConstrainingFormation" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation>The order is important, and must preserved when processing the array.</xs:documentation>
+				</xs:annotation>
+				<xs:complexType>
+					<xs:complexContent>
+						<xs:extension base="DataType">
+							<xs:attribute name="typeOfConstraint" type="xs:short" use="required"/>
+						</xs:extension>
+					</xs:complexContent>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="InfluencedByFault" type="DataType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element ref="PotentialField" minOccurs="0"/>
+		</xs:sequence>
+		<xs:attribute name="name" type="xs:string" use="required"/>
+		<xs:attribute name="relation" type="xs:integer" use="required"/>
+		<xs:attribute name="isUptodate" type="xs:boolean" use="optional"/>
+		<xs:attribute name="InterfaceNugget" type="xs:double" use="optional"/>
+		<xs:attribute name="OrientationNugget" type="xs:decimal" use="optional"/>
+		<xs:attribute name="VariogramRange" type="xs:double" use="optional"/>
+		<xs:attribute name="IsIsotropic" type="xs:boolean" use="optional"/>
+		<xs:attribute name="AnisotropyAngle1" type="xs:double" use="optional"/>
+		<xs:attribute name="AnisotropyAngle2" type="xs:double" use="optional"/>
+		<xs:attribute name="AnisotropyAngle3" type="xs:double" use="optional"/>
+		<xs:attribute name="AnisotropyValue1" type="xs:double" use="optional"/>
+		<xs:attribute name="AnisotropyValue2" type="xs:double" use="optional"/>
+		<xs:attribute name="AnisotropyValue3" type="xs:double" use="optional"/>
+	</xs:complexType>
+	<xs:element name="GridMesh">
+		<xs:annotation>
+			<xs:documentation>Describe a Grid (regular or not) of Hexahedron or quads in 2D or 3D or a Mesh (hexahedron, Tetrahedron, quad, triangle) in 3D.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="DataType">
+					<xs:sequence>
+						<xs:choice>
+							<xs:element ref="Mesh">
+								<xs:annotation>
+									<xs:documentation>A mesh in 2D or 3D of Tetrahedron or hexahedron or quad or triangles  or only vertices.  In this last case it represent observations, the mesh represent the location of observations, the associated field the data. in 3D. None on a grid (regular or not).</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element ref="Grid"/>
+						</xs:choice>
+						<xs:element name="Fields">
+							<xs:annotation>
+								<xs:documentation>A Grid or mesh can have different fields.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="Field" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>A field is attached to gridmesh geometrical elements (quadrangle, hexahedron, triangle, tetrahedron or vertex). A field as a Type (int, real, bool, vec2d, vec3d, string)</xs:documentation>
+										</xs:annotation>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="Purpose" use="optional" default="Unknown">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Geophysics"/>
+								<xs:enumeration value="Model"/>
+								<xs:enumeration value="Technical works"/>
+								<xs:enumeration value="Observations"/>
+								<xs:enumeration value="MicroSeismic"/>
+								<xs:enumeration value="Unknown"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="DataSource" type="xs:anyURI" use="optional">
+						<xs:annotation>
+							<xs:documentation>Source file for this Mesh Grid object. All mesh grids are now persisted as a separate file within the project directory. Allows users to take Mesh Grid results into other packages and GeoModeller to handle gigabyte grids</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="ComeFrom" use="optional" default="Project">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Project"/>
+								<xs:enumeration value="External"/>
+								<xs:enumeration value="External and Project"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="Description" type="xs:string" use="optional"/>
+					<xs:attribute name="CoordSystem" type="xs:string" use="optional" default='"local"'/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Mesh">
+		<xs:annotation>
+			<xs:documentation>A mesh in 2D or 3D of Tetrahedron or hexahedron or quad or triangles. None on a grid.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Volumic_Surfacic_Element" minOccurs="0"/>
+				<xs:choice>
+					<xs:element ref="Vertices"/>
+					<xs:element ref="VerticesFile"/>
+				</xs:choice>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Grid">
+		<xs:annotation>
+			<xs:documentation>A grid (2D or 3D) of Hexahedron (3D) or quads (2D). Regular or not.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="NonRegularGrid"/>
+				<xs:element ref="RegularGrid"/>
+				<xs:element name="SemiRegularGrid">
+					<xs:annotation>
+						<xs:documentation>The vertices coordinates of a regular grid could be computed from the location in the grid. This grid has variable spacing along the axis. Xtuplets, Ytuplets and Ztuplets have length respectively equal to Nx, Ny and Nz (size of the grid)</xs:documentation>
+					</xs:annotation>
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="Origin"/>
+							<xs:element ref="DX">
+								<xs:annotation>
+									<xs:documentation>Represents a vector 2D or 3D.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element ref="DY">
+								<xs:annotation>
+									<xs:documentation>Represents a vector 2D or 3D.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element ref="DZ" minOccurs="0">
+								<xs:annotation>
+									<xs:documentation>Represents a vector 3D.</xs:documentation>
+								</xs:annotation>
+							</xs:element>
+							<xs:element name="Xtuplets" type="xs:double" minOccurs="2" maxOccurs="unbounded"/>
+							<xs:element name="Ytuplets" type="xs:double" minOccurs="2" maxOccurs="unbounded"/>
+							<xs:element name="Ztuplets" type="xs:double" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:choice>
+			<xs:attribute name="Dimension" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="2"/>
+						<xs:maxInclusive value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Nx" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Ny" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="2"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Nz" use="optional" default="1">
+				<xs:annotation>
+					<xs:documentation>if Dimension is 3D Nz > 1, if Dimension is 2D Nz is set to 1.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:positiveInteger">
+						<xs:minInclusive value="1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RegularGrid">
+		<xs:annotation>
+			<xs:documentation>The vertices coordinates of a regular grid could be computed from the location in the grid.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Origin"/>
+				<xs:element ref="DX">
+					<xs:annotation>
+						<xs:documentation>Represents a vector 2D or 3D.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="DY">
+					<xs:annotation>
+						<xs:documentation>Represents a vector 2D or 3D.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element ref="DZ" minOccurs="0">
+					<xs:annotation>
+						<xs:documentation>Represents a vector 3D.</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NonRegularGrid">
+		<xs:annotation>
+			<xs:documentation>The vertices coordinates of a none regular grid could not be computed from the location in the grid.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Vertices"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Vertices" type="gml:LineStringType">
+		<xs:annotation>
+			<xs:documentation> An array of 2D or 3D points</xs:documentation>
+		</xs:annotation>
+	</xs:element>
+	<xs:element name="Volumic_Surfacic_Element">
+		<xs:complexType>
+			<xs:choice>
+				<xs:element ref="Quadrangle" maxOccurs="unbounded"/>
+				<xs:element ref="Hexahedron" maxOccurs="unbounded"/>
+				<xs:element ref="Triangle" maxOccurs="unbounded"/>
+				<xs:element ref="Tetrahedron" maxOccurs="unbounded"/>
+			</xs:choice>
+			<xs:attribute name="value_separator" type="xs:string" use="optional" default=","/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Hexahedron">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Quadrangle">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tetrahedron">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Triangle">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string"/>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Field">
+		<xs:annotation>
+			<xs:documentation>A field is attached to gridmesh geometrical elements (quadrangle, hexahedron, triangle, tetrahedron or vertex). A field as a Type (int, real, bool, vec2d, vec3d, string)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Graphic" minOccurs="0"/>
+				<xs:choice>
+					<xs:element ref="tuplets"/>
+					<xs:element ref="FieldFile"/>
+				</xs:choice>
+				<xs:element ref="Variogram_Analysis" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>Store the results (parameters of experimental variogram and theoritical variogram).</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="Unit" type="xs:string" use="required"/>
+			<xs:attribute name="Datatype" use="required">
+				<xs:annotation>
+					<xs:documentation>Represent the type of the field (int, real, ....) cf. Enumeration type.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Integer"/>
+						<xs:enumeration value="Real"/>
+						<xs:enumeration value="Boolean"/>
+						<xs:enumeration value="Vector3d"/>
+						<xs:enumeration value="Vector2d"/>
+						<xs:enumeration value="String"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Geometry" use="required">
+				<xs:annotation>
+					<xs:documentation>The field could be attached to the vertices or the element (cube, quad, triangle, tetrahedron) of the grid.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Vertex"/>
+						<xs:enumeration value="Quadrangle"/>
+						<xs:enumeration value="Triangle"/>
+						<xs:enumeration value="Hexahedron"/>
+						<xs:enumeration value="Tetrahedron"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="NoValue" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>This NoValue is of same type than the data. There is no default value.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Description" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tuplets">
+		<xs:annotation>
+			<xs:documentation>Values of the field are store in string, there is no way to know if they agree with the type and size of the geometry.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="decimal" type="xs:string" use="optional" default="."/>
+					<xs:attribute name="value_separator" type="xs:string" use="optional" default=" "/>
+					<xs:attribute name="tuplet_separator" type="xs:string" use="optional" default=","/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="tuplet">
+		<xs:annotation>
+			<xs:documentation>Values of the field are store in string, there is no way to know if they agree with the type and size of the geometry.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="V1" type="xs:string" use="required"/>
+			<xs:attribute name="V2" type="xs:string" use="optional"/>
+			<xs:attribute name="V3" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Origin" type="gml:PointType"/>
+	<xs:element name="DY" type="gml:PointType"/>
+	<xs:element name="DZ" type="gml:PointType"/>
+	<xs:element name="DX" type="gml:PointType"/>
+	<xs:element name="FieldFile">
+		<xs:complexType>
+			<xs:attribute name="FileName" type="xs:string" use="required"/>
+			<xs:attribute name="Type" use="optional" default="ASCII">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="BINARY"/>
+						<xs:enumeration value="ASCII"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="ColorLookUpTable">
+		<xs:annotation>
+			<xs:documentation>Color look up table are used to represent meshs or grids.</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="ColorMap" type="ColorType" maxOccurs="255">
+				<xs:annotation>
+					<xs:documentation>Represent the color map used to define the LookUpTable, and represent the object. Maximum color allowed is 255 (Color 0 is used for noValue).</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:choice>
+				<xs:annotation>
+					<xs:documentation>Define which color is associated to a value (int or string case) or interval of value (real value). We have a maximum of 255 intervals or values.As value of data could be Integer, Real, or String. For boolean we will set them as Integer (0 and 1). For vector we use real apply on the module of the vector.</xs:documentation>
+				</xs:annotation>
+				<xs:element name="IntegerMapping" type="ColorIndexInteger" maxOccurs="255"/>
+				<xs:element name="StringMapping" type="ColorIndexString" maxOccurs="255"/>
+				<xs:element name="RealMapping" type="ColorIndexReal" maxOccurs="255"/>
+			</xs:choice>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ColorIndexInteger">
+		<xs:attribute name="IndexInColorTable" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="FieldValue" type="xs:integer" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ColorIndexString">
+		<xs:attribute name="IndexInColorTable" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="FieldValue" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ColorIndexReal">
+		<xs:attribute name="IndexInColorTable" use="required">
+			<xs:simpleType>
+				<xs:restriction base="xs:short">
+					<xs:minInclusive value="0"/>
+					<xs:maxInclusive value="255"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="FieldValue" type="xs:double" use="required"/>
+	</xs:complexType>
+	<xs:element name="AssociatedFoliationType">
+		<xs:complexType>
+			<xs:attribute name="Method" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:enumeration value="0"/>
+						<xs:enumeration value="1"/>
+						<xs:enumeration value="2"/>
+						<xs:enumeration value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Azimuth" type="xs:double" use="optional"/>
+			<xs:attribute name="Dip" type="xs:double" use="optional"/>
+			<xs:attribute name="LineAzimuth" type="xs:double" use="optional"/>
+			<xs:attribute name="LineDip" type="xs:double" use="optional"/>
+			<xs:attribute name="NormalPolarity" type="xs:boolean" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GeophysicalReferenceType">
+		<xs:complexType>
+			<xs:attribute name="DensityRef" type="xs:double" use="required"/>
+			<xs:attribute name="AmbientMagneticMagnitude" type="xs:double" use="required"/>
+			<xs:attribute name="AmbientMagneticInclination" type="xs:double" use="required"/>
+			<xs:attribute name="AmbientMagneticDeclination" type="xs:double" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VerticesFile">
+		<xs:complexType>
+			<xs:attribute name="FileName" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Variogram_Analysis">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="XYZValueCouplesDataPoint">
+					<xs:complexType>
+						<xs:attribute name="FileName" type="xs:string" use="required"/>
+						<xs:attribute name="DistanceMax" type="xs:double" use="required"/>
+						<xs:attribute name="NumberOfClasses" type="xs:positiveInteger" use="optional" default="20">
+							<xs:annotation>
+								<xs:documentation>Number of classes to define experimental variogram.</xs:documentation>
+							</xs:annotation>
+						</xs:attribute>
+					</xs:complexType>
+				</xs:element>
+				<xs:sequence maxOccurs="3">
+					<xs:element ref="Variogram">
+						<xs:annotation>
+							<xs:documentation>This represent the variogram used to fit experimental variogram of this field.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="TypeAnalysis" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="RhoThetaPhi"/>
+						<xs:enumeration value="RhoTheta"/>
+						<xs:enumeration value="Rho"/>
+						<xs:enumeration value="UVT"/>
+						<xs:enumeration value="OnlyT"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="UnitConstraint" type="xs:boolean" use="required"/>
+			<xs:attribute name="SerieConstraint" type="xs:boolean" use="required"/>
+			<xs:attribute name="NameOfSerieOrUnit" type="xs:string" use="required"/>
+			<xs:attribute name="Azimuth" type="xs:double" use="optional" default="0"/>
+			<xs:attribute name="Dip" type="xs:double" use="optional" default="0"/>
+			<xs:attribute name="Plunge" type="xs:double" use="optional" default="0"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Structure">
+		<xs:complexType>
+			<xs:attribute name="TypeOfVariogram" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="SPHERICAL"/>
+						<xs:enumeration value="EXPONENTIAL"/>
+						<xs:enumeration value="GAUSSIAN"/>
+						<xs:enumeration value="POWER"/>
+						<xs:enumeration value="CUBIC"/>
+						<xs:enumeration value="GRAVITY"/>
+						<xs:enumeration value="MAGNETISM"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="Range" type="xs:double" use="required"/>
+			<xs:attribute name="Sill" type="xs:double" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Variogram">
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="2">
+				<xs:element ref="Structure"/>
+			</xs:sequence>
+			<xs:attribute name="WhichComponent" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="U"/>
+						<xs:enumeration value="V"/>
+						<xs:enumeration value="W"/>
+						<xs:enumeration value="RHO"/>
+						<xs:enumeration value="T"/>
+						<xs:enumeration value="UV"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="NuggetEffect" type="xs:double" use="optional" default="0."/>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="Data_DrillholeType">
+		<xs:annotation>
+			<xs:documentation>Describe a drillhole</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="DataType">
+				<xs:sequence>
+					<xs:element name="Collar" type="gml:PointType"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:element name="DrillholeWithFields">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="Data_DrillholeType">
+					<xs:sequence>
+						<xs:element name="Survey" type="gml:LineStringType">
+							<xs:annotation>
+								<xs:documentation>Coordinates are relative to the collar location. Like this changing only the coordinates of the collar one change all the borehole coordinates. The first coordinate will be per definition 0,0,0.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="SurveyInfo" minOccurs="0" maxOccurs="1">
+							<xs:annotation>
+								<xs:documentation>Raw survey data origins from user's data file</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="surveySeg" minOccurs="0" maxOccurs="unbounded">
+										<xs:complexType>
+											<xs:attribute name="dip" type="xs:double" use="required"/>
+											<xs:attribute name="azimuth" type="xs:double" use="required"/>
+											<xs:attribute name="length" type="xs:double" use="required"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="DrillholeFields">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="DrillholeField" maxOccurs="unbounded"/>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+						<xs:element name="UserDefinedGeology" minOccurs="0">
+							<xs:annotation>
+								<xs:documentation>Geological data define per the user and added to the borehole.</xs:documentation>
+							</xs:annotation>
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element ref="Foliation" minOccurs="0" maxOccurs="unbounded"/>
+									<xs:element name="Drillhole_Interface" minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Define un contact point (fault or formation) in the borehole. The point (X value) represent the curvilinear distance from collar along the Drillhole where to put this point.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="Data"/>
+												<xs:element ref="gml:Point"/>
+											</xs:all>
+											<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+											<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="InterfaceRelaxed" minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Define an interface between 2 formations as relaxed (not used in the model compute). The point (X value) represent the curvilinear distance from collar along the Drillhole where to put this relaxed interface.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="gml:Point"/>
+											</xs:all>
+											<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+											<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+									<xs:element name="InterfaceBottomConstraint" minOccurs="0" maxOccurs="unbounded">
+										<xs:annotation>
+											<xs:documentation>Define a contact point below the end of the DH. The point (X value) represent the curvilinear distance from collar along the Drillhole where to put this relaxed interface. This point must be below the end of the DH.</xs:documentation>
+										</xs:annotation>
+										<xs:complexType>
+											<xs:all>
+												<xs:element ref="Data"/>
+												<xs:element ref="gml:Point"/>
+											</xs:all>
+											<xs:attribute name="Provenance" type="xs:nonNegativeInteger" use="optional"/>
+											<xs:attribute name="ObservationID" type="xs:string" use="optional"/>
+										</xs:complexType>
+									</xs:element>
+								</xs:sequence>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+					<xs:attribute name="TotalDepth" type="xs:double" use="optional"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DrillholeField">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:choice>
+					<xs:element ref="ContinueDuplets">
+						<xs:annotation>
+							<xs:documentation>Define the duplet: Curvilinear(curvilinear coordinates from the origin (collar) of the survey), Value.  </xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element ref="DiscontinueTriplets">
+						<xs:annotation>
+							<xs:documentation>Define the triplet: From, To, Value. From and To are curvilinear coordinates from the origin (collar) of the survey.</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:choice>
+				<xs:element ref="Graphic" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="Name" type="xs:string" use="required"/>
+			<xs:attribute name="Unit" type="xs:string" use="required"/>
+			<xs:attribute name="DatatypeDH" use="required">
+				<xs:annotation>
+					<xs:documentation>Represent the type of the field (int, real, ....) cf. Enumeration type.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Integer"/>
+						<xs:enumeration value="Real"/>
+						<xs:enumeration value="Boolean"/>
+						<xs:enumeration value="Vector3d"/>
+						<xs:enumeration value="Vector2d"/>
+						<xs:enumeration value="String"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="GeometryDH" use="required">
+				<xs:annotation>
+					<xs:documentation>The field could a location (store in ContinueDuplets) or attached to an interval (store in DiscontinueTriplet) of the borehole.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="Continuous"/>
+						<xs:enumeration value="Discontinuous"/>
+						<xs:enumeration value="Tetrahedron"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="NoValue" type="xs:string" use="required">
+				<xs:annotation>
+					<xs:documentation>This NoValue is of same type than the data. There is no default value.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Description" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ContinueDuplets">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="decimal" type="xs:string" use="optional" default="."/>
+					<xs:attribute name="value_separator" type="xs:string" use="optional" default=" "/>
+					<xs:attribute name="tuplet_separator" type="xs:string" use="optional" default=","/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DiscontinueTriplets">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="decimal" type="xs:string" use="optional" default="."/>
+					<xs:attribute name="value_separator" type="xs:string" use="optional" default=" "/>
+					<xs:attribute name="tuplet_separator" type="xs:string" use="optional" default=","/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InterfaceObservation"/>
+	<xs:element name="Axis2D">
+		<xs:complexType>
+			<xs:choice minOccurs="0">
+				<xs:element ref="Graphic"/>
+			</xs:choice>
+			<xs:attribute name="Label" type="xs:string" use="required"/>
+			<xs:attribute name="Orientation" type="xs:string" use="required"/>
+			<xs:attribute name="TickInterval" type="xs:double" use="optional"/>
+			<xs:attribute name="TickLabelDecimals" type="xs:nonNegativeInteger" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Text2D">
+		<xs:complexType>
+			<xs:choice minOccurs="0">
+				<xs:element ref="Graphic"/>
+			</xs:choice>
+			<xs:attribute name="Label" type="xs:string" use="required"/>
+			<xs:attribute name="X" type="xs:decimal" use="required"/>
+			<xs:attribute name="Y" type="xs:double" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Presentation2D">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:sequence minOccurs="0">
+					<xs:element ref="Text2D"/>
+				</xs:sequence>
+				<xs:sequence minOccurs="0" maxOccurs="2">
+					<xs:element ref="Axis2D"/>
+				</xs:sequence>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Dyke" type="Data_FormationType"/>
+	<xs:element name="DigitalTerrainModel">
+		<xs:annotation>
+			<xs:documentation>
+			    Represents the DTM used for calculation.
+			    A DTM may refer to:
+			    1. External resource (specified by URI and/or fieldName);
+			    2. Horizontal plane (specified by elevation);
+			    3. Internal grid (specified by gridName and fieldName);
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="dataSource" type="xs:anyURI" use="optional"/>
+			<xs:attribute name="default" type="xs:boolean" use="optional" default="true"/>
+			<xs:attribute name="description" type="xs:string" use="optional"/>
+			<xs:attribute name="resample" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="resamplingRate" type="xs:int" use="optional"/>
+			<xs:attribute name="elevation" type="xs:double" use="optional" default="0.0"/>
+			<xs:attribute name="gridName" type="xs:string" use="optional"/>
+			<xs:attribute name="fieldName" type="xs:string" use="optional"/>
+			<xs:anyAttribute processContents="lax"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DigitalTerrainModelGroup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DigitalTerrainModel" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Provenance">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+			<xs:attribute name="rank" type="xs:int" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProvenanceGroup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Provenance" maxOccurs="unbounded" ecore:ordered="false"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="PetroPhysicalPropertyType">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Density"/>
+			<xs:enumeration value="Susceptibility"/>
+			<xs:enumeration value="RemanentMagnetization"/>
+			<xs:enumeration value="Velocity"/>
+			<xs:enumeration value="ThermalConductivity"/>
+			<xs:enumeration value="HeatProductionRate"/>
+			<xs:enumeration value="SpecificHeat"/>
+			<xs:enumeration value="Porosity"/>
+			<xs:enumeration value="FluidVelocity"/>
+			<xs:enumeration value="AdvocationRate"/>
+			<xs:enumeration value="Resistivity"/>
+			<xs:enumeration value="Conductivity"/>
+			<xs:enumeration value="Chargeability"/>
+			<xs:enumeration value="InducedPolarizationTimeDecay"/>
+			<xs:enumeration value="Geometry"/>
+			<xs:enumeration value="Scalar"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="GridsMeshesPersistenceFashion">
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="BRGM"/>
+			<xs:enumeration value="Intrepid"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

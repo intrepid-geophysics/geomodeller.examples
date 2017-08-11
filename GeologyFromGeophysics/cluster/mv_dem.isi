@@ -1,0 +1,23 @@
+MetaData Begin
+	Name	= mv_dem.grd
+	Version	= "Intrepid Visualisation v6.0.0 future for Windows (x64) by BUSTER debug build 225c383c0692+ "
+	mv_dem.grd Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Alias = {
+			X Y
+}
+		Bands	= 1
+		Samples	= 817599
+		Nulls	= 10641
+		Minimum	=    1434.5222168
+		Maximum	=   2577.93847656
+		Mean	=   1551.20717312
+		Variance	=   33515.4447234
+		Skew	=   2.63946908888
+		Kurtosis	=    6.8623411453
+		Projection	= "NUTM11"
+		Datum	= "NAD27"
+	mv_dem.grd End
+MetaData End

@@ -1,0 +1,120 @@
+name: "A1_Stage2"
+description: "Tutorial A - stage 2 of 4, step 1 of 1"
+auditfile: "audit_A1_Stage2.job"
+
+GeomodellerTask {
+    CreateProject {
+        name: "MyProject"
+        author: "batchrun"
+        date: "16/12/2005  0: 0: 0"
+        projection { map_projection: "NTF / LambertIIet"}
+        version: "2.0"
+        units: meters
+        precision: 1.0
+        Extents {
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        deflection2d: 0.001
+        deflection3d: 0.001
+        discretisation: 10.0
+        referenceTop: false
+        CustomDTM {
+            Extents {
+                xmin: 100000
+                ymin: 2000000
+                xmax: 110000
+                ymax: 2010000
+            }
+            name: "Topography"
+            filename {
+            Grid_Name: "data/DTM.semi"
+            }
+            degree1: 3
+            degree2: 2            
+            nx: 5
+            ny: 5
+        }
+     }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "UpperCover"
+        red: 205
+        green: 205
+        blue: 0.0
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "LowerCover"
+        red: 24
+        green: 116
+        blue: 205
+    }
+}
+
+
+GeomodellerTask {
+    SetSeries {
+        name: "LowerSeries"
+        position: 1
+        relation: "onlap"
+    }
+}
+
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "LowerSeries"
+        formation: "LowerCover"
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "UpperSeries"
+        position: 2
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "UpperCover"
+    }
+}
+
+GeomodellerTask {
+    CreateSection {
+        name: "Section1"
+        degrees: 1
+        direction: 225
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 100010.0
+                y: 2009990.0
+                z: 0.0
+            }
+            Point {
+                x: 109990.0
+                y: 2000010.0
+                z: 0.0
+            }
+        }
+    }
+}
+
+  
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./test.xml"
+    }
+}   
+ 	

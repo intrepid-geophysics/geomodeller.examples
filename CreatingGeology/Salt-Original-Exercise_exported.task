@@ -1,0 +1,649 @@
+name: "Geomodeller Write Protobuf Task file - salt dome example"
+description: "Sections, Pile, Interface, Foliations, NB example of also setting properties"
+GeomodellerTask {
+  CreateProject {
+    HorizontalDTM {
+      name: "SurfaceTopography"
+      elevation: 0
+    }
+    name: "Salt_Dome"
+    author: "antonio"
+    date: "24/ 3/2006 17:40:10"
+    projection {
+      geographic2DCS: "Local"
+      map_projection: "Local"
+    }
+    version: "3.0"
+    precision: 1
+    Extents {
+      xmin: 0
+      ymin: 0
+      zmin: -6000
+      xmax: 8000
+      ymax: 8000
+      zmax: 0
+    }
+    deflection2d: 0.001
+    deflection3d: 0.001
+    discretisation: 10
+    referenceTop: true
+  }
+  CreateFormation {
+    name: "Layer_Bottom"
+    red: 65
+    green: 105
+    blue: 225
+    LithologyProperty { lithology: "Layer_Bottom"; property: Density;
+    	 ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.42; stddev: 0.05;}}
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Layer_Middle"
+    red: 29
+    green: 144
+    blue: 255
+    LithologyProperty { lithology: "Layer_Middle"; property: Density;
+    	 ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.32; stddev: 0.05;}}
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Layer_Top"
+    red: 172
+    green: 255
+    blue: 47
+    LithologyProperty { lithology: "Layer_Top"; property: Density; 
+    	ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.67; stddev: 0.03;}}
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Salt"
+    red: 255
+    green: 186
+    blue: 255
+    LithologyProperty { lithology: "Salt";     property: Density; 
+    	ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.1; stddev: 0.05;}}
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Salt2"
+    red: 237
+    green: 0
+    blue: 237
+    LithologyProperty { lithology: "Salt2"; property: Density;
+    	 ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.11; stddev: 0.05;}}
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Salt3"
+    red: 237
+    green: 105
+    blue: 167
+    LithologyProperty { lithology: "Salt3"; property: Density;
+    	 ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.13; stddev: 0.05;}}
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_Salt"
+    position: 1
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Salt"
+    formation: "Salt3"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Salt"
+    formation: "Salt2"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Salt"
+    formation: "Salt"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_Layer"
+    position: 2
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Layer"
+    formation: "Layer_Bottom"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Layer"
+    formation: "Layer_Middle"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Serie_Layer_Top"
+    position: 3
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Serie_Layer_Top"
+    formation: "Layer_Top"
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "E-W"
+    PointList {
+      Point {
+        x: 227.7752685546875
+        y: 4347.4423828125
+        z: 0
+      }
+      Point {
+        x: 7821.8588867187518
+        y: 4322.62451171875
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 7718.4852676210712
+      y: 4322.9623422302711
+      z: -0.375
+    }
+    formation: "Layer_Top"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 380.78145149059515
+      y: 4346.94235042998
+      z: -4623.653
+    }
+    point {
+      x: 2808.9724847747107
+      y: 4339.0068923701156
+      z: -4541.142
+    }
+    point {
+      x: 4612.4348541551126
+      y: 4333.1130809695333
+      z: -4600.079
+    }
+    point {
+      x: 6969.9032651031512
+      y: 4325.4087482188961
+      z: -4552.929
+    }
+    point {
+      x: 7736.0801736629992
+      y: 4322.90484113705
+      z: -4611.866
+    }
+    formation: "Layer_Bottom"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 310.05682916519783
+      y: 4347.17348227528
+      z: -2325.11
+    }
+    point {
+      x: 1642.0257163549245
+      y: 4342.8205367712171
+      z: -2384.048
+    }
+    point {
+      x: 2408.2026249147721
+      y: 4340.3166296893714
+      z: -2372.26
+    }
+    point {
+      x: 5468.9772801565559
+      y: 4330.313854547534
+      z: -2089.74
+    }
+    point {
+      x: 7017.0520133254231
+      y: 4325.2546635900653
+      z: -2242.599
+    }
+    point {
+      x: 7688.9304254460676
+      y: 4323.0589290339167
+      z: -2183.661
+    }
+    formation: "Layer_Middle"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 2537.8639325140043
+      y: 4339.8928896070074
+      z: -5755.244
+    }
+    point {
+      x: 2891.4840441570109
+      y: 4338.7372401846169
+      z: -4222.882
+    }
+    point {
+      x: 3893.4076938121966
+      y: 4335.4629001545118
+      z: -1865.402
+    }
+    point {
+      x: 4565.2861059328407
+      y: 4333.2671655983631
+      z: -1547.142
+    }
+    point {
+      x: 5307.8881403842242
+      y: 4330.8403024649515
+      z: -1629.654
+    }
+    point {
+      x: 5732.2318743579672
+      y: 4329.4535244652971
+      z: -1983.276
+    }
+    point {
+      x: 5166.4398957280882
+      y: 4331.3025628875148
+      z: -3586.362
+    }
+    point {
+      x: 5201.8017068934578
+      y: 4331.1869985988824
+      z: -4199.307
+    }
+    point {
+      x: 4683.15947648051
+      y: 4332.881949124233
+      z: -4682.59
+    }
+    point {
+      x: 4659.5846023720442
+      y: 4332.958993072667
+      z: -5849.543
+    }
+    formation: "Salt"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 4188.0911201813688
+      y: 4334.4998589691868
+      z: -2525.496
+    }
+    point {
+      x: 4565.2861059328407
+      y: 4333.2671655983631
+      z: -2301.535
+    }
+    point {
+      x: 4871.7564693589165
+      y: 4332.26560407284
+      z: -2478.346
+    }
+    point {
+      x: 4612.4348541551126
+      y: 4333.1130809695323
+      z: -2702.307
+    }
+    point {
+      x: 4317.7514277859409
+      y: 4334.0761221548582
+      z: -2773.031
+    }
+    formation: "Salt3"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 4801.0328470281793
+      y: 4332.4967326501028
+      z: -3774.961
+    }
+    point {
+      x: 4966.05496579812
+      y: 4331.9574315471427
+      z: -3232.74
+    }
+    point {
+      x: 5013.2047140150507
+      y: 4331.8033436502765
+      z: -2973.417
+    }
+    point {
+      x: 5119.2911475058172
+      y: 4331.4566475163447
+      z: -2360.473
+    }
+    point {
+      x: 4541.7112318243753
+      y: 4333.3442095467963
+      z: -1877.189
+    }
+    point {
+      x: 3822.6830714867992
+      y: 4335.6940319998112
+      z: -2584.433
+    }
+    point {
+      x: 3645.873015665296
+      y: 4336.271856711006
+      z: -3904.622
+    }
+    formation: "Salt2"
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Layer_Bottom"
+    foliation {
+      Point3D {
+        x: 1594.8769681326528
+        y: 4342.9746214000479
+        z: -4582.3975
+      }
+      dip: 1.9461765821398829
+      direction: 270.1872450144744
+      azimuth: 270.1872450144744
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 3710.7036694649119
+        y: 4336.059986669824
+        z: -4570.6105
+      }
+      dip: 1.8717451724679823
+      direction: 90.187244990971479
+      azimuth: 90.187244990971479
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 5791.1690596291319
+        y: 4329.2609145942142
+        z: -4576.504
+      }
+      dip: 1.1457720697820402
+      direction: 270.18724501447434
+      azimuth: 270.18724501447434
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 7352.9917193830752
+        y: 4324.1567946779733
+        z: -4582.3975
+      }
+      dip: 4.39870535442117
+      direction: 90.187244990971408
+      azimuth: 90.187244990971408
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Salt"
+    foliation {
+      Point3D {
+        x: 2714.6739883355076
+        y: 4339.3150648958126
+        z: -4989.063
+      }
+      dip: 77.005383198028667
+      direction: 270.18724501447451
+      azimuth: 270.18724501447451
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 3392.4458689846037
+        y: 4337.1000701695648
+        z: -3044.142
+      }
+      dip: 66.9745079827269
+      direction: 270.18724501447446
+      azimuth: 270.18724501447446
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4229.3468998725184
+        y: 4334.365032876437
+        z: -1706.272
+      }
+      dip: 25.346183270104913
+      direction: 270.18724501447446
+      azimuth: 270.18724501447446
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4936.5871231585324
+        y: 4332.0537340316569
+        z: -1588.3980000000001
+      }
+      dip: 6.3402086815489147
+      direction: 90.187244990971408
+      azimuth: 90.187244990971408
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 5520.0600073710957
+        y: 4330.1469134651243
+        z: -1806.4650000000001
+      }
+      dip: 39.805597648639
+      direction: 90.187244990971365
+      azimuth: 90.187244990971365
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 5449.3358850430277
+        y: 4330.3780436764055
+        z: -2784.819
+      }
+      dip: 70.559967032136015
+      direction: 270.18724501447446
+      azimuth: 270.18724501447446
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 5184.1208013107725
+        y: 4331.2447807431981
+        z: -3892.8345
+      }
+      dip: 86.698154022463086
+      direction: 90.187244990971365
+      azimuth: 90.187244990971365
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4942.4805916869836
+        y: 4332.0344738615577
+        z: -4440.9485
+      }
+      dip: 42.978644461106576
+      direction: 270.18724501447446
+      azimuth: 270.18724501447446
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4671.3720394262773
+        y: 4332.9204710984495
+        z: -5266.0665
+      }
+      dip: 88.8426575011471
+      direction: 270.18724501447451
+      azimuth: 270.18724501447451
+      polarity: Reverse_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Salt2"
+    foliation {
+      Point3D {
+        x: 4883.54390641315
+        y: 4332.2270820986232
+        z: -3503.8504999999996
+      }
+      dip: 73.072562612908129
+      direction: 270.18724501447446
+      azimuth: 270.18724501447446
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4989.6298399065854
+        y: 4331.88038759871
+        z: -3103.0784999999996
+      }
+      dip: 79.695075748669709
+      direction: 270.18724501447451
+      azimuth: 270.18724501447451
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 5066.2479307604335
+        y: 4331.62999558331
+        z: -2666.9449999999997
+      }
+      dip: 80.180650481267023
+      direction: 270.18724501447451
+      azimuth: 270.18724501447451
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4830.5011896650967
+        y: 4332.4004285315705
+        z: -2118.831
+      }
+      dip: 39.920407614901471
+      direction: 90.187244990971365
+      azimuth: 90.187244990971365
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 4182.1971516555877
+        y: 4334.5191207733042
+        z: -2230.811
+      }
+      dip: 44.526468033325706
+      direction: 270.18724501447446
+      azimuth: 270.18724501447446
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 3734.2780435760474
+        y: 4335.982944355409
+        z: -3244.5275
+      }
+      dip: 82.371851462671131
+      direction: 270.18724501447451
+      azimuth: 270.18724501447451
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+ComputeModel {
+FaultList {
+	node: "All"
+}
+SeriesList {
+	node: "All"
+}
+SectionList {
+	node: "All"
+}
+BoreholeList {
+	node: "All"
+}
+}
+}
+GeomodellerTask {
+    RenderModel {
+        nx:20;
+        ny:20;
+        nz:20;
+		generateSurfaces: false;
+        generateVolumes: true;
+		topoLimited: false;
+		adaptToTopo: false;
+		buildFormations: true;
+		buildFaults: true;
+		buildDykes: true;
+    }
+}
+GeomodellerTask {
+SavePotentialGradientVoxet {
+	nx: 64
+	ny: 64
+	nz: 16
+	OneVoxet_Lithology: true; # force a gradient voxet for each formation
+	VoxetFileStub: "OUTPUT/Salt-Original"
+}
+}
+
+GeomodellerTask {
+SaveLithologyVoxet {
+	nx: 64
+	ny: 64
+	nz: 16
+	LithologyVoxetFileStub: "OUTPUT/Salt-Original"
+}
+}
+
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "EXPORT/Salt-Original-Exercise_exported.xml"
+  }
+}

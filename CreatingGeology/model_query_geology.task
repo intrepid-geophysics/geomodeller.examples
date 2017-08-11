@@ -1,0 +1,46 @@
+# A simple example of using the batch interface to Geomodeller. Run with the following command:
+#
+# geomodellerbatch -batch model_query_geology.task
+#
+# An audit trail (including potential return values) is written to "geomodeller-batch.audit". 
+# and any errors are reported in "geomodeller-batch.rpt". Both files are located in the 
+# current working directory. Make sure to check these files since non-fatal errors do not
+# result in a termination of the batch processing.
+#
+# (c) 2012 Intrepid Geophysics
+
+# Open the project
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA5.xml"
+    }
+}
+
+# Compute the geological model
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+	    node: "all"
+	}
+	SectionList {
+	    node: "all"
+	}
+    }
+}
+
+# Query several points in model for a lithology code
+GeomodellerTask {
+    GetComputedLithoAtXYZ {
+	  	filename: "myQuery.rpt"
+        Point {
+			x: 500.0
+			y: 500.0
+			z: -100.
+        }
+         Point {
+			x: 500.0
+			y: 500.0
+			z: -200.
+        }
+    }
+}

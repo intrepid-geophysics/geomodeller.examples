@@ -1,0 +1,1246 @@
+syntax = "proto2";
+
+// Here is the specification of the geology/geophysics forward model and stochastic inversion
+// batch process using GOOGLE/Protobuf schema
+//
+// All message objects are preceded by a _GMT to clearly distinguish them from parameters.
+//
+// Syntax to run:
+//
+//    invbatch -batch inversion.task
+//
+// The order of the messages present in a task file is honoured. You must create and fill 
+// out the Case and Run prior to launching the actual work.
+//
+// NOTES on operations
+// Stage 1. - Creation and specification. The Inversion GUI is designed to create a "inversion.xml" state
+// 		file that is the basis of specifying the job to be done. All that functionality plus more is available
+//      via this specified batch language as well.
+// Stage 2. - Running. The tool "invbatch" is to be used to run all forward, geothermal & inversion jobs
+// Stage 3.- Query outputs
+//    	As can be seen below, this language is fully featured to generate statistical reports, movies, and 
+//      images via batch processes
+//
+// Local vs Remote, Single node vs Multiprocessor
+//		Inversion comes fully able to use MPI without any need to do extra things, except start the tool with
+//      a good set of instructions, eg.  qsub
+//
+// Forward modelling is not MPI aware, but it is multi-processor aware and also threaded.
+// New commands are given here to run on multiple processors, then gather the results.
+// Geomodeller supports direct visualization of output voxets and grids in the context of your geology modelling session.
+//
+// Copyright: Intrepid Geophysics, July 2011, 2017
+
+// Sets the namespace in C++, package in Java and Python
+import "commontaskmodel.proto";
+
+package invtaskmodel;
+
+////// Top level methods ///////////////////////////////////////////////////////
+
+//####
+// Run a stochastic inversion or forward model using the specified file.
+//
+// Extenions to run inversion in a super computer or cluster situation: 
+// the idea is is to have a Master process, that distributes the geophysics forward modelling
+// aspects to many SLAVE nodes, and also breaks up the domain into vertical slices
+// As we are using spatial, prism based methods for calculating the response,
+// efficiencies are mostly got by precomupting the kernel responses, and saving these
+// in memory for re-use
+// trial confirm a near linear reduction in elapsed time versus the number of Nodes
+// Multi-threading of the calculations is also being used.
+// Check Point / Restart has been implemented, so that more flexibility on managing
+// simulations is achieved
+// Message definition:\n
+// <b>filename</b> Filename to load the project from
+// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+// equivalent way to specify "INTREPID_NODES=16" is via the delagate command
+message Run_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required string run = 3;
+	optional int32 Number_CPUs = 4 [default = 1];  							// here is the way to get more CPUs into the act
+	optional bool SaveForwardResponsePerLithology = 5 [ default = false];	// used in property optimization (produces an ers grid for each lithology)
+	optional bool do_MPI = 6 [default = false];
+	optional bool checkpoint_iteration = 7 [default = false];  				// write a checkpoint
+	optional string ProcessID_Log = 8;
+	optional Delegate_Process Delegate = 9; // equivalent way to specify "INTREPID_NODES=16" is via the delagate command
+	optional int32 nice = 10 [default = 5];// ask for nice behaviour with priorities during execution on a LINUX super computer ( usually number between 0 and 10)
+	optional string log = 17;
+}
+
+//####
+//! For a cluster, possible way to instruct a job queue submit as to what is required
+//  XXXX  currently, not used
+message Delegate_Process {
+
+	required int32 nodes = 1;  // number of slave nodes to run on
+	required string ticket = 2;  // autorization/temporary license to run
+
+}
+
+//####
+// Create a geomodeller project from an external voxet. The project dimensions
+// will be defined by the voxet
+message NewProjectFromVoxet_GMT {
+
+	required string inputvoxet = 1;
+	required string new_project = 2;
+	repeated VoxetLithologyMap_GMT formation = 3;				// A list of lithology definitions
+	optional VoxetAliases_GMT field_alias = 4;					// Alias "Lithology" is important to set
+	optional string author = 5 [default = "invbatch"];
+	optional string date = 6 [default = "01/01/2011 00:00:00"];
+	optional string description = 7 [default = ""];
+	optional ctm.CoordinateSystem projection = 8;				// The datum/projection
+	optional string version = 9 [default="2"];
+	optional string units =10 [default = "M"];	    			// Units (m, ft)
+	optional double precision = 11 [default = 1.0];				// Precision for the project in units
+	optional double deflection2d = 12 [default = 0.001];
+	optional double deflection3d = 13 [default = 0.0001];
+	optional double discretisation = 14 [default = 1000000.0];
+	optional bool dynamicSelection = 15 [default = true];
+	optional bool referenceTop = 16 [default = true];
+	optional int32 external_null = 17  [default = -9999];	  	// Undefined value used in external voxet
+
+}
+
+//####
+// Define lithology names/indizes/colours
+message VoxetLithologyMap_GMT {
+
+	required int32 index = 1;						// The index of this formation in the stratigraphic order, from oldest (1) to youngest (n)
+	required string field = 2;						// Name of the formation
+	optional double alpha = 3;						// Colour definitions
+	optional double red = 4 [default = 0.0];
+	optional double green = 5 [default = 125.0];
+	optional double blue = 6 [default = 255.0];
+	optional string colour = 7 [default = "0"];
+
+}
+
+//####
+// Allow user to pick out fields for specific purposes in a voxet
+message VoxetAliases_GMT {
+
+	required string alias = 1;
+	required string field = 2;
+
+}
+
+//####
+// Main method for computing rapid forward model responses using FFT
+// Designed only for magentics, gravity, not for temperature
+message ForwardModelFromVoxet_GMT {
+
+	// fft parameters, some will also be used for spatial modelling
+	required string input_voxet = 1;
+	required ctm.RepeatedString fields = 2;
+	optional bool InputVoxetAlreadyProperty = 3 [default = false];
+	optional string OutputVoxelName = 4;
+	optional ctm.GeophysicsSignalType product = 5 [default = Gravimetry];  // what do you want to calculate?
+	optional ctm.CoordinateReferenceSystem coordsys = 6 [default = END];
+	optional string drape_elevation_grid = 7;
+	optional string output_gridname = 8;
+	optional double mean_elevation = 9 [default = 100.0];
+	optional string output_tablename = 10;  // output for boreholes
+	optional string ComputedFieldName = 11;
+	optional string PropertyValuesVoxelName = 12;
+	optional string ExpandedVoxelName = 13;
+	optional ctm.VfiltExpansionMethod expansionmethod = 14 [default = Mirror];
+	optional double horizontalexpansionfactor = 15 [ default = 100.0];
+	optional double verticalexpansionfactor = 16 [default = 300.0]; 
+	optional bool include_border_effect = 17 [default = true];
+	optional bool measure_depth_from_formation_top = 18 [default = false];
+	optional bool LanczosTaper = 19 [default = false];
+	optional ctm.RepeatedDouble Density = 20;  // lists of property values, to match with lithology number
+	optional double SetReferenceDensity = 21 [default = 2.67]; //used to do do deltas during inversion
+	optional ctm.RepeatedDouble Susceptibility = 22;
+	optional double SetReferenceSusceptibility = 23 [default = 0.01]; //used to do do deltas during inversion
+	optional string POSC_CoordinateSystem = 24;
+	optional ctm.SetReferenceMagneticField IGRF = 25;
+	optional ctm.ComputationalMethod method = 26 [default = Spatial];
+	optional string ObservedReferenceGrid = 27;
+
+	// additional parameters used for spatial forward modelling
+	optional string case = 30;
+	optional bool SaveForwardResponsePerLithology = 31 [default = false];  // used in property optimization (produces "reference.vo")
+	optional bool Interpolate = 32 [default = false]; // interpolate between discretized dtm levels (spatial case)
+	optional int32 TopographySampling = 33 [default = 1];
+	//	optional SetTemperatureControl_GMT TemperatureControl = 34;  // geothermal module only
+	//	optional double MaxResidualTemperature = 35 [ default = 0.0001];
+	//	optional string log = 36;
+	optional int32 Number_CPUs = 40 [default = 1];  // here is the way to get more CPUs into the act
+	repeated string ToolName = 99;
+}
+
+//####
+// Property optimization, deterministic method to estimate best fit litho properties , needs:
+// - unit response for each lithology with at least 3 differing units,
+// - a set of lithologies properties, including Lower and Upper bounds
+// - also require the observed geophysical geophysical field to match a best fit response to
+message Property_Optimization_GMT {
+	required string filename = 1;   // project xml  
+	required string case = 2;  
+	required string run = 3;
+	optional string ReportFile = 4  [ default = "Property_Optimization.rpt"];
+	optional SetLaw_GMT SetLaw = 5;
+	optional double maxAbsoluteObserved = 6;  // method to ignore observered data spikes when doing property observations
+	optional bool EstimateDensity = 7 [ default = true];
+	optional bool EstimateSusceptibility = 9 [ default = false];
+	optional int32 MaximumIterations = 10 [ default = 10000];  // stop the Levenberg-Marquardt solver if no good soultion found
+	optional double MisfitThreshold = 11 [ default = 1e-6];  // stop the Levenberg-Marquardt solver if below error threshold
+	optional bool MatchTrends = 12 [ default = true];
+	optional double ReferenceDensity = 13 [ default = 0.0];
+	optional double IGRF_Magnitude = 14;
+	optional double IGRF_Inclination = 15;
+	optional double IGRF_Declination = 16;
+}
+
+////// Case settings ///////////////////////////////////////////////////////////
+
+//####
+// Create a new case for an inversion or forward modelling run using the
+// specified project, and an optional discretization. If external voxets
+// are used (lithology or proptery voxets, see RunControl_GMT), these
+// values will be adjusted to the voxet dimensions.
+//
+// A list of observed geophysical grids is needed to define the anomaly 
+// types that are modelled and to compare with the results. If no observed
+// grid is present, supply "none.semi" as the grid name. You need acutal
+// observed geophysical grids if you want to compare/invert.
+//
+message NewCase_GMT {
+
+	required string filename = 1;								// The path to the GeoModeller Project xml file
+	optional string case = 2;									// The name of the new case
+	optional double x_cell_size = 3;							// X cell size of the voxet to be created
+	optional double y_cell_size = 4;							// Y cell size of the voxet to be created
+	optional double z_cell_size = 5;							// Z cell size of the voxet to be created
+	optional double east_minimum_voxet = 6;						// Western edge of the most western voxels (defaults to project extents)
+	optional double east_maximum_voxet = 7;						// Eastern edge of the most eastern voxels (defaults to project extents)
+	optional double north_minimum_voxet = 8;					// Northern edge of the most northern voxels (defaults to project extents)
+	optional double north_maximum_voxet = 9;					// Southern edge of the most southern voxels (defaults to project extents)
+	optional double elevation_minimum_voxet = 10;				// Elevation of the base of the bottom voxels (defaults to project extents)
+	optional double elevation_maximum_voxet = 11;				// Elevation of the top of the top voxels (defaults to project extents)
+	optional VariableZResolution_GMT VariableZResolution = 12;	// Used for increasing cell sizes with depth
+	required MeasuredGridList_GMT ObservedGridList = 13;		// List of observed grids, see below
+
+}
+
+//####
+// Set up parameters for control of variable z resolution. The top
+// part of the model will be discretized with the cell size set in
+// NewCase_GMT. Starting from topo_part_boundary_at, the lower_z_cell_size
+// will be used, multiplied by geometric_factor for increasing cell size
+// with depth
+message VariableZResolution_GMT {
+
+	optional bool use_variable_z_resolution = 1 [default = false];
+	optional double topo_part_boundary_at = 2 [default = 0.0];
+	optional double lower_z_cell_size = 3 [default = 0.0];
+	optional double geometric_factor = 4 [default = 1.0];
+
+}
+
+//####
+// A list of observed grids
+message MeasuredGridList_GMT {
+
+	repeated MeasuredGrid_GMT ObservedGrid = 1;
+
+}
+
+//####
+// Define observed geophysical grids 
+message MeasuredGrid_GMT {
+
+	required string grid = 1;											// Path of the observed grid, use "none.semi" if no observed grid is available
+	required ctm.GeophysicsSignalType type = 2;							// The observed signal, e.g. gravimetry, tmi, etc
+	optional ComputeSurfaceStyle compute_surface_style = 3 [default = OnTopography];	// Type of computation surface, e.g. DTM, external drape, etc, see below
+	optional double mean_elevation = 4 [default = 0.0];					// Clearance from, or elevation of compute surface
+	optional string compute_surface_grid = 5;							// Path to external drape surface grid
+	optional double compute_surface_z_sampling = 6 [default = 20.0];	// Z discretization of external drape surface grid
+	optional bool Interpolate = 7 [default = false];					// Interpolate between discretized external drape levels
+	optional double precision = 8 [default = 0.1];						// Measurement error
+	optional bool Match_Trend = 9 [default = false];					// Adjust the trend between observed grid and model response
+	optional int32 Match_Trend_Degree = 10 [default = 1];				// Trend matching degree
+	optional int32 Match_Trend_Rate = 11 [default = 0];					// How often to do trend matching? If 0, trend matching will only be done once
+	optional bool Output_Trends = 12 [default = false];					// Save trend grids to disk?
+
+}
+
+//####
+// The different computation surface styles
+enum ComputeSurfaceStyle {
+
+	OnTopography = 0;				// Compute model on the topography of the discretized geology model
+	OnTopographyWithClearance = 1;  // As above, but with clearance added to the topography elevation
+	OnASurface = 2;					// Compute model on external drape surface
+	ConstantElevation = 3;			// Compute model at constant elevation
+	OnTopOfVoxetWithClearance = 4;	// Compute model at constant elevation at top of voxet
+}
+
+//####
+// Create case control parameters
+message CaseControl_GMT {
+
+	required string filename = 1;   								// The path to the GeoModeller Project xml file
+	optional string case = 2; 										// The name of the new case
+	optional double SetReferenceDensity = 3 [ default = 2.67];
+	optional double SetAboveTopoDensity = 4 [ default = 2.67];
+	optional ctm.SetReferenceMagneticField SetReferenceMagneticField = 5;  // geomagnetic reference field details
+	optional SetLaw_GMT SetLaw = 6;
+	optional bool UseRelativeGravityChanges = 7 [ default = true];  //  for this density case, are you using Bouguer or Free Air?
+	repeated ctm.GeophysicsSignalType product = 13;  // what do you want to do?, will use the Observed grid type if nothing else is specified
+
+//	optional bool IncludeBorderEffect = 7 [ default = true];
+//	optional string SetReferenceLithology = 8; // path to reference voxet with field called Lithology
+
+}
+
+message SetLaw_GMT {
+
+	repeated ctm.LithologyProperty_GMT LithologyProperty = 1;
+
+}
+
+
+
+////// Run settings ////////////////////////////////////////////////////////////
+
+//####
+//! Create a new Run situation for an forward model/stochastic inversion using the specified file.
+//
+// Formal definition of a "RUN"
+//  a run has specific controls set, within the confines of the more general case.
+//  a run can hold the geology constant and just perturb the properties
+//  a run can force the stochastic process to reject overturned geology for certain units
+//  a run can select from all the possible topological operators, what mix, and what variation to allow
+//  a run can impose a set of fixed or unchangeable parts of your geology model (eg observed)
+//  a run can explore propability space for a prescribed number of iterations, and then be restarted if required
+//
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message NewRun_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required string run = 3;
+	required int32 NumberOfIterations = 4 [default = 1]; // if one, just a forward model
+	optional string log = 17;
+
+}
+
+//####
+//! Create a Run Control situation for an forward model/stochastic inversion run using the specified file.
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message RunControl_GMT {
+
+	required string filename = 1;	// what project
+	required string case = 2;		// what case
+	required string run = 3;		// what run
+
+	//  options for geological body changes
+	optional ShapeRatioTest_GMT ShapeRatioTest = 4;          
+	optional VolumeRatioTest_GMT VolumeRatioTest = 5;
+	optional CommonalityTest_GMT CommonalityTest = 6; 
+	optional CommonalityVolumeTest_GMT CommonalityVolumeTest = 7;
+	optional DilationOrErosionFilter_GMT DilationOrErosionFilter = 8; 
+	optional HomogeneousFilter_GMT HomogeneousFilter = 9; 
+
+	//  options for lithology property changes, and how to initialise your model
+	optional PropertyInitialiseStyle LithologyInitialiseStyle = 10 [ default = FromModel] ;
+	optional PropertyInitialiseStyle DensityInitialiseStyle = 11 [ default = FromLawMean];
+	optional PropertyInitialiseStyle SusceptibilityInitialiseStyle = 12 [ default = FromLawMean];
+	optional PropertyInitialiseStyle RemanentMagnetizationInitialiseStyle = 13 [ default = FromLawMean];
+	optional string property_voxet_litho = 40 [default = "Lithology"];
+	optional string property_voxet_density = 41; // if using a voxet to initialise the properties
+	optional string property_voxet_susceptibility = 42; // named file, using a voxet  to initialise the properties
+	optional string property_voxet_remanence = 43; // named file, using a voxet to initialise the properties
+	optional string property_voxet_field_litho = 44 [default = "Lithology"]; // the field to use inside your litho voxet
+	optional string property_voxet_field_density = 45 [ default = "Density"];  // the field to use inside your density voxet
+	optional string property_voxet_field_susceptibility = 46 [ default = "Susceptibility"];
+		// convention is to add X,Y,Z to get the components of the field, ENU convention
+	// currently just a standard scalar, not a vector
+	optional string property_voxet_field_remanence = 47 [ default = "Remanence"];  
+	//     optional string property_voxet_field_east_remanence = 47 [ default = "RemanenceEast"];
+	//     optional string property_voxet_field_north_remanence = 48 [ default = "RemanenceNorth"];
+	//     optional string property_voxet_field_up_remanence = 49 [ default = "RemanenceUp"];
+
+	// options for numerics, boundaries etc
+	optional bool AllowNeighbourPropertyDifferentCheck = 18 [default = false]; 
+	optional bool AllowGeophysicalTests = 19 [default = true];  // let geophysics response influence the properties and the geology
+	optional bool AllowGeologicalTests = 20 [default = true];  // the model can have changing lithology or geology boundaries
+	optional bool PreserveTopology = 21 [default = false]; // no topological condition
+	optional bool SetOutputTrendGrids = 22 [default = false];  // dump the trend grids that are progressively being updated
+	//  Temperature below referes to an "entropy" effect to get the initial solver perfomance to go faster
+	//  it does not refer in any way to "Heat flow" studies
+	optional bool SetDualTemperatureMode = 23 [default = false];  // just one speed in the convergence of the solver, if dual, go fast at the beginning(take big steps)
+	optional double LargeMisfitTemperature = 24;  // if dual temperature mode is false
+	optional double LargeMisfitRMSThresholdFactor = 25;
+	optional double Mode1TemperatureFactor = 26 [default = 1.0];  // if dual temperature mode is true
+	optional double Mode1Duration = 27 [ default = 99900];
+	optional double Mode2TemperatureFactor = 28 [ default =  1000000];
+	optional double Mode2Duration = 29 [ default = 100 ];
+	optional int32 ProbabilityOfPropertyChangeOnly = 30 [default = 50]; // percentage of cases where you consider property changes only for a cell
+	optional bool PreserveVerticalRelationshipTest = 31 [default = false];  // allow overturning of geology in sedimentary layers??
+	optional bool PropertyChangeOnFixedCell = 32 [default = true];  // even though you cannot change the litho, allow variable properties, not just the mean
+//	optional bool SetOutputMisfits = 33 [default = false];
+//	optional bool SetOutputCommonality = 34 [default = false];
+	optional double Seed = 35 [default = 1234];  // influence the random number generator, to force the same sequence of tests
+	optional int32 NumberOfIterations = 36 [default = 1];
+	// for deeper studies, the proposed density distributions may include
+	//  a depth trend function, this parameter ensures it is honoured during the inversion as
+	// a constraint
+	optional bool PreserveVerticalDensityGradientTest = 37 [default = false];
+	optional string log = 38;
+
+	// options for vfilt forward modelling
+	optional ctm.VfiltExpansionMethod expansionmethod = 60 [default = Mirror];
+	optional double horizontalexpansionfactor = 61 [ default = 100.0];
+	optional double verticalexpansionfactor = 62 [default = 300.0];
+	optional bool include_border_effect = 63 [default = true];
+	optional bool LanczosTaper = 64 [default = false];
+	optional bool SaveResponseVoxet = 65 [default = false];
+	optional bool SaveExpandedVoxet = 66 [default = false];
+	optional ctm.ComputationalMethod method = 67 [ default = Spatial];
+}
+
+enum PropertyInitialiseStyle {
+
+	FromModel = 0;
+	FromVoxet = 1;
+	FromLawMean = 2;
+	FromLawRandom = 3;
+
+}
+
+//####
+// start on the geology bodies and topology constraints
+message ShapeRatioTest_GMT {
+
+	enum ShapeRatioWeightType {
+
+		none = 0;
+		LocalAbundance = 1;
+
+	}
+	required ShapeRatioWeightType	SetWeights = 1 [default = LocalAbundance];  
+	required bool IncludeAboveTopoFaces = 2 [default = true];
+	required bool IncludeOutsideFaces = 3 [ default = true];
+	optional bool Allow = 4 [default = true]; 
+
+}
+
+message VolumeRatioTest_GMT {
+
+	enum VolumeRatioWeightType {
+		none = 0;
+		LocalAbundance = 1;
+	}
+	required VolumeRatioWeightType	SetWeights = 1 [default = LocalAbundance];
+	optional bool Allow = 2 [default = true]; 
+  
+}
+
+message CommonalityVolumeTest_GMT {
+
+	enum CommonalityVolumeWeightType {
+	none = 0;
+	LocalAbundance = 1;
+	}
+	required CommonalityVolumeWeightType	SetWeights = 1 [default = LocalAbundance];
+	optional bool Allow = 2 [default = true]; 
+  
+}
+
+message CommonalityTest_GMT {
+
+	enum CommonalityWeightType {
+		none = 0;
+		LocalAbundance = 1;
+		LocalCommonality = 2;
+		GlobalCommonality = 3;
+	}
+	required CommonalityWeightType	SetWeights = 1 [default = none];
+	optional bool Allow = 2 [default = true];   
+
+}
+
+//  the Morphology operators below are not recommeneded
+message DilationOrErosionFilter_GMT {
+
+	// specifies a 'repetition rate' for the application of this operation in terms of a number of iterations
+	required int32	Rate = 1 [default = 5000];  
+	optional bool Allow = 2 [default = false]; // turned off
+
+}
+
+message HomogeneousFilter_GMT {
+
+	required int32	Rate = 1 [default = 1000]; 
+	optional bool Allow = 2 [default = false];  // turned off
+
+}
+
+//####
+// Create a Set of Fixed Cell in any part of your  model space for an inversion run.
+// eg due to observed outcrop geology, or drill-hole observations
+// If SetFixedCells is never called, the default is to set all the cells of the layer at the highest elevation to fixed.
+// When the first call of SetFixedCells is made, this program default is cleared (i.e. equivalent to a call of SetFixedCells CLEAR)
+// and a voxet named <Case>_<Run>_modifiable.vo is established with all values of the "Modifiable" property initialised with 1.
+//  All subsequent SetFixedCells calls are additive.
+// Message definition:\n
+// <b>filename</b> Filename to load the case voxet from
+// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message SetFixedCells_GMT {
+
+	required string filename = 1;
+	required string run = 2;
+	optional string case = 3;
+	// nb underlying inversion.xml only supports one file for xyzfile restraints
+	optional ctm.RepeatedString xyzfile = 4;  // accept a set of (X,Y,Z) coordiantes for cells to be fixed
+	optional bool CLEAR = 5 [ default = false];  // clear out any prior fixed cells, XXXX not hooked up to do anything
+	optional bool MappedObservations = 6 [ default = false];  // fix any cell that contains a geology contact
+	optional RepeatedObservedReliability_GMT goodness = 7;  // Deprecated eg goodness{formation: "sandstone"; reliability: Observed;} would fix cells that have contact data with this attribute
+	optional ctm.RepeatedString geology = 8;  // a way to fix whole geology formations eg you have good seismic control near surface
+	optional bool SURFACE = 9 [ default = false];  // fix the surface geology map
+	optional ctm.BoundingBox box = 10; // set all cells within this box, not in the GUI as an option
+	optional ctm.RepeatedString drillholes = 11;  // fix cells containing selected drillholes
+	optional double radius = 12; // radius of influence of fixed drillholes
+	repeated int32 provenances = 13; // fix cells that the provenance of contact data is listed
+
+	optional string log = 17;
+}
+
+//####
+//! This is to allow for an optional string array as there cannot be an optional
+//! repeated field in a message. This corresponsd to the "Provenance" settings in geomodeller
+//! Message definition:\n
+//! <b>array</b> Array of string data.
+message RepeatedObservedReliability_GMT {
+
+	repeated string formation = 1;  // name of geology unit
+	optional ctm.Reliability reliability = 2;  // classify the mapped original data points used to construct the model
+}
+
+////// Compute inversion statistics ////////////////////////////////////////////
+
+//####
+//! Create a RunState  situation for an inversion run using the specified file.
+//! generate the voxet for a model that was created at a specific point in the evolution
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message RunState_GMT {
+
+	required string filename = 1;
+	required string run = 2;
+	required int32 number_of_iterations = 3;
+	optional string case = 4;
+
+}
+
+//####
+//! make a voxet with population of statistics from various parts of runs
+//! useful after the burn in period, to view most probable sections
+//! can combine parts of runs with this call
+message MakeSummaryStats_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	optional string run = 3;
+	required RunIntervalList_GMT RunIntervalList = 4;
+	optional string voxet_name_stub = 5;  // makes a default
+	optional string log = 17;
+
+}
+
+//####
+// make a comprehensive set of stats for the current job
+// use predefined field names for the output fields
+// place in a special stats voxet for later interogation/plotting etc
+// rule to construct the default name!!
+//  OutPrefix = dfastr::printf("%s/%s/%s/SuperSummaryStatstats_iterations_%-d_%-d_%-d",
+//		parent_dir,case, run,to,from,threshold_percentage);
+message MakeSuperSummaryStats_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required RunInterval_GMT RunInterval = 3;
+	optional string statistical_voxet = 4;  // if not supplied, make a standard name up
+	required int32 threshold_percentage = 5;
+	optional string log = 17;
+
+}
+
+message RunIntervalList_GMT {
+
+	repeated RunInterval_GMT RunInterval = 1;
+
+}
+
+//####
+//! produce a movie of the evolution of the inversion of a field on a section
+//! output to JPEG, ERS
+message MakeEvolutionMovie_GMT {
+
+	required string filename = 1;
+	optional string case = 2;
+	required RunInterval_GMT RunInterval = 3; // just one interval is supported here
+	optional int32 MaxPixelCols = 4 [ default = 500];
+	optional int32 MaxPixelRows = 5 [ default = 500];
+	optional double VerticalExaggeration = 6 [ default = 1.0];
+	optional int32 QualityPercentage = 7 [ default = 100];
+	optional int32 FramesPerSecond = 8 [ default = 100];
+	optional int32 IterationIncrement = 9 [ default = 2000];
+	optional ColourScheme lut = 10 [default = Colours];
+	optional ScaleOption_GMT Scaling = 11;
+	optional EvolutionField show = 12 [ default = Geology];
+	required string Section = 13;
+	optional string movie = 14;  // default puts movie in the Case/run with name made from section/vertExag/EvolutionField
+
+}
+
+//####
+//! This is to allow for an optional parts of runs to be interrogated 
+//! <b>array</b> Array of lithology property data.
+message RunInterval_GMT {
+
+	required string run = 1;
+	required int32 start_iterations = 3;
+	required int32 end_iterations = 4;
+
+}
+
+//####
+// make a comprehensive set of stats for the current job
+// use predefined field names for the output fields
+// place in a special stats voxet for later interogation/plotting etc
+// rule to construct the default name!!
+//  OutPrefix = dfastr::printf("%s/%s/%s/SuperSummaryStatstats_iterations_%-d_%-d_%-d",
+//		parent_dir,case, run,to,from,threshold_percentage);
+message MakeThresholdStats_GMT {
+
+	required string inputvoxet = 1;
+	optional string inputfield = 2;
+	optional string outputvoxet = 3;
+	required double isovalue = 4;
+	optional double threshold_percentage = 5;
+	optional double threshold_stddev = 6;
+	optional string log = 17;
+
+}
+
+//####
+enum EvolutionField {
+
+	Geology = 0;
+	WatchedDensity = 1;
+	WatchedSusceptibility = 2;
+	RemanenceEast = 3;
+	RemanenceNorth = 4;
+	RemanenceDown = 5;
+
+}
+
+//####
+//! Create a Histogram report for an inversion run using the specified file.
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message MakeHistogram_GMT {
+
+	required string filename = 1;
+	optional string case = 2;  // use this for inversion stats
+	optional string run = 3;
+	required string voxet = 4;
+	required string lithology_field = 5;
+	required string property_field = 6;
+	optional int32 number_of_bins = 7 [default = 1024];
+	required ScaleOption_GMT Scaling = 8;
+	optional string report = 9 [default= "histo.rpt"];
+	optional string products = 10;  // use this for forward modelling to find output voxets
+	optional bool ttest = 11 [default = false]; //only works on density property field currently (maximum of 50 lithologies)
+	optional string log = 17;
+
+}
+
+message ScaleOption_GMT {
+
+	optional bool doLog = 1 [ default = false];
+	optional double minClip = 2;
+	optional double maxClip = 3;
+
+}
+
+//####
+// used for quering results of inversion, when standard naming conventions can be employed
+// define a subtask to get either a regular field or a stats field from a voxet
+// for a stats voxet computed using Super summary stats, a default voxet can be found at
+//   case/run/"SuperSummaryStats_iterations_startIterations_endIterations_threshold_percentage
+// for a non stats voxet, you must supply a voxet and a input_field name
+// ALSO, adapted for AEM inversion
+message GetFunction_GMT {
+
+	required TransformFunction transform = 1;
+	optional string existing_voxet = 2;  // will use a default statistical voxet for case/run
+	optional string existing_aem_output = 3;  // will use a default aem results set
+
+	optional StatisticalFieldWithinStatsVoxet statistical_field = 4 [ default = MeanDensity];
+	optional AEM_Fields_EM AEM_Field = 5 [default = Log_Resistivity];
+	optional double threshold = 6 [ default = 90];  // likihood percentage of unit being present
+	optional string input_field = 7;  // for a non stats voxet
+	optional int32 iteration = 8 [default = 30]; // for AEM inversion only
+
+}
+
+//####
+// A direct map of the RunFieldResult element in deprecated inversion.xsd
+// it's a complete biject mapping
+message RunFieldResult_GMT {
+	optional string type = 1; // type of the grid
+	optional int32 reject_count = 2; // reject count for this grid
+	optional int32 test_count = 3;
+	optional int32 observed_grid_computed_index = 4;
+}
+
+//####
+// A direct map of the RunResult element in the deprecated inversion.xsd
+// it's a complete biject mapping
+message RunResult_GMT {
+	optional int32 counter = 1;
+	optional int32 proposal_count = 2;
+	optional int32 proposal_rate_per_hour = 3;
+	optional int32 inter_proposal_same_formation_count = 4;
+	optional int32 inter_proposal_different_formation_count = 5;
+	optional int32 intra_proposal_count = 6;
+	optional int32 acceptance_rate_per_hour = 7;
+	optional int32 acceptance_count = 8;
+	optional int32 inter_acceptance_same_formation_count = 9;
+	optional int32 inter_acceptance_different_formation_count = 10;
+	optional int32 intra_acceptance_count = 11;
+	optional int32 preserve_topology_reject_count = 12;
+	optional int32 preserve_topology_test_count = 13;
+	optional int32 preserve_vertical_relationship_reject_count = 14;
+	optional int32 preserve_vertical_relationship_test_count = 15;
+	optional int32 commonality_volume_reject_count = 16;
+	optional int32 commonality_volume_test_count = 17;
+	optional int32 commonality_reject_count = 18;
+	optional int32 commonality_test_count = 19;
+	optional int32 volume_reject_count = 20;
+	optional int32 volume_test_count = 21;
+	optional int32 shape_reject_count = 22;
+	optional int32 shape_test_count = 23;
+	optional string computer_name = 24;
+	optional string started_date_time = 25;
+	optional string finished_date_time = 26;
+	
+	repeated RunFieldResult_GMT field_results = 27; //One per observed grid
+}
+
+//####
+//  for the proability functions below
+// they are moderated by a "threshold"
+// so for example, only report cells if threshold is above 90%
+enum TransformFunction {
+
+	MostProbableField = 0; // returns highest proability in each cell for any lithology
+	WeightedField = 1;  // 
+	MostProbableLithology = 2; // knows the calculated probability names, picks one with highest probability for each cell
+	GetField = 3;  // general reporting function
+	GetHeatFlow = 4;  // report heat flow to a section image
+
+}
+
+//####
+// this is a predefined list of the super summary statistical field names
+// so when you do stats, you can then rely on being able
+// to interrogate a derived statistical voxet to create movies, and images
+//  there are also non predefined fields added to this list
+//  each lithology field has a probability of occurance in each 3D cell
+// this is stored in a field with the form  "Prob_UnitName"
+enum StatisticalFieldWithinStatsVoxet {
+
+	ChangeCount = 0;
+	MeanDensity = 1; //  gravity stuff
+	StdDevDensity = 2;
+	MeanSusceptibility = 3;  // magnetics
+	StdDevSusceptibility = 4;
+	MeanRemanenceEast = 5;
+	StdDevRemanenceEast = 6;
+	MeanRemanenceNorth = 7;
+	StdDevRemanenceNorth = 8;
+	MeanRemanenceUp = 9;  // note, default is ENU for magnetics
+	StdDevRemanenceUp = 10;
+	MostProbable = 11;  // lithologies
+	MostProbableThresholded = 12;
+	Prob_AboveTopo = 13;	
+	MeanHeatFlow = 14; // this one is an odd man out!!
+	
+}
+//####
+// this is a predefined list of the aem inversion field names
+enum AEM_Fields_EM {
+	Resistivity_ohmm = 0;
+	Log_Resistivity = 1;
+	Conductivity_mS_m = 2;
+	Log_Conductivity = 3;
+	Chargeability = 4;
+}
+
+//####
+//! produce an image of a field on a section
+//! output to JPEG, ERS
+// <project> MakeSectionImage <CaseName> <RunName> <VoxetLIST> <ofField> <opField> <op> <threshold> <Section>
+// <Output>
+message MakeSectionImage_GMT {
+
+	required string filename = 1;
+	optional string case = 2;
+	optional string run = 3;
+	optional string products = 4 [default = "."];  // use this for forward modelling to find output voxets
+	required GetFunction_GMT get_function = 5;
+	required string Section = 6;
+	optional int32 MaxPixelCols = 7 [ default = 500];
+	optional int32 MaxPixelRows = 8 [ default = 500];
+	optional double VerticalExaggeration = 9 [ default = 1.0];
+	optional int32 QualityPercentage = 10 [ default = 100];
+	optional ColourScheme lut = 11 [default = Colours];
+	optional ScaleOption_GMT Scaling = 12;
+	optional string image = 13;  // placed in the local directory "SectionImage_verticalExag_fieldName_SectionName"
+
+}
+
+//####
+//! produce an image of a field on all sections, from the an existing voxet
+//! output to JPEG, ERS
+message MakeAllSectionImages_GMT {
+
+	required string filename = 1;
+	optional string case = 2;
+	optional string run = 3;  // not used for forward modelling!
+	required GetFunction_GMT get_function = 4;
+	optional int32 MaxPixelCols = 5 [ default = 500];
+	optional int32 MaxPixelRows = 6 [ default = 500];
+	optional double VerticalExaggeration = 7 [ default = 1.0];
+	optional int32 QualityPercentage = 8 [ default = 100];
+	optional ColourScheme lut = 9 [default = Colours];
+	optional ScaleOption_GMT Scaling = 10;
+	optional string image = 11;  // placed in the correct Case/Run directory "SectionImage_verticalExag_fieldName_SectionName"
+
+}
+
+//####
+enum ColourScheme {
+
+	LithologyColours = 0;
+	Colours = 1;
+	GreyScale = 2;
+
+}
+
+//####
+// produce surface triangles from a 3D grid, of an interface of a field 
+// output to standard surface format as triangles
+// used for iso-surfaces in inversion, thermal uncertainty, grade boundaries in kriging
+message MakeSurfaceShells_GMT {
+
+	enum QueryType {
+		GT = 0;
+		LT = 1;
+		EQ = 2;
+		LE = 3;
+		GE = 4;
+		NE = 5;
+		INSIDERANGE = 6; // can be useful for lithology shells
+	}
+    message InterpolateShells {
+        optional int32 resample_nx = 1 [default = 100];
+        optional int32 resample_ny = 2 [default = 100];
+        optional int32 resample_nz = 3 [default = 100];
+        optional int32 cluster_nx = 4 [default = 50];
+        optional int32 cluster_ny = 5 [default = 50];
+        optional int32 cluster_nz = 6 [default = 50];
+        optional int32 lowpass_iter = 7 [default=2500];
+    }
+
+	optional string filename = 1;
+	optional string case = 2;
+	optional string run = 3;
+	required string inputvoxet = 4;  // you must give the extension!! (.vo, .sg, .vti, .vtr)
+	required string inputfield = 5;
+	optional QueryType operand = 6 [default = GT];  // eg  LE, GE, INSIDERANGE
+	optional double value1 = 7;  // value of the field, eg 200 degrees centrigrade
+	optional double value2 = 8;
+	// default is a tsurf, if you set *.vtp, you will get a VTK triangulated surface
+	optional string output = 9 [ default = "Limit_surface" ]; //  a triangulated meshgrid of the shell, tsurf(default), or vtp ( you have to set the extension!)
+
+	optional bool Do_Tops = 10 [ default = false] ; // create a csv of points at top surface of condition, or, but now unavailable, do a VRML representation!
+
+    // When present data will be interpolated to produce a smooth iso-surface. 
+    // Interpolation will ignore the Do_Tops option and only VTP output is
+    // supported.
+    optional InterpolateShells interpolate = 11;
+	optional string ReportFile = 24  [ default = "SurfaceShell.rpt"];
+}
+
+////// MPI methods /////////////////////////////////////////////////////////////
+
+//####
+//! Control Multi process forward modelling (MPI) for spatial potential field case
+//! note FFT methods do not need to go this way
+//! note parameter sweep methods also do not use this approach as yet
+message SetupMultiProcessForwardModel_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required string run = 3;
+	optional int32 Number_CPUs = 4;
+
+}
+
+message RunAllMultiProcessForwardModel_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required string run = 3;
+	optional string torun = 4;
+	optional int32 Number_Processes = 5;	// Number of simultaneous processes per node
+
+}
+
+message RunOneMultiProcessForwardModel_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required string run = 3;
+	required int32 start_layer = 4;
+	optional int32 number_of_layers = 5 [default = 1];
+	optional int32 Number_CPUs = 6 [ default = 1];  // here is the way to get more CPUs into the act
+
+}
+
+message GatherMultiProcessForwardModel_GMT {
+
+	required string filename = 1;
+	required string case = 2;
+	required string run = 3;
+	required int32 layers = 4;
+	optional string torun = 5;
+
+}
+
+////// Forward model temperature ///////////////////////////////////////////////
+
+//####
+//! Create a thermal resource simulation from a voxet.
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//  standard field names in the input voxet
+//   "Lithology", "ThermalConductivity","HeatProductionRate","Density", "SpecificHeat",
+//   "Porosity","FluidVelocityX", "FluidVelocityY", "FluidVelocityZ"
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message ForwardModelTemperatureForCreateCaseFromVoxet_GMT {
+
+	required string filename = 1;
+	optional string case = 2;
+	optional string run = 3 [ default = "Thermal"];
+	// the input voxet can contain a lithology field ( > 0), or already have the properties,
+	// heat conductivity, heat production rate, advection X,Y,Z fluid velocity, density etc.
+	// standard names, or aliases must be used so the program can find the required fields
+	required string input_voxet = 4;
+	repeated VoxetAliases_GMT field_alias = 5;
+	required int32 NumberOfIterations = 6;
+	optional SetTemperatureControl_GMT TemperatureControl = 7;  // original simple boundary controls
+	optional double MaxResidualTemperature = 8 [ default = 0.0001];
+	optional bool Advanced = 10 [ default = false]; // true is more complex boundary conditions allowed
+	// as below, using probability distribution laws.
+	optional ctm.ProbabilityDistributionFunction_GMT Surface_Temperature_Law = 12;
+	optional ctm.ProbabilityDistributionFunction_GMT Surface_Heatflow_Law = 13;
+	optional ctm.ProbabilityDistributionFunction_GMT Horizon_Temperature_Law = 14;
+	optional ctm.ProbabilityDistributionFunction_GMT Horizon_Heatflow_Law = 15;
+	optional ctm.ProbabilityDistributionFunction_GMT Base_Temperature_Law = 16;
+	optional ctm.ProbabilityDistributionFunction_GMT Base_Heatflow_Law = 17;
+	// method to arbitarily set some temperature constraints anywhere in model space
+	optional string XYZT_fixed_temperature_csv = 18;  // CSV FILE OF FIXED TEMPERATURES,  X,Y,Z,Temperature
+	optional ctm.ComputationalMethod method = 19 [ default = Spatial];
+	optional string InitialTemperatureVoxet = 20;
+	optional int32 Number_CPUs = 21 [ default = 1];  // here is the way to get more CPUs into the act
+	optional SetLaw_GMT SetLaw = 26;
+	optional string ReportFile = 27  [ default = "ForwardModelTemperature.rpt"];
+	optional bool ReinitialiseFromModel = 28  [ default = false]; // true if the InitialTemperatureVoxet is to be repopulated
+	optional string log = 99;
+
+}
+
+//####
+//! temperature and heat flow modelling needs the ambient surface temp, simplified boundary conditions
+message SetTemperatureControl_GMT {
+
+	optional double MeanSurfaceTemperature = 1;
+	optional BoundaryStyleList BoundaryStyle = 2 [ default = Boundary_HeatFlow];
+	optional double BoundaryValue = 3;  // usually the bottom, either heat flow or temperature
+	optional Boundary_Location location = 4 [ default = Base];
+	optional string input_grid = 10; // assume this could be the XYZ surface for an isotherm for instance
+
+}
+// base of model boundary conditions	 
+enum BoundaryStyleList {
+
+	Boundary_Temperature = 0;
+	Boundary_HeatFlow = 1;
+	Mirror = 2;
+	FlippedMirror = 3;
+	UseObservedGrid = 4;  // XYZ surface
+}
+
+enum Boundary_Location {
+
+	Base = 0;
+	Top = 1;
+	Side = 2;
+	Internal = 3;  // eg isotherm
+}
+
+//####
+//! Create an uncertainty simulation from a series of forward models by just changing properties and boundary conditions.
+//! chage the nominated formation's  properties by picking -1 std deviation, mean then +1 std deviation
+//! for each combination of the formation and property and boundary condition. 
+//  for each simulation, then gather all the results into a Statistical MeshGrid/voxet
+message Property_Parameter_Sweep_GMT {
+
+	required string filename = 1;  // project to do the simulation study
+	optional string case = 2;
+	optional string run = 3 [ default = "stochastic"]; // the pattern of each forward model's output results plus permuation index, for latter gathering
+	optional ForwardModelTemperatureForCreateCaseFromVoxet_GMT ThermalUncertaintyStudy = 4;  // template task
+	optional ForwardModelFromProject_GMT PotentialFieldUncertaintyStudy = 5;
+	repeated SetTemperatureControl_GMT BoundaryConditionToSweep = 7; // what is going to change
+	repeated ctm.LithologyProperty_GMT LithologyPropertyToSweep = 8;  //  eg HeatProductionRate, granites1
+	optional int32 Number_CPUs = 21 [ default = 1];  // here is the way to get more CPUs into the act
+	optional int32 Number_Permutations = 22 [ default = 3];  // step through minimum, mean, max values of each parameter,  2 is just min, max
+	optional bool GenerateTasks_ThenStop = 23 [ default = false];  // generate all the tasks, do not spawn the jobs
+	optional string ReportFile = 24  [ default = "Property_Parameter_Sweep.rpt"];
+
+}
+
+//####
+// make a comprehensive stats voxet after a parameter sweep run
+// use predefined field names for the output fields, eg Temperature, heatflow
+// place in a special stats voxet for later interogation/plotting etc
+message MakeParameterSweepSummaryStats_GMT {
+
+	required string filename = 1;
+	optional string case = 2;
+	optional string run = 3 [ default = "stochastic"]; // the pattern of each forwrad model's output results, for latter gathering
+	// optional ForwardModelTemperatureForCreateCaseFromVoxet_GMT ThermalUncertaintyStudy = 4;  // template task
+	// optional ForwardModelFromProject_GMT PotentialFieldUncertaintyStudy = 5;
+	repeated SetTemperatureControl_GMT BoundaryConditionToSweep = 7; // what is going to change
+	repeated ctm.LithologyProperty_GMT LithologyPropertyToSweep = 8;  //  eg HeatProductionRate, granites1
+	optional string statistical_voxet = 9;  // output,if not supplied, make a standard name up
+	optional int32 Number_Permutations = 22 [ default = 3];  // step through minimum, mean, max values of each parameter,  2 is just min, max
+	optional string ReportFile = 24  [ default = "Stats_Voxet.rpt"];
+	optional string log = 17;
+
+}
+
+//####
+//! Create a Forward Model from Project  situation for a run using the specified file.
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+//! XXX deprecated, do not use!
+message ForwardModelFromProject_GMT {
+
+	required string filename = 1;  // geomodeller project
+	optional string case = 2;
+	optional string run = 16 [ default = "Potential"];
+	required double x_cell_size = 3;
+	required double y_cell_size = 4;
+	required double z_cell_size = 5;
+	required double east_minimum_voxet = 6;
+	required double east_maximum_voxet = 7; 
+	required double north_minimum_voxet = 8;
+	required double north_maximum_voxet = 9;
+	required double elevation_minimum_voxet = 10; 
+	required double elevation_maximum_voxet = 11; 
+	required double mean_elevation = 12;  
+	required ctm.GeophysicsSignalType product = 13;  // what do you want to do?
+	optional bool include_border_effect = 14;
+	optional ctm.SetReferenceMagneticField IGRF = 15;
+	optional ctm.ComputationalMethod method = 18 [ default = Spatial];
+	optional bool SaveForwardResponsePerLithology = 19 [ default = false]; // used in property optimization ( produces "reference.vo"), only for spatial
+	optional int32 Number_CPUs = 20 [ default = 1];  // here is the way to get more CPUs into the act
+	optional SetLaw_GMT SetLaw = 26;  // required for parameter sweep
+	optional string ReportFile = 28  [ default = "ForwardModelFromProject.rpt"];
+	optional string log = 99;
+
+}
+
+//####
+message MakeMisfitAndTrend_GMT {
+	required string gridA = 1;
+	required string gridB = 2;
+	required int32 Trend_Degree = 3;
+	required string misfitGrid = 4;
+	required string trendGrid = 5;
+}
+//####
+//! A set of inversion tasks. There can be several commands
+//! per task but there is no guarantee of their execution order. If
+//! order is important (normally is), each command should be in a separate
+//! Task in the job file. For example in a job file to open a project
+//! and get the Extents the tasks would be required in order so the following
+//! would work:\n
+// all of these trasks serviced in batch by invbatch.exe
+message InversionTask {
+
+	// case control based events
+	optional NewCase_GMT NewCase = 1;
+	optional CaseControl_GMT CaseControl = 2;	
+	optional MeasuredGridList_GMT MeasuredGridList = 7;
+	optional MeasuredGrid_GMT MeasuredGrid = 8;
+	optional SetFixedCells_GMT SetFixedCells = 9;
+	optional SetTemperatureControl_GMT SetTemperatureControl = 10;
+	optional NewProjectFromVoxet_GMT NewProjectFromVoxet = 11;
+
+
+	// statistical laws
+//	optional ctm.ProbabilityDistributionFunction_GMT ProbabilityDistributionFunction = 20;
+	optional ctm.LithologyProperty_GMT LithologyProperty = 21;
+	optional SetLaw_GMT SetLaw = 24;
+	optional Property_Optimization_GMT Property_Optimization = 26;
+
+	// run control based events
+	optional ShapeRatioTest_GMT ShapeRatioTest = 50;
+	optional VolumeRatioTest_GMT VolumeRatioTest = 51;
+	optional CommonalityTest_GMT CommonalityTest = 52;
+	optional CommonalityVolumeTest_GMT CommonalityVolumeTest = 53;
+	optional DilationOrErosionFilter_GMT DilationOrErosionFilter = 54;
+	optional HomogeneousFilter_GMT HomogeneousFilter = 55;
+	optional RunControl_GMT RunControl = 60;
+
+
+	// run  based events
+	optional NewRun_GMT NewRun = 61;
+	optional Run_GMT  Run = 63;  // critical actual executive function
+
+	// query results  based events 
+	optional RunState_GMT  RunState = 69; 
+	optional MakeHistogram_GMT  MakeHistogram = 70;
+	optional MakeSummaryStats_GMT  MakeSummaryStats = 71;
+	optional MakeSuperSummaryStats_GMT  MakeSuperSummaryStats = 72; 
+	optional MakeEvolutionMovie_GMT  MakeEvolutionMovie = 73; 
+	optional MakeSectionImage_GMT  MakeSectionImage = 74; 
+	optional MakeAllSectionImages_GMT MakeAllSectionImages = 75;
+	optional MakeSurfaceShells_GMT MakeSurfaceShells = 76;
+	optional RunIntervalList_GMT  RunIntervalList = 77;
+	optional RunInterval_GMT  RunInterval = 78;
+	optional ScaleOption_GMT  ScaleOption = 79;
+	optional GetFunction_GMT     GetFunction = 80;
+	optional MakeParameterSweepSummaryStats_GMT  MakeParameterSweepSummaryStats = 81;
+	optional MakeMisfitAndTrend_GMT MisfitAndTrend = 82;
+
+	// forward modelling commands
+	optional ForwardModelFromProject_GMT ForwardModelFromProject = 83;
+	optional ForwardModelFromVoxet_GMT ForwardModelFromVoxet = 84;  // if we are going to make this mutable??
+	optional ForwardModelTemperatureForCreateCaseFromVoxet_GMT ForwardModelTemperatureForCreateCaseFromVoxet = 85;
+	optional VoxetAliases_GMT VoxetAliases = 86;
+	// Multiprocess version of spatial forward modelling
+	optional SetupMultiProcessForwardModel_GMT SetupMultiProcessForwardModel = 87;
+	optional RunOneMultiProcessForwardModel_GMT RunOneMultiProcessForwardModel = 88;
+	optional RunAllMultiProcessForwardModel_GMT RunAllMultiProcessForwardModel = 89;
+	optional GatherMultiProcessForwardModel_GMT GatherMultiProcessForwardModel = 90;
+	// uncertainty simulation studies
+	optional Property_Parameter_Sweep_GMT Property_Parameter_Sweep = 93;
+	optional MakeThresholdStats_GMT MakeThresholdStats = 94;
+
+	optional string log = 255;   
+
+//	optional CreateCaseFromLithologyVoxet_GMT CreateCaseFromLithologyVoxet = 12;
+//	optional ForwardModelFromCase_GMT ForwardModelFromCase = 82;
+//	optional CreateDepthFunction_GMT CreateDepthFunction = 23;
+//	optional DepthFunction_GMT DepthFunction = 25;
+}
+
+//  tasks specs that have been retired/disabled!
+////####
+////! CreateCase from voxet using the specified file.
+////!  uses ENU convention for the voxet
+////! good for all simulation and inversions
+////  makes direct use of an extrenal voxet to set up a simulation
+//// currently, optional topography set
+////! Message definition:\n
+////! <b>filename</b> Filename to load the project from
+////! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+//message CreateCaseFromLithologyVoxet_GMT {
+//
+//	required string inputvoxet = 1;
+//	required string case = 2 [ default = "Case1"];
+//	required string new_project = 3;
+//	optional ctm.GeophysicsSignalType product = 4;  //  may need this for situation where your input grid is "none.semi"
+//	//   now if you just want the collating integer order of formations mapped to a new formation name
+//	repeated VoxetLithologyMap_GMT formation = 5;
+//	optional string author = 6 [default = "invbatch"];
+//	optional string date = 7 [default="01/01/2011 00:00:00"];       // Format %2d/%2d/%4d %2d:%2d:%2d from Projet_Projet sscanf() call
+//	optional string description = 8 [default=""];
+//	optional ctm.CoordinateSystem projection = 9;  //  well here we go for the start of projections
+//	optional string version = 10 [default="2"];
+//	optional string units =11 [default = "M"];    			// Units (m, ft)
+//	optional double precision = 12 [default = 1.0];			// Precision for the project in units    
+//	//   required ctm.BoundingBox Extents = 11; // from the voxet
+//	optional double deflection2d = 13 [default = 0.001];
+//	optional double deflection3d = 14 [default = 0.001];
+//	optional double discretisation = 15 [default = 10.0];
+//	optional bool dynamicSelection = 16 [default = true];    
+//	optional bool referenceTop = 17  [default = true];
+//	optional MeasuredGridList_GMT ObservedGridList = 18;
+//
+//}
+//
+////####
+////! Create a Forward Model from Case  situation for an inversion run using the specified file.
+////! Message definition:\n
+////! <b>filename</b> Filename to load the project from
+////! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+////! XXXX not needed??
+//message ForwardModelFromCase_GMT {
+//
+//	required string filename = 1;
+//	optional string case = 2;
+//	optional ctm.ComputationalMethod method = 15 [ default = Spatial];
+//	optional int32 Number_CPUs = 7 [ default = 1];  // here is the way to get more CPUs into the act
+//	optional string log = 17;
+//
+//}
+//
+////####
+//message Boundary_Condition_GMT {
+//
+//}
+//
+////####
+//// create depth function in an existing case with an existing voxet
+//// add a field with the required depth / property distribution
+//// mainly a one dimensional/vertical implementation as yet
+//message CreateDepthFunction_GMT {
+//	required string filename = 1;
+//	optional string case = 2;
+//	optional DepthFunction_GMT function = 3;
+//	required string field = 4;
+//	required string output_voxet_name = 5;
+//
+//}
+////####
+////!  pairs of depth / value
+//message DepthFunction_GMT {
+//
+//	required string name = 1;
+//	required gmtaskmodel.PointList2d_GMT PointList = 2;
+//
+//}
+

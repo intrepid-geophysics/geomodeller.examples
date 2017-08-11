@@ -1,0 +1,20 @@
+# "Import a petrel semi-regular grid and vtk visualise "
+# actually a regular voxet example, for a reservoir simulation , buried at 5000 feet
+#  oil/water 2 phase properties.
+
+PetrelTask{
+    Examine{
+        filename: "./petrofaq_example.data";
+		FormatType: ECLIPSE;  # the full simulation language being parsed
+		property: "PORO";
+		show_3D_viewer 	: true;  #control the pop-up of the viewer
+		show_property :true; # a property such as s-velocity, permerability
+		show_pillars :false;  # truncate the fault lengths to geophysical observed data
+		show_zcorners :false;  # show the bounds as either sphere or plane
+		show_3dimage: true;  # show the permeabilities as 3d image
+		Marker_Size: 2;
+		vertical_scale: 2; # exaggeration
+		ReportFile :"petrofaq_example.rpt";
+    }
+}
+

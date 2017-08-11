@@ -1,0 +1,38 @@
+MetaData Begin
+	Name	= zuma_tensor.ers
+	Version	= "Intrepid Visualisation v6.0.0 GMBTA-2388_OCC654 for Windows (x64) by BUSTER debug build 069dce1867f3 "
+	zuma_tensor Begin
+		GroupBy	= no
+		DataType	= Tensor
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		CoordinateSystemType	= "END"
+		Samples	= 172205
+		Nulls	= 165179
+		EigenVector_Max_Minimum	=    4.0681353291
+		EigenVector_Max_Maximum	=   145.004269942
+		EigenVector_Max_Mean	=    38.346830178
+		EigenVector_Max_Variance	=   247.772952298
+		EigenVector_Max_Declination	= 0.0453896839709
+		EigenVector_Max_Inclination	=  -32.9670384611
+		EigenVector_Max_Dispersion	=   64.5524779802
+		EigenVector_Mid_Minimum	=  -38.6557098253
+		EigenVector_Mid_Maximum	=   30.0557235763
+		EigenVector_Mid_Mean	=  -3.18531727639
+		EigenVector_Mid_Variance	=   82.4939694979
+		EigenVector_Mid_Declination	=   63.9259550692
+		EigenVector_Mid_Inclination	=  0.234031921973
+		EigenVector_Mid_Dispersion	=   49.5501772958
+		EigenVector_Min_Minimum	=  -137.207767556
+		EigenVector_Min_Maximum	=  -3.84829703111
+		EigenVector_Min_Mean	=  -35.1615597237
+		EigenVector_Min_Variance	=   213.822868194
+		EigenVector_Min_Declination	=  -63.3770061368
+		EigenVector_Min_Inclination	=   45.7401148901
+		EigenVector_Min_Dispersion	=   57.6996047186
+		EigenVector_Mean_Volume	=  0.843723899538
+		Projection	= "NUTM11"
+		Datum	= "NAD27"
+		Units	= "Eotvos"
+	zuma_tensor End
+MetaData End

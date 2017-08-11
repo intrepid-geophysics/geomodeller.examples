@@ -1,0 +1,87 @@
+# this is the test of the Geomodeller/FEFLOW unstructured mesh
+# primary resolution is controlled by the Ball Radius, set to 120
+# faults are resolved with a 1/20 factor applied to this factor as well.
+# this makes a big difference on the execution time.
+# creating the Triple lines can also take quite a while depending upon the
+# complexity of the internal boundaries between units and faults
+# being able to save and reuse Triple lines is a feature also being added
+# balls are added regularly to the triple lines to protect and force the meshing to honour
+# the break lines in the geology formations. Adjust for more rapid testing
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./Feflow_Alpine/3Dgeomodeller_22_09_2014_Reviewed.xml"
+    log: "Opening project for meshing"
+  }
+}
+
+GeomodellerTask {
+  BuildMeshCGAL {
+      geomodeller_output {
+        formations: true  # we want the geology!
+        faults: true; # no faults in this project
+        volumes: true;  # export these
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true;
+        smooth: 0
+      }
+      build_triple_lines {
+   		topolimited: true
+	    borderline: true;  # box of project is not interesting, but still required to get a CGAL mesh!!
+	    insideline: true
+    	point_spacing: 100.0; # Ball Radius, to protect the break lines
+    	precision: 20
+    	divide_model_using_regular_sections: true
+        export_triple_lines {
+            output_directory: "."
+    	    format: TripleLine_VTK;
+        }
+    }
+    mesh_criteria {
+        min_facet_angle: 15.0
+        min_facet_radii: 25.0
+        radius_edge_ratio: 3.0
+        min_protect_ball_radius: 200
+        default_discretization {
+            precision: 400.0
+            max_tet_radii: 800.0
+            max_facet_radii: 800.0
+            max_edge_length: 800.0
+        }
+    }
+    refine_mesh {
+        lloyd {time_limit:5}
+        perturb {time_limit:5}
+        exude {time_limit:5}
+    }
+     export_mesh {
+#  we want to force a *.gmod file to appear
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: FEFLOW;
+  		output_directory: "."
+  	}
+  	export_mesh {
+#  we want to force a *.medit file to appear, for checking
+   		mesh_type: VOLUME;
+  		file_type: MEDIT;
+  		output_directory: "."
+  	}
+  	export_mesh {
+#  we want to force a *.vtu file to appear,
+# now includes all isopotentials and geology gradients, and geology pile & colours
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+		wantTetrahedra: true
+		filterout_triangles_from_inner_tetrahedrons: true
+        output_directory: "."
+  	}
+  	 log: "Ground Water tutorial for FEFLOW integration - meshing of Alpine geology model, export mesh in a few formats including *.gmod"
+  }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./Alps_geological_model/Alps_geological_model.xml"
+    }
+}

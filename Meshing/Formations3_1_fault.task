@@ -1,0 +1,593 @@
+# here we start to push hi-fidelity mesh grid rendering of your geology model
+# this is done via the CGAL interface, we can open up teraheral rendering
+# triple point lines, Delauny adaptive remeshing etc.
+# updated to V4.0 syntax and the release version of CGAL, but also designed to run quickly in the auto test system
+
+
+name: "Geomodeller Write Protobuf Task file"
+description: "Sections, Pile, Interface, Foliations, no meshgrids (except DTM), or computed geology"
+GeomodellerTask {
+  CreateProject {
+    HorizontalDTM {
+      name: "SurfaceTopography"
+      elevation: 0
+    }
+    name: "Formations3_1Fault"
+    author: "g.c"
+    date: "18/10/2010 10:16: 3"
+    description: "simple co-krig interpolation with fault throw"
+    projection {
+      geographic2DCS: "Local"
+      map_projection: "Local"
+    }
+    version: "1.0"
+    precision: 1
+    Extents {
+      xmin: 0
+      ymin: 0
+      zmin: -5000
+      xmax: 10000
+      ymax: 10000
+      zmax: 1000
+    }
+    deflection2d: 0.001
+    deflection3d: 0.0001
+    discretisation: 1000000
+    referenceTop: false
+  }
+  CreateFormation {
+    name: "A"
+    red: 255
+    green: 105
+    blue: 105
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "B"
+    red: 172
+    green: 255
+    blue: 47
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "D"
+    red: 151
+    green: 255
+    blue: 255
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "A_Series"
+    position: 1
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "A_Series"
+    formation: "A"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "B_Series"
+    position: 2
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "B_Series"
+    formation: "B"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "D_Series"
+    position: 3
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "D_Series"
+    formation: "D"
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "F1"
+    red: 255
+    green: 105
+    blue: 105
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  LinkFaultsWithSeries {
+    FaultSeriesLinks {
+      fault: "F1"
+      series: "A_Series"
+      series: "B_Series"
+      series: "D_Series"
+    }
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BordSud"
+    PointList {
+      Point {
+        x: 0.01
+        y: 0.01
+        z: 0
+      }
+      Point {
+        x: 9999.99
+        y: 0.01
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "C1"
+    PointList {
+      Point {
+        x: 350.3912353515625
+        y: 4643.03857421875
+        z: 0
+      }
+      Point {
+        x: 9526.408203125
+        y: 4748.02685546875
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 5575.7812183178157
+      y: 4702.8253766079915
+      z: -1357.531
+    }
+    point {
+      x: 6181.1995919172987
+      y: 4709.7523291958742
+      z: -1143.821
+    }
+    point {
+      x: 6766.422287382894
+      y: 4716.4482109887276
+      z: -979.525
+    }
+    point {
+      x: 7352.542924075613
+      y: 4723.15436666255
+      z: -929.13900000000012
+    }
+    point {
+      x: 7853.4691369921566
+      y: 4728.8857621375018
+      z: -623.113
+    }
+    point {
+      x: 8456.8806419470548
+      y: 4735.7897529446445
+      z: -113.15499999999997
+    }
+    point {
+      x: 493.00590080524034
+      y: 4644.6703136389815
+      z: -3315.989
+    }
+    point {
+      x: 2050.2969715570052
+      y: 4662.4882093009455
+      z: -3353.974
+    }
+    point {
+      x: 3556.9433571513077
+      y: 4679.7266489235626
+      z: -3176.71
+    }
+    point {
+      x: 4304.1534500686976
+      y: 4688.2759251142625
+      z: -3036.753
+    }
+    formation: "D"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 5543.1703527941945
+      y: 4702.4522562515858
+      z: -1858.162
+    }
+    point {
+      x: 6264.5551360535183
+      y: 4710.7060496763679
+      z: -1575.583
+    }
+    point {
+      x: 6922.8030518051937
+      y: 4718.2374565551772
+      z: -1404.555
+    }
+    point {
+      x: 8142.4262239069949
+      y: 4732.1918924570882
+      z: -986.955
+    }
+    point {
+      x: 8745.8367289273428
+      y: 4739.0958718233833
+      z: -638.483
+    }
+    point {
+      x: 9238.764465367527
+      y: 4744.7357519599464
+      z: -273.0139999999999
+    }
+    point {
+      x: 570.3898358007159
+      y: 4645.5557093787747
+      z: -3721.995
+    }
+    point {
+      x: 2077.0372213295695
+      y: 4662.7941604422385
+      z: -3747.318
+    }
+    point {
+      x: 3406.4312086109603
+      y: 4678.0045496905295
+      z: -3671.348
+    }
+    point {
+      x: 4419.302913200072
+      y: 4689.5934187788325
+      z: -3392.79
+    }
+    formation: "B"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 5879.419
+      y: 3853.2
+      z: 0
+    }
+    point {
+      x: 5879.419
+      y: 6359.49
+      z: 0
+    }
+    formation: "F1"
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "D"
+    foliation {
+      Point3D {
+        x: 5878.4904051175563
+        y: 4706.2888529019328
+        z: -1250.676
+      }
+      dip: 19.441628706214765
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 6473.8109396500968
+        y: 4713.1002700923009
+        z: -1061.673
+      }
+      dip: 15.680632189263896
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 7059.482605729253
+        y: 4719.8012888256389
+        z: -954.33199999999988
+      }
+      dip: 4.9130457853987126
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 7603.0060305338848
+        y: 4726.0200644000261
+        z: -776.126
+      }
+      dip: 31.419937310668377
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 8155.1748894696048
+        y: 4732.3377575410732
+        z: -368.134
+      }
+      dip: 40.200131114767942
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 1271.6514361811228
+        y: 4653.5792614699631
+        z: -3334.9815
+      }
+      dip: 1.3971738529339692
+      direction: 89.344473416829132
+      azimuth: 89.344473416829132
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 2803.6201643541567
+        y: 4671.1074291122541
+        z: -3265.342
+      }
+      dip: 6.7098323942847431
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 3930.5484036100029
+        y: 4684.0012870189121
+        z: -3106.7315
+      }
+      dip: 10.608243354646083
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "B"
+    foliation {
+      Point3D {
+        x: 5903.8627444238564
+        y: 4706.5791529639764
+        z: -1716.8725
+      }
+      dip: 21.3898714159548
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 6593.679093929356
+        y: 4714.471753115773
+        z: -1490.069
+      }
+      dip: 14.563808095172183
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 7532.6146378560943
+        y: 4725.2146745061327
+        z: -1195.755
+      }
+      dip: 18.900097731855645
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 8444.13147641717
+        y: 4735.6438821402362
+        z: -812.719
+      }
+      dip: 30.004983044312031
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 8992.300597147434
+        y: 4741.9158118916648
+        z: -455.74849999999992
+      }
+      dip: 36.552371880949309
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 1323.7135285651427
+        y: 4654.1749349105066
+        z: -3734.6565
+      }
+      dip: 0.96284605535280454
+      direction: 89.344473416829132
+      azimuth: 89.344473416829132
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 2741.7342149702649
+        y: 4670.3993550663845
+        z: -3709.3330000000005
+      }
+      dip: 3.2704731949554131
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 3912.8670609055162
+        y: 4683.7989842346806
+        z: -3532.0690000000004
+      }
+      dip: 15.376253876171374
+      direction: 269.34447344033225
+      azimuth: 269.34447344033225
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "F1"
+    foliation {
+      Point3D {
+        x: 5879.419
+        y: 5106.3449999999993
+        z: 0
+      }
+      dip: 70
+      direction: 270.00000001175158
+      azimuth: 270.00000001175158
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+    ComputeModel {
+        SectionList  { node: "All"}
+        FaultList    { node: "F1"}
+        BoreholeList { node: "All"}
+        SeriesList { node: ["A_Series","B_Series","D_Series"]   }
+        radius: 1.0
+    }
+}
+GeomodellerTask {
+    RenderModel {
+        nx:8;
+        ny:8;
+        nz:8;
+		generateSurfaces: false;
+        generateVolumes: true;
+		topoLimited: false;
+		adaptToTopo: false;
+		buildFormations: true;
+		buildFaults: true;
+		buildDykes: false;
+    }
+}
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "Formations3_1Fault.xml"
+  }
+}
+GeomodellerTask {
+  BuildMeshCGAL {
+      geomodeller_output {
+        formations: true
+        faults: true
+        volumes: true
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true;
+        smooth: 0
+      }
+    build_triple_lines {
+       	topolimited: true  # has topo
+	    borderline: false
+	    insideline: true
+	    point_spacing: 1000.0   # this is sub-divided for precison by 10
+	    precision: 2
+	    divide_model_using_regular_sections: true
+    	clean_lines: true;  # eliminate confusion
+        export_triple_lines {
+            output_directory: "."
+	        format: TripleLine_VTK;
+        }
+    }
+    mesh_criteria {
+        min_facet_angle: 20.0
+        min_facet_radii: 50.0
+        radius_edge_ratio: 3.0
+        min_protect_ball_radius: 400
+        default_discretization {
+            precision: 400.0
+            max_facet_radii: 500.0
+            max_tet_radii: 500.0
+            max_edge_length: 250
+        }
+    }
+    refine_mesh {
+        perturb {time_limit:5}
+        exude {time_limit:5}
+    }
+    export_mesh {
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+  		 output_directory: "."
+  	}
+    log: "Building 3 formations and one fault with tetrahedrons"
+  }
+}
+# now for a formal mesh quality report
+GeomodellerTask {
+  GenerateMeshReport {
+    output_report_file: "3_Formations_1_FaultsMesh.rpt";
+    input_mesh_file: "./Formations3_1Fault400.vtu";  # potential trouble with blank in file name, changed project name to one word in xml
+    vtk: true;
+    sharp_angle_threshold: 20;
+    facet_angle_threshold { first: 20; second: 70;}
+    facet_size_threshold { first: 50; second: 1000;}
+
+    vtp_dir: ".";
+    write_vtp_files: false;
+    output_mesh_report: "3_Formations_1_Faults_quality.rpt";
+
+    report_vertices: true;
+    report_edges: true;
+    report_facets: true;
+    tolerance: 0.0001;
+    log: "Mesh quality check for fault"
+	}
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "Formations3_1FaultSummary.rpt"
+    }
+}
+
+GeomodellerTask {
+  CloseProjectNoGUI {
+  }
+}
+
+

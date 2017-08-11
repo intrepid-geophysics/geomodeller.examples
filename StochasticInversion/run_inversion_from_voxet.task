@@ -1,0 +1,104 @@
+#  example of reusing output voxet from previous inversion as an input to the next case
+InversionTask {
+	CreateCaseFromLithologyVoxet {
+		inputvoxet: "./bdga1/Case6/Run1/Model.vo";	
+		case: "Case7";
+		new_project: "./bdga1/bdga1.xml";
+		formation { index: 1; field: "Crust";	}  # map interger number inside voxet to formation name
+		formation { index: 2; field: "Basin";	}
+		ObservedGridList {
+			ObservedGrid {
+				type: Gravimetry;
+				mean_elevation: 100.000000;
+				compute_surface_style: OnTopographyWithClearance;
+				precision: 0.200000;
+				Match_Trend: true;
+				Match_Trend_Degree: 1;
+				Match_Trend_Rate: 0;
+				grid: "./bdga1/Input_Grids/isoboug_a1.ers";
+			}
+			ObservedGrid {
+				type: Magnetism;
+				mean_elevation: 100.0;
+				compute_surface_style: OnTopographyWithClearance;
+				precision: 0.100000;
+				Match_Trend: false;
+				Match_Trend_Degree: 0;
+				Match_Trend_Rate: 0;
+				grid: "./bdga1/Input_Grids/bdga1_tmi1km.ers";
+			}
+		}
+	}
+}
+InversionTask {
+	CaseControl {
+		filename: "./bdga1/bdga1.xml";
+		case: "Case7";
+		SetReferenceDensity: 2.670000;
+		SetAboveTopoDensity: 2.670000;
+		SetReferenceMagneticField { Magnitude: 48931.700000; Inclination: -47.620000; Declination: 6.390000; }
+		SetLaw {
+			LithologyProperty { lithology: "Basin"; property: Movable; fixed: false;}
+			LithologyProperty { lithology: "Crust"; property: Movable; fixed: false;}
+			LithologyProperty { lithology: "Basin"; index_voxet_key: 1; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.400000; stddev: 0.100000;}}
+			LithologyProperty { lithology: "Crust"; index_voxet_key: 2; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.670000; stddev: 0.070000;}}
+			LithologyProperty { lithology: "Basin"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 0.000000;}}
+			LithologyProperty { lithology: "Crust"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 0.000000;}}
+			LithologyProperty { lithology: "Basin"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 1.000000;}}
+			LithologyProperty { lithology: "Crust"; property: CommonalityVolume; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
+			LithologyProperty { lithology: "Basin"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.001000; stddev: 1.000000;}}
+			LithologyProperty { lithology: "Crust"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
+			LithologyProperty { lithology: "Basin"; property: ShapeRatio; ProbabilityDistributionFunction {type: LogNormalDistribution; mean: 0.250000; stddev: 0.050000;}}
+			LithologyProperty { lithology: "Crust"; property: ShapeRatio; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
+			LithologyProperty { lithology: "Basin"; property: VolumeRatio; ProbabilityDistributionFunction {type: LogNormalDistribution; mean: 0.250000; stddev: 0.050000;}}
+			LithologyProperty { lithology: "Crust"; property: VolumeRatio; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
+		}
+	}
+}
+InversionTask {
+	NewRun {
+		filename: "./bdga1/bdga1.xml";
+		case: "Case7";
+		run: "Run1";
+		NumberOfIterations: 100000;
+	}
+}
+InversionTask {
+	RunControl {
+		filename: "./bdga1/bdga1.xml";
+		case: "Case7";
+		run: "Run1";
+		NumberOfIterations: 100000;
+		LithologyInitialiseStyle: FromModel;
+		DensityInitialiseStyle: FromVoxet;
+		SusceptibilityInitialiseStyle: FromVoxet;
+		property_voxet: "./bdga1/Case6/Run1/Model.vo";
+		property_voxet_field_density: "Density";
+		property_voxet_field_susceptibility: "Susceptibility";		
+		RemenantMagnetizationInitialiseStyle: FromLawMean;
+		PropertyChangeOnFixedCell: true;
+		AllowNeighbourPropertyDifferentCheck: true;
+		Seed: 1234;
+		ProbabilityOfPropertyChangeOnly: 25;
+		SetDualTemperatureMode: false;
+		Mode1TemperatureFactor: 1.000000;
+		Mode1Duration: 100;
+		Mode2TemperatureFactor: 1000000.000000;
+		Mode2Duration: 99900;
+		AllowGeophysicalTests: true;
+		AllowGeologicalTests: false;
+		PreserveTopology: false;
+		PreserveVerticalRelationshipTest: true;
+		CommonalityTest { SetWeights:GlobalCommonality; Allow:true;}
+		CommonalityVolumeTest { SetWeights:LocalAbundance; Allow:true;}
+		VolumeRatioTest { SetWeights:LocalAbundance; Allow:true;}
+		ShapeRatioTest { SetWeights:LocalAbundance; Allow:true; IncludeAboveTopoFaces:true; IncludeOutsideFaces:true;}
+	}
+}
+InversionTask {
+	Run {
+		filename: "./bdga1/bdga1.xml";
+		case: "Case7";
+		run: "Run1";
+	}
+}

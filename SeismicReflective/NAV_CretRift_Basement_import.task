@@ -1,0 +1,15 @@
+# use the ascii column import tool to check and create an intermediate database
+# this contains
+
+IntrepidTask {
+    Import {
+		Input: "data/CF_CretRift_Basement.asc"
+		Output: "data/NAV_cretrift_basement..DIR"  
+		ReportFile: "capel_faust_nav.rpt"
+		Format: ASCIICOLUMNS
+		AsciiColumns {
+		  FixedLength: false
+		  ReportDiagnostics: true
+		  StopOnError: true
+		  DDF: "data/NAV_cretrift_basement.proto_ddf"
+}}}

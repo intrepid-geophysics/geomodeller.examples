@@ -1,0 +1,55 @@
+DatasetHeader Begin
+	LastUpdated	= Sun Mar 23 00:59:52 GMT 2014
+	Version	= "5.0"
+	DataSetType	= ERStorage
+	DataType	= Raster
+	HeaderOffset	= 0
+	CoordinateSpace Begin
+		Projection	= "NUTM11"
+		CoordinateType	= EN
+		Datum	= "NAD27"
+		Rotation	= 0:0:0 
+	CoordinateSpace End
+	ByteOrder	= LSBFirst
+	RasterInfo Begin
+		CellType	= IEEE8ByteReal
+		NrOfLines	= 724
+		NrOfCellsPerLine	= 466
+		NrOfBands	= 6
+		NullCellValue	= -5.0E+75
+		CellInfo Begin
+			Xdimension	=              40
+			Ydimension	=              40
+		CellInfo End
+		RegistrationCellX	= 0
+		RegistrationCellY	= 0
+		RegistrationCoord Begin
+			Eastings	=          534940
+			Northings	=         4489220
+		RegistrationCoord End
+		BandId Begin
+			Value	= "Txx"
+			Units	= "Eotvos"
+		BandId End
+		BandId Begin
+			Value	= "Txy"
+			Units	= "Eotvos"
+		BandId End
+		BandId Begin
+			Value	= "Txz"
+			Units	= "Eotvos"
+		BandId End
+		BandId Begin
+			Value	= "Tyy"
+			Units	= "Eotvos"
+		BandId End
+		BandId Begin
+			Value	= "Tyz"
+			Units	= "Eotvos"
+		BandId End
+		BandId Begin
+			Value	= "Tzz"
+			Units	= "Eotvos"
+		BandId End
+	RasterInfo End
+DatasetHeader End

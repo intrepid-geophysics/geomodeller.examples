@@ -1,0 +1,170 @@
+name: "Slab Setup"
+description: "lets just do lots of parameter settings so we can chek they are alright"
+auditfile: "audit_Slab_Setup.rpt"
+InversionTask {
+	NewCase {
+		filename: "./InputGeology/vs/vs.xml";	
+		case: "Case_1";
+		z_cell_size: 50;
+		elevation_minimum_voxet: -500;
+		elevation_maximum_voxet: 0;
+		
+		ObservedGridList {
+			ObservedGrid {
+				type: Gravimetry;
+				mean_elevation: 50;
+				precision: 0.1;
+				Match_Trend: false;
+				Match_Trend_Degree: 0;
+				Match_Trend_Rate: 0;
+				grid: "./InputGrids/slab_dipping_Observed_Gravimetry.ers";
+				}
+			ObservedGrid {
+				type: Magnetism;
+				mean_elevation: 50;
+				precision: 0.3;
+				Match_Trend: true;
+				Match_Trend_Degree: 1;
+				Match_Trend_Rate: 20000;
+				grid: "./InputGrids/slab_dipping_Observed_Magnetism.ers";
+				}
+			}
+	}
+}
+ 
+InversionTask {
+	CaseControl {
+		case: "Case_1";
+		filename: "./InputGeology/vs/vs.xml";
+		SetReferenceDensity: 2.67;
+		UseRelativeGravityChanges: false; # 	
+		SetReferenceMagneticField {
+			Magnitude:	50000;
+			Inclination: -65.0;
+			Declination: 25; 
+			}
+		SetLaw {
+			LithologyProperty {
+				lithology: "Slab";
+				property: Density;
+				ProbabilityDistributionFunction {
+					type: NormalDistribution;
+					mean: 3.67;
+					stddev: 0.01;
+					}
+				}
+			LithologyProperty {
+				lithology: "Host";
+				property: Density;
+				ProbabilityDistributionFunction {
+					type: NormalDistribution;
+					mean: 2.67;
+					stddev: 0.01;
+					}
+				}
+			LithologyProperty {
+				lithology: "Slab";
+				property: Susceptibility;
+				ProbabilityDistributionFunction {
+					type: LogNormal;
+					mean: 0.001;
+					stddev: 0.000001;
+					}
+				}
+			LithologyProperty {
+				lithology: "Host";
+				property: Susceptibility;
+				ProbabilityDistributionFunction {
+					type: LogNormal;
+					mean: 0.000001;
+					stddev: 0.000001;
+					}
+				}
+			LithologyProperty {
+				lithology: "Slab";
+				property: Remanence;
+				ProbabilityDistributionFunction {
+					type: NormalDistribution;
+					mean: 0;
+					stddev: 0.;
+					}
+				}
+			LithologyProperty {
+				lithology: "Host";
+				property: Remanence;
+				ProbabilityDistributionFunction {
+					type: NormalDistribution;
+					mean: 0;
+					stddev: 0;
+					}
+				}
+			LithologyProperty {
+				lithology: "Slab";
+				property: Commonality;
+				ProbabilityDistributionFunction {
+					type: Weibull;
+					mean: 2;
+					stddev: 1;
+					}
+				}
+			LithologyProperty {
+				lithology: "Host";
+				property: Commonality;
+				ProbabilityDistributionFunction {
+					type: Weibull;
+					mean: 2;
+					stddev: 1;
+					}
+				}
+			LithologyProperty {
+				lithology: "Slab";
+				property: ShapeRatio;
+				ProbabilityDistributionFunction {
+					type: LogNormal;
+					mean: 0.25;
+					stddev: 0.09;
+					}
+				}
+			LithologyProperty {
+				lithology: "Host";
+				property: ShapeRatio;
+				ProbabilityDistributionFunction {
+					type: LogNormal;
+					mean: 0.25;
+					stddev: 0.09;
+					}
+				}
+			}
+	}
+}
+InversionTask {
+	NewRun {
+		filename: "./InputGeology/vs/vs.xml";	
+		case: "Case_1";			
+		run: "Run_1";		
+		NumberOfIterations:	100000;
+	}
+}
+
+InversionTask {
+	RunControl {
+		filename: "./InputGeology/vs/vs.xml";
+		case: "Case_1";	
+		run: "Run_1";		
+		NumberOfIterations:	100000;
+		AllowNeighbourPropertyDifferentCheck: false;
+		PreserveTopology: false;
+		ProbabilityOfPropertyChangeOnly: 50;
+		LargeMisfitRMSThresholdFactor:	1.0;
+		LargeMisfitTemperature:	1.0;
+		CommonalityTest {
+			SetWeights: none;
+			}
+		ShapeRatioTest {
+			SetWeights:	LocalAbundance;
+			IncludeAboveTopoFaces: true;
+			IncludeOutsideFaces: true;
+			}
+		Seed:	1135314798;
+	}
+}

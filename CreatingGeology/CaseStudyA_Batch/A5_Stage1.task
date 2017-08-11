@@ -1,0 +1,86 @@
+name: "A5_Stage1"
+description: "load some drill hole data, also dump out a lithology voxet!"
+auditfile: "audit_A5_Stage1.task"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA5.xml"
+    }
+}
+
+GeomodellerTask {
+    LoadDrillholes {
+        precision: 1.0
+        collarFile: "data/Data/Drillholes1to3_Collars.csv"
+	  	surveyFile: "data/Data/Drillholes1to3_Surveys.csv"
+	  	geologyFile: "data/Data/Drillholes1to3_Geology.csv"
+        collarAliases {
+        	node: "HoleID" 
+			node: "X"
+			node: "Y"
+			node: "Z"
+			node: "DEPTH"
+        }
+	surveyAliases {
+        	node: "HoleID"
+			node: "DIP"
+			node: "BEARING"
+			node: "DISTANCE"
+        }
+	geologyAliases {
+        	node: "HoleID"
+			node: "FROM"
+			node: "TO"
+			node: "LITHOLOGY"
+        }
+    }
+}
+
+GeomodellerTask {
+    ComputeModel {
+        FaultList {
+            node: "All"
+        }
+        SectionList {
+            node: "All"
+        }
+        SeriesList {
+            node: "All"
+        }
+        Extents {
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+
+GeomodellerTask {
+    SaveLithologyVoxet {
+    nx: 20
+    ny: 20
+    nz: 20
+    LithologyVoxetFileStub: "TuteA5"
+    }
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+GeomodellerTask {
+    ExportSection {
+    	section: "Section1"
+        filename: "section1_export.csv"
+    }
+} 
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./test5.xml"
+    }
+}

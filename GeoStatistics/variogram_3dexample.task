@@ -1,0 +1,34 @@
+name: "variogram calc from seismic locations"
+description: "use a geophysical database directly, nominate the field, this example is geodetic, kms depth"
+auditfile: "audit_variogram.job"
+
+GeomodellerTask {
+	ComputeVariogram { 
+		MeshGrid_Source {
+	    	SourceType: File;
+	    	File_Name : "./LandersAfterShocks..DIR";  # an Intrepid database
+	    	#MeshGrid_Name: "LandersAfterShocks";
+	    	FileType: FT_POINT;
+	    	Field_Name: "Magnitude";  # 
+			}
+		Analysis_Type { type: Rho;}  # make isotropic
+    	Domain: NoDomain; 
+     	Maximum_Distance: 0.3; # the maximum distance, about 1/3 of the box largest dimension
+    	Variogram_Name: "magnitude_variogram.var";
+    	Extents {
+            xmin: 33.75
+            ymin: -116.75
+            zmin: 0
+            xmax: 34.75
+            ymax: -116.45
+            zmax: 30
+        }
+    	NuggetEffect: 0;
+		Sill: 1;
+		Range: 0.4;
+		VariogramModelType: VMT_Gaussian;
+		lag: 0.1;
+		Number_Points: 30;
+		Number_CPUs: 4;  # isotropic, so partition/ thread
+    }
+}

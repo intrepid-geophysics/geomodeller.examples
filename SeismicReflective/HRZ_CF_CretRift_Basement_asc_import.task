@@ -1,0 +1,11 @@
+IntrepidTask {
+    Import {
+		Input: "data/CF_CretRift_Basement.asc"
+		Output: "data/hrz_cretrift_basement..DIR"
+		Format: ASCIICOLUMNS
+		AsciiColumns {
+  			FixedLength: false
+  			ReportDiagnostics: true
+  			StopOnError: true
+  			DDF: "data/HRZ_cretrift_basement.proto_ddf"
+}}}

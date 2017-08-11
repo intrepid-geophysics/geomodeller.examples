@@ -1,0 +1,49 @@
+# A simple example of using the batch interface to Geomodeller. Run with the following command:
+#
+# geomodellerbatch -batch compute_model_and_save_litho_voxet.task
+#
+# There can be several commands per geomodeller task but there is no guarantee of their 
+# execution order. If order is important (normally is), each command should be in a 
+# separate task in the job file.
+#
+# An audit trail (including potential return values) is written to "geomodeller-batch.audit". 
+# and any errors are reported in "geomodeller-batch.rpt". Both files are located in the 
+# current working directory. Make sure to check these files since non-fatal errors do not
+# result in a termination of the batch processing.
+#
+# (c) 2012 Intrepid Geophysics
+
+# Open the project
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "%{INSTALL_PATH}/tutorial/CaseStudyA/TutorialA1/Completed_Project/TutorialA1.xml"
+    }
+}
+
+# Report the model bounds
+GeomodellerTask {
+    GetModelBounds {
+    }
+}
+
+# Compute the geological model
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+	    node: "all"
+	}
+	SectionList {
+	    node: "all"
+	}
+    }
+}
+
+# Save the lihtology voxet
+GeomodellerTask {
+    SaveLithologyVoxet {
+        nx: 20
+	ny: 20
+	nz: 20
+        LithologyVoxetFileStub: "myLithoVoxet"
+    }
+}

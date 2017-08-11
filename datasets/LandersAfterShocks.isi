@@ -1,0 +1,50 @@
+MetaData Begin
+	Name	= LandersAfterShocks..DIR
+	Version	= "Intrepid Import v5.6.0 product for Windows (x64) by BUGATTI debug build bc61bb892a94+ "
+	Date Begin
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= FA_FID
+		Width	= 16
+		Decimals	= 2
+		DisplayNullAs	= 99999
+	Date End
+	Longitude Begin
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= X
+		Projection	= "GEODETIC"
+		Datum	= "NAD83"
+	Longitude End
+	Latitude Begin
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Y
+		Projection	= "GEODETIC"
+		Datum	= "NAD83"
+	Latitude End
+	DepthKM Begin
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Z
+		Width	= 16
+		Decimals	= 2
+		DisplayNullAs	= 99999
+	DepthKM End
+	Magnitude Begin
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Width	= 16
+		Decimals	= 2
+		DisplayNullAs	= 99999
+	Magnitude End
+	ReportFormat Begin
+		Default = {
+			9 4 99999 Date:1
+			10 5 99999 Longitude:1
+			9 6 99999 Latitude:1
+			6 3 99999 DepthKM:1
+			4 2 99999 Magnitude:1
+}
+	ReportFormat End
+MetaData End

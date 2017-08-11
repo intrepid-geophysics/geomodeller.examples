@@ -1,0 +1,54 @@
+name: "kriging calc from seismic velocities"
+description: "use geophysical database directly, use variogram model parameters for field, write to external gridmesh as well"
+auditfile: "audit_kriging.job"
+
+GeomodellerTask {
+	InterpolateNumericalReadings { 
+		method: IM_Kriging;	
+		MeshGrid_Source {
+	    		SourceType: File;
+	    		File_Name : "bbbb..DIR";
+	    		FileType: FT_POINT;
+	    		Field_Name: "Rho_ND";  
+			}   	    
+	    OutputStyle: IOT_D3;
+	    Output_Mesh {
+	    		CreateDestinationType: File;
+		    	MeshGrid_Name : "outV.igmesh";
+		    	FileType: FT_IGMESH;
+		    	Field_Name: "Rho_ND"; 
+			Field_Variance: "Rho_ND_stddev";
+		    	dx: 4000; 
+		    	dy: 4000;
+		    	dz: 200; 
+Extents {	    	
+	            	xmin: 4360000;
+	            	ymin: 805000;
+	            	zmin: -40000;
+	           	xmax: 5006000;
+	            	ymax: 1654000;
+	            	zmax: 0;
+}
+		#	nx: 165;			
+		#	ny: 212;
+		#	nz: 200;
+	        }
+        Variogram_Model {
+ 			lag:	3000.; 
+ 			variance1 { node: [ 0.0,0.050530, 0.100491,0.149312,0.196425,
+				0.241260,0.283247,0.321817,0.356400,0.386427,0.411328,0.430534,
+				0.443475,0.449582,0.45,0.45, 0.45,0.45,0.45,0.45,0.45,0.45,0.45,
+				0.45,0.45,0.45,0.45,0.45,0.45,0.45]; }
+ 	 		number_points: 30;
+                        Analysis_Type: Rho;
+			}	
+	    Neighbour: NS_RegularGridBox;
+	    Maximum_Observations: 20;
+            Maximum_Radius: 30000;            
+#	    NuggetEffect: 0;
+#	    Range: 40000;
+#	    Sill: 0.45;
+		
+    }
+}
+

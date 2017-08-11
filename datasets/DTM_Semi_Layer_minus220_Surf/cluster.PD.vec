@@ -1,0 +1,21 @@
+DatasetHeader Begin
+	Version	= "5.0"
+	DataType	= Point
+	ByteOrder	= LSBFirst
+	VectorInfo Begin
+		CellType	= Signed32BitInteger
+		NullCellValue	= -2147483648
+		NrOfLines	= 1
+		NrOfCellsPerLine	= 65536
+		NrOfBands	= 1
+	VectorInfo End
+	CoordinateSpace Begin
+		Projection	= "SUTM53"
+		CoordinateType	= EN
+		Units	= "METERS"
+		Datum	= "GDA94"
+	CoordinateSpace End
+	FormatInfo Begin
+		Width	= 16
+	FormatInfo End
+DatasetHeader End

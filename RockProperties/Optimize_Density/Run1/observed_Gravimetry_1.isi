@@ -1,0 +1,12 @@
+MetaData Begin
+	Name	= observed_Gravimetry_1.ers
+	Version	= "Intrepid 3D GeoModeller v2.1.0 geomodeller_2013 for Linux (x86_64) by seneca debug build 46d2b42d974a+ "
+	observed_Gravimetry_1 Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "MGA50"
+		Datum	= "GDA94"
+	observed_Gravimetry_1 End
+MetaData End

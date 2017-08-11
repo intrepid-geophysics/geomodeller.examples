@@ -1,0 +1,23 @@
+DatasetHeader Begin
+	Version	= "5.0"
+	DataType	= Point
+	ByteOrder	= LSBFirst
+	VectorInfo Begin
+		CellType	= IEEE8ByteReal
+		NullCellValue	= -5.0E+75
+		NrOfLines	= 1
+		NrOfCellsPerLine	= 5040
+		NrOfBands	= 1
+	VectorInfo End
+	CoordinateSpace Begin
+		Projection	= "NUTM11"
+		CoordinateType	= EN
+		Units	= "METERS"
+		Datum	= "NAD27"
+	CoordinateSpace End
+	FormatInfo Begin
+		Order	= 1
+		Width	= 15
+		Decimals	= 6
+	FormatInfo End
+DatasetHeader End

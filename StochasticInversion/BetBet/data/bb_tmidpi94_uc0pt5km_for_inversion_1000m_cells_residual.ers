@@ -1,0 +1,33 @@
+DatasetHeader Begin
+	Version	= "5.0"
+	Name	= "bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual.ers"
+	DataSetType	= ERStorage
+	DataType	= Raster
+	ByteOrder	= LSBFirst
+	CoordinateSpace Begin
+		Datum	= "GDA94"
+		Projection	= "MGA54"
+		CoordinateType	= EN
+		Rotation	= 0:0:0 
+		Units	= "METERS"
+	CoordinateSpace End
+	RasterInfo Begin
+		CellType	= IEEE4ByteReal
+		NrOfLines	= 57
+		NrOfCellsPerLine	= 33
+		NrOfBands	= 1
+		NullCellValue	= -9999.00000000
+		RegistrationCellX	= 0
+		RegistrationCellY	= 0
+		CellInfo Begin
+			Xdimension	=            1000
+			Ydimension	=            1000
+		CellInfo End
+		RegistrationCoord Begin
+			Eastings	=          715500
+			Northings	=         5920500
+		RegistrationCoord End
+	RasterInfo End
+	LastUpdated	= Sun Jun 21 03:09:59 GMT 2015
+	HeaderOffset	= 0
+DatasetHeader End

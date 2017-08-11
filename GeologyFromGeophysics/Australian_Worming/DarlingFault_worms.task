@@ -1,0 +1,128 @@
+#
+# Example job file - worme
+#
+# Generate multi-scale edges (a.k.a. worms) from a gridded dataset. 
+# - Australian case study, isostatic gravity corrected grid,  800m cell size, Cartesian coords.
+#  works on standard gravity and magnetic grids, as well as tensor gradient grids
+#  aim to calibrate the dips, depths with known geology
+#  The Darling fault is the boundary between the Yilgarn Craton  and Perth basin
+#  3 on shore seismic lines cross it, and been studied for a long time.
+#  some issue with the 800m cell size. The Darling fault is so big, works quite well with 3.2km grid size
+# Usage: fmanager -batch worme.task
+#
+
+IntrepidTask {
+	WormE {
+		InputGridName {
+			grid: "IR_gravity_anomaly_Australia_trimmed.ers";
+			type: Gravimetry;
+			Band: 1;
+			mean_elevation: 1.0;
+		}
+		ElevationGridName {
+			grid: "aus_dem_lam.ers";
+			type: Elevation;
+		}
+# it is possible to specify a smaller internal area , define Darling Fault zone
+		Subset {
+			XLower: -2088000.0;
+			XUpper: -1620000.0;
+			YLower: -4070000.0;
+			YUpper: -3302000.0;
+# size of expanded grid as a percentage of original grid size.
+			FFT_BorderPercentExpansion:  120.0;
+			SubsetGridName: "darling_subset.ers"
+		}
+		UC_Filtering {
+			Perform_RTP: false; 
+			Levels:[2500.,10000.,25000.];
+			Perform_VD: false;
+ 			Pre_FFT_Transform {
+				DetrendDegree: 0;
+				RolloffType: Cosine_RollOff;
+				WindowType: NO_Window;
+				FillType: ARTHUR;
+				FFT_Grid_Precision: IEEE4ByteComplex;
+				FFT_Border: 166.667;  
+				Number_CPUs: 4;  # multi-threading option
+			}
+			Output_Grids {
+				Folder_Path: "wa_out/grids"
+				THD_Prefix: "total_hz_deriv"
+				XD_Prefix: "x_deriv"
+				YD_Prefix: "y_deriv"
+				Grid_Precision: IEEE4ByteReal
+			}
+			Continuation_Grids {
+				Output_Folder: "wa_out/grids"
+				Prefix: "cont"
+				Grid_Precision: IEEE4ByteReal
+			}
+			Rarify {
+				Minimum_Rows: 500;  # limit the reduction in the grid overall size reduction
+				Height_Mesh_Multiple: 8;  # force decimation after 10000
+			}
+		}
+		worm {
+			Maximum_Point_Separation: 2.0;  # units of cell size
+			Worm_Dataset: "wa_out/worms..DIR";
+			Worm_Min_Nr_Points: 10;  
+			Worm_Image: "darling.tif";
+			Euler_Minimum_Gradient_Amplitude: 0.3; # Eotvos ?
+			Depth_Estimation: true;  
+		}
+		linears {   # more likely to be fault related
+			Maximum_Straight_Line_Deviation: 20000.0;  # units of meters
+			Minimum_Points_For_Linear: 8;
+			Linear_Dataset: "wa_out/linears..DIR";
+		}
+		point {
+			Minimum_Anomaly: 0.0000;  
+			Point_Dataset: "wa_out/points..DIR";
+			Method: Canny;
+			Amplitude_Option: TotalHorizontal;   
+		}
+		surfaces {  #  here is the extension to 3D contacts, export to Geomodeller, does feature clustering and estimate a dip/strike
+			Maximum_Straight_Line_Deviation: 20000.0;
+	 		Minimum_Points_For_3D: 100;  # only the darling fault is as long as this!!
+			Contact_Dataset: "wa_out/contacts3d";  # stub for the 3 output csv files
+	 		drape { # flying elevation grid of survey
+				type: Elevation;
+				mean_elevation: 10; 
+				# grid: "dem-lambert.ers";  # named DTM grid
+			}
+			Minimum_Continuation_Levels: 2;  # 3D worm needs to have this many near & sub-parallel parts
+			Dip_Estimates_per100km: 1;  #  minimum is one per fault
+			style: ALL;  # go for all the indicated contacts, not just the linears
+			Reject_Strike_Divergence_Angle: 45  # when joining worms that cross at different levels
+			subsample_contacts: true  # only save every 5th point plus beginning and end for each level
+			Units: MICROMETER_SEC2;  # the GA grid standard
+			dump_dip_logs: true;  # want to see the details of the dip calculations
+			origin_method: FROM_WORM;  #  can also come from signal, or the upwards profile curve
+			Fault_Thickness: 0.0;  # if zero, let the value be estimated during dip calcs.
+			Fault_Block_Depth: 100.0;  # near surface units meters
+			Contact_Profiles: "wa_profiles";	
+			}
+		view {
+			show_3D_viewer: false;
+			discretization_intervals: 30;
+			project_zmin: -20000;	# needed for the co-krig range estimation
+			project_zmax: 1000;	
+			show_limited_faults: true;  # truncate the fault lengths to geophysical observed data
+			show_limited_fault_ellipsoid_bounds: true;  # show the bounds as an ellipse
+			show_fault_unit_normal: true;
+			show_original_signal_grid: true;  # show signal grid as a grey scale image
+			show_DTM_grid: true;  # show the DTM as a true warped 3D surface
+			trim_faults_to_DTM: true;
+			show_worms: true;	
+			vertical_scale: 2.0;  # exaggeration
+		}
+		Supplementry_Outputs {
+			Ascii_Point_Dataset: "wa_out/asciiPts.wrm";
+			Ascii_Worm_Dataset: "wa_out/asciiWorms.str";
+			Ascii_Line_Dataset: "wa_out/asciiLines.lin";
+	#		ArcShape_Point_Dataset: "wa_out/arcshapePts.shp";  # arcview stuff
+	#		ArcShape_Worm_Dataset: "wa_out/arcshapeWorms.shp";
+		}
+		ReportFile: "darling_fault_worms.rpt";
+}}

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<DockingDesktop version="2.0">
+<DockingPanel>
+<Split orientation="1" location="0.20447609359104782">
+<Dockable>
+<Key dockName="Explore"/>
+</Dockable>
+<Split orientation="1" location="0.6105398457583547">
+<TabbedDockable>
+<Dockable>
+<Key dockName="Surface_Topography"/>
+</Dockable>
+<Dockable>
+<Key dockName="neg1000_mAHD"/>
+</Dockable>
+<Dockable>
+<Key dockName="5903000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5915000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5873000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5885000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5890000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5863500_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5920000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5868000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="1000_mAHD"/>
+</Dockable>
+</TabbedDockable>
+<Dockable>
+<Key dockName="3D View"/>
+</Dockable>
+</Split>
+</Split>
+</DockingPanel>
+<TabGroups>
+<TabGroup>
+<Dockable>
+<Key dockName="Surface_Topography"/>
+</Dockable>
+<Dockable>
+<Key dockName="neg1000_mAHD"/>
+</Dockable>
+<Dockable>
+<Key dockName="5903000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5915000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5873000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5885000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5890000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5863500_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5920000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="5868000_mN"/>
+</Dockable>
+<Dockable>
+<Key dockName="1000_mAHD"/>
+</Dockable>
+</TabGroup>
+</TabGroups>
+</DockingDesktop>

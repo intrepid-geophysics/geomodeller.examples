@@ -1,0 +1,397 @@
+name: "Geomodeller Writen Protobuf Task for Project: \"Tunnel Project With New DEM plus 5m\" "
+description: "Sections, Pile, Interface, Foliations, Litho Properties, no meshgrids (except DTM), or computed geology"
+GeomodellerTask {
+  CreateProject {
+    HorizontalDTM {
+      name: "SurfaceTopography"
+      elevation: 0
+    }
+    name: "TunnelProject"
+    author: "djf"
+    date: "16/11/2011 20:12: 6"
+    projection {
+      geographic2DCS: "Local"
+      map_projection: "Local"
+    }
+    version: "1.0"
+    precision: 1
+    Extents {
+      xmin: 53635
+      ymin: 164710
+      zmin: -30
+      xmax: 53700
+      ymax: 164778
+      zmax: 30
+    }
+    deflection2d: 0.001
+    deflection3d: 0.0001
+    discretisation: 1000000
+    referenceTop: false
+  }
+  CreateFormation {
+    name: "BasalSeds"
+    red: 138
+    green: 138
+    blue: 0
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Basement"
+    red: 138
+    green: 36
+    blue: 0
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Dolerite"
+    red: 0
+    green: 138
+    blue: 68
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "UpperSeds"
+    red: 237
+    green: 161
+    blue: 172
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Basement_Series"
+    position: 1
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Basement_Series"
+    formation: "Basement"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Alpine_Series"
+    position: 2
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Alpine_Series"
+    formation: "BasalSeds"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Alpine_Series"
+    formation: "UpperSeds"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Dolerite_Series"
+    position: 3
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Dolerite_Series"
+    formation: "Dolerite"
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "EW_Section"
+    PointList {
+      Point {
+        x: 53635.35546875
+        y: 164747.70312499994
+        z: 0
+      }
+      Point {
+        x: 53699.09765625
+        y: 164745.35937499994
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "NW_Section"
+    PointList {
+      Point {
+        x: 53636.109375
+        y: 164777.078125
+        z: 0
+      }
+      Point {
+        x: 53698.64453125
+        y: 164711.8125
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 53681.637390837081
+      y: 164729.56222215749
+      z: -18.240059598332795
+    }
+    point {
+      x: 53695.917000101712
+      y: 164714.65912317607
+      z: -25.572059598332796
+    }
+    formation: "BasalSeds"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 53639.172849313167
+      y: 164773.88089039293
+      z: -17.6960595983328
+    }
+    point {
+      x: 53651.66819926125
+      y: 164760.83995673485
+      z: -13.079059598332798
+    }
+    formation: "UpperSeds"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 53659.18
+      y: 164729.54699999996
+      z: 0.75688658967913325
+    }
+    point {
+      x: 53671.414
+      y: 164739.73399999994
+      z: 9.620665275412339
+    }
+    point {
+      x: 53685.738000000012
+      y: 164755.46899999995
+      z: 5.605586615666236
+    }
+    point {
+      x: 53652.98000000001
+      y: 164735.82799999995
+      z: 6.5048763755670667
+    }
+    point {
+      x: 53657.488000000005
+      y: 164743.18799999994
+      z: 6.5411527524716826
+    }
+    point {
+      x: 53661.676
+      y: 164746.65599999993
+      z: 9.6188856915021113
+    }
+    point {
+      x: 53666.422
+      y: 164750.99999999994
+      z: 8.5234464315099228
+    }
+    point {
+      x: 53672.379
+      y: 164754.78099999993
+      z: 7.3040576359816622
+    }
+    formation: "Dolerite"
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "UpperSeds"
+    foliation {
+      Point3D {
+        x: 53663.411517461718
+        y: 164748.58389074111
+        z: -1.1300595983327968
+      }
+      dip: 76.504
+      direction: 316.224
+      azimuth: 316.224
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53675.906175568271
+        y: 164735.54367913239
+        z: -3.9810595983327968
+      }
+      dip: 46.736
+      direction: 136.224
+      azimuth: 136.224
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53660.498864602996
+        y: 164751.62371858567
+        z: -6.9690595983327972
+      }
+      dip: 33.179
+      direction: 316.224
+      azimuth: 316.224
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53689.105820198114
+        y: 164721.76769921638
+        z: -9.2770595983327961
+      }
+      dip: 16.557
+      direction: 136.224
+      azimuth: 136.224
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53645.044508413404
+        y: 164767.75285739609
+        z: -14.573059598332797
+      }
+      dip: 15.593
+      direction: 316.224
+      azimuth: 316.224
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "BasalSeds"
+    foliation {
+      Point3D {
+        x: 53644.809974133328
+        y: 164767.99763213226
+        z: -22.381059598332797
+      }
+      dip: 14.036
+      direction: 316.224
+      azimuth: 316.224
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53687.978810339
+        y: 164722.94391763888
+        z: -20.548059598332795
+      }
+      dip: 19.983
+      direction: 136.224
+      azimuth: 136.224
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Dolerite"
+    foliation {
+      Point3D {
+        x: 53665.297
+        y: 164734.64049999992
+        z: 5.5005532921618414
+      }
+      dip: 90
+      direction: 320.21654745407295
+      azimuth: 320.21654745407295
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53678.576000000008
+        y: 164747.60149999993
+        z: 12.88367163408639
+      }
+      dip: 90
+      direction: 312.31245071293228
+      azimuth: 312.31245071293228
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53655.234000000004
+        y: 164739.50799999994
+        z: 7.8129103983590724
+      }
+      dip: 90
+      direction: 301.48746937187059
+      azimuth: 301.48746937187059
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53659.581999999995
+        y: 164744.92199999993
+        z: 8.2965971653256219
+      }
+      dip: 90
+      direction: 320.37251637972986
+      azimuth: 320.37251637972986
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53664.049
+        y: 164748.82799999992
+        z: 8.7508341491832571
+      }
+      dip: 90
+      direction: 317.53222278286739
+      azimuth: 317.53222278286739
+      polarity: Reverse_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 53669.4005
+        y: 164752.89049999992
+        z: 8.6490052780565474
+      }
+      dip: 90
+      direction: 327.59607233230253
+      azimuth: 327.59607233230253
+      polarity: Reverse_Polarity
+    }
+  }
+}
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "Dolerite_TunnelDesign.dxf"
+		MeshGrid_Name: "Transit_Shape";
+		FileType: FT_SURFACE;
+		Field_Name: "something";
+		log: "source_meshgrid.rpt";
+    }
+}
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "out/TunnelProject.xml"
+  }
+}
+GeomodellerTask {
+  CloseProjectNoGUI {
+    filename: "Tunnel Project With New DEM plus 5m"
+  }
+}

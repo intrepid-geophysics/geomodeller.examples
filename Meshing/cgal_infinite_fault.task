@@ -1,0 +1,56 @@
+# here we start to push hi-fidelity mesh grid rendering of your geology model
+# this is done via the CGAL interface, we can open up teraheral rendering
+# triple point lines, Delauny adaptive remeshing etc.
+# actually, this example is very simple, 2 formations
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./data/infinite_fault/infinite_fault.xml"
+    log: "Opening project for meshing"
+  }
+}
+# project is 1000*1000*1000
+GeomodellerTask {
+  BuildMeshCGAL {
+    formations: true
+    faults: true
+    volumes: true;  # export these
+    surfaces: false
+    draw: false;  # in batch!
+    tetrahedrons: true
+    calcTripleLines {
+	    borderline: false
+	    insideline: true
+	    borderpoint: false
+	    insidepoint: false
+	    triple_point_spacing: 40.0; # Ball Radius, to protect the break lines
+    	tripleLine_precision_factor: 25 
+    	DivideModel_RegularSections : true
+    	clean_triple_lines: true;  # eliminate confusion of near points
+    	export_triple_lines: true
+    	export_dir: "./data/infinite_fault"	 
+    	save_triple_lines: "infinite_fault_triple"  
+    }
+    min_facet_angle: 20.0
+    max_facet_radii: 100.0
+    min_facet_radii: 20.0
+    precision: 20.0
+    ratio_edges: 3.0
+    max_tet_radii: 100.0
+	smooth: 0  # Apply Taubin smoothing iterations on the vertices.
+  	Export_Mesh {
+  # now dump to vtk, then use that tool's mesh quality capability.. not working
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+  		output_directory: "./data/export/"
+  	}
+    log: "Building_tetrahedrons"
+  }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./data/infinite_fault2/infinite_fault2.xml"
+    }
+}
+

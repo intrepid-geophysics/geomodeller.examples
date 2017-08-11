@@ -1,0 +1,161 @@
+name: "A3_Stage3_4"
+description: "Tutorial A3 - stage 3 of 4, step 4 of 4"
+auditfile: "audit_A3_Stage3.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA2.xml"
+    }
+}
+
+GeomodellerTask {
+    CreateFault {
+        name: "SW_NE_Fault"
+        red: 68
+        green: 138
+        blue: 0
+    }
+}
+
+GeomodellerTask {
+    AddInterfaceToSection {
+        section: "Topography"
+        topFormation: "SW_NE_Fault"
+        bottomFormation: "XXCover"
+        PointList {
+        	Point {
+            	u: 105000
+            	v: 2002500
+            	spatial_location_error: 1
+            	}
+			Point {
+            	u: 107500
+            	v: 2005000
+            	spatial_location_error: 1
+            }
+        }
+    }
+}
+
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "Topography"
+        formation: "SW_NE_Fault"
+		foliation {
+        	Point {
+	            u: 107500
+	            v: 2005000
+	            spatial_location_error: 1
+	        }
+	        direction: 130
+	        dip: 80
+			spherical_variance_kappa: 5; # measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	        polarity: Normal_Polarity
+	        Provenance: field_observation
+		}
+    }
+}
+
+GeomodellerTask {
+    ComputeModel {
+        FaultList {
+            node: "SW_NE_Fault"
+        }
+        SectionList {
+            node: "Topography"
+        }
+        Extents {
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+
+GeomodellerTask {
+    DeleteInterfacesFromSection {
+        section: "Section1"
+    }
+}
+
+GeomodellerTask {
+    ReadAndImport2dDataToASection {
+        section: "Section1"
+        filename: "data/MifMid/Section1_LowerMiddleAndUpperCover.mif"
+        type: rock_interface
+        FieldList {
+            node: "Form"
+        }
+        spatial_location_error: 1
+    }
+}
+
+GeomodellerTask {
+    UpdateInterface {
+        section: "Section1"
+        Point {
+            u: 478
+            v: -6686
+            spatial_location_error: 1
+        }
+        observationId: "log 999"
+        provenance: inferred
+        hasFoliation: true
+        hasLocation: false
+        orientationMethod: orthogonal
+        azimuth: 0.0
+        dip: 0.0
+        lineAzimuth: 0.0
+        lineDip: 0.0
+		spherical_variance_kappa: 5; # measurenment error for dip is best done by normal to the plane, ie a pole analysis
+        polarity: "top"
+    }
+}
+GeomodellerTask {
+    ComputeModel {
+        FaultList {
+            node: "All"
+        }
+        SectionList {
+            node: "All"
+        }
+        Extents {
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+
+GeomodellerTask {
+    CentralVerticalPotentialAndRank {
+    	message: "Tutorial A3"
+        filename: "CentralVerticalPotentialAndRank.rpt"
+    }
+}
+
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+GeomodellerTask {
+    ExportSection {
+    	section: "Section1"
+        filename: "section1_export.csv"
+    }
+} 
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./test3.xml"
+    }
+}
+

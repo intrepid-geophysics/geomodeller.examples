@@ -1,0 +1,20 @@
+MetaData Begin
+	Name	= tmi_anomaly.ers
+	Version	= "Intrepid Visualisation v5.0.0 geomodeller_2013 for Linux (x86_64) by seneca debug build 46d2b42d974a+ "
+	tmi_anomaly Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 900
+		Nulls	= 0
+		Minimum	=  -494.304093441
+		Maximum	=   497.114643659
+		Mean	=   23.2570264078
+		Variance	=   11550.2180673
+		Skew	=   1.22028800785
+		Kurtosis	=   6.20367031475
+		Projection	= "MGA50"
+		Datum	= "GDA94"
+	tmi_anomaly End
+MetaData End

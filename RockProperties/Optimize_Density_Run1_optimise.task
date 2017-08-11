@@ -1,0 +1,18 @@
+InversionTask {
+	Property_Optimization {
+		filename: "PropertyOpt/PropertyOpt.xml";
+		case: "Optimize_Density";
+		run: "Run1";
+		ReportFile: "Optimize_Density/Run1/Property_Optimization.rpt";
+		EstimateDensity: true;
+		SetLaw {
+			LithologyProperty { lithology: "F1"; index_voxet_key: 4; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.750000; stddev: 0.200000;} lower_bound: 2.350000; upper_bound: 3.150000;}
+			LithologyProperty { lithology: "Intrusion"; index_voxet_key: 3; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 3.000000; stddev: 0.200000;} lower_bound: 2.600000; upper_bound: 3.400000;}
+			LithologyProperty { lithology: "F2"; index_voxet_key: 2; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.600000; stddev: 0.200000;} lower_bound: 2.200000; upper_bound: 3.000000;}
+			LithologyProperty { lithology: "G1"; index_voxet_key: 1; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.800000; stddev: 0.200000;} lower_bound: 2.400000; upper_bound: 3.200000;}
+		}
+		#maxAbsoluteObserved: 1000.0;
+		#MaximumIterations: 100000;
+		ReferenceDensity: 2.670000;
+	}
+}

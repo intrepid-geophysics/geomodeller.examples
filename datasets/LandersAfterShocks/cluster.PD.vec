@@ -1,0 +1,20 @@
+DatasetHeader Begin
+	Version	= "5.0"
+	DataType	= Point
+	ByteOrder	= LSBFirst
+	VectorInfo Begin
+		CellType	= Signed32BitInteger
+		NullCellValue	= -2147483648
+		NrOfLines	= 1
+		NrOfCellsPerLine	= 3360
+		NrOfBands	= 1
+	VectorInfo End
+	CoordinateSpace Begin
+		Projection	= "GEODETIC"
+		CoordinateType	= LATLONG
+		Datum	= "NAD83"
+	CoordinateSpace End
+	FormatInfo Begin
+		Width	= 16
+	FormatInfo End
+DatasetHeader End

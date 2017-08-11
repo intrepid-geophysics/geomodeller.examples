@@ -1,0 +1,16 @@
+
+InversionTask {
+	 MakeParameterSweepSummaryStats {
+		filename: "testArea_2suites_imported/testArea_2suites_imported.xml";	
+		case: "Case_1";
+		run: "stochastic_";  # must match the forward model run stub name
+		statistical_voxet: "testArea_2_uncertainty.vo";
+		ReportFile: "stats_report.rpt";
+		BoundaryConditionToSweep {location: Base;  BoundaryStyle:Boundary_HeatFlow;}
+		LithologyPropertyToSweep {lithology:"aboveC"; property: ThermalConductivity;}
+		LithologyPropertyToSweep {lithology:"ZtoC"; property: ThermalConductivity;}
+		LithologyPropertyToSweep {lithology:"BLS"; property: HeatProductionRate;}
+		LithologyPropertyToSweep {lithology:"granites1"; property: HeatProductionRate;}
+		Number_Permutations: 2;
+	}
+}

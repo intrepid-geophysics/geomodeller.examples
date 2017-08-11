@@ -1,0 +1,2077 @@
+syntax = "proto2";
+
+// Here is the specification of the geomodeller GOOGLE/Protobuf schema
+//  note, no XML, designed for fast message passing between processes.
+// All message objects are proceeded by a _GMT for now to clearly
+// distinguish them from parameters.
+//
+// To ensure that tasks are completed in the correct sequence it is
+// best to have one message per GeomodellerTask in the task file.
+//
+//  syntax to run:
+//
+//  geomodellerbatch -batch a1_stage2.task
+//
+// This is simply due to the way the code receives the tasks:
+// (c) 2017 Intrepid Geophysics
+
+// Sets the namespace in C++, package in Java and Python
+import "commontaskmodel.proto";
+import "vtktasksup.proto";
+
+package gmtaskmodel;
+
+enum GeomodellerDataSource {
+    Project = 0;
+    File = 1;
+}
+
+//####
+/// Message defining a foliation. Allows for repeated (arrays of) foliations
+/// Message definition:\n
+/// <b>Point</b> An AddPoint2d holding U, V point coordinates for the foliation on section
+/// <b>Point3d</b> An AddPoint3d holding X,Y,Z point coordinates for the foliation anywhere
+/// <b>direction</b> Dip-direction for the foliation is degrees
+/// <b>dip</b> Dip of the foliation in degrees
+/// <b>polarity</b> Polarity of the foliation (reversed or not)
+message Foliation_GMT {
+// Describe direction and dip of a foliation
+    optional AddPoint2d_GMT Point = 1;
+    optional AddPoint3d_GMT Point3D = 2;
+    required double dip = 3;
+    optional double direction = 4;  // Dip-direction
+    optional double azimuth = 5;  // alternative is strike
+    // or
+    optional ctm.AngleProbabilityDistributionFunction DipDistribution = 11;   // angular stats distribution
+    optional ctm.AngleProbabilityDistributionFunction DirectionDistribution = 12;   // angular stats distribution
+
+    optional ctm.ProvenanceType Provenance = 6 [default = none];
+    optional ctm.PolarityType polarity = 7 [ default = Normal_Polarity];
+	optional string observationID = 8 [default = ""];
+	optional double Intensity = 9;   // A way to have thickness in the dyke for example
+       	// measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	optional double spherical_variance_kappa = 10 [default = 2.];  // cannot be zero
+    optional string log = 20 [default ="foliation.rpt"];
+}
+//####
+/// Message defining an apparent dip.
+/// <b>Point</b> An AddPoint2d holding U, V point coordinates for the foliation on section
+/// <b>dip</b> Dip of the foliation in degrees
+/// <b>polarity</b> Polarity of the foliation (reversed or not)
+message ApparentDip_GMT {
+// Describe direction and dip of a foliation in plane  eg seismic section
+    required AddPoint2d_GMT Point = 1;
+    optional ctm.AngleProbabilityDistributionFunction DipDistribution = 11;   // angular stats distribution
+    optional ctm.ProvenanceType Provenance = 3 [default = seismic_pick];
+	optional string observationID = 4 [default = ""];
+// measurenment error for dip is best done by normal to the plane, ie a pole analysis
+// however, in this case eg seismic sections, you cannot recover the plane
+    optional double dip_error = 5;  // measurement error
+    optional string log = 6 [default ="apparent_dip.rpt"];
+}
+//####
+/// Set the project extents.
+/// Message definition:\n
+/// <b>Extents</b> BoundingBox message holding the new extents of the project.
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message SetModelBounds_GMT {
+    required ctm.BoundingBox Extents = 1;
+    optional string log = 2 [default ="set_model_bounds.rpt"];
+}
+
+//####
+/// Get the project extents
+/// Message definition:\n
+/// <b>Extents</b> BoundingBox message holding the extents of the project
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message GetModelBounds_GMT {
+    optional ctm.BoundingBox Extents = 1;
+    optional string log = 2 [default ="get_model_bounds.rpt"];
+}
+
+//####
+/// Open a project with GUI components
+/// Message definition:\n
+/// <b>filename</b> Name of the project file
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message OpenProjectGUI_GMT {
+    required string filename = 1;
+    optional string log = 2 [default ="open_project.rpt"];
+}
+
+//####
+/// Open a project with no GUI components
+/// <b>filename</b> Name of the project file
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message OpenProjectNoGUI_GMT {
+    required string filename = 1;
+    optional string log = 2 [default ="open_project.rpt"];
+}
+
+//####
+/// Close the current opened (or specified) project and release resources with no GUI components
+/// <b>filename</b> Optional Name of the project file
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CloseProjectNoGUI_GMT {
+    optional string filename = 1;
+    optional string log = 2 [default ="close_project.rpt"];
+}
+
+//####
+/// Save the current project using its existing file.
+/// Message definition:\n
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message SaveProject_GMT {
+	optional bool without_computed_model = 2 [default=false];  // sometimes useful, if a project does not load as you change languages/LOCALE etc
+    optional string log = 1 [default ="save_project.rpt"];
+}
+
+//####
+/// Save the current project under a new filename
+/// Message definition:\n
+/// <b>filename</b> Name of the file to save the project as
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message SaveProjectAs_GMT {
+    required string filename = 1;
+    optional bool without_computed_model = 2 [default=false];
+    optional string log = 3 [default ="save_project_as.rpt"];
+}
+
+//####
+/// Create a custom DTM using the specified file.
+/// Message definition:\n
+/// <b>isGDM</b> Flag indicating if the data is from GDM
+/// <b>name</b> Name of the DTM in the project
+/// <b>filename</b> Filename to load the DTM from
+/// <b>Extents</b> BoundingBox message specifying th extents of the DTM
+/// <b>nx</b> Grid extents along the X axis
+/// <b>ny</b> Grid extents along the Y axis
+/// <b>degree1</b> Spline degree along the U axis
+/// <b>degree2</b> Spline degree along the V axis
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CustomDTM_GMT {
+    optional bool isGDM = 1 [default=false];  // not really used anymore
+    required string name = 2;  // name in project
+    required ctm.Grid_INT filename = 3;  // where to get the grid data from, a range of grid formats are supported
+    optional ctm.BoundingBox2D Extents = 4;
+    optional int32 nx = 5 [default = 5];             // Minimum = 1
+    optional int32 ny = 6 [default = 5];             // Minimum = 1
+    optional int32 degree1 = 7 [default = 3];          // min = 1, max = 8
+    optional int32 degree2 = 8 [default = 5];          // min = 1, max = 8
+    optional int32 sub_sample_rate = 9 [default = 1]; // allow for the grid to be decimated, to reduce the overall size in-memory  around 100000 cells before this should kick in
+    optional double elevation_error = 10;  // measurement error
+    optional double spatial_location_error = 13;  // measurement error
+    optional bool isElevationMeasure = 11 [default=true];  // assume the positive value in the grid file is an elevation, false for a depth
+    optional ctm.Distance_Units units = 12 [ default = meters];    // Units (m, ft)
+    optional string log = 20 [default ="custom_dtm.rpt"];
+}
+
+//####
+/// Build a horizontal DTM for the project.
+/// Message definition:\n
+/// <b>name</b> Name of the topography
+/// <b>elevation</b> Elevation of the topography depth
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message HorizontalDTM_GMT {
+   required string name = 1;
+   required double elevation = 2;
+   optional double spatial_location_error = 3;  // measurement error
+   optional string log = 4 [default ="horizontal_dtm.rpt"];
+}
+
+
+//####
+/// Create a new project
+/// Message definition:\n
+/// <b>CustomDTM</b> A CustomDTM task which defines the DTM to load and use for the topography [optional]
+/// <b>HorizontalDTM</b> A HorizonalDTM task which defines the DTM to load and use for the topography [optional]
+/// <b>name</b> Name of the project
+/// <b>author</b> Author for the project
+/// <b>date</b> Date string for the project (Format %2d/%2d/%4d %2d:%2d:%2d from Projet_Projet sscanf() call) [default = "01/01/1979 00:00:00"]
+/// <b>description</b> Description of the project [default = ""]
+/// <b>projection</b> Projection string for the project (Geomodeller format such as "NTF / LambertIIet") [default = ""]
+/// <b>version</b> Project version string [default = ""]
+/// <b>units</b> Units of the project [default = "M"]
+/// <b>precision</b> Precision to use when computing the project. [default = 1.0]
+/// <b>Extents</b> BoundingBox message defining the extents of the project
+/// <b>deflection2d</b> 2D deflection to use [default = 0.001]
+/// <b>deflection3d</b> 3D deflection to use [default = 0.001]
+/// <b>discretisation</b> Discretisation level for the project [default = 10.0]
+/// <b>dynamicSelection</b> Dynamic selection is available for the project [default = true]
+/// <b>referenceTop</b> Flag indiciating whether tops or bottoms of units are used. True = tops, False = bottoms [default = TRUE]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CreateProject_GMT {
+    optional CustomDTM_GMT CustomDTM = 1;  // either way to speify a DTM, but not both!
+    optional HorizontalDTM_GMT HorizontalDTM = 2;
+    required string name = 3;
+    required string author = 4;
+    optional string date = 5 [default="01/01/2012 00:00:00"];       // Format %2d/%2d/%4d %2d:%2d:%2d from Projet_Projet sscanf() call
+    optional string description = 6 [default=""];
+    optional ctm.CoordinateSystem projection = 7;  //  well here we go for the start of projections
+    optional string version = 8 [default="3"];
+    optional ctm.Distance_Units units = 9 [ default = meters];    // Units (m, ft)
+    optional ctm.Vertical_Units Zunits = 10 [ default = meters_elevation];
+    optional double precision = 12 [default = 1.0];			// Precision for the project in units
+
+    required ctm.BoundingBox Extents = 14;
+
+    optional double deflection2d = 16 [default = 0.001];
+    optional double deflection3d = 17 [default = 0.001];
+    optional double discretisation = 18 [default = 10.0];
+    optional bool dynamicSelection = 19 [default = true];
+
+    optional bool referenceTop = 20  [default = true];
+    optional string log = 30 [default ="create_project.rpt"];
+    optional int32 run = 40 [default = 0];
+}
+//####
+// co-krig interpolation parameters
+message ModelInterpotationParameters_GMT {
+	optional double Range = 1 [default = 10000.0];  // co-krig range
+    optional double Contacts_Nugget_Effect = 2 [default = 0.000001];  // 1st equation uncertainty
+	optional double Gradients_Nugget_Effect = 3 [default = 0.01];  // 2nd equation type ( orientations) uncertainty
+	optional double FaultDriftEquationDegree = 4 [default = 1];  // polynomial approximation
+	optional Anisotropic_Effect_GMT Anisotropy = 5;  // not isotropic??
+	optional string log = 255;
+}
+// 3D ellipse to specify the anisotrophy
+message Anisotropic_Effect_GMT {
+	// first the Euler angles
+	optional double Azimuth = 1 [default = 0];
+    optional double Dip = 2 [default = 0];
+	optional double Pitch = 3 [default = 0];
+	// now the axes of the ellipse at that oreintation
+	optional double LocalXRange = 4 [default = 1000];
+    optional double LocalYRange = 5 [default = 1000];
+	optional double LocalZRange = 6 [default = 1000];
+	optional string log = 255;
+}
+//####
+/// Compute the model using the listed series, sections and faults.
+/// Message definition:\n
+/// <b>SeriesList</b> RepeatedString message which holds the array of series names to process. [optional]
+/// <b>SectionList</b> RepeatedString message which holds the array of section names to process [optional]
+/// <b>FaultList</b> RepeatedString message which holds the array of fault names to process [optional]
+/// <b>Extents</b> BoundingBox message holding the extents in which to perform the compute [optional]
+/// <b>radius</b> Simplification radius [default = 10.0 units]
+ /// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+ // option for including everything in any of the lists below  node: "ALL"
+ // otherwise an explicit string list of each name is required
+ //
+ //  the 3D structural data is also implicated here, but the control for what to use just defaults
+ // to all the structural data that is currently present in the model, no way to be selective, and turn off parts as yet
+ // via some sort of grouping and a list structure
+message ComputeModel_GMT {
+    optional ctm.RepeatedString SeriesList = 1;  // what formations to compute?  ALL
+    optional ctm.RepeatedString SectionList = 2;  // what sections to include.. mainly their data observations, ALL
+    optional ctm.RepeatedString FaultList = 3; // [default = "{node: 'All'}"];  // what faults to bring into the model.. extra ALL,HALF
+    optional ctm.RepeatedString BoreholeList = 4;  // what boreholes to consider  .. contacts, faults etc.  extra ALL, HALF
+    optional ctm.BoundingBox Extents = 6;  // do you just want part of your model?
+    optional double radius = 5 [default = 10.0];  // simplification
+    optional double MinimumDykeThickness = 7 [default = 2.0];  // simplification
+    optional bool dump_system = 8 [default = false];  // actually, the Gibbs flag, for forcing the tool to honour non-hard constraints
+    optional bool calc_uncertainty = 9 [default = false];  // the extra parameter for each series, representing the geostatistical variance in 3D calcs
+    optional bool faults_only = 10 [default = false];  // the fault network only
+    optional bool dykes_only = 11 [default = false];  // dyke network only ( potvtk version only)
+    optional ModelInterpotationParameters_GMT InterpotationParameters = 12;
+    optional string log = 20 [default ="compute_model.rpt"];
+}
+
+//####
+/// Render the 3D model using the original MarchingCubes algorithm,
+//   augmented with the ability to honour the geological pile.
+/// Message definition:\n
+/// <b>nx</b> Grid extents in the X direction
+/// <b>ny</b> Grid extents in the Y direction
+/// <b>nz</b> Grid extents in the Z direction
+/// <b>generateSurfaces</b> Flag indiciating if surfaces should be generated [default = false]
+/// <b>generateVolumes</b> Flag indiciating if volumes should be generated [default = true]
+/// <b>grid</b> Flag indicating adaptive semi-regualr mesh, in the Z direction usually [default = false]
+/// <b>adaptToTopo</b> Flag indicating if the render should adapt to the topography [default = true]
+/// <b>topoLimited</b> Flag indicating that the geometry should be clipped to the topography. [default = true]
+/// <b>adaptX</b> Flag to specify the grid is non-uniform in the X direction. [default = false]
+/// <b>adaptY</b> Flag to specify the grid is non-uniform in the Y direction. [default = false]
+/// <b>adaptZ</b> Flag to specify the grid is non-uniform in the Z direction. [default = false]
+/// <b>lookForOverturned</b> Flag indiciating that overturned geometry should be removed? [default = false]
+/// <b>createShaped</b> Flag indicating that the persistant model shapes should be created [default = true]
+// nb.. the rendering step to then show these in the 3D viewer is not activated.. always off for batch
+/// <b>restart</b> Flag indicating whether to restart from a TSurf incremental stage. [default = false];
+//  a checkpoint/restart capability for very large and detailed rendering jobs.
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message RenderModel_GMT {
+    required int32 nx = 1;  // discretization steps, to realise the implicit function
+    required int32 ny = 2;
+    required int32 nz = 3;
+    optional bool generateSurfaces = 4 [default = false];  // triangulated surfaces, actual default for VTK rendering
+    optional bool generateVolumes = 5 [default = true];  // prisms
+    optional bool grid = 6 [default = false];  // column grid with usually an adaptive Z, fixed X,Y  soil mechanics etc
+    optional bool buildFormations = 7 [default = true];  // do the main geology formations
+    optional bool buildFaults = 8 [ default = false];  // do the fault network only
+    optional bool buildDykes = 22 [ default = false];  // do the dyke network only  (potvtk option only)
+    optional bool adaptToTopo = 9 [default = true];  // do you want adaptive grids/columns
+    optional bool topoLimited = 10 [default = true];  // clip geology model to the surface DTM
+    optional bool adaptX = 11 [default = false];  // 3d grid intervals
+    optional bool adaptY = 12 [default = false];
+    optional bool adaptZ = 13 [default = false];
+    optional bool lookForOverturned = 14 [default = false];   // may have overturned geology, so be careful to check for this,  slower
+    optional bool createShapes = 15 [default = true]; // go ahead and create persistent versions of the requested shapes
+    optional bool restart = 16 [default = false];  // if we have tsurf's, use those to save time
+    optional int32 smoothingIterations = 17 [default = 0]; // before leaving, have a look at taking out some of the big jumps from column to column
+    optional ctm.BoundingBox Extents = 18;  // you may just wnat to render part of your model
+    optional string log = 25 [default ="render_model.rpt"];
+}
+//  render sections as solid geology, and save to image files
+//  UNFINISHED, just one at a time, not automated
+enum SectionRenderStyle {
+    Solid_Fill = 0;
+    Boundary_Lines = 1;  // required style for geology co-krig uncertainty section plots
+    Geology_Trends = 2;
+}
+message RenderModelOnSection_GMT {
+	required int32 nu = 1;  // discretization steps, to realise the implicit function
+    required int32 nv = 2;
+    required string section = 3;
+    required string filename = 4 [default = "section.png"];
+	optional ctm.Image_Format Format = 5 [default = PNG_format];
+    optional SectionRenderStyle Style = 6 [ default = Solid_Fill];
+    optional double projection_distance = 7 [default = 1.0];  // allow objects either side of the section to be seen
+    optional string log = 25 [default ="render_section.rpt"];
+}
+//####
+/// Create a new fault with the RGB colour
+/// Message definition:\n
+/// <b>name</b> Name of the fault to create
+/// <b>red</b> Red component of the fault colour [optional]
+/// <b>green</b> Green component of the fault colour [optional]
+/// <b>blue</b> Blue component of the fault colour [optional]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CreateFault_GMT {
+    required string name = 1;
+    optional double red = 2 [default = 255.0];
+    optional double green = 3 [default = 255.0];
+    optional double blue = 4 [default = 0.0];
+    //  fault thickness is notionally always zero
+    // can be thicker, but renedered as a mid-fault surface
+    //  attribute can be passed to third party models eg FEFLOW
+    optional double Thickness = 6 [default = 0.0];  // default is infinetly thin
+    optional string log = 5 [default ="create_fault.rpt"];
+}
+// add the Elliptical limits to the fault
+// actually the API allows for a full ellipsoid with the declination, inclination of the ellipsoid
+message Set3dFaultLimits_GMT {
+    required string Fault_name = 1;
+    optional double Horizontal = 2 [default = 1000];
+    optional double Vertical = 3 [default = 1000];
+    optional double InfluenceDistance = 4 [default = 100.0];
+    optional string log = 5 [default ="set_fault_limits.rpt"];
+}
+
+//####
+/// Create a new formation with the given RGB colour
+/// Message definition:\n
+/// <b>name</b> Name of the formation to create
+/// <b>red</b> Red component of the formation colour [optional]
+/// <b>green</b> Green component of the formation colour [optional]
+/// <b>blue</b> Blue component of the formation colour [optional]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CreateFormation_GMT {
+    required string name = 1;
+    optional double red = 2 [default = 0.0];
+    optional double green = 3 [default = 125.0];
+    optional double blue = 4 [default = 255.0];
+    // not multi-modal property support to start with!!
+    repeated ctm.LithologyProperty_GMT LithologyProperty = 5;
+    optional string log = 10  [default ="create_formation.rpt"];
+}
+
+//####
+/// Create a new dyke with the given RGB colour
+/// Message definition:\n
+/// <b>name</b> Name of the dyke to create
+/// <b>red</b> Red component of the dyke colour [optional]
+/// <b>green</b> Green component of the dyke colour [optional]
+/// <b>blue</b> Blue component of the dyke colour [optional]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CreateDyke_GMT {
+    required string name = 1;
+    optional double red = 2 [default = 125.0];
+    optional double green = 3 [default = 255.0];
+    optional double blue = 4 [default = 0.0];
+    repeated ctm.LithologyProperty_GMT LithologyProperty = 5;
+    optional string log = 10 [default ="create_dyke.rpt"];
+}
+
+//####
+/// Export section data a CSV file
+/// Message definition:\n
+/// <b>name</b> Name of the csv file to create
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message ExportSection_GMT {
+    required string section = 1;
+    required string filename = 2;
+    optional string log = 3 [default ="export_section.rpt"];
+}
+
+//####
+/// Central Vertical Column Potential And Rank data a report log file for automated testing
+/// Message definition:\n
+/// <b>message</b> string to add to the report log when the message is processed.
+/// <b>name</b> Name of the report file to create
+message CentralVerticalPotentialAndRank_GMT {
+    required string message = 1;
+    required string filename = 2;
+}
+
+//####
+/// Get Summary data to a report log file for automated testing
+/// Message definition:\n
+/// <b>filename</b> Name of the report file to create
+/// <b>level</b> Level of detail in summary report (1 = basic)
+message GetModelSummary_GMT {
+    required string filename = 1;
+    optional int32 level = 2 [default = 2]; // shorter report for level 1
+	optional string log = 255;
+}
+//####
+/// Set a series at a position in the pile with a geological relation in the project.
+/// Three things can occur when adding a series with the given position:\n
+/// 1. The pile is empty in which case the series is added to the pile.\n
+/// 2. The series doesn't exist in which case it is created and added to the pile.\n
+/// 3. The series exists in the pile, in which case it is updated to the new position with
+/// the given geological relationship.
+///
+// ctm::StratigraphicRelationship
+//enum GeologicalRelations
+//{
+//	any = 1;  // unknown eg borehole
+//	onlap = 2;  // mainstream setting
+//	erode = 3;  // mainstream setting
+//	channel = 4;  // deep erosional channel - somewhat experimental, not in the GUI
+//	intrusion = 5;  // erosional relationship is what is normally used - somewhat experimental, not in the GUI
+//}
+   /*
+ * Here's what's going on: TheGlobalPile contains all series defined by the
+ * user, whereas TheSeries only contains series with a valid interpolation
+ * solution, i.e. the serie at the bottom (top) of the pile is missing since
+ * it's just used to fill in the remaining space.
+ *
+ * If everything goes well during interpolation, we need to add this series
+ * to the current pile.
+ * If things go wrong (for instance if the user enters observations for the
+ * bottom (top) serie), the serie at the bottom (top) will have an interpolation
+ * solution and is added to TheSeries. In this case we need to add a dummy
+ * series to fill any holes in the model. E.g.:
+ *
+ * Reference: Bottom - model OK, no need for a dummy series
+ *
+ * missingSeries = Basement
+ *
+ * TheGlobalPile   The Series   TheCurrentPile
+ * Cover           Cover        Cover
+ * Basement
+ * -- add to TheCurrentPile --> Basement
+ *
+ *
+ * Reference: Bottom - model not OK, need dummy series
+ *
+ * missingSeries = Basement
+ *
+ * TheGlobalPile   The Series   TheCurrentPile
+ * Cover           Cover        Cover
+ * Basement        Basement     Basement
+ * -- add to TheCurrentPile --> Dummy
+ */
+/// Message definition:\n
+/// <b>name</b> Name of the series to update or create is not already present
+/// <b>position</b> Position of the series in the pile, note 1 relative
+/// <b>releation</b> Releation of the series defined as a string. Either: "any", "onlap", "erode", "channel" or "intrusion"
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message SetSeries_GMT {
+    required string name = 1;
+    required int32 position = 2;  // greater than 0
+    optional string relation = 3 [default = "any"];  // switch to the enum version
+    optional ctm.StratigraphicRelationship erelation = 5 [default = Any];
+    optional string log = 7;
+}
+
+//####
+/// Add a formation to the specified series.
+// simple append to list, cannot insert in a nominated position as yet
+/// Message definition:\n
+/// <b>series</b> Name of the series to add the formation to
+/// <b>formation</b> Name of the formation
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message AddFormationToSeries_GMT {
+    required string series = 1;
+    required string formation = 2;
+    optional string log = 3;
+}
+//####
+/// Add a dyke to the specified series.
+// simple append to list
+// a property of the dyke being set permanently
+// Boundedness, is similar to "limited for faults"
+/// Message definition:\n
+/// <b>series</b> Name of the series to add the formation to
+/// <b>dyke</b> Name of the dyke
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message AddDykeToSeries_GMT {
+    required string series = 1;
+    required string dyke = 2;  // eg DoleriteDyke
+// here is the top/bottom formation contacts being added for a dyke
+//  top is given the extra suffix Bis
+// The pile top/bottom is over ridden by this flag
+// the dyke hot spot is expanded to 2 interfaces, and the
+// secondary interface takes on the formation name "dyke_name_BIS"
+// we are dealing with hangingwall/footwall issues, especially in borehole logs as well
+    optional bool asBase = 3 [default = true];
+    optional string log = 4;
+}
+
+//####
+/// Task to add a single 3D (x, y, z) point to the internal list. These points
+/// are used when creating section traces and adding interface points to a section etc.
+/// Message definition:\n
+/// <b>x</b> X coordinate of the point
+/// <b>y</b> Y coordinate of the point
+/// <b>z</b> Z coordinate of the point
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message AddPoint3d_GMT {
+    required double x = 1;
+    required double y = 2;
+    optional double z = 3 [ default = -999999.0];
+    optional double spatial_location_error = 4;  // location error
+    optional string log = 5;
+}
+//####
+/// Task to add a series of 3D (x, y, z) points to the internal list. These points
+/// are used when creating section traces and adding interface points to a section etc.
+/// The array is simple a repeated set of AddPoint2d tasks, each adding a single X, Y, Z point
+/// to the internal list.
+/// Message definition:\n
+/// <b>Point</b> AddPoint3d task to add a single point.
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message PointList3d_GMT {
+    repeated AddPoint3d_GMT Point = 1;
+    optional string log = 2;
+}
+
+//####
+/// Add a single 2D (u, v) point to the internal list. These points
+/// are used when creating section traces and adding interface points to a section etc.
+/// Message definition:\n
+/// <b>u</b> U coordinate of the point
+/// <b>v</b> V coordinate of the point
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message AddPoint2d_GMT {
+    required double u = 1;
+    required double v = 2;
+    optional double spatial_location_error = 3;  // location error
+    optional string log = 4;
+}
+
+//####
+/// Task to add a series of 2D (u, v) points to the internal list. These points
+/// are used when creating section traces and adding interface points to a section etc.
+/// The array is simple a repeated set of AddPoint2d tasks, each adding a single U, V point
+/// to the internal list.
+/// Message definition:\n
+/// <b>Point</b> AddPoint2d task to add a single point.
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message PointList2d_GMT {
+    repeated AddPoint2d_GMT Point = 1;
+    optional string log = 2;
+}
+
+//####
+/// Create a new section in the current project
+/// Message definition:\n
+/// <b>name</b> Name of the new section
+/// <b>PointList</b> PointList3d holding the X, Y, Z point list for the section trace
+/// <b>degrees</b> Polynomial degree to use when generating the section spline through the trace points [default = 1]
+/// <b>direction</b> Direction of the section [optional]
+/// <b>dip</b> Dip of the section [optional]
+/// <b>Extents</b> BoundingBox defining the section extents [optional]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CreateSection_GMT {
+    required string name = 1;
+    optional PointList3d_GMT PointList = 2;
+    optional int32 degrees = 3 [default = 1];
+    optional double direction = 4 [default = 0.0];
+    optional double dip = 5 [default = -90.0];
+    optional ctm.BoundingBox Extents = 6;
+    optional string log = 7;
+}
+
+//####
+/// Create a new interface on a section given a list of points in UV space.
+/// Requires the section name and the top and bottom formation that the
+/// interface points separate.
+/// Message definition:\n
+/// <b>section</b> Name of the section to import the data onto
+/// <b>topFormation</b> Name of the top formation being separated by the interface points
+/// <b>bottomFormation</b> Name of the bottom formation being separated by the interface points
+//   this is a bit of an unnecessary extra, as it is not actually used
+/// <b>PointList</b> PointList2d holding the array of 2D (u,v) points defining the interface
+/// <b>dip</b> Associated dip for each point [optional]
+/// <b>azimuth</b> Associated dip-direction for each point [optional]
+/// <b>polarity</b> Associated polarity for each point [optional]
+/// <b>location</b> Location for each point [optional]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+enum Associated_OrientationMethod {
+ 	UNDEFINED= 0;
+  	DIP= 1;  // set dip only, use the strike of the line segemnt
+    DIPAZIMUTH= 2;
+    LINEORIENTATION= 3;
+    ORTHOGONAL= 4; // just right angles to each line segment on the section
+}
+message AddInterfaceToSection_GMT {
+    required string section = 1;
+    required string topFormation = 2;
+    optional string bottomFormation = 3 [default = "dummy"]; // actually, not used
+    required PointList2d_GMT PointList = 4;
+ // optional foliation info
+	optional Associated_OrientationMethod OrientationMethod = 5 [default = UNDEFINED];
+    optional double dip = 6;
+    optional double azimuth = 7;
+    optional ctm.PolarityType polarity = 8;  // actaully 0 is top, 1 is reversed
+    optional ctm.ProvenanceType provenance = 9 [default=none];
+  // to get orthogonal, set location TRUE, but leave Dip/Azmiuth undefined
+    optional bool location = 10 [default = false];   // polarity location
+    	// measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	optional double spherical_variance_kappa = 12 [default = 2.];  // cannot be zero
+    optional string log = 13;
+}
+
+//####
+/// Add a foliation to the section and associate it with the named formation.
+/// Message definition:\n
+/// <b>section</b> Name of the section to add the foliation to
+/// <b>formation</b> Name of the formation to associate the foliation with
+/// <b>log</b> Optional string to add to the report log when the message is processed.
+message AddFoliationToSection_GMT {
+    required string section = 1;
+    required string formation = 2;
+    required Foliation_GMT foliation = 3;
+    optional string log = 7;
+}
+//####
+// Add a 3D foliation  and associate it with the named geology object.
+message Add3DFoliationToFormation_GMT {
+    required string formation = 2;  // can be formation, dyke or fault
+    repeated Foliation_GMT foliation = 3;
+    optional string log = 7;
+}
+
+//####
+// Add  3D interface points  and associate it with the named geology object.
+message Add3DInterfacesToFormation_GMT {
+    required string formation = 2;  // can be formation, dyke or fault
+   	repeated ctm.Point3d point = 1;
+    optional string log = 7;
+}
+
+//####
+/// Add a apparent dip to the section and associate it with the named formation.
+/// Message definition:\n
+/// <b>section</b> Name of the section to add the foliation to
+/// <b>formation</b> Name of the formation to associate the foliation with
+/// <b>log</b> Optional string to add to the report log when the message is processed.
+message AddApparentDipToSection_GMT {
+    required string section = 1;
+    required string formation = 2;
+    required ApparentDip_GMT apparentdip = 3;
+    optional string log = 7;
+}
+// create a method that does the import job
+// also has an optional set of magnetic properties that generally are also of interest
+// unlike any other object in Geomodeller, a line is required to constain a dyke geom.
+// this is done from the Hot spot, the length and the strike
+//  rad = line_strike * M_PI / 180.0;
+//			 dx = length * sin(rad) * 0.1;
+//			 dy = length * cos(rad) * 0.1;
+//			 x1 = xhot + dx;
+//			 y1 = yhot + dy;
+//			 x2 = xhot - dx;
+//			 y2 = yhot - dy;
+//  this makes out that a dyke must be specified on a section
+//  not true, interface can also be for any 3D point, but not supported in the interface as yet
+message AddDykeStructuralDataToSection_GMT {
+    required string section = 1;
+    required string dyke_name = 2;
+    required AddPoint2d_GMT Point = 3;  // need a HOT spot point to define dyke strike
+    required double dip = 34;
+    optional double direction = 5;  // Dip-direction
+    optional double strike = 6;  //
+        // or
+    optional ctm.AngleProbabilityDistributionFunction DipDistribution = 11;   // angular stats distribution
+    optional ctm.AngleProbabilityDistributionFunction DirectionDistribution = 12;   // angular stats distribution
+
+    optional ctm.ProvenanceType Provenance = 7 [default = none];
+    optional ctm.PolarityType polarity = 17 [ default = Normal_Polarity];
+	optional string observationID = 8 [default = ""];  // also a tag from Naudy
+	optional double thickness = 9 [default = 5];   // thickness in the dyke
+	optional double length = 10 [default = 100.0];   // a notional length, coming from the automatic magnetic Naudy method
+	optional double height = 18 [default = 100.];   // a notional height, coming from the automatic magnetic Naudy method
+    optional double susceptibility = 19 [default = 0.01];   // a notional magnetic susc, coming from the automatic magnetic Naudy method
+	optional double rms = 13 [default = 1.];   // a notional inversion fit, coming from the automatic magnetic Naudy method
+	optional double thickness_error = 15 [default = 5];   // thickness error in the dyke
+   // measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	optional double spherical_variance_kappa = 14 [default = 2.];  // cannot be zero
+    optional Associated_OrientationMethod OrientationMethod = 16 [default = UNDEFINED];
+    optional string log = 20;
+}
+// <CreatePoint3dOfTrace
+// add 3D interface points to a list (LDP)
+message Create3DPoint_GMT {
+	repeated ctm.Point3d point = 1;
+	    optional string log = 4;
+}
+// assign the above 3D points to a formation, clear the list
+//message Assign3DPoints2Formation_GMT {
+//	 required string formation = 1;
+//	  optional string log = 4;
+//}
+//####
+//  start of general IMPORTING section
+// organize the API to mostly follow the options in the main menu IMPORT section
+/// Import 2D data points onto a section
+/// Message definition:\n
+/// <b>section</b> Name of the section to import the data onto
+/// <b>filename</b> Name of the file to import
+/// <b>log</b> Optional string to add to the report log when the message is processed.
+message Import2dDataToSection_GMT {
+    required string section = 1;
+    required string filename = 2;
+    optional double spatial_location_error = 3;
+    optional string log = 4 [default ="read_import2d_section.rpt"];
+}
+
+//####
+/// Read and import 2D data onto a section. This has an required data type
+/// specifying the type of data imported.
+/// Message definition:\n
+/// <b>section</b> Name of the section to import the data onto
+/// <b>filename</b> Name of the file to import
+/// <b>type</b> String specifying the type of the data. One of:\n
+/// <pre>
+///     "interface" (ModelSession_Interface)
+///     "foliation" (ModelSession_Foliation)
+///     "contact" (ModelSession_Contact)
+///     "trajectory" (ModelSession_GMTrajectory)
+///     "sondage" (ModelSession_Sondage)
+///     "intersection" (ModelSession_Intersection)
+///     "fond" (ModelSession_FOND)
+/// </pre>
+/// <b>Fields</b> String list of fields to import
+/// <b>log</b> Optional string to add to the report log when the message is processed.
+message ReadAndImport2dDataToASection_GMT {
+    required string section = 1;
+    required string filename = 2;
+    optional ctm.SectionDataType type = 3 [ default = contact];
+    required ctm.RepeatedString FieldList = 4;
+    optional double spatial_location_error = 5;
+    optional string log = 6 [default ="read_import2d.rpt"];
+}
+// IMPORT > 3D Geology options
+// see examples in the distribution TASK file area
+enum ImportAction {
+	CreateFault = 0;  // create new geology formations, add interface and/or orientation data
+	CreateFormation = 1;
+	CreateDyke = 2;
+	MergeFault = 3;
+	MergeFormation = 5;
+	Import_default = 6;  // make the most intelligent decision in the context.. if a named formation, add to it etc.
+}
+// GUI allows one or more blank, comma, TAB delimiters, this is the batch support
+// this is geared to outputs from several geophysical automatic interp tools
+// so obsreved in a nearly horizontal plane
+// WORME... a 3D clustering of the worms, yields 3 csv files
+// NaudyD .. the profile automatic modelling method for mag, and tensor data, yields a DYKES.csv file
+//     note, for this case it is optional to supply susc, sim, rms, length, mag az, mag incl fields
+message ReadAndImport3dData_GMT {
+    optional string contact_csv_file = 1;  // all variants (WormE/Naudy) start with the contact csv file
+    optional string foliation_csv_file = 2;  // WormeE start with the foliation csv file
+    optional string limits_csv_file = 3;  //  for faults, can also specify a limited fault extents ellipsiod
+    optional int32 contact_header_linestoSkip = 4 [default=3]; // Not really needed, as the parser is quite smart
+    optional int32 foliation_header_linestoSkip = 5 [default=3]; //
+    optional int32 fault_limit_header_linestoSkip = 6 [default=4]; //
+    optional ctm.GeologyObsType3D type = 8 [ default = contact_3D];  // not really needed for the compound case
+    optional ImportAction operation = 9 [ default = CreateFault];  // required to control the creation
+    optional double spatial_location_error = 20;
+    optional double vertical_location_error = 22;
+    optional string log = 21 [default ="import3d.rpt"];
+}
+// Microseismic import into MeshGrid
+// bring in  a time series of 3D points in a cloud, of located micro-seismic events
+// creates an irregular Mesh Grid of 3d points with attributes that must include dateTime
+// minimum number of mandatory fields  X,Y,Z, dateTime, Magnitude
+// beware blanks lines near the beginning can upset the parsers
+message ImportMicroSeismicEvents_GMT {
+	optional string events_csv_file = 1;  //  with the events csv file
+    optional int32 events_header_linestoSkip = 2 [default=3]; // Not really needed, as the parser is quite smart
+    optional string MeshGrid_Name = 3;  //  mesh grid
+	repeated string ignoreFields = 5;  // fields to not import
+    optional double spatial_location_error = 20;
+    optional double vertical_location_error = 22;
+    optional bool CreateDateTime=9 [default = false];  // for the time filter, need to convert a date and a time field, into a combined DateTime Intrepid field
+    optional string log = 21 [default ="import3d_microseismic.rpt"];
+}
+//####
+/// load a standard 3 table implementation of a borehole database
+/// collar Alias field must have 5 entries for the column names coresponding too "ID", "X", "Y", "Z", "LENGTH"
+/// survey Alias field must have 4 entries for the column names coresponding too "ID", "DIP", "BEARING", "DOWN_HOLE_DISTANCE"
+/// geology/lithology Alias field must have 4 entries for the column names coresponding too "ID", "FROM", "TO", "LITHOLOGY_CODE"
+/// lithology code in this API must already correspond to what is being used inside your session ie you must already have created
+/// the entry, if not, the interval is ignored
+message LoadDrillholes_GMT {
+	required double precision = 1;
+	required string collarFile = 2;
+	required string surveyFile = 3;
+	required string geologyFile = 4;
+	required ctm.RepeatedString collarAliases = 5;
+	required ctm.RepeatedString surveyAliases = 6;
+	required ctm.RepeatedString geologyAliases = 7;
+	optional bool invertDips = 8 [default = false]; // convention for dips in mines is sometimes reversed
+	optional bool scanOnly=9 [default = false];
+	// best done using a vector and von Miese / Fisher kappa approach
+	// this cumulates as you go deeper, for the location errors
+	optional double downhole_distance_error = 10 [default = 0.0];
+	optional double downhole_azimuth_error = 11 [default = 0.0];
+	optional double downhole_declination_error = 12 [default = 0.0];
+	// no entry for down hole logging erros, user derived
+	optional string log = 13 [default ="load_drillholes.rpt"];
+}
+//####
+enum CompositeStyle {
+	Start_Collar = 0;
+	First_NonNull = 1;
+}
+enum CompositeReplacementStyle {
+	BackgroundValue = 0;
+	WeightedMean = 1;
+}
+//Note: If Density weighting is chosen and there is no density value for an interval then the
+//chosen background density and selected Null and Trailing Interval handling options will be
+//applied to obtain a value for the density
+
+enum CompositeWeightingStyle {
+	length_weighting = 0;
+	density_weighting = 1;
+}
+//  upscale/composite the drill hole intervals for a litho-style 3D interrogation
+message CompositeDrillholes_GMT {
+	optional bool DoAllAssayFields = 1 [default = false];
+	optional string AssayField = 2;
+	optional string Suffix = 3 [default = "Reg"];
+	optional string DensityField = 4;  // required if density weighting,
+	optional double Support_Length = 5 [default = 2.0];  // aggregate assays/numercis to this minimum length
+	optional CompositeStyle Build_Style = 6 [default = Start_Collar];
+	optional bool Restart_On_Nulls = 7 [default = false];
+	optional double restart_interval = 8 [default = 2.0];
+	optional CompositeReplacementStyle internal_null_replacement = 9 [default = BackgroundValue ];
+	optional CompositeReplacementStyle external_null_replacement = 10 [default = BackgroundValue ];
+	optional bool Enable_Trailing_Interval_Length_Threshold = 11 [default = false];
+	optional double low_trailing_threshold = 12 [default = 1.0];
+	optional double high_trailing_threshold = 13 [default = 3.0];
+	optional CompositeWeightingStyle Weight_Style = 14 [default = length_weighting];
+	optional double  assayBackground = 15;		// Background value
+	optional double  densityBackground = 16;	// Background value for the density field
+
+	optional string log = 30 [default ="composite_drillholes.rpt"];
+}
+
+message ImportSeismicCommon {
+
+    // Is this message coming from the GUI or batch?
+    optional bool InGUI = 1 [default = false];
+    // Input seismic file   a full survey taking the file pattern instead of a full array of
+// filenames.  use a pattern such as nav*.dat
+	optional string InputDataFile = 2;
+    // Input project to import into.
+    optional string InputProjectFile = 3;
+
+    // Max number of iterations when thinning the data, generally default is fine.
+    optional int32 MaxThinningIter = 5 [default = 9999];
+    // Minimum change in the thinning threshold. Generally default is fine
+    optional double MinThinningDelta = 6 [default = 0.0000001];
+    // Maximum number of points per section. NOTE: Thinning is done on the full resolution data, not the thinned data
+    optional int32 MaxSectionPoints = 7 [default = 5];
+    // Ignore points outside project extents, rather than throwing an error
+    // (clipping)
+    optional bool ClipToProject = 8 [default = true];
+
+    // Handle Lat/Lon not in dd:mm:ss.ss format that Intrepid requires.
+    optional bool DMSConvert = 9 [default = false];
+    optional string DMSLatFormat = 11 [default = "ddmmss.ss"];
+    optional string DMSLonFormat = 12 [default = "dddmmss.ss"];
+    // GeoModeller likes to be different
+    optional bool InvertDepth = 13 [default = true];
+
+    optional bool RunParallelCode = 14 [default = true];
+    optional string OutputProjectFile = 19;
+    optional string log = 255 [default ="seismic_report.rpt"];
+}
+//###
+/// Import seismic nav. lines into GeoModeller as sections from an ASCII file.
+/// See <em>ImportSeismicCommon</em>
+message ImportSeismicNav_GMT {
+    // Degree of the spline used when generating sections
+    optional int32 SectionSplineDegree = 1 [default = 1];
+    required ImportSeismicCommon ImportSeismic = 2;
+	optional string log = 255;
+}
+
+//###
+/// Import seismic horizon picks into GeoModeller onto sections from an ASCII file.
+/// Requires that the navigation import has been done, or at least that the sections exist
+/// in the GeoModeller project with the line names.
+/// See <em>ImportSeismicCommon</em>
+message ImportSeismicHorizons_GMT {
+    optional ctm.RepeatedString NavigationFiles = 1;
+    optional ctm.RepeatedString HorizonColumnNames = 2;
+    optional double IntersectionRadius = 3;
+    required ImportSeismicCommon ImportSeismic = 8;
+	optional string log = 255;
+}
+//####
+/// Render a 2D section, using either 2D marching Squares, or CGAL 2D Delauney triangles.
+/// Message definition:\n
+/// <b>section</b> Name of the section to render
+/// <b>nx</b> Grid extents in the X direction
+/// <b>ny</b> Grid extents in the Y direction
+/// <b>fillFormations</b> List of Formations to render filled
+/// <b>lineFormationOrFaults</b> List of Formations and/or Faults to render as lines
+/// <b>traceSeries</b> List of Series to render as traces
+/// <b>showTraceInSeries</b> Flag indicating if the trace render should show only within the series [default = true]
+/// <b>showTraceInSeries</b> Flag indicating if the trace render should show everywhere [default = false]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message RenderSection_GMT {
+    optional string section = 1;
+    required int32 nx = 2 [default = 50];  // resolution
+    required int32 ny = 3 [default = 50];
+    optional ctm.RepeatedString fillFormations = 4;
+    optional ctm.RepeatedString lineFormationOrFaults = 5;
+    optional ctm.RepeatedString traceSeries = 6;
+    optional bool showTraceInSeries = 7 [ default = true];  // clip the geology trend lines forma formation to current formation extents
+    optional bool showTraceEverywhere = 8 [ default = false];  // extend the formation trend lines vereywhere on section
+    optional bool showVarianceEnvelope = 9 [ default = false]; // for variance enveloppes of uncertainty
+    optional string log = 15 [default ="render_section.rpt"];
+}
+
+
+/// dump the current computed model for your project to a lithology voxet
+/// quick way to do bulk FFT forward models
+message SaveLithologyVoxet_GMT {
+		required int32 nx = 1;  // number of cells in X direction
+		required int32 ny = 2;
+		required int32 nz = 3;
+		required string LithologyVoxetFileStub = 4;  //  a Gocad voxet will be created with this as the stub name
+		optional string log = 15 [default ="save_voxet.rpt"];
+}
+//  ###
+//  write the current computed model for your project geology gradient components
+//  writes all the query results to a voxet file  , also stores the Lithology rank
+// calls two methods, optional for the Potential voxet, always for the gradients
+message SavePotentialGradientVoxet_GMT {
+		required int32 nx = 1;  // number of cells in X direction
+		required int32 ny = 2;
+		required int32 nz = 3;
+		optional bool Just_Gradients = 5 [default = true]; // isopotential numbers not very interesting, vector of trend is however.
+		optional bool OneVoxet_Lithology = 6 [default = false]; // just do the current pile
+		required string VoxetFileStub = 4;  //  a Gocad voxet will be created with this as the stub name
+		optional string log = 15 [default ="save_potentialvoxet.rpt"];
+}
+//####
+/// Update an interface point on a section.
+/// Message definition:\n
+/// <b>section</b> Name of the section to import the data onto
+/// <b>Point</b> U, V coordinates specifying the 2D point to update.
+/// <b>observationId</b> String ID for the observation [default = ""]
+/// <b>provenance</b> Provenance data associated with the point [default = 0.0]
+/// <b>hasFoliation</b> Flag indicating if the point is foliation data [default = true];
+/// <b>hasLocation</b> Flag indicating if the point is contact data [default = false];
+
+/// <b>azimuth</b> Azimuth of the foliation (if required) [default = 0.0]
+/// <b>dip</b> Dip of the foliation (if required) [default = 0.0]
+/// <b>lineAzimuth</b> Line-azimuth of the foliation (if required) [default = 0.0]
+/// <b>lineDip</b> Line-dip of the foliation (if required) [default = 0.0]
+/// <b>polarity</b> Polarity of the foliation (if required) [default = 0]
+/// <b>log</b> Optional string to add to the report log when the message is processed.
+message UpdateInterface_GMT {
+    required string section = 1;
+    required AddPoint2d_GMT Point = 2;
+    required string observationId = 3 [default = ""];
+   	optional ctm.ProvenanceType provenance = 4 [default=none];
+    optional bool hasFoliation = 5 [default=true];
+    required bool hasLocation = 6 [default=false];
+    optional ctm.OrientationMethodType orientationMethod = 7 [default=undefined];
+    optional double azimuth = 8 [default=0.0];
+    optional double dip = 9 [default=0.0];
+    optional double lineAzimuth = 10 [default=0.0];
+    optional double lineDip = 11 [default=0.0];
+    required string polarity = 12 [default="top"]; // "top", "bottom"
+	// measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	optional double spherical_variance_kappa = 13 [default = 5.];  // cannot be zero
+    optional string log = 15 [default ="update_interface.rpt"];
+}
+
+//####
+/// Delete interface data from a section
+/// Message definition:\n
+/// <b>section</b> Name of the section to delete the interface data from\n
+/// <b>log</b> Optional string to add to the report log when the message is processed.\n
+message DeleteInterfacesFromSection_GMT {
+    required string section = 1;
+    optional string log = 2  [default ="delete_interface.rpt"];
+}
+
+
+//####
+/// Link faults with series in the Geomodeller project
+/// Message definition:\n
+/// <b>FaultSeriesList</b> List where each node has a fault and series name\n
+/// <b>log</b> Optional string to add to the report log when the message is processed.\n
+message FaultSeriesLinks_GMT {
+    required string fault = 1;
+    repeated string series = 2;
+	optional string log = 255;
+}
+message LinkFaultsWithSeries_GMT {
+
+    repeated FaultSeriesLinks_GMT FaultSeriesLinks = 1;
+    optional string log = 2 [default ="link_fault_series.rpt"];
+}
+
+//####
+/// Link faults with faults in the Geomodeller project
+/// Message definition:\n
+/// <b>FaultStopsOnFaults</b> List where each node has a fault and fault that it stops on\n
+/// <b>log</b> Optional string to add to the report log when the message is processed.\n
+message FaultStopsOnFaults_GMT {
+        required string fault = 1;
+        repeated string stopson = 2;
+	optional string log = 255;
+}
+message LinkFaultsWithFaults_GMT {
+    repeated FaultStopsOnFaults_GMT FaultStopsOnFaults = 1;
+    optional string log = 2 [default ="link_fault_fault.rpt"];
+}
+
+
+//####
+/// Export  GeoModeller to protobuf syntax ( task files).
+/// Open a project with no GUI components
+// mainly go for all the original sections
+// geological pile,
+// interfaces/foliations etc
+// planar sections only!
+// optional convert associated foliation data on a section to 3D
+// do not capture the computed 3D model
+// not so interested in the mesh grids either
+// useful way to go from the interactive world to the world of geolgical uncertainty via batch
+// also a possible path for merging adjacent projects
+// by harvesting the original observations and PILE, faults etc
+message WriteBatchFile_GMT {
+	required string filename = 1;  // geomodeller project
+    optional string Task_Name = 2 [default="myProject.task"];  // protobuf output file name
+//	optional GeomodellerVRMLType Type = 3 [default=Model];  // not a real option
+    optional bool convertSection_InterfacesTo3D = 5 [default=false]; // push from a section coordinates to 3D(global)
+    optional bool convertSection_FoliationTo3D = 6 [default=false];
+    optional bool exportBoreholesToCSV = 7 [default=false]; // for  boreholes, dump out as 3 CSV files
+    optional string csv_path = 8 [default="EXPORT/"]; // where to place the exported 3 csv files for the boreholes
+    optional bool exportToGeomodellerTempDirectory = 9 [default=true]; //  this is needed for automated testing (false for current directory)
+    optional string log = 12 [default ="writeprotobuf.rpt"];
+}
+//####
+/// Load a mesh grid with the given file name. This will load the external & IGMesh formats.
+// also will load any standard geophysical database, lock stock and barrel
+// use FT_POINT for this to happen, or FT_SURFACE for triangles/quads
+// the problematic ones are the ASCII voxet, ASCII XYZ "voxet", as the standard is loose
+// We have no real ASCII format (plain ascii without header)
+//  formal list of supported input loading formats
+//   FT_VOXET: // formal Binary or ASCII 3d voxet
+//    FT_GRID: // access the full list of supported grid formats from Intrepid
+//    FT_BRGM_XYZ: // the BRGM ASCII - sort of a point cloud
+//	FT_IGMESH: // the formal Intrepid binary IG mesh type
+//  FT_SURFACE:  can be dxf, trsurf, vtp etc
+//    FT_POINT:/FT_ASCII: // can use this for Intrepid/GDB databases
+//  the VTK variants are also OK and treated as a special case. *.vtp, *.vtu, *.vtr
+message SourceMeshGrid_GMT {
+    optional GeomodellerDataSource SourceType = 1 [default = Project];
+    optional string File_Name = 2;  //  data source file name eg an Intrepid database
+    optional string MeshGrid_Name = 3;  //  mesh grid
+    // also supports the VTK formats  vtp, vtu, vtr
+    optional ctm.DfaFileType FileType = 4 [ default = FT_IGMESH];
+    optional string Field_Name = 5;  // not necessarily used
+    optional sint32 header_records = 6 [default = 0];  // for some ASCII grids,
+    optional string log = 255 [default ="source_meshgrid.rpt"];
+}
+//####
+/// Create a mesh grid with the given file name. This will create all the supported formats.
+message CreateMeshGrid_GMT {
+    optional GeomodellerDataSource CreateDestinationType = 1 [default = Project];
+    optional ctm.OutputMeshType OutputMeshType = 20 [ default = ODT_RegularMesh3D];
+    //  there is a standard place to park MeshGrids, when associated with a Geomodeller project... The MeshGrid subdirecytory!
+    optional string File_Name = 2;  //  data  file name, especially if you want to put a Grid somewhere when not using a Geomodeller project
+    // or
+    optional string MeshGrid_Name = 3;  //  mesh grid , when you are using a Geomodeller project!
+    optional ctm.DfaFileType FileType = 4 [ default = FT_IGMESH];
+    optional string Field_Name = 5;  //  estimated field
+    optional string Field_Variance = 6;  //  estimated field variance
+	// and/or optionally, specify the cell sizes..
+	optional sint32 dx = 10 [ default = 100];  // width of cell in X direction, cannot be double, as bug in stream ascii parsing
+	optional sint32 dy = 11 [ default = 100];
+	optional sint32 dz = 12 [ default = 100];
+	 // if within a project, use project extents as default
+    // otherwise, you must specify the extents
+	optional ctm.BoundingBox Extents = 13;
+        // now to specify an regular grid
+    optional sint32 nx = 21 [ default = 20];  // number of cells in X direction
+	optional sint32 ny = 22 [ default = 20];
+	optional sint32 nz = 23 [ default = 20];
+
+    optional string log = 99 [default ="create_meshgrid.rpt"];
+}
+
+//####
+/// Export a mesh grid with the given file name.
+// converts from an existing mesh grid to another format
+// This loads an IGMesh in your project.
+//  way to do a format convert in batch
+message ExportMeshGrid_GMT {
+    required SourceMeshGrid_GMT MeshGrid_Source = 1;
+        // now start on the geometry of the mesh to be created
+    optional ctm.OutputMeshType OutputMeshType = 20 [ default = ODT_RegularMesh3D]; // not used as yet
+     optional string OutFileName = 2;  //  data source file name
+    optional string OutMeshGridName = 3;  //  mesh grid
+    // supported output export format types, plus dataformat types for each
+    // so far, this method does not wire up to the more general interchange API from ioclass in Intrepid
+	// FT_VOXET,  DF_GOCAD,DF_VTK,
+	// FT_GRID,  DF_ERM,DF_OASIS
+	// FT_SURFACE, DF_VTK,DF_DXF,DF_TSURF
+	// FT_BRGM_XYZ,
+	// FT_POINT,FT_ASCII, DF_PITS ( older name for Intrepid database formats)
+	// FT_IGMESH,
+    optional ctm.DfaFileType OutFileType = 4 [ default = FT_IGMESH];
+    optional ctm.DataFormat OutDataFormat = 5 [ default = DF_VTK];
+    optional ctm.BoundingBox Extents = 21;
+    optional int32 nx = 22 [ default = 20];  // number of cells in X direction
+	optional int32 ny = 23 [ default = 20];
+	optional int32 nz = 24 [ default = 20];
+	// and/or optionally, specify the cell sizes
+	optional double dx = 25 [ default = 100];  // number of cells in X direction
+	optional double dy = 26 [ default = 100];
+	optional double dz = 27 [ default = 100];
+	// optional add the current geology model to the mesh, as the field: "rank" or lithology
+	optional bool AddGeologyField = 8 [default=false]; // useful, when bringing in a foreign mesh grid in the first place
+
+    optional string log = 255 [default ="save_meshgrid.rpt"];
+}
+// start of geostats, types of variograms, 1,2,3 Dimensions
+enum TypeOfAnalysis {
+	    RhoThetaPhi = 0;  // conventional 3D
+ 	    RhoTheta = 1;  // conventional 2D
+	    Rho = 2;   // conventional 1D, isotropic all directions
+	    UVT = 3;   // domain in 3D local curvatures, requires 2 dimensions geodesic
+	    OnlyT = 4;  // thickness of formation, 1D but still geodesic
+    }
+enum KrigingDomain {
+        Series = 0;  // all the geology units in a series
+        Formation = 1;  // just the current formation
+        NoDomain = 2;
+    }
+// when you have a variogram, nominate exactly which type it is
+enum Kriging_WhichVariogram {
+	Kriging_U=0;
+	Kriging_V=1;
+	Kriging_W=2;
+	Kriging_RHO=3;  // isotropic, all directions in cartesian space
+	Kriging_T=4;  // domain thickness of unit
+	Kriging_UV = 5;  // domain geodesic distance
+}
+//####
+/// Specify a  variogram curves directly in-line.
+// can come from any where, lag tolerance is 50%, hardwired
+message VariogramCurves_GMT {
+//	optional TypeOfAnalysis Analysis_Type = 1 [default = Rho];
+ 	required double lag = 2 [ default = 100.0];
+ 	optional ctm.RepeatedDouble variance1 = 3;   // 1D
+ 	optional Kriging_WhichVariogram which1 = 4 [default = Kriging_RHO];
+ 	optional ctm.RepeatedDouble variance2 = 5;   // 2D
+ 	optional Kriging_WhichVariogram which2 = 6 [default = Kriging_V];
+ 	optional ctm.RepeatedDouble variance3 = 7;   // and now the 3D
+ 	optional Kriging_WhichVariogram which3 = 8 [default = Kriging_W];
+ 	required int32  number_points = 10 [ default = 100 ];  // number of points to use from variogram curve
+ 	optional string log = 255 [default ="model_variogram.rpt"];
+
+}
+//####
+/// Experimental Variogram generation
+// 2 strategies for neighbourhood analysis
+// if isotropic, we run a multi-threaded operations which splits the points cloud by number of nominated CPU's
+//  if a formation bounded, domain bounded, use up to 8 octants, to sort the population of point
+// lags, and also allow for anisotropic bias by setting a spheroid - much slower though
+message ComputeVariogram_GMT {
+    // This will allow the user to either load an existing mesh grid if they
+    // provide the file name
+    required SourceMeshGrid_GMT MeshGrid_Source = 1;
+    optional VariogramAnalysisType Analysis_Type = 3 ; // really dimensionality
+    required KrigingDomain Domain = 4 [default = NoDomain];
+    optional string Data_Name = 5;
+    optional double Maximum_Distance = 6; // Default = 1/3 the project diagonal.
+    required string Variogram_Name = 7;
+    optional ctm.BoundingBox Extents = 8;
+    // now for the variogram model, only one part
+    optional double NuggetEffect = 10 [ default = 0.0];
+	optional double Range = 11 [ default = 1.0];
+	optional double Sill = 12 [ default = 1.0];
+	optional ctm.VariogramModelType VariogramModelType = 13 [ default = VMT_Spherical];
+	optional double lag = 14 [ default = 100.0];
+	optional sint32  Number_Points = 15 [ default = 20 ];  // number of points in variogram plot
+	optional string ReportFile = 16 [ default = "variogram.rpt"];  // here is where the results are listed
+	optional int32 Maximum_Measures = 17 [ default = 10000 ];
+	optional int32 Maximum_Pairs = 18 [default = 100000 ];
+	optional int32 Number_CPUs = 19 [default = 3];  // isotropic Voisonage ( neighbourhood) only
+	optional string log = 255;
+}
+
+//###
+/// VariogramAnalysisType structure, this is really the master structure for the type
+message VariogramAnalysisType {
+//	optional XYZValueCouplesDataPointType xYZValueCouplesDataPoint = 1;
+//	optional FeatureMap group = 2;
+// optional anisotropic oblate spheroid for search bias
+	optional double azmiuth = 3 [default=0.0];
+	optional double dip = 4 [default =90];
+	optional double plunge = 5 [default = 0.0];
+	optional string name = 6;
+	optional string nameOfSerieOrUnit = 7;
+	optional bool serieConstraint = 8 [default = false];
+	optional TypeOfAnalysis type = 9 [default = Rho];
+	optional bool unitConstraint = 10 [default = false];
+	// you can ask for the analysis to be directionally biased by up to 8 octants or sectors in 3D
+	// in effect, the pair analysis is conducted independently in each sector, so near
+	// pairs on a boundary in one direction, do not mask far pairs in another direction
+	// from being taken into account. ( A pair is the current point and a near neighbour)
+	optional int32 Number_Sectors = 19 [default = 1];  //
+	optional string log = 255;
+}
+//###
+/// interpolation section,
+/// you must have a project open & computed, if you wish to use "Domain" kriging
+///  with availble numerical data in boreholes
+///  or a 3D point cloud with associated readings
+// this function -
+//  can work outside a Geomodeller open project for more generic work
+//  can work directly of  any geophysical database as well
+/// only scalar data fields are supported ( double/integer)  , tensors/vectors still to come
+message InterpolateNumericalReadings_GMT {
+    // This will allow the user to either load an existing mesh grid if they
+    // provide the file name
+    required SourceMeshGrid_GMT MeshGrid_Source = 1;
+    required ctm.InterpolationMethod method = 2 [default = IM_Kriging];
+    required ctm.InterpolationOutputType OutputStyle = 3 [default = IOT_D3 ];
+	optional sint32 Maximum_Observations = 5 [ default = 50];  // stop finding more observations when this is reached
+	optional sint32 Minimum_Observations = 6 [ default = 2 ];
+	optional double Maximum_Radius = 7; // radius of the equatorial circle. default is 1/3 project box diagonal
+	 	// are we doing domain kriging??
+ 	optional KrigingDomain Domain = 8 [default = NoDomain];
+    optional string Data_Name = 9;   // for domain kriging, what series or formation to choose?
+
+//  methods to manage variograms
+	optional TypeOfAnalysis Analysis_Type = 21 [default = Rho];  // usually always required
+//  import an external variogram curve
+	optional VariogramCurves_GMT Variogram_Model = 10;
+// or use an existing experimental variogram from a project, as saved in the persistent format for Geomodeller
+ 	optional string Experimental_Variogram_Name = 20;
+//  or calculate on fly, with traditional simple paramters, provision for isotropic only at present
+	optional ctm.VariogramModelType VariogramModelType = 30 [ default = VMT_Spherical];
+	optional ctm.NeighbourStyle Neighbour = 31 [ default = NS_RegularGridBox];
+	optional double NuggetEffect = 32 [ default = 0.0];
+	optional double Range = 33 [ default = 1.0];
+	optional double Sill = 34 [ default = 1.0];
+	optional Kriging_WhichVariogram which = 35 [default = Kriging_RHO];  // what type of variogram is described by these parameters
+// An oblate spheroid is a rotationally symmetric ellipsoid having a polar axis shorter than the diameter of the equatorial circle whose plane bisects it.
+	optional double aratio = 15 [ default = 1.0]; // polar axis length / diameter of equatorial circle.
+
+	// direction of 3 angles.
+	optional double dip = 17 [ default = 90];
+    optional double azimuth = 18 [ default = 0];
+    optional double plunge = 19 [ default = 0];
+
+// now to specify the created interpolated data
+	required CreateMeshGrid_GMT Output_Mesh = 50;
+	optional string ReportFile = 80 [ default = "interpolate.rpt"];  // here is where the summary results are listed
+	optional string log = 255;
+}
+// Persistent format
+// also going to make it in to MESH grids.
+
+
+//####
+//  A triple Line is the break line between 3 formations or faults in your model
+//  these are the lines you would like to be well defined
+// algorithmic steps
+// 	a.slicing the model in X/Y/Z,
+// 		looking at each of these slices as sections ( render the faults, find the triple point)
+// 		Build Formation/Formation lines
+// 		Select points and set them to a polyline representing a triple line from 2 potential fields,
+// 		Set to the points the id of the 2 potential fields.
+// 		if the point is set to a triple line remove it from the list.
+// 		The reorder the points to decribe a line (Using the Sort method).
+//   b. looking at formation joins
+//   c. formation / fault joins
+//   d. fault/fault joins
+//   e. fault/topo joins
+//    persist these lines to a text and also vtp file
+//	-2 fault tip line,  -1 border, 0 formation, 1 fault, 2 fault formation
+//     current scheme for naming
+//  Angle(min_facet_angle)
+//  Size,
+//   Tol,
+//   Ratio, (ratio_edges)
+//   Tetsize,
+//   TheBallRadius (triple_point_spacing)
+message BuildTripleLines_GMT {
+
+    message ExportTripleLines {
+        enum TripleLine_ExportFormat {
+            TripleLine_ASCII_LONG =0; // one is meant to be more human compatible and has a summary of which formations are involved
+            TripleLine_ASCII_CGAL=1; // second ASCII format is CGAL Compatible
+            TripleLine_VTK=2;  // a third format, export to VTP, enables independent visualization
+        }
+        optional string output_directory = 1 [default = "./"];
+        optional TripleLine_ExportFormat format = 2 [default = TripleLine_VTK];
+        optional string log = 255;
+    }
+    // for the non-Triple lines part
+    // if(precision > Tol/10.) Model->SetPrecision(Tol/10.);
+    //  this paramters is ignored, and
+    //   tol =  Model->Precision()/ 1000;
+    //  candidate parameter to set up control for this aspect, Model_Section.cxx
+    optional double precision = 12 [default = 20]; // 1/20 of Precision defining the allowable error between facet surfaces and the implicit model.
+    //	Over all Model Precision = ThePrecision;
+    //	ConfusedLinePrecision = ThePrecision/2.; // If distance between 2 lines is smaller keep just one
+    //	EndPointsPrecision = ThePrecision/4.; // If two endpoints are at a smaller distance merge them.
+    //	ShortLinesPrecision = ThePrecision/5.; // If a line is smaller remove it.
+    //	DangleLinesPrecision = ThePrecision; // If the end point of a line is at a smaller distance from another line, clean it.
+    //	ConfusedPointPrecision = 2.; // If 2 points are at a smaller distance merge them.
+    // post process the triple lines, to remove unwanted extras
+    optional bool clean_lines = 20 [ default = true];   // eliminate confusion of near points, should always do this
+    // the main use of this following parameter is
+    // to sample the 3D geology model for faults, on a regular basis, in X, Y, Z
+    // for Triple line calcs, on a series of cross sections in the 3 Planes,
+    optional double point_spacing = 24 [default = 250]; //
+
+    // Apply a bias along the X, Y and Z axis. The defaults are set up for
+    // vertical bias along the Z axis.
+    message ThinBodyBias {
+        optional double x = 1 [default = 1.0];
+        optional double y = 2 [default = 1.0];
+        optional double z = 3 [default = 1.0];
+    }
+    // Thin bodies, generally near surface and near horizontal, may require increased
+    // sampling. E.g. a horizontal thin body may required a x10 sampling rate
+    // along the vertical Z axis with a bias vector of [0,0,10]
+    optional ThinBodyBias thin_body_bias = 25;
+
+    //    optional string tagname = 25;  //  tagname to use for naming artifacts
+    // Export as a VTK poly line. We then get the angle between all lines. Any with an angle < A
+    // and a distance < D we snap together. Snapping the shorter onto the longer. Because any turning
+    // point in the line
+    // is a point we can just check the full line, no curvature check required.
+    optional ExportTripleLines export_triple_lines = 27;
+    // actual line of code that builds the name of the triple line file name, in VTK format, also want ASCII text version
+    //	std::string exportfn(dfastr::printf("%s_%0.3f_%0.3f_%0.3f_%0.3f_%0.3f_%0.3f_triplelines.vtp",ProjetSession::CurrentProjet()->PathStubWithoutXML().ToCString(), Angle, Size, Tol, Ratio, Tetsize, TheBallRadius).str());
+    // control
+    optional bool topolimited = 28 [default = true]; // indicating whether to clip the shapes at the topography.
+    // triple line controls
+    optional bool borderline = 29 [default = true]; // indicating if the border triple lines are used when preserving sharp features.
+    optional bool insideline = 30 [default = true]; // indicating is interior (non-border) triple lines are used when preserving sharp features.
+    //  as part of the process of finding the triple lines, points came first - deprecated now
+    // or triple points.. no need to do both, these methods just capture the basic points and ignore the line structure! Otherwise just the same
+    optional bool divide_model_using_regular_sections = 31 [default = true]; // CGAL Sections are better for computing the triple points, do not change
+    optional string log = 255;
+}
+
+message ImportTripleLines_GMT {
+    optional string filename = 1 [default="triple_lines.txt"];
+    optional string log = 255;
+}
+//####
+/// Build the tetrahedral model, volume shells and surface meshes using CGAL,
+/// which uses a optimised Delaunay method.
+message BuildMeshCGAL_GMT {
+
+    // Parms to control mesh refinement, i.e. optimization of the generated mesh
+    // to improve tetrahedron and facet quality.
+    message RefineMesh {
+        message OptEnergyParms {
+            // Maximum time in seconds to run the algorithm
+            optional double time_limit = 1 [default = 5.0]; // units: seconds
+            // Maximum number of iterations to run
+            optional int32 max_iter = 2 [default = 0]; // units: integer
+            // The target convergence of the energy function
+            optional double convergence = 3 [default = 0.02];
+            // The minimum change between successive iterations before halting the algorithm
+            optional double freeze_bound = 4 [default = 0.01];
+            // Flag indicating if the algorithm should adhere to the freeze bound
+            optional bool do_freeze = 5 [default = true]; // units boolean
+            optional string log = 255;
+        }
+        message OptVertexParms {
+            // Maximum time to run the algorithm
+            optional double time_limit = 1 [default = 5.0]; // units: seconds
+            // runs as long as steps are successful and the worst tetrahedron
+            // in the mesh has a smallest angle larger than sliver_bound degrees.
+            // A value of 0 indicates the algorithm should run until a step
+            // fail to improve the quality.
+            optional double sliver_bound = 2 [default = 3.0]; // units: degrees
+            optional string log = 255;
+        }
+        // Lloyd smoothing optimizes the mesh using an energy minimisation function.
+        // Vertices are moved to positions that minimize the energy gradient then
+        // the Delaunay mesh is regenerated. Lloyd uses Voronoi cells to compute
+        // the energy function.
+        optional OptEnergyParms lloyd = 1;
+        // ODT smoothing optimizes the mesh using an energy minimisation function.
+        // Vertices are moved to positions that minimize the energy gradient then
+        // the Delaunay mesh is regenerated. ODT uses Delaunay balls to compute
+        // the energy function.
+        optional OptEnergyParms odt = 2;
+        // Perturb optimizes the mesh by moving the vertices to improve the dihedral
+        // angles of the worst cells. A step is considered successful if the
+        // worst tetrahedron has a minimal dihedral angle larger than the sliver_bound
+        // parameter.
+        optional OptVertexParms perturb = 3;
+        // Exude slivers by performing a weighted Delaunay meshing algorithm then
+        // optimizing vertex weights until slivres disappear.
+        optional OptVertexParms exude = 4;
+    }
+    message GeomodellerOutput {
+        optional string output_directory = 1;  // appears unused; should be removed
+        // Taubin smoothing iterations on mesh vertices. This may break  (MAY BREAK DELAUNAY PROPERTIES)
+        optional int32 smooth = 2 [default = 0];
+        optional bool draw_shapes = 3 [default = false];
+        optional bool formations = 4 [default = true];
+        optional bool faults = 5 [default = true];
+        optional bool surfaces = 6 [default = true];
+        optional bool volumes = 7 [default = true];
+        optional bool tetrahedrons = 8 [default = true];
+
+        optional string log = 255;
+    }
+    message MeshCriteria {
+        //####
+        // TODO(esh) Adaptive sizing parameters per formation
+        // (still experimental in CGAL as of 4.10 release)
+        // TODO(esh) Sizing parameters for geology interfaces
+        // (surface patch indexed sizing field)
+        // FormationDiscretization defines the sizing parameters for a formation
+        // This is the formation interior sizing parameters.
+        message FormationDiscretization
+        {
+            // name of geology unit
+            optional string formation = 1 [default="default"];
+            // Upper bound on the error between surface facet center and the
+            // boundary interface.
+            optional double precision = 2;
+            // Upper bound on facet circumcircle radii
+            optional double max_facet_radii = 3;
+            // Upper bound on tetrahedron circumcsphere radii
+            optional double max_tet_radii = 4;
+            // Upper bound of curved segment length (triple line 1-features)
+            optional double max_edge_length = 5;
+        }
+        // The lower bound on smallest facet angle
+        optional double min_facet_angle = 1 [default=10.0];
+        // The lower bound on facet circumcircle radii
+        optional double min_facet_radii = 2;
+        // The lower bound on the protecting ball radius. Protecting balls are
+        // placed on vertices of the triple lines (1-features).
+        optional double min_protect_ball_radius = 3;
+        // The upper bound on the ratio of tetrahedron circumsphere radius to
+        // the longest edge smaller the better, < 2.5 is considered high quality.
+        // This does not consider long thin slivers.
+        optional double radius_edge_ratio = 4 [default = 2.5];
+        // The default discretization to use when a formation is not specified.
+        // This is a mandatory field
+        optional FormationDiscretization default_discretization = 5;
+        // The array or formation discretization parameters. Formation discretization
+        // are optional fields.
+        repeated FormationDiscretization formation_discretization= 6;
+        optional string log = 255;
+    }
+    //####
+    // Control how the initial points are generated that seed the meshing
+    // algorithm. The initial points are fixed and carry through to the final
+    // mesh. If the refine_mesh{} block is present the points may be moved from
+    // their original position because the optimisation steps move points to
+    // improve shape quality of mesh elements.
+    //
+    // Users can specify a combination of three methods to inject points:
+    //
+    // a)   Triple line points, after confused lines are removed. This is ON by
+    //      default.
+    //
+    // b)   Points from a VTP polydata mesh file. Users can define preprocessing
+    //      on the mesh to clean and/or decimate the points prior to meshing.
+    //
+    // c)   Random points sampled on the geology interfaces.
+    message SeedPoints {
+        //####
+        // Defines the paramters to load an existing mesh and extract the
+        // points for use as initial meshing algorithm points.
+        message MeshSeedPoints {
+            // VTP file containing the points to inject
+            optional string filename=1;
+            // If clean_mesh{} block is provided the mesh will be cleaned prior
+            // to extracting points. Cleaning will attempt to remove degenerate
+            // mesh elements or merge coincident points.
+            optional vtktasksup.CleanPolyData clean_mesh=3;
+            // If decimate_mesh{} block is provided the mesh is decimated prior
+            // to extracting points. The decimation attempts to reduce the number
+            // of points while maintaining the topology.
+            optional vtktasksup.QuadricDecimation decimate_mesh=4;
+        }
+        //####
+        // Defines the parameters for random point sampling to seed the mesh
+        // algorithm.
+        message RandomSeedPoints {
+            // The number of seed points to use
+            optional int32 count = 1 [default = 12];
+        }
+        // If FALSE the points on triple lines will not be used to seed the mesh.
+        // NOTE: This does not turn on/off triple line protection.
+        optional bool use_triple_points = 1 [default = true];
+        // If present in the task file points will be sampled randomly on
+        // domain interfaces and used to seed the mesh
+        optional RandomSeedPoints random_points = 2;
+
+        // If one or more mesh_points{} blocks is in the task file the points
+        // from the VTP file(s) will be used as seed points to the meshing
+        // algorithm, with optional clean and decimate preprocessing.
+        repeated MeshSeedPoints mesh_points = 3;
+    }
+    // The mesh criteria parameters to use
+    optional MeshCriteria mesh_criteria = 1;
+    // The mesh refinement parmaeters to use
+    optional RefineMesh refine_mesh = 2;
+    // When present triple lines will be generated. It is an error to specify
+    // both build_triple_lines and import_triple_lines
+    // When both import_triple_lines and build_triple_lines are missing a
+    // rough approximation mesh will be
+    optional BuildTripleLines_GMT build_triple_lines = 3;
+    // When present triple lines will be imported. It is an error to specify
+    // both import_triple_lines and build_triple_lines.
+    // When both import_triple_lines and build_triple_lines are missing a
+    // rough approximation mesh will be
+    // generated
+    optional ImportTripleLines_GMT import_triple_lines = 4;
+    // Turn on CGAL support for concurrent meshing
+    optional bool multithreaded = 5 [default = false];
+    // List of mesh export parameters.
+    repeated Export3DShapes_GMT export_mesh = 6;
+    // The geomodeller output parameters
+    optional GeomodellerOutput geomodeller_output = 7;
+    // Allow the user to control the initial seed points to the meshing algorithm
+    optional SeedPoints initial_points=8;
+
+    optional string log = 255;
+}
+
+//####
+/// Export the 2D/3D model properties to structured grids - a set of files in a directory.
+//  when more than one product is requested, multiple files/grids are produced
+// most of these output formats are ASCII based, so you have direct access to the numbers.
+// see also SavePotentialGradientVoxet, a binary export
+
+message ExportModel_GMT {
+	message ExportType2D {
+	// 2d export types in GUI, all / seperate files by formation
+	//  all use the Column discretization
+		optional bool Isopachs = 1 [default = false]; // equal thickness of formation
+		optional bool Isohyps = 2  [default = false];  // height contour
+		optional bool Interfaces = 3  [default = false]; // depth to base of formation
+		optional bool Layercake = 4 [default = false]; // X,Y,Z ASCII, from/to depth for each formation
+		optional bool Marthe = 5 [default = false]; // X,Y,Z of formation base ; separated
+		optional bool Tough = 6 [default = false]; // Tough ASCII grid format
+		// of valleys and rivers; running in the direction of the dip in surrounding rock strata
+		optional bool Cataclinal = 7 [default = false]; // angle between topo slope, and formation that intersects
+	}
+
+	message ExportType3D {
+	// 3d export types in GUI
+		optional bool DistanceToFaults = 8 [default = false]; // calculated distance of every point in your model to nearest fault
+		// special, triangulate the TOPO, then project down 50 layers, dump out the geology gradient as Dip/Strike everywhere.
+		// rank, phi teta in each cell. You must have a Surface Topography "section"
+		optional bool Feflow_Layered = 1 [default = false]; // a structured *.fem of your geomodeller produced
+		optional bool Gradients = 2 [default = false]; // geology gradients as a unit vector
+		optional bool Grdecl = 3 [default = false]; // petrel interchange pillars
+		optional bool MartheVoxels = 4 [default = false];
+		optional bool ToughVoxels = 5 [default = false]; // export to finite difference simulation package from USGS
+		optional bool Voxels = 6 [default = false]; // ASCII 3D grid, geology rank
+		optional bool voxelsXYZ = 7 [default = false]; // ASCII, located, close to a point cloud, geology rank
+	}
+
+	optional string output_directory = 1 [default = "export_mesh"]; // stub name for the export products
+	optional ExportType3D export3D = 2;
+	// or
+	optional ExportType2D export2D = 3;
+
+	optional ctm.BoundingBox GridSize = 6; // typically no more than the model extents
+	// and/or optionally, specify the cell sizes..
+	optional sint32 dx = 10 [default = 100]; // width of cell in X direction, cannot be double, as bug in stream ascii parsing
+	optional sint32 dy = 11 [default = 100];
+	optional sint32 dz = 12 [default = 100];
+	optional sint32 dxy = 13 [default = 100]; // only for surface 2D queries
+	optional string ReportFile = 16 [ default = "export_model.rpt"];  // here is where the results are listed
+	optional string log = 255;
+}
+
+//####
+/// Export the 3D shapes (meshes) to a set of files in a directory. No ZIP file in BATCH yet.
+message Export3DShapes_GMT {
+    enum FileType3D {
+        // generic/historic  mesh using Open Cascade geometry, really the structured mesh options
+        TSURF = 0;
+        VULCAN = 1;
+        IGES = 2;
+        STEP = 3;
+        DXF12 = 4;
+        DXF13 = 5;
+        VTP = 6;
+        STL = 7;
+ //  following are only really supported via the CGAL methods for unstructured meshes
+        VTU = 8;  // unstructured mesh, VTK
+        FEFLOW = 9;  // so called gmod
+        MEDIT = 10;
+        C3T3 = 11;   // cgal native mesh format
+        COMSOL = 12;  // the comsol simulation package, also supports a 2D version for sections
+    }
+// also specific to CGAL context, we support an export to VTK formats for ( these are in the GUI) -
+    enum MeshType {
+// cf with the MeshGridType enum as well!!
+        //  other genric types to classify for output
+        SURFACE = 10;
+        SHELL = 11;
+        VOLUME = 12;
+    }
+    optional string output_directory = 1 [default = "export_mesh"]; // not used for the CGAL workflow, just the main project name is used
+    repeated string model_name = 2; // Allow a selection of the formation shapes to write. If none given write them all.
+    optional FileType3D file_type = 3 [default = VTU];
+    optional MeshType mesh_type = 4 [default = VOLUME];
+    // following so far only applicable for FEFLOW output
+    optional bool filterout_triangles_from_inner_tetrahedrons = 5 [default = true];
+	optional bool wantTetrahedra = 6 [default = true];
+	optional bool envelop_surfaces_only = 7 [default = true]; // feflow, envelop surfaces only and border -  negate for all triangles of tetrahedrons
+    optional bool Formation_IsoPotentials = 8 [default = true];
+    optional bool Formation_GradientPotentials = 9 [default = true]; // dx,dy,dz, a vector
+    ////  now for material propeties and exporting these to VTK meshes.
+    // other mesh formats do not support properties very well
+    repeated ctm.PropertyType property = 50;
+
+    optional string log = 99 [default ="export_3d_shapes.rpt"];
+}
+//###
+enum SiteType3D {
+    VRML_Site = 0;  // mostly deprecated
+    PDF3D_Site = 1;
+    PDF3D_direct = 2;  // try the new vtk to pdf methods for vtp's, only at vtk V8, so not yet
+}
+enum GeomodellerDataType {
+   Structure = 1;  // Geological structures, formation surfaces
+   	Model = 2;  // 3d shapes
+   	MeshGrid = 3;  // stuff from the mesh grids
+   	DrillHoles = 4;
+   	All_Parts = 10;
+}
+
+/// Export  GeoModeller to VRML or PDF3d.
+// Converting VTP files to PDF3D
+// based upon an existing utility that is already shipping, but undocumented
+//  vtp2pdf3d.exe, now converetd over to the standard API
+// extensions to convert other VTK data formats to vtp are required for meshgrids support.
+// basically, surfaces are converted to lines and wireframes
+// you should have a previously opened geomodeller project to exercise this option
+//  if you run without an open project, your options are limired to lists of files that you supply
+message ExportProjectSite_GMT {
+	repeated GeomodellerDataType dataType = 1;
+	optional SiteType3D myTypeSite = 2 [default = PDF3D_Site];
+    optional string Name = 3;  //  unit name
+    optional string VRMLFile_Name = 4;  //  vrml file name
+    optional bool DoTextureEnhancement = 6 [default = true]; // texture DEF image ImageTexture
+    optional bool AddLighting = 7 [default = false]; // add a camera, light, based upon a box,  maximum box dimension of your data, to its centre
+
+    // pdf3d options
+    repeated string vtp_files = 10; // list of vtp files from your project, if you want to do them from a list
+	optional string output_pdf3d = 11 [default ="myProject.pdf"];
+	optional string output_u3d = 12 [default ="myProject.u3d"];
+	optional string output_ifx = 13 [default ="myProject.idtf"];  // also a possibility
+	optional string output_png = 14 [default ="myProject.png"];  // also done
+	optional string output_report_file = 20 [default ="ExportProjectSite.rpt"];
+	optional string log = 255;
+}
+//#
+//  a 2D surface triangulation mesh, is turned into a 3D FEM layered mesh,
+// using a vertical downward colums extrapolation approach
+//  numer of layers to use.  Uses existing open Project's 3D geology model
+message PrismFeFLOWTriangulation_GMT {
+    required string input_fem_mesh_file = 1;
+    optional sint32 Number_Layers = 2 [ default = 50];
+    optional string output_mesh = 3 [default ="fem_3d.mesh"];
+    optional string output_report_file = 4 [default ="prism_fem_mesh_report.rpt"];
+ 	optional string log = 255;
+}
+
+//  here is the main query method for mesh quality
+// report of outcomes goes into another protobuf structure
+// MeshQualityReport, then print this out!
+// also uses the VTK mesh quality methods
+message GenerateMeshReport_GMT {
+    optional string output_report_file = 1 [default ="generate_mesh_report.rpt"];
+    optional string input_mesh_file = 2;
+    optional ctm.MeshGrid_TypeMeshGrid TypeMeshGrid = 13 [default= MeshGrid_VERTEX];
+    optional bool vtk = 3 [default = true];
+    optional double sharp_angle_threshold = 4;
+    optional ctm.PairDouble facet_angle_threshold = 5;
+    optional ctm.PairDouble facet_size_threshold = 6;
+
+    optional string vtp_dir = 7 [default = "."];
+    optional bool write_vtp_files = 8 [default = false];
+
+    optional bool report_vertices = 9 [default = true];
+    optional bool report_edges = 10 [default = true];
+    optional bool report_facets = 11 [default = true];
+    optional double tolerance = 12 [default = 0.0001];
+    optional string output_mesh_report = 20 [default ="mesh_quality.rpt"];
+ 	optional string log = 255;
+}
+// gridding of point clouds, needs new cluster tool as well
+message MeshUnitForGeophys_GMT {
+
+    message RankRadiusControl {
+        optional string name = 1;
+        optional int32 rank = 2;
+        optional double topo_radius = 3 [default = 1.0];// Sample raduis at the topography
+        optional double base_radius = 4 [default = 100.0];// Sample radius at the base of the mesh
+    }
+    // Add more here as required
+    enum ThinningFunction {
+        LINEAR = 0;
+        ANISOTROPIC = 1;
+    }
+    enum SampleMethod {
+        INPUT_POINT_CLOUD = 0; // Use VTK to mesh point cloud
+        POTENTIAL_FIELD = 1; // Use CGAL to mesh implicit model
+    }
+
+    optional string input_point_file = 1; // Input point cloud file.
+    optional string output_mesh_file = 2; // Output file to write the final mesh
+    repeated RankRadiusControl rank_radius= 3;
+    optional int32 num_samples = 4 [default=10]; // The number of samples along an axis when input_point_file is not present and sampling is used.
+    optional string debug_dir = 5; // Set this to save intermediate meshes for debugging
+    optional string debug_prefix = 7; // This prefix will be prepended to each debug output mesh file to distinguish one run from another.
+    optional ThinningFunction thinning_function = 8 [default=LINEAR];
+    optional SampleMethod sample_method = 9 [default=INPUT_POINT_CLOUD];
+    optional bool thinning_radii_are_absolute = 10 [default=false]; // When TRUE the thinning radii are absolute. FALSE=radii are a percentage of the mesh bounding box diagonal.
+    optional string unit_name = 11; // Either select the unit by name or rank
+    optional int32 unit_rank = 12; // Either select the unit by name or rank
+    optional BuildMeshCGAL_GMT cgalparms = 13;
+    optional string log = 99 [default ="mesh_unit_for_geophysics_model.rpt"];
+}
+//  ###
+//  method to query a 3D computed model for the predicted lithology at any XYZ position in space
+// takes a repeated list of points, and writes all the query results to the report file
+message GetComputedLithoAtXYZ_GMT {
+    required string filename = 1 [ default = "ModelLitho_Query.rpt"];  // report file
+    repeated AddPoint3d_GMT Point = 2;  // list of 3d query points
+	optional string log = 255;
+}
+//  ###
+//  method to query a 3D computed model for the predicted geology gradient components at any XYZ position in space
+// takes a repeated list of points, and writes all the query results to the report file
+message GetComputedGradientAtXYZ_GMT {
+    required string filename = 1 [ default = "ModelGradients_Query.rpt"];  // report file
+    repeated AddPoint3d_GMT Point = 2;  // list of 3d query points
+	optional string log = 255;
+}
+//  ###
+//  AXIAL surface support
+enum FoldType {
+        Anticline = 0; // linear, strata normally dip away from axial center, oldest strata in center irrespective of orientation.
+        Syncline = 1;  // linear, strata normally dip toward axial center, youngest strata in center irrespective of orientation.
+        Antiform = 2; // linear, strata dip away from axial center, age unknown, or inverted.
+        Synform = 3;  // linear, strata dip toward axial centre, age unknown, or inverted.
+        Dome = 4;  // nonlinear, strata dip away from center in all directions, oldest strata in center.
+        Basin = 5; // nonlinear, strata dip toward center in all directions, youngest strata in center.
+        Monocline = 6; //  linear, strata dip in one direction between horizontal layers on each side.
+        Chevron = 7; // angular fold with straight limbs and small hinges
+        Recumbent = 8; // linear, fold axial plane oriented at low angle resulting in overturned strata in one limb of the fold
+        Slump = 9;  // typically monoclinal, result of differential compaction or dissolution during sedimentation and lithification.
+        Ptygmatic = 10;  //  Folds are chaotic, random and disconnected. Typical of sedimentary slump folding, migmatites and decollement detachment zones
+        Parasitic = 11; // short wavelength folds formed within a larger wavelength fold structure - normally associated with differences in bed thickness
+        Disharmonic = 12; // Folds in adjacent layers with different wavelengths and shapes
+    }
+enum FoldMechanism {
+	FlexuralSlip = 0;
+	Buckling = 1;
+	MassDisplacement = 2;
+}
+enum FoldTightness {
+	Gentle = 0;
+	OpenFold = 1;
+	TightFold = 2;
+}
+enum DeformationStyle {
+	Class1 = 0; // Dip isogons converge
+	Class1A = 1; // Orthogonal thickness at hinge narrower than at limbs
+	Class1B = 2; // Parallel folds
+	Class1C = 3; // Orthogonal thickness at limbs narrower than at hinge
+	Class2 = 4; // Dip isogons are parallel: similar folds
+	Class3 = 5; // Dip isogons diverge
+}
+// each axial series has a potential field underpinning it to capture the basic folding geometry
+// that is,  the standard Potential co-krig method to support this set of folds (anticlines/synclines)
+// currently, no way to visualize this folding constraint function
+// proposal has been to allow this to be anistropic as well, instead of always the default isotropic case.
+/// Message definition:\n
+/// <b>name</b> Name of the series to update or create is not already present
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message CreateAxialSeries_GMT {
+    required string AxialSeries = 1;
+    optional double red = 3 [default = 0.0];
+    optional double green = 4 [default = 125.0];
+    optional double blue = 5 [default = 255.0];
+    optional FoldMechanism Mechanism = 13 [default = FlexuralSlip];
+    optional DeformationStyle style = 14 [default = Class1B];
+    optional string log = 7;
+}
+//  one or more fold surfaces allowed in an axial series
+//  we are defining either a peak ( anticline) or trough ( syncline)
+//  currently the interpolator has constant range and isotropy
+// proposed extension to support variable ranges and anisotropy ( easy enough)
+message CreateAxialSurface_GMT {
+    required string AxialSeries = 1;  // name of parent series
+    required string AxialSurface = 2;  // name of this fold feature surface
+    optional double red = 3 [default = 0.0];
+    optional double green = 4 [default = 125.0];
+    optional double blue = 5 [default = 255.0];
+    // straight on to the trace of the fold on this section
+    optional PointList2d_GMT PointList = 6; // section U & V coordinate
+        // or
+    optional PointList3d_GMT PointList3D = 7;  // global coords
+    optional string observationId = 8 [default = ""];
+   	optional ctm.ProvenanceType provenance = 9 [default=none];
+    optional FoldType type = 10 [default=Anticline];
+    optional FoldTightness tightness = 12 [default = Gentle];
+    optional string log = 20;
+}
+//  ###  GUI requires a separate step for the trace line definition
+//  method to specify an axial Trace line for a folded surface structure on a map
+message AddAxialTraceLine_GMT {
+    optional string AxialSeries = 1; // not so easy to get from existing project
+    required string AxialSurface = 2;  // section is the axial surface itself
+    // defining the trace on a section
+    optional string DefiningSection = 3;  // section/surface on which fold orientation is being defined
+    optional PointList2d_GMT PointList = 4; // section U & V coordinate
+        // or in 3D
+    optional PointList3d_GMT PointList3D = 5;
+    optional string observationId = 6 [default = ""];
+   	optional ctm.ProvenanceType provenance = 7 [default=none];
+	optional string log = 255;
+}
+//  ###
+//  method to specify an orientation or foliation for a folded surface structure, one side or the other of the Trace
+message AddAxialSurfaceOrientation_GMT {
+    required string AxialSeries = 1;  // not so easy to get from existing project
+    optional string observationId = 2 [default = ""];
+    // defining the foliation on a section
+    optional string DefiningSection = 4;  // section/surface on which fold orientation is being defined
+    optional AddPoint2d_GMT Point = 6;  // actually, stored internally in UV space of 0 to 1.0
+    // or
+    optional AddPoint3d_GMT Point3D = 7;
+    optional ctm.ProvenanceType provenance = 5 [default=none];
+    // actually next 3 are the Euler angles
+    optional double Dip = 8 [default=0.0];
+    optional double DipDirection = 9 [default=0.0];
+    optional double Pitch = 10 [default=0.0];
+    optional ctm.PolarityType Polarity = 17 [ default = Normal_Polarity];
+    // or
+    optional Foliation_GMT foliation = 20;  // not done this way, so no cigar
+    optional string log = 50;
+}
+//  method to specify a hinge line for a folded surface structure
+enum HingePolarity {
+        Hinge_Left = 0;  // left handed
+        Hinge_Right = 1; // right handed rule for angles
+    }
+// further constraints, this time for the limbs of a fold
+// hinge line polylines are for one or more formations
+//  the polyline points are on te axial axes plane
+// importantly, 2 foliations per hinge line constraint point are generated
+// and used to impose the actual folded shapes
+// below or above, depending upon
+// construire les foliations avec p, pln,N, ApertureAngles, distance ....
+// vecteur horizontal perpendiculaire au vecteur normal
+// Direction Normal au plan tangent au pnt i de la hingeline
+message AddHingeLine_GMT {
+	optional string AxialSeries = 1;
+	required string AxialSurface = 2;  // section is the axial surface itself
+    required string Formation = 4;  // which formation are you trying to pin an intersection with the fold with?
+    optional PointList2d_GMT PointList = 5; // section U & V coordinate, not much good if exported this way
+            // or
+    optional PointList3d_GMT PointList3D = 6;
+    optional string observationId = 7 [default = ""];
+   	optional ctm.ProvenanceType provenance = 8 [default=none];
+    optional double DistanceAtOrigin = 9 [default=90.0];  // offset from strating hingeline position down limb
+    optional double DistanceAtExtremity = 10 [default=100.0];
+    optional bool Constant_Fold_Shape = 11 [default=true]; // When TRUE the, Aperture values are ignored
+    optional double ApertureAtOrigin = 12 [default=30.0];  // angle of limb from hinge line/axial plane of the limb to the distance point.
+    optional double ApertureAtExtremity = 13 [default=30.0];
+    optional HingePolarity Polarity = 14 [default=Hinge_Left];
+	optional string log = 50;
+}
+//####
+/// Create a new fold axis section in the current project, using the axial surface construction points and orientation data
+// this is the method used to define a special representation of the axial surface, mid-fold
+// a co-krig potential field is used to create the surface from the points and orientation data.
+// this is described in local u,v coords, and mapped from the global X,Y,Z, coord by the Jacobian.
+// currently, once a fold has its surface calculated and turned into a section, not so easy to edit, and redo
+/// Message definition:\n
+/// <b>name</b> Name of the new section
+/// <b>Extents</b> BoundingBox defining the section extents [optional]
+/// <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+ // actually, stored internally in UV space of 0 to 1.0
+message CreateSectionFromAxialSurface_GMT {
+    required string AxialSectionName = 1;
+    required string AxialSurface = 2;  // use data that has already been added for this surface
+    optional int32 GridNodes = 4 [default=10]; // The number of samples to apprximate the curved surfaces, as the section geometry is formed.
+    optional ctm.BoundingBox Extents = 6;  // typically no more than the model extents
+    // new possibility for folding
+    optional ModelInterpotationParameters_GMT InterpotationParameters = 12;
+    optional string log = 7;
+}
+
+//####
+/// A set of geomodeller tasks. There can be several commands
+/// per task but there is no guarantee of their execution order. If
+/// order is important (normally is), each command should be in a separate
+/// Task in the job file. For example in a job file to open a project
+/// and get the Extents the tasks would be required in order so the following
+/// would work:\n
+/// <pre>
+///
+/// GMTask {
+///     OpenProjectNoGUI {
+///         filename: "e:/proc/geomodeller/GM_Paralana_44/GM_Paralana_44.xml"
+///     }
+/// }
+/// GMTask {
+///     GetModelBounds {
+///     }
+/// }
+/// IF EXECUTION ORDER IS NOT IMPORTANT THEN THE FOLLOWING CAN BE USED.
+/// GMTask {
+///     OpenProjectNoGUI {
+///         filename: "e:/proc/geomodeller/GM_Paralana_44/GM_Paralana_44.xml"
+///     }
+///     GetModelBounds {
+///     }
+/// }
+/// </pre>
+message GeomodellerTask {
+
+    // Create Geology based events
+    optional CreateProject_GMT CreateProject=1;
+    optional OpenProjectGUI_GMT OpenProjectGUI=2;
+    optional OpenProjectNoGUI_GMT OpenProjectNoGUI=3;
+    optional SaveProject_GMT SaveProject = 4;
+    optional SaveProjectAs_GMT SaveProjectAs = 5;
+    optional CustomDTM_GMT CustomDTM=6;
+    optional HorizontalDTM_GMT HorizontalDTM=7;
+    optional CreateFormation_GMT CreateFormation=8;
+    optional CreateFault_GMT CreateFault=9;
+    optional SetSeries_GMT SetSeries=10;
+    optional AddFormationToSeries_GMT AddFormationToSeries=11;
+    optional AddDykeToSeries_GMT AddDykeToSeries=52;
+    optional AddPoint3d_GMT AddPoint3d = 12;
+    optional PointList3d_GMT PointList3d = 13;
+    optional CreateSection_GMT CreateSection = 14;
+    optional AddPoint2d_GMT AddPoint2d = 15;
+    optional PointList2d_GMT PointList2d = 16;
+    optional AddInterfaceToSection_GMT AddInterfaceToSection = 17;
+    optional AddFoliationToSection_GMT AddFoliationToSection = 18;
+    optional Add3DFoliationToFormation_GMT Add3DFoliationToFormation = 19;
+    optional Import2dDataToSection_GMT Import2dDataToSection = 20;
+    optional DeleteInterfacesFromSection_GMT DeleteInterfacesFromSection = 21;
+    optional ReadAndImport2dDataToASection_GMT ReadAndImport2dDataToASection = 30;
+    optional RenderSection_GMT RenderSection = 31;
+    optional UpdateInterface_GMT UpdateInterface = 32;
+    optional LinkFaultsWithSeries_GMT LinkFaultsWithSeries = 33;
+    optional LinkFaultsWithFaults_GMT LinkFaultsWithFaults = 48;
+    optional CreateDyke_GMT CreateDyke=34;
+    optional ExportSection_GMT ExportSection=35;
+    optional CentralVerticalPotentialAndRank_GMT CentralVerticalPotentialAndRank=36;
+    optional GetModelSummary_GMT GetModelSummary=37;
+
+    optional AddApparentDipToSection_GMT AddApparentDipToSection=40;
+    optional AddDykeStructuralDataToSection_GMT AddDykeStructuralDataToSection = 51;
+    optional Set3dFaultLimits_GMT Set3dFaultLimits = 39;
+
+    optional Create3DPoint_GMT Create3DPoint = 43;
+    optional Add3DInterfacesToFormation_GMT Add3DInterfacesToFormation = 44;
+    optional GetComputedLithoAtXYZ_GMT GetComputedLithoAtXYZ = 45;
+    optional GetComputedGradientAtXYZ_GMT GetComputedGradientAtXYZ = 46;
+    optional ReadAndImport3dData_GMT ReadAndImport3dData = 47;
+// axial surfaces
+	optional CreateAxialSeries_GMT CreateAxialSeries=54;
+	optional CreateAxialSurface_GMT CreateAxialSurface = 55;
+	optional AddAxialTraceLine_GMT AddAxialTraceLine = 56;
+	optional AddHingeLine_GMT AddHingeLine = 57;
+	optional AddAxialSurfaceOrientation_GMT AddAxialSurfaceOrientation = 58;
+	optional CreateSectionFromAxialSurface_GMT CreateSectionFromAxialSurface = 59;
+// drill holes
+    optional LoadDrillholes_GMT LoadDrillholes=38;
+    optional CompositeDrillholes_GMT CompositeDrillholes = 60;
+// properties
+	optional ctm.ProbabilityDistributionFunction_GMT ProbabilityDistributionFunction = 70;
+	optional ctm.LithologyProperty_GMT LithologyProperty = 71;
+
+    optional SetModelBounds_GMT SetModelBounds = 98;
+    optional GetModelBounds_GMT GetModelBounds = 99;
+
+    optional WriteBatchFile_GMT WriteBatchFile =49;  // dump a project back into a task file for a circular creation check
+
+
+    // Model based events
+    optional ComputeModel_GMT ComputeModel = 100;
+    optional RenderModel_GMT RenderModel = 101;
+    optional RenderModelOnSection_GMT RenderModelOnSection = 113;
+    optional SaveLithologyVoxet_GMT SaveLithologyVoxet = 102;
+    optional SavePotentialGradientVoxet_GMT SavePotentialGradientVoxet = 103;
+    optional InterpolateNumericalReadings_GMT InterpolateNumericalReadings = 104;  // kriging, gridding etc.
+// marine seismic
+    optional ImportSeismicNav_GMT ImportSeismicNav = 105;
+    optional ImportSeismicHorizons_GMT ImportSeismicHorizons = 106;
+    // micro seismic
+    optional ImportMicroSeismicEvents_GMT ImportMicroSeismicEvents = 112;
+    // meshing
+    optional SourceMeshGrid_GMT LoadMeshGrid = 107;
+    optional ExportMeshGrid_GMT ExportMeshGrid = 108;
+    optional CreateMeshGrid_GMT CreateMeshGrid = 109;
+    optional GenerateMeshReport_GMT GenerateMeshReport = 110;
+    optional BuildMeshCGAL_GMT BuildMeshCGAL = 41;
+    optional Export3DShapes_GMT Export3DShapes = 42;
+    optional ExportModel_GMT ExportModel = 65;
+    optional ExportProjectSite_GMT ExportProjectSite = 50;  //
+    optional BuildTripleLines_GMT BuildTripleLines = 53; // where do all the formations, faults, boundaries meet??
+	optional PrismFeFLOWTriangulation_GMT PrismFeFLOWTriangulation = 67;
+    optional MeshUnitForGeophys_GMT MeshUnitForGeophys = 111;
+
+    optional ComputeVariogram_GMT ComputeVariogram = 120;
+    optional ImportTripleLines_GMT ImportTripleLines = 130; // where do all the formations, faults, boundaries meet??
+    optional CloseProjectNoGUI_GMT CloseProjectNoGUI = 140;
+    optional string log = 255;
+}

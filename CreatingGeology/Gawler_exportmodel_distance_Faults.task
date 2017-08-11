@@ -1,0 +1,64 @@
+# gawler craton fault network
+# query a 3D mesh output to contain a systematic estimate of the 
+# nearest approach distance to all faults in the region
+#
+# eg
+# XMIN=108000 XMAX=892000 YMIN=6.0105e+006 YMAX=7.0395e+006 ZMIN=-98980 ZMAX=980 NUMBERX=50 NUMBERY=50 NUMBERZ=50 NOVALUE=-9999
+# X Y Z BulgunniaFaultZone CooberPedyShearZone DonningtonFaultZone HarrisFaultZone KalinjalaMyloniteZone KarariFaultZone MiddleBoreFaultZone NEFaultZone NWFaultZone OolabinnaShearZone YarlbrindaFault YerdaShearZone dmin
+# 108000  6.0105e+006 -98980 410541 -9999 612497 -9999 390372 -9999 531416 641901 -9999 464403 409460 -9999 390372
+# (c) 2017 Intrepid Geophysics
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "out/GawlerCraton3D.xml"
+  }
+}
+
+# Compute the fault network
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+	    node: "all"
+	}
+	SectionList {
+	    node: "all"
+	}
+	FaultList {
+	    node: "all"
+	}
+	faults_only: true;
+    }
+}
+
+
+# Save the distance to all faults ASCII XYZ 3D mesh
+GeomodellerTask {
+    ExportModel {
+        dx: 10000
+		dy: 10000
+		dz: 2000 
+        output_directory: "Gawler"
+        export3D {
+        	DistanceToFaults: true;
+        }
+        ReportFile: "Gawler_fault.rpt"
+    }
+}
+# re-import the ASCII voxet to a mesh grid
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "Gawler_DistancesToFaults.vox"; # not a true ascii voxet
+		MeshGrid_Name: "FaultDistance";
+		FileType: FT_BRGM_XYZ;
+		header_records: 2;
+		Field_Name: "distance";
+		log: "source_meshgrid.rpt";
+    }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "fault_distance/GawlerCraton3D.xml"
+    }
+}
+

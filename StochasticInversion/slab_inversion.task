@@ -1,0 +1,149 @@
+name: "Slab Inversion run"
+description: "run inversion"
+auditfile: "audit_Slab_Run.rpt"
+InversionTask {
+	Run {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";	
+		run: "Run_1";		
+	}
+}
+
+InversionTask {
+	MakeSuperSummaryStats {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";
+		RunInterval {
+			run: "Run_1";
+			start_iterations: 70000;
+			end_iterations: 100000;
+		}
+		threshold_percentage: 95;
+	}
+}
+
+InversionTask {
+	MakeSuperSummaryStats {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";
+		RunInterval {
+			run: "Run_1";
+			start_iterations: 70000;
+			end_iterations: 100000;
+		}
+		threshold_percentage: 85;
+	}
+}
+
+InversionTask {
+	MakeEvolutionMovie {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";							
+		RunInterval {
+			run: "Run_1";
+			start_iterations: 0;
+			end_iterations: 100000;
+		}
+		MaxPixelCols: 500;
+		MaxPixelRows: 500;
+		VerticalExaggeration: 1.0;
+		QualityPercentage: 100;
+		FramesPerSecond: 6;
+		IterationIncrement: 2000;
+		lut: GreyScale;
+		Scaling {
+			doLog: false;
+		}
+		show: Geology;
+		Section: "500_mN";
+		movie: "EvolutionMovie_Case_1_Run_1_500_mN_v2";
+	}
+}
+
+InversionTask {
+	MakeSectionImage {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";			
+		run: "Run_1";		
+		get_function {
+			existing_voxet: "SuperSummaryStats_iterations_100000_70000_85.vo";
+			statistical_field: MostProbable;
+			transform: GetField;
+			}
+		Section: "500_mN";
+		MaxPixelCols: 1000;
+		MaxPixelRows: 500;
+		VerticalExaggeration: 1.0;
+		QualityPercentage: 95;
+		lut: LithologyColours;
+		Scaling {
+			doLog: false;
+		}
+		image: "Run_1_SSSVoxet85_500_mN_MostProbable_LithologyColours.jpg";
+	}
+}
+
+InversionTask {
+	MakeSectionImage {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";		
+		run: "Run_1";			
+		get_function {
+			existing_voxet: "SuperSummaryStats_iterations_100000_70000_85.vo";
+			statistical_field: MostProbableThresholded;
+			transform: GetField;
+			threshold: 90;
+			}
+		Section: "500_mN";
+		MaxPixelCols: 1000;
+		MaxPixelRows: 500;
+		VerticalExaggeration: 1.0;
+		QualityPercentage: 95;
+		lut: LithologyColours;
+		Scaling {
+			doLog: false;
+		}
+		image: "Run_1_SSSVoxet85_500_mN_MostProbableThresholded_85_LithologyColours.jpg";
+	}
+}
+
+InversionTask {
+	MakeHistogram {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";		
+		run: "Run_1";	
+		voxet: "initial.vo";
+		lithology_field: "Lithology";
+		property_field: "Density";
+		number_of_bins: 51;
+		Scaling {
+			doLog: false;
+		}
+		report: "Histogram_Density_initial.rpt";
+	}
+}
+
+InversionTask {
+	RunState {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";			
+		run: "Run_1";	
+		number_of_iterations: 70000;
+	}
+}
+
+InversionTask {
+	MakeHistogram {
+		filename: "InputGeology/vs/vs.xml";
+		case: "Case_1";		
+		run: "Run_1";			
+		voxet: "70000.vo";
+		lithology_field: "Lithology";
+		property_field: "Density";
+		number_of_bins: 51;
+		Scaling {
+			doLog: false;
+		}
+		report: "Histogram_Density_70000.rpt";
+	}
+}

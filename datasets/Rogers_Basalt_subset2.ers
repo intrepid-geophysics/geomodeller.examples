@@ -1,0 +1,36 @@
+DatasetHeader Begin
+	Version	= "5.0"
+	Name	= "Rogers_Basalt_subset2.ers"
+	LastUpdated	= Sat Feb 13 05:43:35 GMT 2016
+	DataSetType	= ERStorage
+	DataType	= Raster
+	ByteOrder	= LSBFirst
+	CoordinateSpace Begin
+		Datum	= "GDA94"
+		Projection	= "SUTM53"
+		CoordinateType	= EN
+		Rotation	= 0:0:0 
+		Units	= "METERS"
+	CoordinateSpace End
+	RasterInfo Begin
+		CellType	= IEEE4ByteReal
+		NullCellValue	= -99999.00000000
+		CellInfo Begin
+			Xdimension	=              80
+			Ydimension	=              80
+		CellInfo End
+		NrOfLines	= 276
+		NrOfCellsPerLine	= 276
+		RegistrationCoord Begin
+			Eastings	=          499200
+			Northings	=         8021280
+		RegistrationCoord End
+		NrOfBands	= 1
+		BandId Begin
+			Value	= "Pseudo Layer"
+		BandId End
+		RegistrationCellX	= 0
+		RegistrationCellY	= 0
+	RasterInfo End
+	HeaderOffset	= 0
+DatasetHeader End

@@ -1,0 +1,231 @@
+name: "Cube, 1 series,2 formations, 2 limited faults"
+description: "sample of creating a viable limited fault geomodeller project via batch, with 2 limited faults, same as the solver_unittest"
+
+GeomodellerTask {
+    CreateProject {
+        name: "MyMeshProject"
+        author: "des"
+        date: "27/10/2016  0: 0: 0"
+        projection { map_projection: "Local / Local"}
+        precision: 0.0001
+        referenceTop: false
+        Extents {
+            xmin: 0.
+            ymin: 0.
+            zmin: 0.
+            xmax: 1.
+            ymax: 1.
+            zmax: 1.
+        }
+        HorizontalDTM {
+            name: "Topography"
+            elevation: 0.99           
+        }
+     }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "UpperCover"
+        red: 205
+        green: 205
+        blue: 0.0
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "LowerCover"
+        red: 24
+        green: 205
+        blue: 100
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "basement"
+        red: 24
+        green: 116
+        blue: 205
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "Dummy"
+        position: 1  # pile order
+        erelation: Onlap
+    }
+}
+GeomodellerTask {
+    SetSeries {
+        name: "ASeries"
+        position: 2
+        erelation: Onlap
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "ASeries"
+        formation: "LowerCover"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "ASeries"
+        formation: "UpperCover"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Dummy"
+        formation: "basement"
+    }
+}
+GeomodellerTask {
+    Add3DInterfacesToFormation {
+    		formation: "UpperCover"
+            point {x:0.2; y: 0.1;z: 0.95}
+            point {x:0.75;y: 0.5;z: 0.6}
+            point {x:0.6; y: 0.8;z: 0.5}  
+            } 
+}
+GeomodellerTask {
+    Add3DInterfacesToFormation {
+    		formation: "LowerCover"
+            point {x:0.07; y: 0.3;z: 0.5}         
+ 			point {x:0.6; y: 0.8;z: 0.4}  
+    } 
+}
+
+GeomodellerTask {
+    Add3DFoliationToFormation {       
+        formation: "UpperCover"
+        foliation {
+	        Point3D {x: 0.1; y: 0.25; z: 0.9 }
+	        direction: 45
+	        dip: 10.0
+	        polarity: Normal
+	        Provenance: field_observation
+        }
+        foliation {
+	        Point3D {x: 0.6; y: 0.4; z: 0.6 }
+	        direction: 60
+	        dip: 20.0
+	        polarity: Normal
+	        Provenance: field_observation
+        }
+    }
+}
+GeomodellerTask {
+    CreateFault {
+        name: "fault1"
+         red: 45
+        green: 205
+        blue: 40.0
+    }
+}
+
+GeomodellerTask {
+    Add3DInterfacesToFormation {
+        formation: "fault1"
+		point {	x: 0.6;	y: 0.6;	z: 0.6	}
+    }
+}
+GeomodellerTask {
+    Add3DFoliationToFormation {
+        formation: "fault1"
+		foliation {
+        	Point3D {	x: 0.6;	y: 0.6;	z: 0.99 }
+	        direction: 145
+	        dip: 80
+			spherical_variance_kappa: 5; 
+	        polarity: Normal
+	        Provenance: field_observation
+		}
+    }
+}
+GeomodellerTask {
+	CreateFault {
+        name: "fault2"
+         red: 45
+        green: 45
+        blue: 200.0
+    }
+}
+GeomodellerTask {
+    Add3DInterfacesToFormation {
+        formation: "fault1"
+        point {	x: 0.3;	y: 0.3;	z: 0.6 	}
+    }
+}
+GeomodellerTask {
+    Add3DFoliationToFormation {
+        formation: "fault2"
+		foliation {
+        	Point3D {	x: 0.2;	y: 0.2;	z: 0.99 }
+	        direction: 210
+	        dip: 80
+			spherical_variance_kappa: 5; 
+	        polarity: Normal
+	        Provenance: field_observation
+		}
+    }
+}
+GeomodellerTask {
+	Set3dFaultLimits {
+		Fault_name: "fault1"
+		Horizontal: 0.3
+		Vertical: 0.4
+		InfluenceDistance: 0.2
+	}
+}
+GeomodellerTask {
+	Set3dFaultLimits {
+		Fault_name: "fault2"
+		Horizontal: 0.3
+		Vertical: 0.4
+		InfluenceDistance: 0.2
+	}
+}
+
+        
+GeomodellerTask {
+    LinkFaultsWithSeries {
+	    FaultSeriesLinks{
+		    fault: "fault1"
+		    series: "ASeries"
+	    }
+		FaultSeriesLinks{
+		    fault: "fault2"
+		    series: "ASeries"
+	    }
+    }
+}
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+            node: "All"
+        }
+        SectionList {
+            node: "All"         
+        } 
+		FaultList {
+            node: "All"
+        }		
+        radius: 0.005
+    }
+}
+
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./data/cube_limited_faults.xml"
+    }
+}   
+

@@ -1,0 +1,92 @@
+## warning, following com mand has been withdrawn from the protobuf language!!
+InversionTask {
+	CreateCaseFromLithologyVoxet {
+		inputvoxet: "testArea_2suites.vo";	
+		case: "Case_1";
+		new_project: "testArea_2suites_imported\testArea_2suites_imported.xml";
+		formation { index: 1; field: "aboveC";	}  # map interger number inside voxet to formation name
+		formation { index: 2; field: "ZtoC";	}
+		formation { index: 3; field: "basement";	}
+		formation { index: 4; field: "BLS";	}
+		formation { index: 5; field: "granites1";	}
+	}
+}
+## this one is OK, so if you have aforeign voxet with an integer code for lithologies, yo have to use Geomodeller to match the formation name to the code
+InversionTask {
+	ForwardModelTemperatureForCreateCaseFromVoxet {	
+		filename: "testArea_2suites_imported\testArea_2suites_imported.xml";	
+		case: "Case_1";
+		input_voxet: "testArea_2suites.vo";
+		field_alias {
+			alias: "Lithology";
+			field: "Lithology";
+		}
+		SetLaw {
+			LithologyProperty {
+				lithology: "aboveC";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 2.0;stddev: 0.2;}
+				}
+			LithologyProperty {
+				lithology: "ZtoC";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 1.4;stddev: 0.2;}
+				}
+			LithologyProperty {
+				lithology: "basement";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 2.4;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "BLS";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 3.1;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "granites1";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 3.1;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "aboveC";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.000001;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "ZtoC";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.000001;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "basement";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.000002;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "BLS";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.000011;stddev: 0.0000015;}
+				}
+			LithologyProperty {
+				lithology: "granites1";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 0.000008;stddev: 0.0000035;}
+				}
+			}
+		Advanced: true;
+		Surface_Temperature_Law {
+			type: Log_normal;
+			mean: 22;
+			stddev: 0;
+			percentage: 100;
+		}
+		Base_Heatflow_Law {
+			type: Log_normal;
+			mean: 0.036;
+			stddev: 0;
+			percentage: 100;
+		}
+		MaxResidualTemperature: 0.0001;
+		NumberOfIterations: 10000;
+	}
+}

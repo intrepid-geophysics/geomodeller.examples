@@ -1,0 +1,69 @@
+# gawler craton fault network
+# create a multiple 3d grid outputs to contain a systematic estimate of the 
+#
+# 		Gradients  // geology gradients as a unit vector
+#		Grdecl     // petrel interchange
+#		MartheVoxels
+#		ToughVoxels // export to finite difference simulation package from USGS
+#		Voxels     // binary
+#		voxelsXYZ  // ASCII, located
+#
+# (c) 2017 Intrepid Geophysics
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "out/GawlerCraton3D.xml"
+  }
+}
+
+# Compute the fault network
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+	    node: "all"
+	}
+	SectionList {
+	    node: "all"
+	}
+	FaultList {
+	    node: "all"
+	}
+	faults_only: false;
+    }
+}
+
+
+# Save the model attributes to ASCII 3D mesh
+GeomodellerTask {
+    ExportModel {
+        dx: 10000
+		dy: 10000
+		dz: 2000 
+        output_directory: "Gawler_3dexport"
+        export3D {
+	 		Gradients: true;  # geology gradients as a unit vector
+			Grdecl : true;    # petrel interchange
+			MartheVoxels: true;
+			#ToughVoxels # export to finite difference simulation package from USGS
+			Voxels: true;     # ASCII
+			voxelsXYZ: true;  # ASCII, located
+        }
+        ReportFile: "Gawler_3dexports.rpt"
+    }
+}
+# re-import the ASCII voxet to a mesh grid
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "Gawler_3dexport.vox";
+		MeshGrid_Name: "Geology_Import";
+		FileType: FT_VOXET;
+		Field_Name: "rank";
+		log: "source_meshgrid.rpt";
+    }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "test_vox/GawlerCraton3D.xml"
+    }
+}

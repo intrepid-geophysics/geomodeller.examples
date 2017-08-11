@@ -1,0 +1,2804 @@
+name: "Geomodeller Write Protobuf Task file"
+description: "Sections, Pile, Interface, Foliations, no meshgrids (except DTM), or computed geology"
+GeomodellerTask {
+  CreateProject {
+    CustomDTM {
+      name: "Frome_DEM_ers_gridded"
+      filename {
+        Grid_Name: "Frome_DEM_ers_gridded.ers"
+      }
+      Extents {
+        xmin: 349900
+        ymin: 6648000
+        xmax: 385000.1
+        ymax: 6669000
+      }
+      nx: 5
+      ny: 5
+      isElevationMeasure: true
+    }
+    name: "Beverley_MeshDemo"
+    author: "Intrepid"
+    date: " 3/ 6/2017 17:27:48"
+    projection {
+      geographic2DCS: "GDA94 / MGA zone 54"
+      map_projection: "GDA94 / MGA zone 54"
+    }
+    version: "2.0"
+    precision: 1
+    Extents {
+      xmin: 349900
+      ymin: 6648000
+      zmin: -800
+      xmax: 385000.1
+      ymax: 6669000
+      zmax: 250
+    }
+    deflection2d: 0.001
+    deflection3d: 0.0001
+    discretisation: 1000000
+    referenceTop: true
+  }
+  CreateFormation {
+    name: "Arrowrie"
+    red: 255
+    green: 130
+    blue: 170
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "BulldogShale"
+    red: 144
+    green: 237
+    blue: 144
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Eyre"
+    red: 255
+    green: 130
+    blue: 70
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "GraniticBasement"
+    red: 138
+    green: 10
+    blue: 79
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Namba"
+    red: 255
+    green: 255
+    blue: 0
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Namba_Lower"
+    red: 205
+    green: 198
+    blue: 114
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Quaternary"
+    red: 191
+    green: 191
+    blue: 191
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Willawortina"
+    red: 255
+    green: 246
+    blue: 142
+  }
+}
+GeomodellerTask {
+  CreateFormation {
+    name: "Willawortina_Lower"
+    red: 138
+    green: 68
+    blue: 0
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Arrowrie_Series"
+    position: 1
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Arrowrie_Series"
+    formation: "Arrowrie"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "GraniticBasement_Series"
+    position: 2
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "GraniticBasement_Series"
+    formation: "GraniticBasement"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "BulldogShale_Series"
+    position: 3
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "BulldogShale_Series"
+    formation: "BulldogShale"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Eyre_Series"
+    position: 4
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Eyre_Series"
+    formation: "Eyre"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Namba_Series"
+    position: 5
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Namba_Series"
+    formation: "Namba_Lower"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Namba_Series"
+    formation: "Namba"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Willawortina_Series"
+    position: 6
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Willawortina_Series"
+    formation: "Willawortina_Lower"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Willawortina_Series"
+    formation: "Willawortina"
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Quaternary_Series"
+    position: 7
+    relation: "onlap"
+  }
+}
+GeomodellerTask {
+  AddFormationToSeries {
+    series: "Quaternary_Series"
+    formation: "Quaternary"
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "VidneeYarta"
+    red: 160
+    green: 31
+    blue: 239
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  CreateFault {
+    name: "Wooltana"
+    red: 255
+    green: 0
+    blue: 255
+    Thickness: 0
+  }
+}
+GeomodellerTask {
+  LinkFaultsWithFaults {
+  }
+}
+GeomodellerTask {
+  LinkFaultsWithSeries {
+    FaultSeriesLinks {
+      fault: "VidneeYarta"
+      series: "BulldogShale_Series"
+      series: "Eyre_Series"
+      series: "Namba_Series"
+      series: "Willawortina_Series"
+    }
+    FaultSeriesLinks {
+      fault: "Wooltana"
+      series: "BulldogShale_Series"
+      series: "Eyre_Series"
+      series: "Namba_Series"
+      series: "Willawortina_Series"
+    }
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3003901"
+    PointList {
+      Point {
+        x: 350000
+        y: 6668500
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6668500
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004001"
+    PointList {
+      Point {
+        x: 350000
+        y: 6666000
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6666000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004102"
+    PointList {
+      Point {
+        x: 350000
+        y: 6663500
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6663500
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004202"
+    PointList {
+      Point {
+        x: 350000
+        y: 6661000
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6661000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004302"
+    PointList {
+      Point {
+        x: 350000
+        y: 6658500
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6658500
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004402"
+    PointList {
+      Point {
+        x: 350000
+        y: 6656000
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6656000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004501"
+    PointList {
+      Point {
+        x: 350000
+        y: 6653500
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6653500
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004601"
+    PointList {
+      Point {
+        x: 350000
+        y: 6651000
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6651000
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  CreateSection {
+    name: "BPt_3004701"
+    PointList {
+      Point {
+        x: 350000
+        y: 6648500
+        z: 0
+      }
+      Point {
+        x: 385000
+        y: 6648500
+        z: 0
+      }
+    }
+    degrees: 1
+    dip: -90
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "Frome_DEM_ers_gridded"
+    topFormation: "VidneeYarta"
+    PointList {
+      Point {
+        u: 363240.461
+        v: 6659645.494
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "Frome_DEM_ers_gridded"
+    topFormation: "Wooltana"
+    PointList {
+      Point {
+        u: 366267.401
+        v: 6668389.989
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "Frome_DEM_ers_gridded"
+    topFormation: "VidneeYarta"
+    PointList {
+      Point {
+        u: 359002.744
+        v: 6648546.711
+      }
+    }
+    OrientationMethod: ORTHOGONAL
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 357617.36470588233
+      y: 6666000
+      z: -400
+    }
+    point {
+      x: 368735.32941176469
+      y: 6666000
+      z: -380.91596638655449
+    }
+    point {
+      x: 375598.27058823529
+      y: 6666000
+      z: -426.668907563025
+    }
+    point {
+      x: 362695.9411764706
+      y: 6666000
+      z: -322.09075630252084
+    }
+    point {
+      x: 366264.67058823531
+      y: 6666000
+      z: -341.69915966386543
+    }
+    point {
+      x: 357388.6
+      y: 6658500
+      z: -400
+    }
+    point {
+      x: 369055.6
+      y: 6658500
+      z: -390.20294117647052
+    }
+    point {
+      x: 381042.87058823532
+      y: 6658500
+      z: -395.92205882352937
+    }
+    point {
+      x: 363061.96470588236
+      y: 6658500
+      z: -310.13529411764705
+    }
+    point {
+      x: 364251.54117647058
+      y: 6658500
+      z: -292.97794117647055
+    }
+    point {
+      x: 354875.32019607845
+      y: 6651000
+      z: -400
+    }
+    point {
+      x: 364193.338627451
+      y: 6651000
+      z: -400.86299719888035
+    }
+    point {
+      x: 375485.12450980395
+      y: 6651000
+      z: -420.53509803921651
+    }
+    point {
+      x: 360154.00058823527
+      y: 6651000
+      z: -328.73196078431454
+    }
+    point {
+      x: 362449.07901960786
+      y: 6651000
+      z: -341.84669467787188
+    }
+    formation: "BulldogShale"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 367454.24705882353
+      y: 6666000
+      z: -309.01848739495784
+    }
+    point {
+      x: 375552.51764705882
+      y: 6666000
+      z: -315.55462184873937
+    }
+    point {
+      x: 362284.16470588237
+      y: 6666000
+      z: -210.97647058823517
+    }
+    point {
+      x: 364526.0588235294
+      y: 6666000
+      z: -224.0487394957982
+    }
+    point {
+      x: 366722.2
+      y: 6666000
+      z: -256.72941176470573
+    }
+    point {
+      x: 358852.69411764707
+      y: 6666000
+      z: 168.11932773109254
+    }
+    point {
+      x: 359950.76470588235
+      y: 6658500
+      z: -250
+    }
+    point {
+      x: 366630.69411764707
+      y: 6658500
+      z: -281.53970588235291
+    }
+    point {
+      x: 372715.83529411763
+      y: 6658500
+      z: -281.53970588235291
+    }
+    point {
+      x: 379304.25882352941
+      y: 6658500
+      z: -315.85441176470584
+    }
+    point {
+      x: 362284.16470588237
+      y: 6658500
+      z: -241.50588235294117
+    }
+    point {
+      x: 364434.55294117646
+      y: 6658500
+      z: -218.62941176470585
+    }
+    point {
+      x: 364937.83529411763
+      y: 6658500
+      z: -258.66323529411761
+    }
+    point {
+      x: 355609.74529411766
+      y: 6651000
+      z: -250
+    }
+    point {
+      x: 363596.61823529413
+      y: 6651000
+      z: -289.38775910364222
+    }
+    point {
+      x: 374750.69941176474
+      y: 6651000
+      z: -322.17459383753578
+    }
+    point {
+      x: 359878.59117647057
+      y: 6651000
+      z: -230.37145658263373
+    }
+    point {
+      x: 362081.86647058825
+      y: 6651000
+      z: -217.25672268907633
+    }
+    formation: "Eyre"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 360512.72941176471
+      y: 6666000
+      z: -465.88571428571413
+    }
+    point {
+      x: 360924.50588235294
+      y: 6666000
+      z: 128.90252100840343
+    }
+    point {
+      x: 355649.98823529412
+      y: 6658500
+      z: -475.98970588235289
+    }
+    point {
+      x: 356290.5294117647
+      y: 6658500
+      z: 130.23676470588236
+    }
+    point {
+      x: 352498.27313725487
+      y: 6651000
+      z: -479.55140056022492
+    }
+    point {
+      x: 353232.69823529414
+      y: 6651000
+      z: 143.398459383753
+    }
+    formation: "GraniticBasement"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 370794.21176470589
+      y: 6666000
+      z: -86.789915966386445
+    }
+    point {
+      x: 372578.57647058822
+      y: 6666000
+      z: -60.6453781512604
+    }
+    point {
+      x: 374317.18823529413
+      y: 6666000
+      z: -99.862184873949474
+    }
+    point {
+      x: 376330.31764705881
+      y: 6666000
+      z: -80.253781512604931
+    }
+    point {
+      x: 378114.68235294119
+      y: 6666000
+      z: -67.181512605041917
+    }
+    point {
+      x: 380356.57647058822
+      y: 6666000
+      z: -54.109243697478888
+    }
+    point {
+      x: 381683.4117647059
+      y: 6666000
+      z: -80.253781512604931
+    }
+    point {
+      x: 382918.74117647059
+      y: 6666000
+      z: -54.109243697478888
+    }
+    point {
+      x: 367545.75294117647
+      y: 6666000
+      z: -54.109243697478888
+    }
+    point {
+      x: 368277.8
+      y: 6666000
+      z: -67.181512605041917
+    }
+    point {
+      x: 369238.61176470586
+      y: 6666000
+      z: -99.862184873949474
+    }
+    point {
+      x: 361780.8823529412
+      y: 6666000
+      z: -41.03697478991586
+    }
+    point {
+      x: 362878.95294117648
+      y: 6666000
+      z: -8.3563025210083026
+    }
+    point {
+      x: 363748.25882352941
+      y: 6666000
+      z: -14.892436974789831
+    }
+    point {
+      x: 364526.0588235294
+      y: 6666000
+      z: -27.964705882352845
+    }
+    point {
+      x: 365303.85882352939
+      y: 6666000
+      z: -27.964705882352845
+    }
+    point {
+      x: 366035.90588235296
+      y: 6666000
+      z: -73.717647058823431
+    }
+    point {
+      x: 362507.298
+      y: 6658500
+      z: -41
+    }
+    point {
+      x: 363694.416
+      y: 6658500
+      z: 46.325999999999993
+    }
+    point {
+      x: 364881.534
+      y: 6658500
+      z: -16.454000000000008
+    }
+    point {
+      x: 366159.968
+      y: 6658500
+      z: -41
+    }
+    point {
+      x: 367073.135
+      y: 6658500
+      z: -44.990000000000009
+    }
+    point {
+      x: 368579.862
+      y: 6658500
+      z: -62.111999999999995
+    }
+    point {
+      x: 371547.656
+      y: 6658500
+      z: -67.82
+    }
+    point {
+      x: 375337.3
+      y: 6658500
+      z: -73.527
+    }
+    point {
+      x: 377117.977
+      y: 6658500
+      z: -84.942
+    }
+    point {
+      x: 378761.678
+      y: 6658500
+      z: -79.234
+    }
+    point {
+      x: 382003.422
+      y: 6658500
+      z: -79.234
+    }
+    point {
+      x: 384103.707
+      y: 6658500
+      z: -73.527
+    }
+    point {
+      x: 384352.859
+      y: 6658500
+      z: -61.265999999999991
+    }
+    point {
+      x: 364101.53549019608
+      y: 6651000
+      z: -92.666750700280772
+    }
+    point {
+      x: 366075.30294117646
+      y: 6651000
+      z: -99.224117647059472
+    }
+    point {
+      x: 369334.31431372551
+      y: 6651000
+      z: -79.55201680672333
+    }
+    point {
+      x: 373878.56960784312
+      y: 6651000
+      z: -86.109383753502073
+    }
+    point {
+      x: 378652.33274509804
+      y: 6651000
+      z: -72.99464985994463
+    }
+    point {
+      x: 382967.08019607846
+      y: 6651000
+      z: -72.99464985994463
+    }
+    point {
+      x: 359419.57549019606
+      y: 6651000
+      z: -33.650448179272331
+    }
+    point {
+      x: 360521.21313725493
+      y: 6651000
+      z: -66.4372829131659
+    }
+    point {
+      x: 361714.65392156865
+      y: 6651000
+      z: -53.322549019608488
+    }
+    point {
+      x: 362494.98058823531
+      y: 6651000
+      z: -40.207815126051059
+    }
+    formation: "Namba"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 359676.24705882353
+      y: 6666000
+      z: -165
+    }
+    point {
+      x: 367683.01176470588
+      y: 6666000
+      z: -139.07899159663853
+    }
+    point {
+      x: 369192.85882352939
+      y: 6666000
+      z: -165.22352941176459
+    }
+    point {
+      x: 370931.4705882353
+      y: 6666000
+      z: -165.22352941176459
+    }
+    point {
+      x: 373127.61176470586
+      y: 6666000
+      z: -165.22352941176459
+    }
+    point {
+      x: 375415.25882352941
+      y: 6666000
+      z: -178.29579831932762
+    }
+    point {
+      x: 377062.36470588238
+      y: 6666000
+      z: -152.15126050420156
+    }
+    point {
+      x: 379029.74117647059
+      y: 6666000
+      z: -158.68739495798309
+    }
+    point {
+      x: 384016.81176470587
+      y: 6666000
+      z: -165.22352941176459
+    }
+    point {
+      x: 362329.91764705884
+      y: 6666000
+      z: -112.9344537815125
+    }
+    point {
+      x: 365166.6
+      y: 6666000
+      z: -165.22352941176459
+    }
+    point {
+      x: 366264.67058823531
+      y: 6666000
+      z: -165.22352941176459
+    }
+    point {
+      x: 359859.25882352941
+      y: 6658500
+      z: -165
+    }
+    point {
+      x: 368460.81176470587
+      y: 6658500
+      z: -178.59558823529409
+    }
+    point {
+      x: 372304.0588235294
+      y: 6658500
+      z: -172.87647058823526
+    }
+    point {
+      x: 377702.90588235296
+      y: 6658500
+      z: -190.03382352941173
+    }
+    point {
+      x: 382689.97647058824
+      y: 6658500
+      z: -161.43823529411762
+    }
+    point {
+      x: 362146.90588235296
+      y: 6658500
+      z: -109.96617647058824
+    }
+    point {
+      x: 364526.0588235294
+      y: 6658500
+      z: -132.84264705882353
+    }
+    point {
+      x: 366173.16470588237
+      y: 6658500
+      z: -201.47205882352938
+    }
+    point {
+      x: 355747.45
+      y: 6651000
+      z: 176.18529411764655
+    }
+    point {
+      x: 363826.12607843138
+      y: 6651000
+      z: -184.46988795518277
+    }
+    point {
+      x: 370849.06607843138
+      y: 6651000
+      z: -177.91252100840404
+    }
+    point {
+      x: 376403.15588235296
+      y: 6651000
+      z: -151.68305322128919
+    }
+    point {
+      x: 380488.39549019607
+      y: 6651000
+      z: -184.46988795518277
+    }
+    point {
+      x: 383563.80058823532
+      y: 6651000
+      z: -158.24042016806791
+    }
+    point {
+      x: 359694.98490196076
+      y: 6651000
+      z: -171.35515406162531
+    }
+    point {
+      x: 361944.1617647059
+      y: 6651000
+      z: -164.79778711484664
+    }
+    formation: "Namba_Lower"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 365789.480059
+      y: 6659381.305992
+      z: 73.919289
+    }
+    point {
+      x: 366146.372166
+      y: 6659398.300854
+      z: 71.223612
+    }
+    point {
+      x: 366350.310513
+      y: 6659772.187824
+      z: 72.679813
+    }
+    point {
+      x: 366418.289963
+      y: 6659551.254614
+      z: 71.477509
+    }
+    point {
+      x: 366486.269412
+      y: 6659194.362507
+      z: 69.779748
+    }
+    point {
+      x: 365875.042502
+      y: 6654137.458092
+      z: 65.036415
+    }
+    formation: "Quaternary"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 360337.60686274513
+      y: 6651000
+      z: 38.48058823529351
+    }
+    point {
+      x: 366901.53117647057
+      y: 6651000
+      z: 12.251120448178654
+    }
+    point {
+      x: 375622.8292156863
+      y: 6651000
+      z: -7.4209803921574746
+    }
+    formation: "Willawortina"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 361824.1498713941
+      y: 6658500
+      z: 38.496446630305272
+    }
+    point {
+      x: 358795.88587993948
+      y: 6658500
+      z: -15.579696074240807
+    }
+    point {
+      x: 370476.33270412142
+      y: 6658500
+      z: -15.579696074240807
+    }
+    formation: "Willawortina_Lower"
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "BulldogShale"
+    foliation {
+      Point3D {
+        x: 372166.8
+        y: 6666000
+        z: -403.79243697478978
+      }
+      dip: 0.48196620467914975
+      direction: 52.41895652360968
+      azimuth: 52.41895652360968
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 372166.8
+        y: 6666000
+        z: -403.79243697478978
+      }
+      dip: 0.48196620467914975
+      direction: 52.41895652360968
+      azimuth: 52.41895652360968
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364480.30588235293
+        y: 6666000
+        z: -331.89495798319314
+      }
+      dip: 0.41480880734799752
+      direction: 49.370283972275431
+      azimuth: 49.370283972275431
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364480.30588235293
+        y: 6666000
+        z: -331.89495798319314
+      }
+      dip: 0.41480880734799752
+      direction: 49.370283972275431
+      azimuth: 49.370283972275431
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 375049.23529411765
+        y: 6658500
+        z: -393.06249999999994
+      }
+      dip: 0.12733577059079657
+      direction: 12.396420334671799
+      azimuth: 12.396420334671799
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 375049.23529411765
+        y: 6658500
+        z: -393.06249999999994
+      }
+      dip: 0.12733577059079657
+      direction: 12.396420334671799
+      azimuth: 12.396420334671799
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363656.75294117647
+        y: 6658500
+        z: -301.55661764705883
+      }
+      dip: 0.92632413962136562
+      direction: 296.87400745848743
+      azimuth: 296.87400745848743
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363656.75294117647
+        y: 6658500
+        z: -301.55661764705883
+      }
+      dip: 0.92632413962136562
+      direction: 296.87400745848743
+      azimuth: 296.87400745848743
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 369839.23156862747
+        y: 6651000
+        z: -410.69904761904843
+      }
+      dip: 0.19981833020755732
+      direction: 29.969474509190075
+      azimuth: 29.969474509190075
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 369839.23156862747
+        y: 6651000
+        z: -410.69904761904843
+      }
+      dip: 0.19981833020755732
+      direction: 29.969474509190075
+      azimuth: 29.969474509190075
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 361301.53980392159
+        y: 6651000
+        z: -335.28932773109318
+      }
+      dip: 0.4274008908016308
+      direction: 49.993781499203628
+      azimuth: 49.993781499203628
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 361301.53980392159
+        y: 6651000
+        z: -335.28932773109318
+      }
+      dip: 0.4274008908016308
+      direction: 49.993781499203628
+      azimuth: 49.993781499203628
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Eyre"
+    foliation {
+      Point3D {
+        x: 371503.3823529412
+        y: 6666000
+        z: -312.28655462184861
+      }
+      dip: 0.14624355695278979
+      direction: 18.433575904114338
+      azimuth: 18.433575904114338
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 371503.3823529412
+        y: 6666000
+        z: -312.28655462184861
+      }
+      dip: 0.14624355695278979
+      direction: 18.433575904114338
+      azimuth: 18.433575904114338
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363405.11176470586
+        y: 6666000
+        z: -217.51260504201667
+      }
+      dip: 0.43408239170492324
+      direction: 50.324358071824427
+      azimuth: 50.324358071824427
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363405.11176470586
+        y: 6666000
+        z: -217.51260504201667
+      }
+      dip: 0.43408239170492324
+      direction: 50.324358071824427
+      azimuth: 50.324358071824427
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365624.12941176473
+        y: 6666000
+        z: -240.38907563025197
+      }
+      dip: 0.95255283962142157
+      direction: 63.516105249533275
+      azimuth: 63.516105249533275
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365624.12941176473
+        y: 6666000
+        z: -240.38907563025197
+      }
+      dip: 0.95255283962142157
+      direction: 63.516105249533275
+      azimuth: 63.516105249533275
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363359.35882352939
+        y: 6658500
+        z: -230.06764705882352
+      }
+      dip: 0.70950657659562066
+      direction: 300.79692619086927
+      azimuth: 300.79692619086927
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363359.35882352939
+        y: 6658500
+        z: -230.06764705882352
+      }
+      dip: 0.70950657659562066
+      direction: 300.79692619086927
+      azimuth: 300.79692619086927
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364686.19411764707
+        y: 6658500
+        z: -238.64632352941175
+      }
+      dip: 4.648042408531631
+      direction: 78.024438637311036
+      azimuth: 78.024438637311036
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364686.19411764707
+        y: 6658500
+        z: -238.64632352941175
+      }
+      dip: 4.648042408531631
+      direction: 78.024438637311036
+      azimuth: 78.024438637311036
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 369173.65882352943
+        y: 6651000
+        z: -305.781176470589
+      }
+      dip: 0.26841744411495971
+      direction: 38.859611840312716
+      azimuth: 38.859611840312716
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 369173.65882352943
+        y: 6651000
+        z: -305.781176470589
+      }
+      dip: 0.26841744411495971
+      direction: 38.859611840312716
+      azimuth: 38.859611840312716
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 360980.22882352944
+        y: 6651000
+        z: -223.81408963585503
+      }
+      dip: 0.44104227881431546
+      direction: 309.3579908312592
+      azimuth: 309.3579908312592
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 360980.22882352944
+        y: 6651000
+        z: -223.81408963585503
+      }
+      dip: 0.44104227881431546
+      direction: 309.3579908312592
+      azimuth: 309.3579908312592
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "GraniticBasement"
+    foliation {
+      Point3D {
+        x: 356460.84600000014
+        y: 6649305.254
+        z: 126.84871862599245
+      }
+      dip: 85
+      direction: 104.036
+      azimuth: 104.036
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 356569.7790000001
+        y: 6659790.0790000008
+        z: 136.74475335202129
+      }
+      dip: 85
+      direction: 90
+      azimuth: 90
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Namba"
+    foliation {
+      Point3D {
+        x: 371686.39411764708
+        y: 6666000
+        z: -73.717647058823417
+      }
+      dip: 0.939438533602723
+      direction: 296.67388535793822
+      azimuth: 296.67388535793822
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 371686.39411764708
+        y: 6666000
+        z: -73.717647058823417
+      }
+      dip: 0.939438533602723
+      direction: 296.67388535793822
+      azimuth: 296.67388535793822
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 373447.8823529412
+        y: 6666000
+        z: -80.253781512604945
+      }
+      dip: 1.392166886081186
+      direction: 68.1461724135053
+      azimuth: 68.1461724135053
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 373447.8823529412
+        y: 6666000
+        z: -80.253781512604945
+      }
+      dip: 1.392166886081186
+      direction: 68.1461724135053
+      azimuth: 68.1461724135053
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 375323.75294117647
+        y: 6666000
+        z: -90.057983193277209
+      }
+      dip: 0.65805812669874286
+      direction: 302.00109538071581
+      azimuth: 302.00109538071581
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 375323.75294117647
+        y: 6666000
+        z: -90.057983193277209
+      }
+      dip: 0.65805812669874286
+      direction: 302.00109538071581
+      azimuth: 302.00109538071581
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 377222.5
+        y: 6666000
+        z: -73.717647058823417
+      }
+      dip: 0.51974179128051512
+      direction: 306.13849724283511
+      azimuth: 306.13849724283511
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 377222.5
+        y: 6666000
+        z: -73.717647058823417
+      }
+      dip: 0.51974179128051512
+      direction: 306.13849724283511
+      azimuth: 306.13849724283511
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 379235.62941176468
+        y: 6666000
+        z: -60.6453781512604
+      }
+      dip: 0.43408239170492324
+      direction: 309.67552733462531
+      azimuth: 309.67552733462531
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 379235.62941176468
+        y: 6666000
+        z: -60.6453781512604
+      }
+      dip: 0.43408239170492324
+      direction: 309.67552733462531
+      azimuth: 309.67552733462531
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 381019.99411764706
+        y: 6666000
+        z: -67.181512605041917
+      }
+      dip: 1.2288347965132125
+      direction: 66.71002597779686
+      azimuth: 66.71002597779686
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 381019.99411764706
+        y: 6666000
+        z: -67.181512605041917
+      }
+      dip: 1.2288347965132125
+      direction: 66.71002597779686
+      azimuth: 66.71002597779686
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 382301.07647058822
+        y: 6666000
+        z: -67.181512605041917
+      }
+      dip: 1.3124280897866361
+      direction: 292.51954081111239
+      azimuth: 292.51954081111239
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 382301.07647058822
+        y: 6666000
+        z: -67.181512605041917
+      }
+      dip: 1.3124280897866361
+      direction: 292.51954081111239
+      azimuth: 292.51954081111239
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367911.77647058823
+        y: 6666000
+        z: -60.6453781512604
+      }
+      dip: 1.1230301885342715
+      direction: 65.649446366535358
+      azimuth: 65.649446366535358
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367911.77647058823
+        y: 6666000
+        z: -60.6453781512604
+      }
+      dip: 1.1230301885342715
+      direction: 65.649446366535358
+      azimuth: 65.649446366535358
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 368758.20588235295
+        y: 6666000
+        z: -83.5218487394957
+      }
+      dip: 2.0480850062606111
+      direction: 72.013452264556136
+      azimuth: 72.013452264556136
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 368758.20588235295
+        y: 6666000
+        z: -83.5218487394957
+      }
+      dip: 2.0480850062606111
+      direction: 72.013452264556136
+      azimuth: 72.013452264556136
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 362329.91764705884
+        y: 6666000
+        z: -24.69663865546211
+      }
+      dip: 1.8047283187847016
+      direction: 289.17397581785525
+      azimuth: 289.17397581785525
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 362329.91764705884
+        y: 6666000
+        z: -24.69663865546211
+      }
+      dip: 1.8047283187847016
+      direction: 289.17397581785525
+      azimuth: 289.17397581785525
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363313.60588235292
+        y: 6666000
+        z: -11.624369747899067
+      }
+      dip: 0.53078721695238684
+      direction: 54.246803382406647
+      azimuth: 54.246803382406647
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363313.60588235292
+        y: 6666000
+        z: -11.624369747899067
+      }
+      dip: 0.53078721695238684
+      direction: 54.246803382406647
+      azimuth: 54.246803382406647
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364137.15882352943
+        y: 6666000
+        z: -21.428571428571331
+      }
+      dip: 1.0628636255105024
+      direction: 64.9350757663222
+      azimuth: 64.9350757663222
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364137.15882352943
+        y: 6666000
+        z: -21.428571428571331
+      }
+      dip: 1.0628636255105024
+      direction: 64.9350757663222
+      azimuth: 64.9350757663222
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364914.95882352942
+        y: 6666000
+        z: -27.964705882352845
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364914.95882352942
+        y: 6666000
+        z: -27.964705882352845
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365669.8823529412
+        y: 6666000
+        z: -50.841176470588138
+      }
+      dip: 3.6763343745301484
+      direction: 76.576064620956046
+      azimuth: 76.576064620956046
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365669.8823529412
+        y: 6666000
+        z: -50.841176470588138
+      }
+      dip: 3.6763343745301484
+      direction: 76.576064620956046
+      azimuth: 76.576064620956046
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363100.857
+        y: 6658500
+        z: 32.057999999999993
+      }
+      dip: 1.4770135390424179
+      direction: 291.20222002460207
+      azimuth: 291.20222002460207
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363100.857
+        y: 6658500
+        z: 32.057999999999993
+      }
+      dip: 1.4770135390424179
+      direction: 291.20222002460207
+      azimuth: 291.20222002460207
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364287.975
+        y: 6658500
+        z: 14.936000000000007
+      }
+      dip: 3.1272317610208558
+      direction: 75.448827290580468
+      azimuth: 75.448827290580468
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 364287.975
+        y: 6658500
+        z: 14.936000000000007
+      }
+      dip: 3.1272317610208558
+      direction: 75.448827290580468
+      azimuth: 75.448827290580468
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365520.751
+        y: 6658500
+        z: -7.8930000000000007
+      }
+      dip: 0.86731351604822626
+      direction: 297.78817891846876
+      azimuth: 297.78817891846876
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365520.751
+        y: 6658500
+        z: -7.8930000000000007
+      }
+      dip: 0.86731351604822626
+      direction: 297.78817891846876
+      azimuth: 297.78817891846876
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 366616.5515
+        y: 6658500
+        z: -22.161
+      }
+      dip: 2.9623833200904315
+      direction: 75.012805844180562
+      azimuth: 75.012805844180562
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 366616.5515
+        y: 6658500
+        z: -22.161
+      }
+      dip: 2.9623833200904315
+      direction: 75.012805844180562
+      azimuth: 75.012805844180562
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367826.4985
+        y: 6658500
+        z: -53.551
+      }
+      dip: 0.75106426873147636
+      direction: 60.098586718251191
+      azimuth: 60.098586718251191
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367826.4985
+        y: 6658500
+        z: -53.551
+      }
+      dip: 0.75106426873147636
+      direction: 60.098586718251191
+      azimuth: 60.098586718251191
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 370063.759
+        y: 6658500
+        z: -64.966
+      }
+      dip: 0.21019764382510731
+      direction: 31.618384946625284
+      azimuth: 31.618384946625284
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 370063.759
+        y: 6658500
+        z: -64.966
+      }
+      dip: 0.21019764382510731
+      direction: 31.618384946625284
+      azimuth: 31.618384946625284
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 373442.478
+        y: 6658500
+        z: -70.67349999999999
+      }
+      dip: 0.18628429648018618
+      direction: 27.593722845426363
+      azimuth: 27.593722845426363
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 373442.478
+        y: 6658500
+        z: -70.67349999999999
+      }
+      dip: 0.18628429648018618
+      direction: 27.593722845426363
+      azimuth: 27.593722845426363
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 376227.6385
+        y: 6658500
+        z: -79.2345
+      }
+      dip: 0.46728860107249193
+      direction: 51.803599093530906
+      azimuth: 51.803599093530906
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 376227.6385
+        y: 6658500
+        z: -79.2345
+      }
+      dip: 0.46728860107249193
+      direction: 51.803599093530906
+      azimuth: 51.803599093530906
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 377939.8275
+        y: 6658500
+        z: -82.088
+      }
+      dip: 0.29896744893693639
+      direction: 318.27916645208336
+      azimuth: 318.27916645208336
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 377939.8275
+        y: 6658500
+        z: -82.088
+      }
+      dip: 0.29896744893693639
+      direction: 318.27916645208336
+      azimuth: 318.27916645208336
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 380382.55
+        y: 6658500
+        z: -79.234
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 380382.55
+        y: 6658500
+        z: -79.234
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 383053.5645
+        y: 6658500
+        z: -76.3805
+      }
+      dip: 0.25568658961905
+      direction: 322.49036684144556
+      azimuth: 322.49036684144556
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 383053.5645
+        y: 6658500
+        z: -76.3805
+      }
+      dip: 0.25568658961905
+      direction: 322.49036684144556
+      azimuth: 322.49036684144556
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 384228.283
+        y: 6658500
+        z: -67.3965
+      }
+      dip: 2.9173054492705344
+      direction: 285.05520129920734
+      azimuth: 285.05520129920734
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 384228.283
+        y: 6658500
+        z: -67.3965
+      }
+      dip: 2.9173054492705344
+      direction: 285.05520129920734
+      azimuth: 285.05520129920734
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365088.41921568627
+        y: 6651000
+        z: -95.945434173670122
+      }
+      dip: 0.2903507266049003
+      direction: 40.961721573551912
+      azimuth: 40.961721573551912
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365088.41921568627
+        y: 6651000
+        z: -95.945434173670122
+      }
+      dip: 0.2903507266049003
+      direction: 40.961721573551912
+      azimuth: 40.961721573551912
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367704.808627451
+        y: 6651000
+        z: -89.3880672268914
+      }
+      dip: 0.44584557532804536
+      direction: 309.13202887773878
+      azimuth: 309.13202887773878
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367704.808627451
+        y: 6651000
+        z: -89.3880672268914
+      }
+      dip: 0.44584557532804536
+      direction: 309.13202887773878
+      azimuth: 309.13202887773878
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 371606.44196078432
+        y: 6651000
+        z: -82.8307002801127
+      }
+      dip: 0.18267783511911312
+      direction: 26.909623356433855
+      azimuth: 26.909623356433855
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 371606.44196078432
+        y: 6651000
+        z: -82.8307002801127
+      }
+      dip: 0.18267783511911312
+      direction: 26.909623356433855
+      azimuth: 26.909623356433855
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 376265.45117647061
+        y: 6651000
+        z: -79.552016806723344
+      }
+      dip: 0.25740559165268218
+      direction: 322.30367298932504
+      azimuth: 322.30367298932504
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 376265.45117647061
+        y: 6651000
+        z: -79.552016806723344
+      }
+      dip: 0.25740559165268218
+      direction: 322.30367298932504
+      azimuth: 322.30367298932504
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 380809.70647058822
+        y: 6651000
+        z: -72.99464985994463
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 380809.70647058822
+        y: 6651000
+        z: -72.99464985994463
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 359970.39431372547
+        y: 6651000
+        z: -50.043865546219124
+      }
+      dip: 1.8047283187846006
+      direction: 70.8349313096817
+      azimuth: 70.8349313096817
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 359970.39431372547
+        y: 6651000
+        z: -50.043865546219124
+      }
+      dip: 1.8047283187846006
+      direction: 70.8349313096817
+      azimuth: 70.8349313096817
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 361117.93352941179
+        y: 6651000
+        z: -59.8799159663872
+      }
+      dip: 0.72959860832806289
+      direction: 300.35009990676531
+      azimuth: 300.35009990676531
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 361117.93352941179
+        y: 6651000
+        z: -59.8799159663872
+      }
+      dip: 0.72959860832806289
+      direction: 300.35009990676531
+      azimuth: 300.35009990676531
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 362104.817254902
+        y: 6651000
+        z: -46.765182072829774
+      }
+      dip: 1.0628636255104968
+      direction: 295.06480962707218
+      azimuth: 295.06480962707218
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 362104.817254902
+        y: 6651000
+        z: -46.765182072829774
+      }
+      dip: 1.0628636255104968
+      direction: 295.06480962707218
+      azimuth: 295.06480962707218
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Namba_Lower"
+    foliation {
+      Point3D {
+        x: 368437.93529411766
+        y: 6666000
+        z: -152.15126050420156
+      }
+      dip: 1.0920355658591019
+      direction: 65.275361571929
+      azimuth: 65.275361571929
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 368437.93529411766
+        y: 6666000
+        z: -152.15126050420156
+      }
+      dip: 1.0920355658591019
+      direction: 65.275361571929
+      azimuth: 65.275361571929
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 370062.16470588237
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 370062.16470588237
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 372029.54117647058
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 372029.54117647058
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 374271.43529411766
+        y: 6666000
+        z: -171.75966386554609
+      }
+      dip: 0.42740089080163512
+      direction: 49.993787010152666
+      azimuth: 49.993787010152666
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 374271.43529411766
+        y: 6666000
+        z: -171.75966386554609
+      }
+      dip: 0.42740089080163512
+      direction: 49.993787010152666
+      azimuth: 49.993787010152666
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 376238.81176470587
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 1.0093804490803826
+      direction: 295.71149759491584
+      azimuth: 295.71149759491584
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 376238.81176470587
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 1.0093804490803826
+      direction: 295.71149759491584
+      azimuth: 295.71149759491584
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 378046.05294117646
+        y: 6666000
+        z: -155.41932773109232
+      }
+      dip: 0.29035072660490246
+      direction: 40.961721605695054
+      azimuth: 40.961721605695054
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 378046.05294117646
+        y: 6666000
+        z: -155.41932773109232
+      }
+      dip: 0.29035072660490246
+      direction: 40.961721605695054
+      azimuth: 40.961721605695054
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 381523.27647058823
+        y: 6666000
+        z: -161.95546218487385
+      }
+      dip: 0.17509272175584389
+      direction: 25.395511325351695
+      azimuth: 25.395511325351695
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 381523.27647058823
+        y: 6666000
+        z: -161.95546218487385
+      }
+      dip: 0.17509272175584389
+      direction: 25.395511325351695
+      azimuth: 25.395511325351695
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363748.25882352941
+        y: 6666000
+        z: -139.07899159663856
+      }
+      dip: 1.1560238058596695
+      direction: 65.996027796062862
+      azimuth: 65.996027796062862
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363748.25882352941
+        y: 6666000
+        z: -139.07899159663856
+      }
+      dip: 1.1560238058596695
+      direction: 65.996027796062862
+      azimuth: 65.996027796062862
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365715.63529411767
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365715.63529411767
+        y: 6666000
+        z: -165.22352941176459
+      }
+      dip: 0.1
+      direction: 359.99994270422047
+      azimuth: 359.99994270422047
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 370382.43529411766
+        y: 6658500
+        z: -175.73602941176466
+      }
+      dip: 0.18526151371013169
+      direction: 332.59886584683869
+      azimuth: 332.59886584683869
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 370382.43529411766
+        y: 6658500
+        z: -175.73602941176466
+      }
+      dip: 0.18526151371013169
+      direction: 332.59886584683869
+      azimuth: 332.59886584683869
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 375003.48235294118
+        y: 6658500
+        z: -181.45514705882351
+      }
+      dip: 0.28208343205867126
+      direction: 40.201312763087145
+      azimuth: 40.201312763087145
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 375003.48235294118
+        y: 6658500
+        z: -181.45514705882351
+      }
+      dip: 0.28208343205867126
+      direction: 40.201312763087145
+      azimuth: 40.201312763087145
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 380196.4411764706
+        y: 6658500
+        z: -175.73602941176466
+      }
+      dip: 0.42852724536731335
+      direction: 309.95486142445077
+      azimuth: 309.95486142445077
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 380196.4411764706
+        y: 6658500
+        z: -175.73602941176466
+      }
+      dip: 0.42852724536731335
+      direction: 309.95486142445077
+      azimuth: 309.95486142445077
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363336.48235294118
+        y: 6658500
+        z: -121.40441176470588
+      }
+      dip: 0.650903979146648
+      direction: 57.813184373472033
+      azimuth: 57.813184373472033
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 363336.48235294118
+        y: 6658500
+        z: -121.40441176470588
+      }
+      dip: 0.650903979146648
+      direction: 57.813184373472033
+      azimuth: 57.813184373472033
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365349.61176470586
+        y: 6658500
+        z: -167.15735294117644
+      }
+      dip: 2.4859440300772238
+      direction: 73.679059469565829
+      azimuth: 73.679059469565829
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 365349.61176470586
+        y: 6658500
+        z: -167.15735294117644
+      }
+      dip: 2.4859440300772238
+      direction: 73.679059469565829
+      azimuth: 73.679059469565829
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367337.59607843135
+        y: 6651000
+        z: -181.19120448179342
+      }
+      dip: 0.15349744430933293
+      direction: 339.60313770936551
+      azimuth: 339.60313770936551
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 367337.59607843135
+        y: 6651000
+        z: -181.19120448179342
+      }
+      dip: 0.15349744430933293
+      direction: 339.60313770936551
+      azimuth: 339.60313770936551
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 373626.11098039214
+        y: 6651000
+        z: -164.79778711484661
+      }
+      dip: 0.3705801821265885
+      direction: 313.10021386270927
+      azimuth: 313.10021386270927
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 373626.11098039214
+        y: 6651000
+        z: -164.79778711484661
+      }
+      dip: 0.3705801821265885
+      direction: 313.10021386270927
+      azimuth: 313.10021386270927
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 378445.77568627452
+        y: 6651000
+        z: -168.07647058823596
+      }
+      dip: 0.5598278441628004
+      direction: 55.220083634368436
+      azimuth: 55.220083634368436
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 378445.77568627452
+        y: 6651000
+        z: -168.07647058823596
+      }
+      dip: 0.5598278441628004
+      direction: 55.220083634368436
+      azimuth: 55.220083634368436
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 382026.09803921572
+        y: 6651000
+        z: -171.35515406162534
+      }
+      dip: 0.58865151668538751
+      direction: 303.89368937576933
+      azimuth: 303.89368937576933
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 382026.09803921572
+        y: 6651000
+        z: -171.35515406162534
+      }
+      dip: 0.58865151668538751
+      direction: 303.89368937576933
+      azimuth: 303.89368937576933
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 360819.57333333336
+        y: 6651000
+        z: -168.07647058823596
+      }
+      dip: 0.26704261565907916
+      direction: 321.27669330415165
+      azimuth: 321.27669330415165
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 360819.57333333336
+        y: 6651000
+        z: -168.07647058823596
+      }
+      dip: 0.26704261565907916
+      direction: 321.27669330415165
+      azimuth: 321.27669330415165
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 367316.98823529412
+      y: 6666000
+      z: 187.727731092437
+    }
+    point {
+      x: 366905.21176470589
+      y: 6666000
+      z: -459.3495798319326
+    }
+    point {
+      x: 362029.50411764707
+      y: 6651000
+      z: 45.037955182072267
+    }
+    point {
+      x: 362908.09470588237
+      y: 6651000
+      z: -472.99403361344616
+    }
+    formation: "VidneeYarta"
+  }
+}
+GeomodellerTask {
+  Add3DInterfacesToFormation {
+    point {
+      x: 362735.12941176473
+      y: 6666000
+      z: 102.75798319327737
+    }
+    point {
+      x: 362401.15294117649
+      y: 6666000
+      z: -478.95798319327713
+    }
+    point {
+      x: 361089.37647058826
+      y: 6658500
+      z: 90.2029411764706
+    }
+    point {
+      x: 361538.4117647059
+      y: 6658500
+      z: -355.88823529411764
+    }
+    point {
+      x: 356898.26450980391
+      y: 6651000
+      z: 110.61162464985938
+    }
+    point {
+      x: 356894.98490196076
+      y: 6651000
+      z: -446.76456582633136
+    }
+    formation: "Wooltana"
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "VidneeYarta"
+    foliation {
+      Point3D {
+        x: 366578.61900000006
+        y: 6661862.033
+        z: 76.28541042721892
+      }
+      dip: 85
+      direction: 275
+      azimuth: 275
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+  Add3DFoliationToFormation {
+    formation: "Wooltana"
+    foliation {
+      Point3D {
+        x: 360926.37500000017
+        y: 6654325.7080000015
+        z: 106.9073523093745
+      }
+      dip: 85
+      direction: 95
+      azimuth: 95
+      polarity: Normal_Polarity
+    }
+    foliation {
+      Point3D {
+        x: 361383.9380000002
+        y: 6661996.611
+        z: 102.78119385821159
+      }
+      dip: 85
+      direction: 100
+      azimuth: 100
+      polarity: Normal_Polarity
+    }
+  }
+}
+GeomodellerTask {
+	ComputeModel {
+		FaultList {
+			node: "All"
+		}
+		SeriesList {
+			node: "All"
+		}
+		SectionList {
+			node: "All"
+		}
+		BoreholeList {
+			node: "All"
+		}
+	}
+}
+GeomodellerTask {
+    RenderModel {
+        nx:20;
+        ny:30;
+        nz:15;
+		generateSurfaces: false;
+        generateVolumes: true;
+		topoLimited: true;
+		adaptToTopo: true;
+		buildFormations: true;
+		buildFaults: true;
+		buildDykes: false;
+    }
+}
+GeomodellerTask {
+	GetModelSummary {
+		level: 2;
+		filename: "summary.rpt";
+}}
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "./Auto3/Beverley_MeshDemo3.xml"
+  }
+}
+GeomodellerTask {
+  BuildMeshCGAL {
+    build_triple_lines {
+   		topolimited: true;  # clip the triple points to the top surface, not top of the project box
+	    borderline: true;  # box of project is not interesting, but still required to get a CGAL mesh!!
+	    insideline: true
+    	point_spacing: 100; # divide the box into sections using this delta
+    	precision: 50 
+    	thin_body_bias { x: 1;y: 1; z: 20}; # this is a near surface mesh, uses a vertical delta compared to the horizontal values
+    	divide_model_using_regular_sections: true
+    	clean_lines: true;  # eliminate confusion in points too close to each other
+        export_triple_lines {
+            output_directory: "."
+    	    format: TripleLine_VTK;
+        }
+    	log: "Building triple lines and save for re-use"
+    }
+    geomodeller_output {
+        formations: true  # we want the geology!
+        faults: true; # two faults in this project
+        volumes: true;  # export these
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true;
+        smooth: 0
+    }
+    mesh_criteria {
+        default_discretization {
+            max_facet_radii: 1000
+            max_tet_radii: 1000
+            precision: 30;  #  also a ball radius factor
+            max_edge_length: 1250
+        }
+        min_protect_ball_radius: 60
+        min_facet_angle: 5
+        min_facet_radii: 100
+        radius_edge_ratio: 3
+    }
+    refine_mesh {
+        perturb {time_limit:5}
+       exude {time_limit:5}
+    }
+     export_mesh {
+#  we want to force a *.gmod file to appear
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: FEFLOW;
+  		output_directory: "."
+  	}
+  	export_mesh {
+#  we want to force a *.vtu file to appear, for checking
+   		mesh_type: VOLUME;
+  		file_type: VTU;
+  		output_directory: "."
+  	}
+  }
+}
+
+GeomodellerTask {
+  CloseProjectNoGUI {
+  }
+}

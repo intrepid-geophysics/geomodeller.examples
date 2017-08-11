@@ -1,0 +1,29 @@
+MetaData Begin
+	Name	= bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual.ers
+	Version	= "Intrepid acquire_catalog v6.0.0 merge_future_to_product for Windows (x64) by BUSTER debug build f3eb7e20692a+ "
+	bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "MGA54"
+		Datum	= "GDA94"
+	bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual End
+	Extensions Begin
+		JetStream Begin
+			Theme	= .ers
+			LABEL	= "bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual"
+			Date	= "Unknown"
+			Price	= "Unknown"
+			CSDATA	= "GDA94 / MGA54"
+			RenderStyle	= "Unknown"
+			ReportFormat	= "Unknown"
+			CELLSIZE	= "1000.000000"
+			DATEADDED	= "21/06/2015"
+			ASSET_TEAM	= "Unknown"
+			PUBLISHED	= "Unknown"
+			Survey	= "Unknown"
+			ScaleFactor	= "Unknown"
+		JetStream End
+	Extensions End
+MetaData End

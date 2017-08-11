@@ -1,0 +1,72 @@
+name: "import 3D worms"
+description: "Link clustered 3D output from wormE to Geomodeller"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "Australian_Worming/StartingBox/FirstGo.xml"  # just a 3D project box, with a flat DTM
+    }
+}
+
+GeomodellerTask {
+    ReadAndImport3dData {
+   		operation: CreateFault;
+        contact_csv_file: "Australian_Worming/contacts3d_contacts.csv"
+        contact_header_linestoSkip: 3
+        foliation_csv_file: "Australian_Worming/contacts3d_orientation_contacts.csv"
+        foliation_header_linestoSkip: 3
+        limits_csv_file: "Australian_Worming/contacts3d_limited_extents.csv"
+        fault_limit_header_linestoSkip: 4
+        log: "oz_faults.log"
+    }
+}
+
+# Lambert Conformal, GDA94
+GeomodellerTask {
+    ComputeModel {
+        FaultList {
+         #   node: "All" ;  # do all the faults
+          #  node: "Half" ; # do first half only
+           node: ["Contact1" ,"Contact2","Contact3","Contact4","Contact5","Contact6"]  			           
+        }
+        Extents { 
+            xmin: -2188000
+            ymin: -4974400
+            zmin: -50000
+            xmax: 1902400
+            ymax: -1256000
+            zmax: 10000
+        }
+        radius: 100.0
+        log: "oz_faults.log"
+    }
+}
+
+GeomodellerTask {
+	RenderModel { # make the 3D tangible model, but no graphics objects
+    nx: 15  # resolution
+    ny: 15
+    nz: 15
+    buildFormations: false
+    buildFaults: true
+    generateSurfaces: true
+    generateVolumes: false
+    grid: false
+    adaptToTopo: true
+    topoLimited: true
+    adaptX: false
+    adaptY: false
+    adaptZ: false
+    lookForOverturned :false  # faults do not usually overturn
+    createShapes: true  # 3d persistent shapes
+    restart: false
+    smoothingIterations: 0  # bit dangerous still
+    log: "oz_faults.log"
+    }
+}
+    
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "out/oz_faults.xml"
+        log: "oz_faults.log"
+    }
+}

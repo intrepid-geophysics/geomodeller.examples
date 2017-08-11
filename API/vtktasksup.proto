@@ -1,0 +1,198 @@
+syntax="proto2";
+
+// A place to formalise VTK filters and operations. Builders for VTK objects from
+// the parameters are available as free functions. E.g. given a
+// vtktasksup::DecimatePro parms; the following function can be used:
+//
+// auto vtk_cleaner_object = build_vtkCleanPolyData(parms);
+//
+// See vtktasksup.h for a list of available builder functions
+//
+package vtktasksup;
+
+message QuadricDecimation
+{
+
+
+    // Set/Get the desired reduction (expressed as a fraction of the original 
+    // number of triangles). The actual reduction may be less depending on 
+    // triangulation and topological constraints.
+    optional double target_reduction=1 [default=0.9];
+
+
+    // Decide whether to include data attributes in the error metric. If off, 
+    // then only geometric error is used to control the decimation. By default 
+    // the attribute errors are off.
+    optional bool use_attribute_error_metric=2 [default=false];
+
+
+    // Decide whether to activate volume preservation which greatly reduces 
+    // errors in triangle normal direction. If off, volume preservation is 
+    // disabled and if AttributeErrorMetric is active, these errors can be 
+    // large. By default VolumePreservation is off the attribute errors are 
+    // off.
+    optional bool use_volume_preservation=3 [default=false];
+
+    // If attribute errors are to be included in the metric 
+    // (i.e., AttributeErrorMetric is on), then the following flags control 
+    // which attributes are to be included in the error calculation.
+    // By default all of these are on.
+    optional bool use_scalars_attribute=4 [default=true];
+
+    // If attribute errors are to be included in the metric 
+    // (i.e., AttributeErrorMetric is on), then the following flags control 
+    // which attributes are to be included in the error calculation.
+    // By default all of these are on.
+    optional bool use_vectors_attribute=5 [default=true];
+
+    // If attribute errors are to be included in the metric (i.e.,
+    // AttributeErrorMetric is on), then the following flags control which
+    // attributes are to be included in the error calculation.
+    // By default all of these are on.
+    optional bool use_normals_attribute=6 [default=true];
+
+    // If attribute errors are to be included in the metric (i.e.,
+    // AttributeErrorMetric is on), then the following flags control which
+    // attributes are to be included in the error calculation. By default all
+    // of these are on.
+    optional bool use_tcoords_attribute=7 [default=true];
+
+
+    // If attribute errors are to be included in the metric (i.e.,
+    // AttributeErrorMetric is on), then the following flags control which
+    // attributes are to be included in the error calculation. By default all
+    // of these are on.
+    optional bool use_tensors_attribute=8 [default=true];
+
+    // Set/Get the scaling weight contribution of the attribute. These values
+    // are used to weight the contribution of the attributes towards the error
+    // metric.
+    optional double scalars_weight=9 [default=1.0];
+
+    // Set/Get the scaling weight contribution of the attribute. These values
+    // are used to weight the contribution of the attributes towards the error
+    // metric.
+    optional double vectors_weight=10 [default = 0.0];
+
+    // Set/Get the scaling weight contribution of the attribute. These values
+    // are used to weight the contribution of the attributes towards the error
+    // metric.
+    optional double normals_weight=11 [default = 0.0];
+    
+    // Set/Get the scaling weight contribution of the attribute. These values
+    // are used to weight the contribution of the attributes towards the error
+    // metric.
+    optional double tcoords_weight=12 [default = 0.0];
+    
+    // Set/Get the scaling weight contribution of the attribute. These values
+    // are used to weight the contribution of the attributes towards the error
+    // metric.
+    optional double tensors_weight=13 [default = 0.0];
+
+    // Free boundary edges are weighted. 
+    optional bool use_boundary_constraints=14 [default=true];
+
+}
+
+// vtkDecimatePro is a filter to  reduce the number of triangles in a triangle
+// mesh, forming a good approximation to the original geometry.
+message DecimatePro {
+    // Specify the desired reduction in the total number of polygons
+    // (e.g., if TargetReduction is set to 0.9, this filter will try to reduce
+    // the data set to 10% of its original size). Because of various constraints,
+    // this level of reduction may not be realized. If you want to guarantee a
+    // particular reduction, you must turn off PreserveTopology, turn on
+    // SplitEdges and BoundaryVertexDeletion, and set the MaximumError to
+    // VTK_DOUBLE_MAX (these ivars are initialized this way when the object is
+    // instantiated).
+    optional double target_reduction=1 [default=0.9]; // units=percentage.
+
+    // Specify the mesh feature angle. This angle is used to define what an
+    // edge is (i.e., if the surface normal between two adjacent triangles
+    // is >= FeatureAngle, an edge exists).
+    optional double feature_angle=2 [default=60]; // units=degree
+
+    // Turn on/off whether to preserve the topology of the original mesh.
+    // If on, mesh splitting and hole elimination will not occur. This may
+    // limit the maximum reduction that may be achieved.
+    optional bool preserve_topology=3 [default=true];
+
+    // Turn on/off the splitting of the mesh at corners, along edges, at
+    // non-manifold points, or anywhere else a split is required. Turning
+    // splitting off will better preserve the original topology of the mesh,
+    // but you may not obtain the requested reduction.
+    optional bool splitting=4 [default=false];
+
+    // This angle is used to control the splitting of the mesh. A split line
+    // exists when the surface normals between two edge connected triangles
+    // are >= SplitAngle.
+    optional double split_angle=5 [default=120];
+
+    // In some cases you may wish to split the mesh prior to algorithm
+    // execution. This separates the mesh into semi-planar patches, which are
+    // disconnected from each other. This can give superior results in some
+    // cases. If the ivar PreSplitMesh ivar is enabled, the mesh is split with
+    // the specified SplitAngle. Otherwise mesh splitting is deferred as long
+    // as possible.
+    optional bool pre_split_mesh=6 [default=false];
+
+    // Set the largest decimation error that is allowed during the decimation
+    // process. This may limit the maximum reduction that may be achieved. The
+    // maximum error is specified as a fraction of the maximum length of the
+    // input data bounding box.
+    optional double max_error=7;
+
+    // The computed error can either be computed directly from the mesh or the
+    // error may be accumulated as the mesh is modified. If the error is
+    // accumulated, then it represents a global error bounds, and the ivar
+    // MaximumError becomes a global bounds on mesh error. Accumulating the
+    // error requires extra memory proportional to the number of vertices in
+    // the mesh. If AccumulateError is off, then the error is not accumulated.
+    optional bool accumulate_error=8 [default=true];
+
+    // The MaximumError is normally defined as a fraction of the dataset
+    // bounding diagonal. By setting ErrorIsAbsolute to 1, the error is
+    // instead defined as that specified by AbsoluteError. By default
+    // ErrorIsAbsolute=0.
+    optional bool use_absolute_error=9 [default=false];
+
+    // Turn on/off the deletion of vertices on the boundary of a mesh. This
+    // may limit the maximum reduction that may be achieved.
+    optional bool boundary_vertex_deletion=10 [default=false];
+
+    // If the number of triangles connected to a vertex exceeds "Degree", then
+    // the vertex will be split. (NOTE: the complexity of the triangulation
+    // algorithm is proportional to Degree^2. Setting degree small can improve
+    // the performance of the algorithm.)
+    optional int32 degree=11;
+
+    // Specify the inflection point ratio. An inflection point occurs when the
+    // ratio of reduction error between two iterations is greater than or equal
+    // to the InflectionPointRatio.
+    optional double inflection_point_ratio=12;
+}
+
+// Operates on a vtkPolyData to merge duplicate points, and/or remove
+// unused points and/or remove degenerate cells.
+message CleanPolyData
+{
+    // By default ToleranceIsAbsolute is false and Tolerance is a fraction
+    // of Bounding box diagonal, if true, AbsoluteTolerance is used when
+    // adding points to locator (merging)
+    optional bool tolerance_is_absolute=1 [default=false];
+    // The tolerance in terms of fraction of bounding box length or absolute,
+    // depending the tolerance_is_absolute flag
+    optional double tolerance=2 [default = 0.0];
+    // Turn on/off conversion of degenerate lines to points.
+    optional bool convert_lines_to_points=3 [default=true];
+    // Turn on/off conversion of degenerate polys to lines.
+    optional bool convert_polys_to_lines=4 [default=true];
+    // Turn on/off conversion of degenerate strips to polys.
+    optional bool convert_strips_to_polys=5 [default=true];
+    // Set/Get a boolean value that controls whether point merging is performed.
+    // If on, a locator will be used, and points laying within the appropriate
+    // tolerance may be merged. If off, points are never merged. By default,
+    // merging is on.
+    optional bool point_merging=6 [default=true];
+}
+

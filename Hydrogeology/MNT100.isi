@@ -1,0 +1,14 @@
+MetaData Begin
+	Name	= MNT100.ers
+	Version	= "Intrepid GeoModeller v6.0.0 geomodeller_2014 for Windows (x64) by PRT1652 optimised build 632f03462bda+ "
+	MNT100 Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= quad
+		Alias	= MNT100
+		Bands	= 1
+		Projection	= "GEODETIC"
+		Datum	= "CH1903"
+	MNT100 End
+MetaData End

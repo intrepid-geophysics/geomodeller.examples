@@ -1,0 +1,20 @@
+MetaData Begin
+	Name	= bouguer_anomaly.ers
+	Version	= "Intrepid Visualisation v5.0.0 geomodeller_2013 for Linux (x86_64) by seneca debug build 46d2b42d974a+ "
+	bouguer_anomaly Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 900
+		Nulls	= 0
+		Minimum	=   1.52990057558
+		Maximum	=   7.82889148586
+		Mean	=   3.35356896703
+		Variance	=   1.46790945297
+		Skew	=    0.6946060746
+		Kurtosis	=   1.50800250325
+		Projection	= "MGA50"
+		Datum	= "GDA94"
+	bouguer_anomaly End
+MetaData End

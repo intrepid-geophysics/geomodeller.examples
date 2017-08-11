@@ -1,0 +1,136 @@
+name: "A2_Stage3"
+description: "Tutorial A2 - stage 3 of 5, step 2 of 2"
+auditfile: "audit_A2_Stage3.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA1.xml"
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "Basement"
+        red: 238
+        green: 162
+        blue: 172
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "MiddleCover"
+        red: 255
+        green: 165
+        blue: 0.0
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "BasalSeries"
+        position: 1
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "BasalSeries"
+        formation: "Basement"
+    }
+} 
+
+GeomodellerTask {
+    SetSeries {
+        name: "LowerSeries"
+        position: 2
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "LowerSeries"
+        formation: "LowerCover"
+    }
+}
+GeomodellerTask {
+    SetSeries {
+        name: "UpperSeries"
+        position: 3
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "MiddleCover"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "UpperCover"
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section1"
+        filename: "./data/Section1_LowerCover_MiddleCover.data"
+        spatial_location_error: 1
+    }
+}
+
+
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+            node: "LowerSeries"         
+        }
+        SectionList {
+            node: "All"            
+        }
+        Extents { 
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+            node: "All"         
+        }
+        SectionList {
+            node: "All"            
+        }
+        Extents { 
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+
+
+GeomodellerTask {
+    CentralVerticalPotentialAndRank {
+    	message: "Tutorial A2"
+        filename: "CentralVerticalPotentialAndRank.rpt"
+    }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./test2.xml"
+    }
+}

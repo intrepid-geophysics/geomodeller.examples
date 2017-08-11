@@ -1,0 +1,79 @@
+# this is the test of the Geomodeller/FEFLOW unstructured mesh
+# primary resolution is controlled by the Ball Radius, set to 120
+# faults are resolved with a 1/20 factor applied to this factor as well.
+# this makes a big difference on the execution time.
+# creating the Triple lines can also take quite a while depending upon the
+# complexity of the internal boundaries between units and faults
+# being able to save and reuse Triple lines is enabled - uses the *.vtp files
+# balls are added regularly to the triple lines to protect and force the meshing to honour
+# the break lines in the geology formations.
+# this demontsrates the variable precison of meshing options as well - Dyke formation is nominated for high precison
+# also, pass the Density properties from the Geomodeller project into the mesh file
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./Completed_Project/TutorialA6.xml"
+    log: "Opening project for meshing"
+  }
+}
+
+GeomodellerTask {
+  BuildMeshCGAL {
+      geomodeller_output {
+        formations: true  # we want the geology!
+        faults: true; # one fault in this project
+        volumes: false;  # export these
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true;
+        smooth: 0
+      }
+    import_triple_lines {
+        filename: "tutorialA_triple.vtp"
+    }
+    mesh_criteria {
+        min_facet_angle: 20.0
+        min_facet_radii: 50.0
+        radius_edge_ratio: 3.0
+        min_protect_ball_radius: 800
+        default_discretization {
+            precision: 800.0;  #  also a ball radius factor, very coarse, for speed
+            max_facet_radii: 1000.0
+            max_tet_radii: 1000.0
+            max_edge_length: 500.0
+        }
+    }
+    refine_mesh {
+        lloyd {time_limit: 20}
+        perturb {time_limits: 20}
+        exude {time_limit: 20}
+    }
+
+  	export_mesh {
+#  we want to force a *.vtu file to appear,
+# now includes all isopotentials and geology gradients, and geology pile & colours
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+		wantTetrahedra: true
+		filterout_triangles_from_inner_tetrahedrons: true
+        output_directory: "."
+        property: Density;  # pass the required lithological property from Geomodeller to the mesh as a fielddata array
+  	}
+  	log: "Building Tutorial A mesh(VTK), skipping the triple line calcs, by re-using existing"
+  }
+}
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "TutorialA3800.vtu";
+		MeshGrid_Name: "Tetras";
+		FileType: FT_IGMESH;
+		Field_Name: "gradient";
+		log: "source_meshgrid.rpt";
+    }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./TutA/TutA_geological_coarsemesh.xml"
+    }
+}

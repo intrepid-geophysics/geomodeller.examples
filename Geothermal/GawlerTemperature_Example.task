@@ -1,0 +1,54 @@
+name: "Temperature/basal heat flow simulation for heat flow calcs"
+description: "Sample for Tony Meixner to work from for Gawler study"
+auditfile: "audit_Temperature_HeatFlow.rpt"
+InversionTask {
+	CreateCaseFromLithologyVoxet {
+		inputvoxet: "SA_GawCur_15km_4kmXY100mZ_thermal.vo";
+		new_project: "SA_GawCur_15km_4kmXY100mZ_thermal_imported\SA_GawCur_15km_4kmXY100mZ_thermal_imported.xml";	
+		case: "Case_1";
+		product: Temperature;  
+    	formation {	field: "Eucla_basin";	index: 1;}
+    	formation {	field: "Lake_eyre_basin";index: 2;}
+	}
+}
+InversionTask {
+	CaseControl {
+		filename: "SA_GawCur_15km_4kmXY100mZ_thermal_imported\SA_GawCur_15km_4kmXY100mZ_thermal_imported.xml";	
+		SetLaw {
+			LithologyProperty {
+				lithology: "Eucla_basin";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;	mean: 0.000001;	stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "Lake_eyre_basin";
+				property: HeatProductionRate;
+				ProbabilityDistributionFunction {type: NormalDistribution;	mean: 0.0000013;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "Eucla_basin";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;	mean: 1.9;stddev: 0.0;}
+				}
+			LithologyProperty {
+				lithology: "Lake_eyre_basin";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: NormalDistribution;mean: 2.0;stddev: 0.0;}
+				}
+			}
+	}
+}
+InversionTask {
+	ForwardModelTemperatureForCreateCaseFromVoxet {	
+		filename: "SA_GawCur_15km_4kmXY100mZ_thermal_imported\SA_GawCur_15km_4kmXY100mZ_thermal_imported.xml";	
+		case: "Case_1";
+		input_voxet: "SA_GawCur_15km_4kmXY100mZ_thermal.vo";
+		field_alias {alias: "Lithology";	field: "Lithology";	}
+		Advanced: true;
+		Surface_Temperature_Law {	type: Log_normal;	mean: 22;	stddev: 0;	percentage: 100;}
+		Base_Heatflow_Law {		type: Log_normal;		mean: 0.036;stddev: 0;	percentage: 100;}
+		MaxResidualTemperature: 0.000001;
+		NumberOfIterations: 100000;
+		Number_CPUs: 1;
+	}
+}

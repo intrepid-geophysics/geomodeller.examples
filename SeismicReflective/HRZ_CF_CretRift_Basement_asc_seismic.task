@@ -1,0 +1,35 @@
+# now match the nav and seismic data, to locate sections and place 3D picks
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/withnav_capel_faust/withnav_capel_faust.xml"
+    }
+}
+GeomodellerTask {
+  ImportSeismicHorizons {
+    NavigationFiles {
+      node: "data/NAV_cretrift_basement..DIR"
+    }
+    HorizonColumnNames {
+      node: "depth"
+    }
+    IntersectionRadius: 100.0
+    ImportSeismic {
+      InGUI: false
+      InputDataFile: "data/hrz_cretrift_basement..DIR"
+      InputProjectFile: "data/withnav_capel_faust/withnav_capel_faust.xml"
+      MaxSectionPoints: 15
+      ClipToProject: true
+      InvertDepth: true
+    }
+  }
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "new/CF_w_basement.xml"
+    }
+}

@@ -1,0 +1,342 @@
+syntax = "proto2";
+
+// Here is the specification of the intrepid geophysics 
+// Eclipse grid data interchange standard - Eclipse semi-regular 3d grid
+// and Petrel ordinary grid data interchange which is not documented
+//  See more at: http://petrofaq.org/wiki/Eclipse_Input_Data#GRID
+// using GOOGLE/Protobuf schema
+//  
+// also supporting Petrel format grids using Eclipse keywords.
+//
+// All message objects are postscripted by a _ECL for now to clearly
+// distinguish them from standard KEYWORDS.
+// I,J,K order
+// The order is according to the “book order”, line after line until a page
+// has been read, then the next page until all data has been read.
+// I.e. First the top layer (K=1) is read, line by line
+// (begin with J=1, read I=1,...,NX, then J=2, etc.) Then repeat for K=2,...,NZ.
+//  See more at: http://petrofaq.org/wiki/Eclipse_Syntax#sthash.vmivTZvN.dpuf
+
+//
+// Data repeats
+// When providing a data vector associated with a keyword, often the same value will be repeated.
+//  One example is that we often look at models where we assume that porosity is constant in each layer.
+// Then the porosity keyword would be comprised of NX*NY equal values for layer 1,
+// followed by another NX*NY equal values for layer 2 etc. This situation is so common that Eclipse
+// fortunately allows for a shorthand notation: n*val means that the value val shall be repeated n times. So,
+// PORO
+// 0.23 0.23 0.23 0.23 0.23 0.23 0.23 0.23 0.24 0.25 0.25 0.25 /
+// is equivalent to
+// PORO
+// 8*0.23 0.24 3*0.25 /
+// Note that there must not be any blanks on any side of the asterisk (star).
+
+// event based with protobuf being used for the actual event messages.
+// copyright  Intrepid Geophysics January 2016, DjF
+
+// Sets the namespace in C++, package in Java and Python
+import "commontaskmodel.proto";
+import "meshgrid_model.proto";
+import "data_description_format.proto";
+
+package eclipse;
+
+enum WellState {
+	OpenWell=0;
+	ShutWell = 1;
+};
+enum UNITS {  // hard to use this
+	P_METRIC=0; // meters
+	P_FIELD = 1; // feet
+	P_LAB = 2;  // who knows
+};
+//
+message RunSpec_ECL {
+	optional string TITLE = 1 [ default = ""]; // Title is used as header on output, to identify run
+	repeated int32 DIMENS = 2;  // NX NY NZ
+	optional string START = 3;  // Start date, i.e. “Day 0” in simulation eg 1 'JAN' 2012
+	// Phases
+	optional bool OIL = 4 [default = false];  // Phases included (oil and water, i.e. 2-phase run)
+	optional bool GAS = 5 [default = false];
+	optional bool WATER = 6 [default = false];
+	optional bool DISGAS = 7 [default = false];
+	optional bool NONNC = 8 [default = false];
+	//  Units to use
+	optional bool METRIC = 10 [default = false];  // meters
+	optional bool FIELD = 11 [default = false];  // feet
+	optional bool LAB = 12 [default = false];
+	repeated int32 WELLDIMS = 20;  // max.wells; max.cell-connections; Next three values are defaulted
+	repeated int32 TABDIMS = 21;  // max.table;
+	optional int32 NSTACK = 23 [default = 0];
+}
+// short hand method for bulk value assignments
+message Equals_ECL {
+	optional string parameter_name = 1;  // eg DX, PORO
+	optional double value = 2;
+	//  cell location i j
+	optional int32 st_I = 3 [default = -1];
+	optional int32 end_I = 4 [default = -1];
+	optional int32 st_J = 5 [default = -1];
+	optional int32 end_J = 6 [default = -1];
+	optional int32 st_K = 7 [default = -1];
+	optional int32 end_K = 8 [default = -1];
+}
+// To describe Grid in ASCII format the following set of keywords may be used
+message Grid_ECL {
+//	optional int32 MAXINFO = 1 [ default = 256];  // maximum  number of text lines
+	repeated double TOPS = 2 ; // Depth of the top face of each grid block
+	repeated double DX = 3; // Block size along direction X, really
+	repeated double DY = 4;// Block size along direction Y
+	repeated double DZ = 5;// Block size along direction Z
+	// or  combination of coordinate line and depths at corners
+	//  dx is fastest, dx  next,  dz last, starting from surface
+	repeated double COORD = 6;  // Coordinate lines  ( x,y,z),(X,y,z)
+	repeated double ZCORN = 7;  // Depths of grid block corners
+	optional string INCLUDE = 9; // Usually ASCII GRID data is too large to keep in .DATA file, it's often allocated in separate file
+	optional string GDFILE = 10; // Usually BINARY GRID data is too large to keep in .DATA file, it's often allocated in separate file
+	repeated sint32 ACTNUM = 12;  // Explicit "active" map.  May be NULL
+//  can also define default permiabilites,
+	repeated double PERMX = 21; // Permeabilities are constant X
+	repeated double PERMY = 22;// Permeabilities are constant Y
+	repeated double PERMZ = 23;// Permeabilities are constant Z
+//  can also define default porosities
+	repeated double PORO = 25; // Porosity is constant
+	 // alternative way to specify any grid parameter
+	repeated Equals_ECL EQUALS = 30;  // alternative way to specify any grid parameter
+	repeated double MAPAXES 	= 31;  //  6 Element rotation vector - can be NULL. define the X,Y,Z axes and origin
+
+}
+// This section is optional, This section is used to define changes to the grid data. For example manual edit of porosity or permebility.
+message Edit_Multiply_ECL {
+// property name
+	optional string PropertyName = 1;
+	optional double modifier = 2;  // what multiplier??
+//  cell location i j
+	optional int32 st_I = 3 [default = -1];
+	optional int32 end_I = 4 [default = -1];
+	optional int32 st_J = 5 [default = -1];
+	optional int32 end_J = 6 [default = -1];
+	optional int32 st_K = 7 [default = -1];
+	optional int32 end_K = 8 [default = -1];
+}
+message Edit_ECL {
+	// method A, define a BOX
+	optional string BOX = 1 [default="BOX"];  // dynamic number from HEAD is the default
+	//  inner cell location i j
+	optional int32 st_I = 3 [default = -1];
+	optional int32 end_I = 4 [default = -1];
+	optional int32 st_J = 5 [default = -1];
+	optional int32 end_J = 6 [default = -1];
+	optional int32 st_K = 7 [default = -1];
+	optional int32 end_K = 8 [default = -1];
+	repeated double MULTPV = 9; // number of cells*multiplier
+	optional string ENDBOX = 20 [default="ENDBOX"];
+	// method B, direct manipulation with cell indices
+	optional Edit_Multiply_ECL MULTIPLY = 21; // name modifier x1 x2 y1 y2 z1 z2
+}
+// This section is required, In this section fluid and rock properties (relative permeabilities, PVT tables, ...) are defined.
+message Props_ECL {
+	// Relative permeability for water and oil,
+//  and water-oil capillary pressure, as a function of water saturation
+	repeated double SWOF = 1; // water - Sw Krw Krow Pcwo
+	repeated double SGOF = 2; // gas, Sg Krg Krog Pcgo
+
+	// PVT properties for water.
+	// Pref: Reference pressure for rest of data (psi)
+	// Bw: Volume formation factor for water
+	// Cw: Water compressibiblity
+	// ViscW: Water viscosity
+	repeated double PVTW = 3;
+
+// PVT properties for oil,
+//  Pressure
+// Bo, of Volume formation factor for oil
+// Oil viscosity
+	repeated double PVDO = 4;
+// PVT properties for gas,
+//  Pressure
+// Bg, of Volume formation factor for gas
+// Gas viscosity
+	repeated double PVDG = 5;
+	// Dead oil: Rs (Gas resolution factor) is constant
+	repeated double RSCONST = 6;  // Rs Bubble-point-pressure
+	// Specify constant rock compressibility.
+	repeated double ROCK = 7;  // Pref Cr
+	// Fluid densities at surface conditions
+	repeated double DENSITY = 8;  // Oil Water Gas
+}
+// This section is optional
+// The REGIONS section divides the grid into regions. The common regions are
+// If there is no REGIONS section, ECLIPSE puts all grid blocks into a single region for all the above operations
+message Regions_ECL {
+	optional int32 NFREQ = 1;  // dynamic number from head is the default
+	repeated double dataset = 2; // must contain  num_freq values sorted in the nominated way above
+//	SATNUM Saturation table regions (relative permeability and capillary pressure)
+//EQLNUM Equilibration regions (setting initial pressures and saturations).
+//PVTNUM PVT data regions (fluid densities, FVFs, viscosities).
+//FIPNUM Fluid-in-Place regions.
+}
+// This section is required.
+// In the SOLUTION section the initial state (pressure, saturations, compositions) is defined.
+message Solution_ECL {
+//	DD = Datum depth, the depth to which all reports will be referenced.
+//  DD Pres.at.DD OWC Pcow(OWC) Default rest of data items
+	repeated double EQUIL = 2;
+	repeated double PBVD = 3; // --Pb Depth
+}
+// List data vectors which we want stored for graphics post-processing
+message Summary_ECL {
+	optional bool FOPR = 1 [default = false];  // Field Oil Production Rate
+	optional bool FOPT = 2 [default = false];  // Field Oil Production Total
+	optional bool FPR = 3 [default = false];  // Field Pressure
+	optional bool FOIP = 4 [default = false];  // Field Oil in Place
+	optional bool GOPR = 5 [default = false];  // Field Gas Production Rate
+	optional bool WWPR = 6 [default = false];  // Field Water Production Rate
+	optional string WWIR = 10 ;  // Field Water Injection Rate for well(s)
+	optional bool WWCT = 11 [default = false];  // Well water cut for all wells
+	repeated string WOPR = 12 ; // --Oil rates for listed production wells
+	repeated string WGPR = 13 ; // Gas rates for listed production wells
+	repeated int32 BPR = 20;  // pressure in cell i,j,k, completions for wells
+	repeated int32 BGSAT = 21;  // Gas saturations in indicated cells
+	repeated int32 BWSAT = 22; // Water saturations in indicated cells
+}
+// now for schedule elements
+message ReportFreq_ECL {
+	optional int32 BASIC = 1 	[ default = 5];
+	optional int32 NORST = 2 	[ default = 1];
+	optional int32 FREQ = 3 	[ default = 5];
+}
+//Well specification: Give names, positions (i, j) and main phase of wells
+message WellSpecs_ECL {
+// wname
+	optional string WellName = 1;
+// group
+	optional string Group = 2;
+//  cell location i j
+	optional int32 cell_I = 3 [default = -1];
+	optional int32 cell_J = 4 [default = -1];
+//Z(bhp)
+// prefPhase
+	optional string PreferredPhase = 6;
+}
+// Completion data, the well is open to the reservoir in cells in layers from k_hi to k_lo.
+message Completion_ECL {
+// wname
+	optional string WellName = 1;
+//  cell location i j
+	optional int32 ic = 3 [default = -1];
+	optional int32 jc = 4 [default = -1];
+	optional int32 k_hi = 5 [default = -1];
+	optional int32 k_lo = 6 [default = -1];
+	optional WellState WSTATE = 7 [default=OpenWell];
+	optional double Inner_Radius = 8;
+	optional double Outer_Radius = 9;
+	}
+//	Well production with an oil rate  constrained by that well’s flowing bottomhole pressure
+message WellProduction_ECL {
+	optional string WellName = 1;
+	optional WellState WSTATE = 7 [default=OpenWell];
+	optional double OperatingRate = 8;
+	optional double BottomHolePressure = 9;
+
+	}
+// Specify output of graphics result files for cell data, and times which to write these.
+message Schedule_ECL {
+	optional ReportFreq_ECL 	RPTRST = 1;
+	optional WellSpecs_ECL 		WELSPECS = 2;
+	optional Completion_ECL 	COMPDAT = 3;
+	optional WellProduction_ECL WCONPROD = 4;
+	repeated string 			GRUPTREE = 10;
+}
+
+// main tie in to the top level Eclipse semi-regular 3d grid
+message DataInterchangeStandard_ECL {
+
+	optional RunSpec_ECL 					RUNSPEC = 1;  // must be first
+	optional Grid_ECL 						GRID = 2;
+	optional Edit_ECL  						EDIT = 3;
+	optional Props_ECL 						PROPS = 4;
+	optional Regions_ECL 					REGIONS = 5;
+	optional Solution_ECL 					SOLUTION = 7;
+	optional Summary_ECL 					SUMMARY = 8;
+	repeated Schedule_ECL 					SCHEDULE = 9;
+
+	optional string 						END = 20;
+	optional string 						log = 255;
+}
+
+// now Petrel ordinary grid data interchange which is not documented
+// it uses ECLIPSE keywords (grid geometry and properties) (ASCII)
+message PetrelASCII_Grid_ECL {
+
+	optional bool PINCH 					= 1 [default = false];  // does formation pinch out?
+	optional bool NOECHO					= 2 [default = false];  // turn off parser echo of input
+	optional bool ECHO						= 3 [default = true];  // turn off parser echo of input
+
+	optional ctm.Distance_Units MAPUNITS 	= 5 [default = meters];  // force a change to the ENUM, also for now
+	optional string GRIDUNIT			 	= 6 [default = "METRES"];  // done as a string lietral for now
+	repeated sint32 COORDSYS 				= 7;  // POSC coordinate system code number
+	repeated double MAPAXES 				= 8;  //  6 Element rotation vector - can be NULL. define the X,Y,Z axes and origin
+	repeated sint32 SPECGRID 				= 9;  // Cartesian box dimensions, and last entry is a char, for Float, double etc.
+	repeated double COORD 					= 10;  // Pillar end-points, Coordinate lines  ( x,y,z),(X,y,z)
+	repeated double ZCORN 					= 11;  // Depths of grid block corners
+	repeated sint32 ACTNUM	 				= 12;  // Explicit "active" map.  May be NULL
+	repeated double TOPS 					= 15; // Depth of the top face of each grid block
+
+// Petrel field names
+	repeated double S_VELOCITY 				= 13;  //  cannot manage a hyphen in field names
+	repeated double P_VELOCITY 				= 14;  //  cannot manage a hyphen in field names
+	repeated double PERMX = 21; // Permeabilities are constant X
+	repeated double PERMY = 22;// Permeabilities are constant Y
+	repeated double PERMZ = 23;// Permeabilities are constant Z
+//  can also define default porosities
+	repeated double PORO = 25; // Porosity is constant
+
+
+	optional string END 					= 20;
+	optional string log 					= 255;
+}
+
+enum SchlumbgerFormatType {
+	ECLIPSE=0;  //  requires runspec, grid etc
+	PETREL=1; // just the grid keywords, plus more geolocation
+
+}
+//###
+//! allow a user to frame a task file to specify either
+// ECLIPSE ASCII simulation runs including grids, and wells etc
+// or
+//  PETREL ASCII grids, dumping from any Petrel in ASCII format
+// We use the specifications of all the objects as specified above, in the messages
+//  then add 3D viewing options, to choose what field and what dataset
+//  and other enhacment options, with a VTK viewer
+message Schlumberger_ECL {
+	required string filename = 1;  // must be 3D grid in either Eclipse or Perel format
+	optional string OutputMesh = 2;  // export to an Intrepid Mesh
+
+	optional string property = 3;  // a mesh grid field property value
+	optional SchlumbgerFormatType FormatType = 4 [ default = PETREL];
+	//  earthquake proint locations, are often presented in lat/long.. no good for clustering
+	optional ctm.CoordinateSystem Projection = 5;  // may need to convert from GEODETIC to a projected dataset
+	optional ctm.Distance_Units Distance_Units = 6 [ default = meters];
+	//
+	//  3D visualization, an OpenGL 3D VTK display window
+	optional bool show_3D_viewer 			= 7 [default = true];  //control the pop-up of the viewer
+	optional bool show_property = 8 [default = true]; // a property such as s-velocity, permerability
+	optional bool show_pillars 		= 9 [default = false];  // truncate the fault lengths to geophysical observed data
+	optional bool show_zcorners 		= 10 [default = false];  // show the bounds as either sphere or plane
+	optional bool show_original_signal_grid = 11 [default = true];  // show signal grid as a grey scale image
+	optional bool show_3dimage = 17 [ default = false];  // 3d grid display, as byte data for colour
+	optional bool write_vtk_cellCentroidsPoints	= 12 [default = false];  // dump the cluster points to  vtp glyphs
+	optional string vtk_cellCentroidPointsFile = 13 [default = "centroid.vtp"];// a name for a file of XML vtp glyphs
+	optional double vertical_scale			= 14 [default = 1.0]; // for the 3D viewer, what exaggeration??
+	optional double Marker_Size = 15 [default = 1];  //  1 m
+	optional double opacity = 16 [default = 1.0];  // non-transparent
+	optional bool doLog = 40 [default = true];
+	optional string ReportFile = 41 [default = "schlumbger_viewer.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "Schlumberger"];
+}
+// public task file interface for 3D visualization
+message PetrelTask {
+	optional Schlumberger_ECL Examine = 1;  // set up so a standard task file can be created and used
+}

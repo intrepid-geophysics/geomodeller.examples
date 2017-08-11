@@ -1,0 +1,3283 @@
+syntax = "proto2";
+
+// Here is the specification of the intrepid geophysics
+// batch processing langauge for each  core tool
+// using GOOGLE/Protobuf schema
+//
+// All message objects are preceded by a _INT for now to clearly
+// distinguish them from parameters.
+//
+// To ensure that tasks are completed in the correct sequence it is
+// best to have one message per intrepid tool in the task file.
+//  syntax to run:
+//
+//  fmanager -batch import_ascii.task
+//
+// This is simply due to the way the code receives the tasks:
+// currently it is a simple if/else if approach. Could also be
+// event based with protobuf being used for the actual event messages.
+//
+// NOTES on operations
+// Stage 1. the GUI's in Intrepid also support this language in preference to the older "nParms" style
+// file that is the basis of specifying the job to be done
+// Stage 2. at V5.0, the tool fmanager is to be used in
+// tool to actually run the any sequences of tasks involving multiple tools, much like the older
+// syntax.  Maco substitution is now available as well, with repeat blocks.. no examples shipping as yet
+// copyright  Intrepid Geophysics March 2016
+//  nb  backslash not supported for a windows drive/pathname  interpreted as an escape character
+// (c) 2017 Intrepid Geophysics
+// Sets the namespace in C++, package in Java and Python, Java scripting
+import "commontaskmodel.proto";
+import "geophysical_models.proto";
+import "filter_description.proto";
+
+
+package intrepid;
+
+//####
+//! below is list of file formats supported by import/export tool
+//  aim has been to put mostly "neutral interchange formats here", and have io Drivers available more generically in each tool
+// so the need to import/export is reduced, as soon as the format becomes one of the generally supported ones.
+enum GeophysicsFormatType {
+	AGSOARGUS = 0;  // deprecated
+	AGSOARGUSBINARY = 1;  // deprecated
+	AGSOBASOS = 2;  // old AGSO original processing format... do not use
+	AGSORAF = 3;   // old AGSO line archive format
+	AGSOGRIDBINARY = 4;  // deprecated
+	ARCSHAPE = 5;
+	ASCIILINEXYZ = 6;  // fairly standatrd line interchange ascii format
+	ASEGY = 7;   // a SEGY format file
+	ASEGGDF = 8;  // the ISO standard grid interchange format
+	ASCIICOLUMNS = 9;  // generalized colum format for line/point data
+	ASCIIIMAGE = 10;
+	ASCIIIMAGEXYZ = 11;
+	ASCIIPRINTER = 12;
+	BINARYIMAGE = 13;
+	ENCOMIMAGE = 14;
+	AGSOGRID = 15;  // deprecated
+	ASEGGXF = 16;
+	ECSGRDUTE = 17;
+	ECSGRIDFILE = 18;
+	GIPSI = 19;  // old UNIX version of geosoft grid, byte reveresed
+	GEOSOFT = 20;  // does compressed grids as well
+	GEOSOFT_DB = 21;  //  just uses the standard ioclass driver now anyway, so no need to do it this way!!
+	GEOSOFTINT = 22;  // geosoft integer 16 bit grids, to be avoided
+	GEOTIFF = 23;  // supports scan lines and tiling, up to real*4
+	GEOPAK = 24;  // very old 16 bit format from canada
+	GR820 = 25;  // radiometrics crystal pack format... a specialist import
+	ECSGPCBASE = 26;
+	LCTGRID = 27;  // FUGRO prop. format grid
+	MAPINFO = 28;  //  TAB style files
+	MOSS = 29;  // deprecated
+	NETCDFGRID = 30;  // opendap preferred
+	NETCDFXYZ = 31;
+	NEWCRESTLINE = 32;
+	NEWCRESTIMAGE = 33;  // old graham boyd format
+	PICODAS = 34;
+	PICODAS_V2 = 35;  // later generation Data acq. system formats
+	USGSDEM = 36;
+	USGSIMAGE = 37;
+	VOXELGEO = 38;
+	ZMAPIMAGE = 39;  // oil industry format, Zycor
+	KML = 40;
+	ARCASCIIGRID = 41;
+	UNSELECTED = 42;
+	MAXFORMAT= 43;  // do not use, will be removed
+}
+
+//! generalized ASCII column data, can do EXCEL etc
+message AsciiColumns_INT {
+	// import options
+	optional bool FixedLength = 1 [default = false];
+	optional int32 RecordLength = 2 [default = 80];
+	optional int32 SkipRecords = 3 [default = 0];
+	optional bool ReportDiagnostics = 4 [default = true];
+	optional bool StopOnError = 5 [default = true];
+	optional string DDF = 6;
+	// export options
+	optional bool ASEGGDF = 10 [default = true]; //  dump standard meta data and self describing field descriptors
+	optional bool ForceBlankBetweenColumns = 11 [default = false];  // do not let fields run into each other
+	optional bool SortByLine = 12 [default = false];  // geophysical databases are typically a bit of a mess internally, so force a sort by increasing line number
+	optional bool CommaDelimiter = 13 [default = false];  // do you want this file to be comma delimited?
+}
+//! generalized  ascii grid data
+message AsciiImage_INT {
+	// import options
+	optional bool FixedFormat = 1 [default = false];
+	optional int32 LeadCharacters = 2 [default = 0];
+	optional int32 TrailCharacters = 3 [default = 0];
+	optional int32 CharactersPerPixel = 4 [default = 0];
+	optional int32 SkipRecords = 5 [default = 0];
+	optional int32 Data_Sense = 6 [default = 0];
+	optional string NullCellvalue = 7;
+}
+//! generalized binary grid data
+message BinaryImage_INT {
+	optional bool PC_file = 1 [default = false];
+	optional int32 LeadCharacters = 2 [default = 0];
+	optional int32 TrailCharacters = 3 [default = 0];
+	optional int32 HeadCharacters = 4 [default = 0];
+	optional string NullCellvalue = 7;
+}
+//!  ENCOM binary grid data
+message EncomImage_INT {
+	optional bool PC_file = 1 [default = false];
+	optional int32 LeadCharacters = 2 [default = 0];
+	optional int32 TrailCharacters = 3 [default = 0];
+	optional int32 HeadCharacters = 4 [default = 0];
+	optional string NullCellvalue = 7;
+}
+//!  GeoTiff binary grid data
+message GeoTiffImage_INT {
+	optional double Minimum = 1 [default = 0];
+	optional double Maximum = 3 [default = 256];
+	optional string ColourTable = 7;
+}
+
+//!  ZmapGrid binary grid data
+message ZmapGrid_INT {
+	optional int32 CharactersPerPixel = 2 [default = 0];
+	optional string NullCellvalue = 7;  // allows for "*****"
+}
+//!  Old AGSO ARGUS format  data
+message AGSO_ARGUS_INT {
+	optional bool DoReport = 2 [default = true];
+	optional int32 Data_Style = 3 [default = 0];
+	optional ctm.BoundingBox BoundingBox = 4;
+}
+//!import Picodas format acquisition data, mostly for radiometrics data, but does multirate mag, gps, as well  McPhar use this
+message Picodas_INT {
+	optional bool KeepTraverse = 1 [default = false];
+	optional bool KeepTie = 2 [default = false];
+	optional bool KeepCalibration = 3 [default = false];
+	optional bool KeepScrub = 4 [default = false];
+	optional ctm.RepeatedString Keep = 5;
+	//  later generation options
+	optional bool Compress_Spectra 	= 10 [default = false];  // change the 1024 to 256 on import, upgrade the U16 fields to S32
+	optional bool Do_ASCII_Dump 	= 11 [default = false];  // do not create the geophy database, just write all to the log file
+	optional bool Spectra_ASCII 	= 12 [default = false];  // do not create the geophy database, just write one spectra to the auxillary file
+	optional string Spectra_Field 	= 13 [default = "ISPD"];  // integrated spectra down
+	optional string auxilary_file 	= 14 [default = "ISPD_256.txt"];  // integrated spectra, ascci dump file
+	optional bool LineInfo 			= 15 [default = false];   // reproduce the Pico report as a test (out to "Intrepid_LineInfo.txt"
+	repeated string ignore_fields 	= 16 ;  // list of fields not to import
+}
+message ARC_SHAPE_INT {
+	optional bool OnePerGroup = 1 [default = false];  // force the dbf to contain more of the attribute data
+	optional bool GroupBy = 2 [default = true]; // do you want to have the group by fields from a geophysics database?
+	optional bool NonGroupBy = 3 [default = true];  // do you want to have the ordinary fields from a geophysics database?
+	optional bool AsGeodetic = 4 [default = false]; // do you wish to force conversion back to geodetic
+}
+message MAPINFO_INT {
+	optional bool GroupBy = 2 [default = true]; // do you want to have the group by fields from a geophysics database?
+	optional bool NonGroupBy = 3 [default = true];  // do you want to have the ordinary fields from a geophysics database?
+}
+// export a voxel, resampling if necessary??
+message VOXELGEO_INT {
+	optional string XField = 1 [ default = "X"];
+	optional string YField = 2 [ default = "Y"];
+	optional string ZField = 3 [ default = "Z"];
+	optional string SignalField = 4 [ default = "Lithology"];
+	optional double Xmin = 5;
+	optional double Xmax = 6;
+	optional double Xcellsize = 7;
+	optional double Ymin = 8;
+	optional double Ymax = 9;
+	optional double Ycellsize = 10;
+	optional double Zmin = 11;
+	optional double Zmax = 12;
+	optional double Zcellsize = 13;
+	optional double Signalmin = 14;  // allow a clip on signal ranges exported as well
+	optional double Signalmax = 15;
+}
+message MapSignalToBand_INT {
+	optional double Starting_Band = 1;
+	optional double Increment = 2;
+	optional int32 Number_Bands = 3;
+	optional double OutputNull = 4 [default = -9999];
+	optional double AlongBin = 5;
+	optional double AcrossBin = 6;
+}
+// mostly to help you decide how to serve up SEGY data from an internal database repository, to suit your needs in an external package
+message SEGY_INT {
+	optional bool SaveAsMultiBand = 1 [default = true];
+	optional bool Force2D = 2 [default = false];
+	optional int32 Revision = 3 [default = 0];
+	optional bool Extra_Stanzas = 4 [default = false];
+	optional string Signal = 5;
+	optional string Depth = 6;
+	optional string CDP = 7;
+	optional string ShotPoint = 8;
+	repeated string Header_Comments = 9;
+	optional int32 OutputFormat = 10;
+	optional int32 Sample_Interval = 11;
+	optional MapSignalToBand_INT MapSignalToBand = 20;
+	}
+//####
+//! import external/ geophysical and other spatial data into a database
+//! import tool
+message Import_INT {
+	required string Input = 1;
+	optional string Format_File = 2; // mainly for output formats on display
+	required string Output = 3;
+	optional string ReportFile = 32 [default = "import_data.rpt"];// a name for a comprehensive report file from any process
+	required GeophysicsFormatType Format = 4; // primary external list of supported formats
+	optional ctm.CoordinateSystem projection = 5; // you must make data properly geolocated
+	optional ctm.CoordinateReferenceSystem coordsys = 6 [default = END]; // for vector/tensor fields
+//  some formats have special extra options, not just a declaration of the essential type
+	optional AsciiColumns_INT AsciiColumns = 7;
+	optional AsciiImage_INT AsciiImage = 8;
+	optional BinaryImage_INT BinaryImage = 9;
+	optional EncomImage_INT EncomImage = 10;
+	optional ZmapGrid_INT ZmapGrid = 11;
+	optional AGSO_ARGUS_INT AGSO_ARGUS = 12;
+	optional Picodas_INT Picodas = 13;
+	optional GeoTiffImage_INT GeoTiffImage = 14;
+	optional bool SaveSEGYAsMultiBand = 15 [default = true];  // better import via direct reading!!
+	optional string POLY = 16;
+	optional string AGSOcopy_ = 17;
+	optional string AgsoSelectFile = 18;
+	optional string ToolName = 99 [default = "import"];
+}
+
+//####
+//! export external/ geophysical and other spatial data from a database
+//! export tool
+message Export_INT {
+	required string Input = 1;
+	optional string Format_File = 2; // you can specify a format file that contains a list of fields, width, number of decimals etc.
+	required string Output = 3; // when not a grid, the suffix of the output file also plays a part in determining format
+	optional string ReportFile = 32 [default = "export_data.rpt"];// a name for a comprehensive report file from any process
+
+	required GeophysicsFormatType Format = 4;
+	optional ctm.CoordinateReferenceSystem coordsys = 5 [default = END];  // for tensors and vectors field measurments
+	//  host of possible export formats, grid, images, lines, voxets and polygon, polyline
+	optional AsciiColumns_INT AsciiColumns = 6;
+	optional AsciiImage_INT AsciiImage = 7;
+	optional BinaryImage_INT BinaryImage = 8;
+	optional EncomImage_INT EncomImage = 9;
+	optional ZmapGrid_INT ZmapGrid = 10;
+	optional AGSO_ARGUS_INT AGSO_ARGUS = 11;
+	optional Picodas_INT Picodas = 12;
+	optional GeoTiffImage_INT GeoTiffImage = 13;
+	optional SEGY_INT SEGY = 14;
+	optional VOXELGEO_INT VoxelGEO = 15;
+	optional ARC_SHAPE_INT ArcShape = 16;
+	optional MAPINFO_INT MapInfo = 17;
+	optional string ColourTable_GeoTiff = 18;
+
+	optional bool UseNulls = 23 [default = true];  // do we want to translate the internal NULL to one of our choosing?
+	optional string NullValue = 24 [default = "null"];
+//  for a line dataset  ( alias LineNumber exists), optionally pick out a range of lines for export
+	optional double	StartLine	= 25 [default = -1];
+	optional double	EndLine	= 26 [default = -1];
+	// ascii grid formatting of numbers
+	optional double OutputGridWidth = 27 [ default = 8];
+	optional double OutputGridDecimals = 28 [ default = 2];
+	optional string ToolName = 99 [default = "export"];
+}
+//###
+/**
+ *  Clever copy between databases!!!!  - Interpolate option following
+ *  To safely copy data between databases must:
+ *  1. Match keys between data bases on line, flight and survey number identification fields.
+ *  2. Both have a fiducial field to allow interpolation.
+ *  3. Both have whole number Fiducial intervals.
+ *  4. Values where the fiducial fields from each data base where the fiducial values don't overlap each other within
+ *1 fiducial increment are set to NULL.
+ *  5. If a key exists in the to data base but no match is found in the from data base set the corresponding line
+ *data to all missing.
+ */
+//
+enum DB_Operations {
+	Append = 0;  // add the "output" dataset to the "input"
+	Copy = 1;
+//	Echo = 2;
+	EditGeoReference = 3;  // NOT DONE
+	EditMeta = 4;
+	EditSurveyInfo = 5;  // NOT DONE
+	Command = 6; // NOT DONE
+	Delete = 7;  // delete a dataset
+	Interpolate = 8;  // clever copy from dataset to dataset, also handling differing sampling intervals
+	Rename = 9;  // rename the "input" to the "output"
+	RemoveDuplicates = 10;  // NOT DONE
+	Spawn = 11;  // fire off new processes  // NOT DONE
+	Statistics = 12;  // do long form statistics on the input dataset
+	tTest = 13;  // compare two populations for statistical equivalence
+	CopyTable = 14;  // same as save as in dbedit, convert from one database format to another ge *.edi to *..DIR
+	CopyGrid = 15;   // same as dbedit SaveAs, but grid format change only
+	//surfaces jDF_NODDY, jDF_LAS, jDF_StanfordPLY_File_Format,jDF_DXF_AUTOCAD, jDF_BREP,jDF_VULCAN, jDF_GOCAD:	// This is actually the tsurf
+	CopySurface = 16;   // does any triangulated surface copy basically (ts, dxf, vulcan, etc), format switcher
+	CopyMeshGrid = 17;   // does an igmesh copy basically
+	CopyVoxet = 18;   // voxet create like
+	//  unfinished
+	// zip
+	// email
+}
+//###
+//  simple operations on mostly line/point datasets
+message DataBase_Manipulation_INT {
+	optional string Input = 1;  // the main reference dataset
+	optional string Output = 2;
+	repeated string InputList = 3;  //Lists of datasets to add to the exitsing
+
+	optional DB_Operations Action =4;
+	// when doing an Append, you can give a list of fields to restrict this too, others will be NULLed filled
+	repeated string Fields = 30;
+	optional int32 Max_Frequencies = 31 [default = 1];  // for the copy table option, when creating a multiband ( multi-freq field), allow for more frequencies
+	// Command parameters
+	optional string Script = 20;
+	optional string Args = 21;
+	optional bool Pause = 22 [default = false];
+	//  Interpolate parameters,  only available for line data!!
+	optional string FromLineNumber = 10;
+	optional string FromFiducial = 11;
+	optional string ToLineNumber = 12;
+	optional string ToFiducial = 13;
+	// Remove duplicates parameters
+	optional double Precision = 50;
+	repeated string DuplicateFields = 51; // list of fields to check for duplicates
+	// edit survey info, or set the aliases in a database
+	optional ctm.FieldAlias Alias_Code =62 [default = FA_X];
+	optional string Alias_String = 63; // can use explicit string eg "X", "input", needs to be an actual field reference
+	// or, in a generalised syntax, for any that you want to invent
+	optional string myField = 60;
+	optional string myAlias = 61;
+	// geo-reference parameters
+	optional ctm.CoordinateSystem Location = 70;
+	//  set meta data into the "isi" file
+	optional string Keyword = 80;
+	optional string Block = 81;
+	optional string Value = 82;
+
+	optional string ReportFile = 950 [default = "fmanager_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "fmanager"];
+}
+//###
+//! spread sheet editing.. create/manipulate new fields and also grids/voxets tool functions
+// please be aware that grid/voxet ops should be local inside a directory, not sub-directories
+enum OperationType {
+	OpenField=0 ; // can be a grid/voxet or a database
+	CreateField = 1 ;  // only a database op
+	Replace =2;
+	DeleteField = 3;
+	ConditionalDelete =4;
+	SplitGroup =5; // only a database op
+	SaveAs =6;
+}
+//  here is the action message, which can be repeated any number of times in an operation on a database or a grid/voxet etc
+//  The in-built list of supported function is long, apart from normal maths
+// functions can be referenced any time a string condition is mentioned below
+// eg Initial, IfCondition, ThenAction
+message SpreadSheet_Actions {
+	enum DeleteAction {
+		Rows=0;
+		Groups=1;
+	}
+	required OperationType Type = 1 [default = OpenField];
+	// OpenField(s) and CreateField and DeleteField
+	// Field name should start with an alphabet or _, Field name should not contain any special characters, INDEX is a reserved name
+	optional string Name =2;  // what field are we to operate on?
+	optional string Save =3 [default=""];  // required new field name
+	// CreateField
+	optional ctm.GridDataTypes Dtype =4 [default= IEEE4ByteReal];  // warning, must match the datatype required by signal field and any choices of dynamic manipulations
+	optional int32 Width = 5 [default = 10];
+	optional bool GroupBy = 6 [default = false];  // is new field a GroupBY?
+	optional string Initial = 7 [default=""];  // what is the new default value.. can be a reference to another field, and also use the builtin functions etc
+	optional int32 Bands = 8 [default = 1];
+	optional ctm.CoordinateReferenceSystem coordsys = 9 [default = END]; // for vector/tensor fields
+	// Replace
+	optional string IfCondition =10 [default=""];  // generic parser of fields and arithmetic, to pose a condition
+	optional string ThenAction =11 [default=""];  // set the field value when IF is positive
+	optional string ElseAction =12 [default=""];  // set the outcome when negative
+	// provision to pick out parts of a database by row/column/group etc
+	optional int32 FromGroup =13 [default =-1];
+	optional int32 FromSamp =14 [default=-1];
+	optional int32 ToGroup =15 [default=-1];  // default is the whole of the database, or last group
+	optional int32 ToSamp =16 [default=-1];  // default is the whole set of records for this group
+	// ConditionDelete
+	optional string DeleteIf =17 [default=""]; // generic parser of fields and arithmetic, to pose a conditional delete
+	optional DeleteAction deleteAction =18 [default=Rows];  // record at a time, or whole groups at a time
+	optional string SplitGroupIf =19 [default=""]; // generic parser of fields and arithmetic, to pose a conditional split of a group into to two
+}
+// main entry for repeated actions
+// can work on databases , grids and voxets, provided there is a driver for the required format
+// this tool works live on the database.. there is no roll-back!!
+//  The in-built list of supported function is long, apart from normal maths
+// includes many to convert/create compound geophysics signal types from their parts eg tensors
+message SpreadSheet_INT {
+	repeated SpreadSheet_Actions Action = 1;
+	optional string ReportFile = 70 [default = "dbedit_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "dbedit"];
+}
+
+// sample from one dataset into another
+// can be grid, lines, points etc
+// also allow a new flight/survey plan to be specified
+// good for all the exotic data field types ( tensor, vector, rotations) as well as scalars
+message Dataset_Resampler_INT {
+	enum DRRunTypes {
+		Extract_Profile=0;  //  sample along the new profile lines
+		EndPoints_To_Dataset=1;  // just do the end points
+	}
+	optional string ReferenceGridDataset = 1;  // must have one of these three
+	optional string ReferenceLineDataset = 2; //
+	optional string ReferencePointDataset = 3; //
+
+	// Is the trace of what you want to resample onto one of the following?
+	// 1.  A digitised trace
+	// 2.  A table dataset
+	// 3.  A point dataset
+	// 4.  A flight plan
+	optional string ProfilePathDataset = 4;  // existing name of a datset to sample into
+	optional string OutputProfilesDataset = 14;  // if you need to create a new profile/line/ dataset  eg survey plan
+	optional string OutputExtractedDatasetField = 5;  // what is the field name of the new field
+
+	required DRRunTypes RunType = 6 [default = Extract_Profile];
+
+//  how wide, and how often down a profile
+	optional double CorridorWidth = 7 [default = 1000];
+	optional double SamplingInterval = 8 [default = 1000];
+	optional int32 CurrentBand = 9 [ default = 0];
+	optional int32 NumberOfBands = 10 [default = 1];
+	// make a flight plan from a set of irregular profile end points you supply
+	repeated ctm.Point2d ProfileEnds = 11;
+// or
+// flight path design template ...... you cannot do both!!
+	optional double Origin_X =12 [default= 0.0];
+	optional double Origin_Y =13 [default= 0.0];
+	optional double Lines_Azmiuth =15 [default=0.0];  // North
+	optional double TraverseSeparation = 16 [default = 200]; // meters
+	optional double TraverseExtension = 17 [default = 0];
+	optional int32  TraverseNum = 18 [default = 10];
+	optional double TieSeparation = 19 [default = 1000]; // meters
+	optional double TieExtension = 20 [default = 0];
+	optional int32  TieNum = 21 [default = 4];
+	optional string ReportFile = 70 [default = "datset_resampler_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "dataset_resampler"];
+}
+//###
+/**
+ *  Survey Distances : Calculate the length of a traverse.
+ *
+ *  Tony Luyendyk : March, 1994.
+ *
+ *  Given two fidClass buffers containing the (x,y) coordinates of a flight line the routine calculates the total
+ *length of the line. Gaps in the line are ignored but the number of gaps and the total length of the gaps are also
+ *calculated.
+ *
+ *  Notes.
+ *
+ *  1. Accuracy.
+ *
+ *    Distance calculations can be performed in either 1 of 2 modes. A. Accurately - the distance between each
+ *successive pair of (x,y) coordinates are individually calculated and summed. B. Inaccurate - distances are
+ *calculated from the end points of each well defined section of the line and summed. This assumes the flight path
+ *can be well approximated by a straight line.
+ *
+ *  2. Projection. The projection of the data is described by the passed object
+ *    "projection". A. If the data is in unprojected units the (x,y) data is assumed to be in longitudes,latitudes
+ *and all distances are calculated along the surface of the sphere using Robbin's formula. That is, actual distances
+ *along the ground with no projection used. B. If the data is in projected units they are assumed to be in metres and
+ *the (x,y) coordinates are used as is.
+ *
+ *  3. In all cases, gaps are detected and ignored in the distance calculations. The total length of all gaps found
+ *are computed from their bounding well defined points as a straight line segment. The definition of a gap has been
+ *altered to include any jumps in the fiducial which exceeds one standard deviation from the mean
+ *
+ *  Parameters Input fid		- fidClass buffer containing fids for the (x,y) pairs (added by Lillian ,21/06/96	)
+ *Xcoordinate - fidClass buffers containing the (x,y) pairs. Ycoordinate projection  - MapProj object describing the
+ *projection of the (x,y) data. Altitude    - Mean survey height above sea level. Used to improve the accuracy of
+ *distance calculations along the spheroid by allowing for the actual height above the survey of the flight path.
+ *  accurate    - Logical set to TRUE if calculations are to be carried out as accurately as possible. Output dist
+ *        - Calculated length of the line in metres.
+ *  nGaps       - Number of gaps occuring in the line. Gaps at the very start or end of the line are ignored.
+ *  distGaps    - Calculated length of all gaps.
+ *
+ *  Distances returned in metres
+ *
+ *  Return value.
+ *  0 - ok.
+ *  -1 - Length could not be calculated as path contained no two well defined consecutive (x,y) pairs.
+ */
+message SurveyDistance_INT {
+	required string DataBase = 1;  // typical airborne survey database
+	optional bool SelectLines = 2 [default = false];  // do the whole survey
+	optional bool PlotFlightPath = 3 [default = false];
+	optional bool Accurate = 4 [default = true];
+	optional double Altitude = 5 [default = 0];
+	optional int32 MinSurveyNumber = 6 [default = 0];
+	optional int32 MaxSurveyNumber = 7 [default = 999999];
+	optional int32 MinFlightNumber = 8 [default = 0];
+	optional int32 MaxFlightNumber = 9 [default = 999999];
+	optional string MinLineNumber = 10;
+	optional string MaxLineNumber = 11;
+	optional string ReportFile = 70 [default = "survey_distances.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "sdist"];
+}
+//###
+/**
+ *  Cluster Point/Line datasets  (djf 2014)
+ * An important new toolbox for geophysical datsets
+ *
+ * typically uses recursion to improve the clustering
+ * a. Euler solutions,
+ * b. tensor strike/dip foliation estimation targetting zones for grids of FTG data
+ * c. clustering worms, into a 3D version of the data, prior to the dip work
+ * d. Naudy and building worms/dykes from the HOT Spot solutions.
+ * e.  microseismic event clusters and fault surfaces
+ * f.  reducing a surface expressed as a point cloud, to cluster centres for planar portions
+ * *     and estimates of the dip, dip dircetion for each plate.. good for Geomodeller, and seismic horizons
+ *
+ *
+ *  This tool evolves taking note of various efforts in a few disciplines,
+ * but mainly those related to edge detection, fault plane delineation ie earth sciences rather than
+ * isotropic events
+ *
+ *
+ * papers taken into count of -
+ "Automatic reconstruction of fault networks from seismicity catalogs: Three-dimensional optimal anisotropic dynamic clustering"
+ * Ouillon, et al,, Journal Geophysical Research, 2008
+ * This introduces anisotropic clustering for fault planes.
+ * It also introduces the concept of cluster location uncertainty -
+ * once this threshold is met, stop trying to do any further improvements.
+ *  Typically, this work could be done using distance units of kilometers, so this needs support as well
+ *
+ * The prior work in Intrepid has stages in clustering ( developed for Euler work)
+ *              0 no clustering analysis
+ *				1 first stage clustering analysis, micro clustering
+ *				2 second stage clustering analysis, micro clustering and fusion of the clusters.
+ *              3 third stage clustering analysis, micro clustering and fusion of the clusters resplitting and reforming.
+ *
+ *   Treatment of horizontal distance seperation
+ *      Part of the horizontal distance with respect to Dx of the points that belong to the same cluster.
+ *   It is used to calculate MaxDis, the maximum distance allowed for two solutions to belong to the same
+* Cluster Radius
+*   Based upon a T test of all the samples that go into anyone cluster multiplied by the standard deviation
+*      of each X/Y/Z component of the position coordinates.
+*   FacMaxRadCon: Factor that multiplies and upscales the maximum radius of confidence in the cluster fusion.
+
+//==TODO  =================================================================
+// Performs a cluster analysis on directions defined by "Dirn of Dip"
+// and "Dip". Cluster analysis is that given by
+// Shanley, R.J. & Mahtab, M.A., Delineation and Analysis of Clusters
+// in Orientation Data, Mathematical Geology, Vol 8, No 1, 9-23, 1976.
+//===================================================================
+  The clustering is based on classification in the same category all the points whose horizontal distances is less
+	 than PerDis To accelerate the clustering algorithm a divide and conquer technique was implemented which processes
+	 the solutions in batches with a maximum number of points given by the internal variable MaxNumPoi. To reduce the
+	 number of clusters, an optional fusion of clusters algorithm was implemented. This algorithm puts in the same
+	 cluster all the clusters whose horizontal center of gravity distances are less than FacMaxRadCon*MaxRadCon, where
+	 MaxRadCon is the maximum horizontal radius of confidence of all the clusters and FacMaxRadCon is a factor chosen by
+	 the user. The reasonable values for this factor are equal or greater than one. The clusters (and the associated
+	 points) with less points than the number shown by the internal variable MinNumPoiClu are eliminated to improve the
+	 significance of the statistical analysis of the clusters.
+ Outputs a cluster points database
+ *
+ * the OpenGL 3D viewer option shows stages of the clustering forming - quite useful
+*/
+enum Cluster_Algorithm {
+	 	NoClustering =0;  // no clustering analysis, import, nothing to write out
+	 	IsoClustering=1;  // bin the observations,  and ensure close pts to the centre
+// !HorizontalFusion - Recursive Fusion of the clusters whose
+// a.  clusters circles overlap in the horizontal plane ( standard deviation of X & Y)
+// b. horizontal center of gravity separation distances is less than a threshold value
+//   and the new fused cluster still has points near the COG
+	 	HorizontalFusion=2; // 2D horizontal clustering analysis, and fusion of the clusters, eliminate small cluaters
+	 	ResplitClustering=3;  // clustering analysis, micro clustering and fusion of the clusters resplitting and reforming.
+	 	Anisotropic=4; // look for fault planes, Ouillon method  ie Landers Earthquake, recurse while yuo break up the point cloud
+	 }
+message ClusterControl_INT {
+	optional  Cluster_Algorithm ClusterAlgorithm = 1 [default = IsoClustering]; // indicating the clustering analysis level.
+	optional double PerDistance = 2 [default = 900.0];      // Part of the horizontal distance with respect to Dx of the points that belong to the same cluster
+	 													// It is used to calculate MaxDis, the maximum distance allowed for two solutions to belong in the same initial cluster.
+	optional double MaximumSeparationClusterToFirstPoint = 3 [default = 50.0]; // maximum a centre of a cluster can be from at least one observation
+	optional double Factor_MaxRadius_Confidence = 4 [ default = 1.2]; //Factor that multiplies any pair clusters radii, to examine a possible first fusion.
+		// It is used to calculate MaxDisFus, the maximum distance allowed for two clusters to be fused. Recommended to be equal or bigger than one.
+	optional int32 Minimum_Number_Points  = 5 [default = 5];  // Eliminates clusters (and the associated points) with less than MinNumPoiClu
+																// to improve the significance of the statistical analysis of the clusters
+	optional double Location_Uncertainty = 6 [ default = 1.0];  //for anisotropic fault cluster, stop when location out of plane is less than this
+	 //for anisotropic fault cluster, stop when number of resursion steps exceeds this, if not before
+	 // for horizontal fusion, you are joining, not splitting, stop after this manner leve;ls of recursion  typical value is 9, should be odd
+	optional int32 Maximum_Recursion_Steps = 7 [ default = 500];
+	optional int32 Frequency_Cluster_Forming_Reports = 8 [ default = 11];  // for anisotropic forming, at what freq to report the cluster state?
+	optional bool Post_recursion_filtering_checks 			= 9 [default = true];  //control post culling of plate clusters
+	optional bool Cull_cluster_uncertainties 			= 10 [default = true];  // cull bad ones with high uncertainty
+	optional bool Restrict_Plate_Dips 			= 11 [default = true];  // blow away any with bad dis
+	optional int32 MaximumDipRange = 12 [ default = 20];  // for anisotropic forming, at what freq to report the cluster state?
+
+// The rest are deprecated
+enum Cluster_Level {
+	 	zeroStage =0;  // no clustering analysis
+	 	firstStage=1;  // first stage clustering analysis, micro clustering
+	 	secondStage=2;  // second stage clustering analysis, micro clustering and fusion of the clusters.
+	 	thirdStage=3; // third stage clustering analysis, micro clustering and fusion of the clusters resplitting and reforming.
+	 }
+	optional  Cluster_Level ClusterLevel = 71 [default = secondStage];
+	 													// It is used to calculate MaxDis, the maximum distance allowed for two solutions to belong to the same cluster.	 									// calculate MaxDisFus, the maximum distance allowed for two clusters to be fused. Recommended to be equal or bigger than one.
+}
+// 3d openGL visualization window of the before/after cluster
+message View3D_Points {
+//  3D visualization, an OpenGL 3D VTK display window
+	optional bool show_3D_viewer 			= 1 [default = true];  //control the pop-up of the viewer
+	optional double project_zmin 			= 3 [default = -3000.0];  // depth of the 3d project window, only needed if not in 3D to start with ( eg grid data)
+	optional double project_zmax 			= 4 [default = 500.0];
+	optional bool show_original_points 		= 5 [default = true];  // truncate the fault lengths to geophysical observed data
+	optional bool show_cluster_shape 		= 6 [default = true];  // show the bounds as either sphere or plane
+	optional bool show_original_signal_grid = 8 [default = true];  // show signal grid as a grey scale image
+	optional bool show_DTM_grid 			= 9 [default = true];  // show the DTM as a true warped 3D surface
+	optional bool show_Cluster_FormingStages = 10 [default = false];  // show the progressive 3D graphics during cluster forming
+	optional bool show_dip_calc_profiles 	= 11 [default = false];  // profile sampling line for 2D tensor dip calcs
+	optional bool show_interface_foliation	= 12 [default = false];	// construction points for 3D surfaces, anisotropic clusters only
+	optional bool show_average_2DStructureEigenvectors = 13 [default = false]; // the average cluster tensor 3D ellipsoid, not spatial data
+	optional bool write_vtk_clusterPoints	= 14 [default = false];  // dump the cluster points to  vtp glyphs
+	optional string vtk_clusterPointsFile = 15 [default = "cluster.vtp"];// a name for a file of XML vtp glyphs
+	optional double vertical_scale			= 16 [default = 1.0]; // for the 3D viewer, what exaggeration??
+	// show the cluster discrete plates as one warped 3D surface for anisotropic
+	//  show each tensor derived fault implicit surface
+	optional bool show_ImplicitFunction_Fault = 17 [default = true];
+		//  show each tensor derived near horizontal tilt  implicit surface (Yellow)
+	optional bool show_ImplicitFunction_Tilt = 19 [default = false];
+	optional double Minimum_Fault_Vertical_Extent = 18 [default = 1000];  //  1 km, used for geometry of fault object created
+}
+enum ClusterDatasetType {
+	Generic2D = 0;  // Pretty much just X,Y points
+	Generic3D = 1;  // Pretty much just X,Y,Z points  ( OK for earthquake work, no magnitude of strike/dip/rake)
+	EulerSolutions=2;  //  requires XYZ,SI,alpha,beta,etc points from Euler/Werner
+	Tensor_2DFaults=3; // requires XY strike,tilt,Eigen1,Eigen2, Eigen3;  2D foliation, prior to the dip calculation, from the convolve tool
+	Unit_Vector = 4;  // Cluster analysis by directions defined by "Dirn of Dip" and "Dip".
+}
+// *************  tensor dip clacs workflow variation *****
+// reference SEG 2014 abstract -Structural geology observations derived from full tensor gravity gradiometry over rift systems
+// use convolve filtering on an FTG grid to find known points on a significant 2D structure eg fault/contact
+// now use clustering to see if enough support for a dip calculation
+// extract tensor samples at centroid of cluster, along a profile at right angles to the strike!!
+// to build the curve, at least 10 samples required, plus far field 0,0
+// rotate the tensors into a local coordinate frame using averaged eigenvector
+// so Gxx, Gxz are aligned locally across the fault
+// least squares best fit the ellipsoid, check its variance and stability
+// find the co-dip
+// convert to dip/strike
+// find the throw
+message FTG_Fault3D_Calc {
+	optional ctm.MeasuredGrid_INT InputGridName	= 1;  // primary FTG grid dataset to do work on!
+	// move dtm to main block, for more general use
+//	optional MeasuredGrid_INT ElevationGridName		= 2;  // primary surface topography grid, gravity is assumed to be measured on this surface
+	optional ctm.MeasuredGrid_INT drape			= 4;  // possile flying height drape grid, or mean clearance
+	optional bool disallow_poor_low_dip_estimates = 10 [ default = true]; // marginal estimates for dip  treatment
+	optional int32 default_low_dip_estimate = 11 [default = 40];  // substitute dip value when we have a low dipp estimate
+	optional Gravity_Units Units 			= 40 [default = MILLIGALS];  // require to scale the upwards profiles when modelling for dip
+	optional bool dump_dip_logs 			= 41 [default = false];   // dump profiles and reports for fault/dip calculations
+	// properties of the 2D block model used to figure out the dip
+//	optional FAULT_ORIGIN origin_method 	= 42 [default = FROM_WORM]; // estimate where the fault outcrops ( toe position)
+//	optional double Fault_Thickness 		= 44 [default = 0.0];  // if zero, let the value be estimated during dip calcs, units in meters
+//	optional double Fault_Block_Depth 		= 45 [default = 0.0]; // depth to top of fault block, if zero, let the value be estimated, units meters
+	optional string Contact_Profiles 		= 43 [default="output"];  // a directory for csv files suitable for Excell display of profiles
+//	optional int32 subsample_dtm 			= 46 [default = 1];  //  for high resolution DTM, you may want to subsample, to speed things up
+	//  specific tensor grid eigenvalue/noise params
+	// assume that we will never get a perfect value for the Gyy of zero, due to noise in signal, so set noise floor in Eotvos
+	optional double Tyy_minimum_test 		= 47 [default = 2.0]; // absolute value in Eotvos, for Gyy approximation for a 2D body in local rotated system
+	optional double minimum_Total_Vertical_Plane_Derivative	= 48 [default = 10.0]; // minimum value in Eotvos, for Total Vertical Gradient before a dip calculation should be considered - avoid low anomalies
+	optional int32 Minimum_2D_Responses		= 49 [ default = 11];  //  minimum number of profile observation points to record a 2D body
+	optional bool Correct_For_FaultBlock_Tilt = 50 [default = true]; //  tilt the eigensystem for 2D body
+	// next option also requires report logging to be on
+	optional bool capture_gravity_profiles_from_dip_calcs 	= 60 [default = false];  //  a profile is created and stored/shown at right angles to each fault structure for dip calc
+	optional bool Trim_Faults_to_DTM 	= 61 [default = false];  // the implicit function representation of a fault is trimmed to stop at the DTM
+	// all faluts are treated as limited.
+
+}
+//###
+//! spatial point clustering tool functions, can work in 2D and 3D
+//  designed to also allow you access to any process that uses clustering in Intrepid
+message ClusterAnalysis_INT {
+	required string DataBase = 1;  // must be 3D points database, with XYZ location
+	required string OutputCluster = 2;  // reduce the points to a cluster dataset
+	optional ctm.MeasuredGrid_INT InputGridName	= 3;  // possible original grid dataset !
+	// either on shore or off-shore ( Bathymetry)
+	optional ctm.MeasuredGrid_INT ElevationGridName		= 4;  // primary surface topography grid,
+	optional ClusterDatasetType ClusterType = 5 [ default = Tensor_2DFaults];
+	optional ClusterControl_INT Cluster=8;
+	optional View3D_Points view = 10;
+	//  earthquake proint locations, are often presented in lat/long.. no good for clustering
+	// do not set this, unless you have to move from a Geodetic to a projected coordinate system
+	optional ctm.CoordinateSystem Projection = 11;  // may need to convert from GEODETIC to a projected dataset
+	// may also need to convert meters to kilometers for earthquake locations, leave out for most uses, as unitds are consistent.
+	optional ctm.Distance_Units Distance_Units = 13 [ default = meters];
+	// control dip, dip dierection, depending upon elevation/depth being used as a positive
+	optional ctm.CoordinateReferenceSystem ElevationCoordinateSystem = 14 [default = END]; // are we doing Elevation or Depth positive?
+//	optional double Maximum_Point_separation = 20 [default = 5000.0]; // no cluster if values separated by more than this distance
+//	optional double MinimumDepth = 21 [default = 0];  // set to exclude shallow solutions
+//	optional double MaximumDepth = 22 [default = 5000]; // restrict solutions to nearer surface bodies
+	optional grid_subset_INT Subset = 30;  // use if you just want a subset of your data, on the initial unprojected XY data
+	// now specials for the 2D dip calcs for tensor grids, once a cluster is found
+	optional FTG_Fault3D_Calc tensor_dip = 35;
+	//
+	optional bool doLog = 40 [default = true];
+	optional bool Generated_By_GUI = 50 [default = false];
+	optional string ReportFile = 41 [default = "cluster_points.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "Cluster"];
+}
+
+//###
+//! spatial grid convolution filtering tool functions
+// 3 modes of running
+enum ConvolveAlgorithmType {
+		UserDefinedKernels = 1;  // ConvolveFilterType, ConvolveKernel, from a user accessible kernel library
+		PresetKernels = 2;    // ConvolveFilterType, all the predefined, except for tensor ops
+		TensorGridOperations = 3;	// TensorGridConvolveFiltering
+}
+enum ConvolveFilterType {
+	ConvolveKernel=0;  //  any standard 3*3, 5*5, 7*7 etc finite difference kernel
+	Median=1; // return median in a box
+	AGC=2;  // return a automated gain control grid enhancement
+	CNORM=3;  // similar to AGC, but a C normalization
+	TERRACE=4;  // USGS grid terrace algorithm
+	Curvature=5;  // high resolution curvature calc, to check on gridding of potential fields data
+	Tensor_QC=6;  // tensor grid specific filters, see next list of  options
+	Gaussian=7;  // smooth with anti-alias Gaussian
+}
+enum TensorGridConvolveFiltering {
+	QC = 0;  // return Frobenius Norm of Estimate at centre of Box - measured value
+	Potential=1; // convert a tensor grid back to its potential
+	Smoothed_Potential=2; // convert to potential, then smooth it
+	Potential_StdDev=3; // estimate the Standard deviation of the potential locally
+	FourierCoeffs=4; // dump 48 band coefficient grid of truncated fourier series
+	FourierErrors=5; // show a grid of estiamted error in the potential/FTG calc method
+	SmoothedComponents=6; // estimate a smoothed FTG at each cell based upon the neighbours
+	Grid_Vertical_Component=7; // convert FTG to a vertical component of Gravity via the fourier series method
+	Solve_2DEigenSystem=8;  // convolve tensor grid, looking for 2D body, dump points database with strike and quality
+	Frobinius_Norm_Error = 9; // When we have redundant observations, estimate the error in a convolve window.
+}
+enum TensorNormCase {
+	zero=0;
+	one = 1;
+	two = 2;
+}
+// 2D grid filters using spatial convolution methods
+// traditional filters are specified in kernels compatible with the ERMapper standard
+// you can thus make your own filters and add them to the library if you follow that template
+// The predifined filetrs above and beyond that approach includes
+// median, AGC, CNORM, terracing
+//  all the tensor grid filters use the truncated 3D Fourier series methods, constrained to just 3*5
+// this is because for third order approxiamtions of the potential, a minimum of 10 observatiuons must be used.
+// also supports tensor grids
+message ConvolveGrid_INT {
+	required string Input = 1;
+	required string Output = 3;
+	optional ConvolveFilterType Type = 4 [default = ConvolveKernel];
+	// main entry for tensor grid filtering using truncated 3D Fourier series methods
+	optional TensorGridConvolveFiltering Tensor_Option = 5 [default = QC];
+	optional TensorNormCase norm = 2 [ default = one];
+	// options for a standard convolution kernel filter on a grid
+	optional string KernelName = 6; // chosen from the kernel directory
+	optional bool Residual =7 [default = false];
+	optional bool NormaliseWeights =8 [default = false];
+	optional bool ChopWeights =9 [default = false];
+	optional bool NullWeights =10 [default = false];
+
+	optional string Description = 20;
+	optional string KernelType = 21; // ??
+	optional int32 Rows = 22 [default = 3];
+	optional int32 Columns = 23 [default = 3];
+//	optional bool OkOnSubsampledData =24 [default = false];  // cant see why we need this
+	optional int32 ScaleFactor = 25 [default = 0];
+	repeated double Weights = 26 ;
+
+	optional int32 Window = 27 [default = 21];  // for median and cnorm filters
+	optional double CNORM_Mean = 28 [default = 0.0];
+	optional double CNORM_StdDev = 29 [ default = 100.0];
+	optional double CNORM_Alpha = 30 [ default = 1.0]; // weight for means
+	optional double CNORM_MaxGain = 31 [ default = 10000.0];
+	// USGS terracing algorithm
+	optional int32 Terrace_Iterations = 32 [ default = 90];
+	optional int32 Terrace_Percentage_Flattened = 33 [ default = 95];
+	optional double Terrace_Minimum_Change = 34 [default = 2];
+	//  specific tensor grid eigenvalue/noise params, output a points database
+	// actually, the strike direction depends upon the coordsystemtype!!
+	optional double Tyy_minimum_test 		= 47 [default = 2.0]; // absolute value in Eotvos, for Gyy approximation for a 2D body in local rotated system
+	optional double minimum_Total_Vertical_Plane_Derivative	= 48 [default = 10.0]; // minimum value in Eotvos, for Total Vertical Gradient before a dip calculation should be considered - avoid low anomalies
+	optional int32 Minimum_2D_Responses		= 49 [ default = 10];  // in a 3*5 convolve, minimum number oif cells to record a 2D body
+	optional ctm.CoordinateReferenceSystem CoordinateSystemType = 46 [default = END];  // tensor/vector
+	optional bool Generated_By_GUI = 51 [default = false];
+	optional string ReportFile = 70 [default = "cfilter_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "cfilter"];
+}
+//###
+//! gravity processing and utility tool functions
+enum Gravity_Process_Option {
+	AGSOField = 0; // Geoscience Australia ASCII format import
+	AGSOLoop = 1; //loop level and reduce to principal facts
+	SCINTREXField = 2; // CG3 ascii data import
+	SCINTREXLoop = 3; // loop level, principal facts for scintrex sourced readings
+	SCINTREX_CALIBRATE = 4; // calibrate a scintrex gravity meter
+	CG5Field = 5; // CG5 binary data import (sgd)
+	DumpCG5 = 6; // CG5 dump to ascii for checking
+	MGS6Field = 7; // MGS6 ascii data
+	AIRSEAIIField = 8; // AirSeaII ascii data
+	FREE_AIR = 9; // do a free air correction on a database
+	REVERSE_FREE_AIR = 10; // do a reverse calc
+	SIMPLE_BOUGUER = 11;
+	REVERSE_SIMPLE_BOUGUER = 12;
+	BULLARD_B = 13;
+	REVERSE_BULLARD_B = 14;
+	CALC_EOTVOS = 15; // estimate the eotvos correction for moving platform gravity measure
+	REVERSE_EOTVOS = 16;
+	THEORETICAL = 17; // create a field of the theoretical gravity model
+	EarthTide = 18; // create an earthtide field in database
+	TERRAIN = 19; // do a terrain correction calculation
+	TOWGS84 = 20; // convert a IGSN71 gravity reading to WGS84
+	POTSDAM_IGSN71 = 21; //convert a POTSDAM gravity reading to IGSN71
+	STABILIZED_PLATFORM_CALIBRATION = 22; // L&R S meter calibration calculation
+	STABILIZED_PLATFORM_CORRECTION = 23; // L&R S meter, remove auxiliary accelerations, leave the gravity
+	STABILIZED_PLATFORM_RECONSTRUCT = 24; // L&R S meter, recalc the gravity signal from parts
+	STABILIZED_PLATFORM_CALIBRATE_CORRECT = 25; // L&R S meter, do calibration then the correction, line by line
+	STABILIZED_PLATFORM_RECONSTRUCT_CC = 26; // L&R S meter, create the Cross Coupling field from the parts.
+	// methods for  FTG/Bell/ArkEx
+	// you must set "alias" for inline1, inline2,inline3, crossline1, crossline2, crossline3, carousel angle to use this option
+	CONVERT_BELL_TENSOR = 27; // create a gravity gradient tensor from INLINE, Crossline and carousel angle
+	INVERT_BELL_TENSOR = 28; // reverse an FTG reading back to inline, crossline parts
+	STABILIZED_MICROG_LACOSTE_AIRSEAII = 29; // L&R S meter, use new processing scheme, do all in one go
+	STABILIZED_MICROG_LACOSTE_MGS6 = 30; // L&R S meter, use new processing scheme, do all in one go
+}
+
+enum Gravity_Meter_Drift_Model {
+	Short_Term_Linear = 0; // mainly point to point
+	Long_Term_Linear = 1;
+	Long_Term_Polynomial = 2; // more complex drift model for your meter
+}
+// list of allowable units in the tool
+enum Gravity_Units {
+	NO_UNIT = 0;
+	MILLIGALS = 1;
+	MICROMETER_SEC2 = 2;
+	MICROGALS = 3;
+	EOTVOS_UNITS = 4;
+}
+// supported theoretical equations in the tool
+enum Gravity_Datum {
+	POTSDAM = 0;
+	IGSN71 = 1;
+	ISOGAL80 = 2;
+	WGS84 = 3;
+	IGSN71_AGSO = 4;
+	GA07 = 5; // alias for AAGD07
+	ABSOLUTE_GRAVITY = 6; // basically, independent of any model
+	AAGD07 = 7; // the official name of this datum
+	LAST_DATUM = 8;
+}
+// now for the context in which a gravity observation has been made
+enum Gravity_Terrain_Case {
+	LAND_SURFACE = 0; // standard case
+	LAND_SUBSURFACE = 1; // in a mine
+	OCEAN_SURFACE = 2; // ship bourne
+	OCEAN_SUBMERGED = 3; // submarine
+	LAKE_SURFACE_ABOVE_SL = 4; // on a lake
+	LAKE_BOTTOM_ABOVE_SL = 5;
+	LAKE_BOTTOM_BELOW_SL = 6;
+	LAKE_SURFACE_ABOVE_SL_BOT_BELOW = 7;
+	LAKE_SURFACE_BELOW_SL = 8;
+	LAKE_BOTTOM_SURFACE_BELOW_SL = 9;
+	ICE_CAP_BOTTOM_BELOW_SL = 10; // on ice
+	ICE_CAP_BOTTOM_ABOVE_SL = 11; // airborne
+	AIRBORNE_OVER_LAND = 12; // in the air
+	AIRBORNE_OVER_SEA = 13;
+	AIRBORNE_OVER_ICE_BOTTOM_BELOW_SL = 14;
+	AIRBORNE_OVER_ICE_BOTTOM_ABOVE_SL = 15;
+	LAND_OCEAN_MIXED = 16; // special purpose
+	OCEAN_LAND_MIXED = 17;
+}
+//  L&R processing option for survey
+enum Marine_Gravity_Selection_Type {
+	PROCESS_ALL = 0; // do the whole survey
+	MARINE_LINE_SELECTION = 1; // pick out a line/cruise
+}
+
+//  L&R filtering options for survey
+enum Marine_Filter_Type {
+	EXACT_BLACKMAN = 0;
+	FULLER_FIR = 1;
+	RC_IIR = 2;
+}
+message Marine_Filter_Parameter {
+	optional Marine_Filter_Type FilterType = 1 [ default = FULLER_FIR ]; // filter to use
+	optional int32 FilterWidth = 2 [ default = 120 ];
+	optional int32 FilterSteps = 3 [default = 6 ];
+}
+// List of datapoints to null in corrected gravity
+message Selection_Range {
+	optional double From = 1;
+	optional double To = 2;
+	optional double Value = 3;
+}
+message Data_Replacer {
+	optional string DataSet = 1;
+	optional string DataField = 2;
+	optional int32 Group = 3;
+	repeated Selection_Range Range = 4;
+}
+// Gravity meter definitions
+message Gravity_Meter_Marine_Settings {
+	optional double BeamScaleFactor = 1 [default = 1.0];
+	optional double AL_MON = 2 [default = 0.0];
+	optional double AX_MON = 3 [default = 0.0];
+	optional double AX2_MON = 4 [default = 0.0];
+	optional double VCC_MON = 5 [default = 0.0];
+	optional double VE_MON = 6 [default = 0.0];
+	optional double XACC_MON = 7 [default = 0.0];
+	optional double XACC2_MON = 8 [default = 0.0];
+	optional double LACC_MON = 9 [default = 0.0];
+	optional double LACC2_MON = 10 [default = 0.0];
+	optional double ManufacturerGravityReference = 11 [default = 0.0];
+}
+message Gravity_Meter_Config {
+	required string MeterName = 1;
+	optional double ScaleFactor = 2 [default = 1.0];
+	repeated double CounterReading = 3;
+	repeated double ConvertedCounterReading = 4;
+	repeated double IntervalScaleFactor = 5;
+	optional Gravity_Meter_Marine_Settings MarineSettings = 6;
+}
+message Gravity_Meter_Table {
+	repeated Gravity_Meter_Config Gravity_Meter = 1;
+}
+
+//  now for default material density contrasts
+message Density_Material_Properties {
+	optional double Density_Land = 1 [default = 2.67];
+	optional double Density_Marine_Sediment = 2 [default = 2.2];
+	optional double Density_Fresh_Water = 3 [default = 1.0];
+	optional double Density_Salt_Water = 4 [default = 1.027];
+	optional double Density_Ice = 5 [default = 0.917];
+	optional double Density_LandMinusFreshWater = 6 [default = 1.67];
+	optional double Density_MarineSedimentMinusSaltWater = 7 [default = 1.173];
+	optional double Density_LandMinusIce = 8 [default = 1.763];
+}
+// Terrain - classical way to define influence radii and contribution
+// to a terrain effect at an obseravtion point, using a DEM/DTM, as the representation of the
+//  terrain. Inner circle/close terrain is modelled with sloping top prisms, outer contribution by a rod source.
+// works for gravity gradients as well.
+message Terrain_Correction {
+	optional double Cell_Size = 1;
+	optional int32 Max_Circles = 2 [default = 2]; // maximum is 5
+	optional int32 Radius_Ring_1 = 3 [default = 16]; // multiply the cell size by this to get actual radius
+	optional int32 Radius_Ring_2 = 4 [default = 32];
+	optional int32 Radius_Ring_3 = 5 [default = 64];
+	optional int32 Radius_Ring_4 = 6 [default = 256];
+	optional int32 Radius_Ring_5 = 7 [default = 1024];
+	optional double Bottom_RL = 8 [default = 0.0]; // only relevant for tensors
+	optional bool UseDTM_Elevations_At_Observation = 10 [default = true];
+	optional bool Add_Obs_Elevations_To_DTM = 11 [default = false];
+	optional bool Report_Calculations_To_ASCII = 12 [default = false];
+	optional bool LocalInverseDistanceInterpolator = 13 [default = true];
+	optional bool UseSlopingTopPrisms = 14 [default = true];
+	optional bool ScalarTerrainCorrection = 15 [default = true];
+	optional bool TensorTerrainCorrection = 16 [default = false];
+	// methods to make the calculation go faster, especially for airborne surveys
+	optional int32 Sub_Sample_Rate = 18 [ default = 1];
+}
+//  now an updated, faster way to do terrain corrections.
+// uses an adaptive quadtree style of searching, to determine if any more effort should be put into
+//  calculating a contribution from a far flung cell to the present observation.
+// the effort is done recursively as well, for optimization.
+//  also the whole inner loop of athe gravity effect contribution is multi-threaded.
+// in all, a big improvement in speed ( 100+ times) for essentially the same output as the older method.
+message Terrain_Correction_QuadTree_INT {
+	// Input
+	required string InputDTM = 1;
+	optional string InputDB = 2;
+	optional string InputX = 3;
+	optional string InputY = 4;
+	optional string InputGravity = 5;
+	optional string InputGroundElevation = 6;	// if not present use InputDTM as InputElevation
+	optional string InputAircraftElevation = 7;
+	optional string InputNValue = 8;
+
+	optional string InputGravityGrid = 9;
+	optional string InputDrapeSurfaceGrid = 10;
+	optional string InputNValueGrid = 11;
+
+	optional string InputMaterialDensity = 12;	// For Variable Terrain Correction
+
+	// Output
+	optional string OutputTerrainCorrection = 15;
+	optional string OutputCorrectedGravity = 16;	// OutputCorrectGravity = InputGravity+OutputTerrainCorrection (for scalar)
+													// OutputCorrectGravity = InputGravity-OutputTerrainCorrection (for tensor)
+	optional string ReportFile = 17;
+	
+	// Input Environment/Setting
+	optional Gravity_Datum GravityDatum = 20 [default = WGS84];
+	optional Gravity_Units GravityUnits = 21 [default = MILLIGALS];
+	optional Gravity_Terrain_Case GravityAcquisitionEnvironment = 22 [default = LAND_SURFACE];
+	optional ctm.CoordinateReferenceSystem CoordinateSystemType = 23 [default = END];  // tensor/vector
+	optional Density_Material_Properties MaterialDensity = 24;
+
+	// algorithmic
+	optional bool DoScalarTerrainCorrection = 30 [default = true];
+	optional bool DoTensorTerrainCorrection = 31 [default = false];
+	optional double Bottom_RL_For_Tensor = 32 [default = 0.0]; // only relevant for tensors
+	optional double Precision = 33 [default = 1.0];
+	optional bool UseSlopingTopPrisms = 34 [default = false];
+	optional bool AdaptToTerrain = 35 [default = false];
+	optional bool UseEllipsoid = 36 [default = false];
+	optional bool UseDTM_Elevations_At_Observation = 37 [default = true];
+	
+	// methods to make the calculation go faster, especially for airborne surveys
+	optional int32 Sub_Sample_Rate = 40 [ default = 1];
+	optional int32 Number_CPUs 	= 41 [ default = 1];  // here is the way to get more CPUs into the act
+
+	// debugging
+	optional bool DumpResampledDTM = 42 [default = false];
+	optional bool DumpCalculationSurfaces = 43 [default = false];
+	optional int32 DumpGridsforEveryNthObservation = 44 [default = 0]; // put 0 to disable
+}
+	// Levelling
+message Land_Loop_Reduction_Principal_Facts {
+	optional string InputCG5Data = 1; // file with CG5 raw data
+	repeated string InputFieldData = 2; // observed field gravity data.. either AGSO ASCII format, or ASCII CG3
+	optional string InputGPSData = 3; // location of each station
+	optional string InputControlData = 4; // tie in point location, absolute value
+	optional string LoopDataBase = 5; // name of intermediate loop database
+	optional string AbsoluteDataBase = 6; // name of intermediate absolute database
+	optional string StationNumber = 7; // field with station number
+	optional string InputENVFile = 8; // AirSeaII gravity meter state file
+
+	optional int32 Max_Loop_Iterations = 90 [default = 20]; // loop levelling iterations
+	optional double Max_Loop_Change = 91 [default = 0.01]; // convergence criteria during loop levelling, milligals
+	optional bool SortNodesInTime = 92 [default = true]; // section 12 behaviour, just before the network adjustment, resort the nodes?
+	optional bool AllowCloseTimeNodeRepeats = 93 [default = false]; // needed for scintrex in particular
+	optional Gravity_Meter_Drift_Model DriftType = 94 [default = Long_Term_Polynomial];
+	optional bool IgnoreInternalRepeats = 95 [default = false];
+	optional bool SkipEarthTideCorrection = 96 [default = false]; // perhaps already done
+
+	// Method Scintrex, stuff not inherent in the input data, so still needed
+	optional int32 SurveyNumber = 100; // which survey from the raw meter records??
+	optional ctm.CoordinateSystem GPSProjection = 101; // specify input projection of coords
+	optional double Meter_Vertical_Offset = 103 [default = 0.0]; // assume meter at station elevation
+	optional double Scale_Factor = 104 [default = 1.0];  // a meter may need scaling
+	optional double TimeTolerance_StackingReadings = 105 [default = 2.0]; // minutes, scintrex has habit of collecting many readings at a station, so ignore if on top of each other
+
+	// now for specific process options
+	// Field observation Checking
+	optional double Repeat_Tolerance = 61 [default = 0.2]; // diff in milligals when returning to a station after a period
+	optional double Maximum_Tare = 62 [default = 20]; // diff in milligals from one reading to the next in time
+	optional bool Verbose_Report = 33 [default = false]; // turn on if cannot find issue with your input data
+	optional bool Complete_DataBase_Fields = 34 [default = false]; // create a very complete set of possible principal facts fields
+}
+	// Method L&R S meter Stabilized platform corrections
+	// note, the monitor data is collected in up to 7 separate readings,
+	//  you must set up "alias" for each of the standard monitors eg XACC
+message Traditional_Marine_Gravity {
+	optional string MeterNumber = 1; // L&R S meter number, factory calibrations must also be present
+	optional double GravityLag = 2 [default = 300]; // seconds late in being logged   mainly marine hardware factor
+	optional double UTC_Offset = 3 [default = 0]; // hours =/- from GMT
+	optional double MaximumCurvature = 4 [default = 0.05]; // ignore excessive accelerations for RC curvature calcs
+	repeated double AbsoluteValue = 5; // shore based tie in absolute value
+	repeated double StillValue = 6; // shore based relative reading for tie in
+	repeated double StillDateTime = 7; // datetime of shore based relative reading for tie in
+	optional double Sampling_Period = 8 [default = 1]; // L&R hardware sampling period for all time related calculations.
+	optional int32 MonitorRepeats = 9 [default = 10]; // 10 Hz for acceleration monitors, 1 Hz for gravity
+	optional int32 CurvatureTimeStep = 10 [default = 240]; // between 2 & 30 minutes for curvature diff.
+	optional int32 Number_Monitors = 11 [default = 7]; // use all the monitors when doing decorrelation calcs, reduce right back to 1 if desperate
+	optional bool IgnoreEotvos = 12 [default = true]; // skip the eotvos correction by default
+	optional bool IgnoreDecorrelation = 13 [default = false];
+	optional Marine_Gravity_Selection_Type Process = 14 [default = PROCESS_ALL];
+	//	optional int32 NoOfLines = 15 [ default = 0]; // batch processing, for selected lines in a marine database
+	repeated double SelectedLines = 16; // list of required lines
+	optional Marine_Filter_Parameter FilterParameters = 17;
+	repeated Data_Replacer ReplaceData = 18;
+}
+//###
+//! Gravity Field Data tool functions
+// a. data reduction and levelling of land based gravity survey data ( LOOPS)
+// 		this is done using 16 steps to import, locate, validate multiple meters and meter readers
+//		an ASCII format devised to be future proof by Geoscience Australia, plus standard Scintrex formats
+//		outputs a principal facts database that has error estimates derived from the redundancy in the readings.
+// b. gravity transforms, free air, bouguser, bullard B, eotvos, gravity earth models, tides
+//  	also includes many inverse funtions, if you want to reverse a calc, and go forward with a new model etc.
+// c. moving platform gravity data processing
+//  	L&R sea meters for traditional ship borne work
+//      Lockhead Martin FTG meter support from inline/crossline to tensor
+// d. terrain corrections
+//    	land, marine, airborne context, traditional and tensor cases
+message Gravity_INT {
+	//  main switch to specify what process you want to run
+	required Gravity_Process_Option RunType = 1 [default = AGSOField];
+	//  can be both an input and an output, depending upon context
+	// required principal facts gravity database for output from reduction of field data
+	//  main database for utility functions
+	optional string GravityDatabase = 2;
+	// context where the data is being collected and used
+	optional Gravity_Terrain_Case TerrainType = 3 [default = LAND_SURFACE];
+	optional bool UseBullardB = 4 [default = false];
+	optional bool UseEllipsoid = 5 [default = false];
+//  the input database and any standard relevant fields
+	optional string LineBearing = 8; // field with a line bearing
+	optional string Date = 10; // field with current date
+	optional string TimeOfDay = 11; // field with wall clock time
+	optional string ObservedGravity = 12; // field with observed gravity
+	optional string StationElevation = 13; // field with station elevation
+	optional string MeterElevation = 14; // field with meter offset from station
+	optional string N_Value = 15; // field with geoid/ellipsoid separation
+	optional string DigitalTerrain = 16; // field with digitital terrain elevation
+	optional string Latitude = 17; // field with station latitude
+	optional string Longitude = 18; // field with station longitude
+	optional string CraftVelocity = 19; // field with the moving platform velocity
+
+	//  a. data reduction and Levelling
+	optional Land_Loop_Reduction_Principal_Facts Reduction = 90;
+
+	// b. gravity transforms,
+	// the output database and any relevant fields from a utility calculation
+	optional string MasterDatabase = 20;
+	optional string ObservedGravityWGS84 = 22;
+	optional string CorrectedGravity = 23; // field to contain reduced and corrected gravity reading
+	optional string ReconstructedCC = 24; // field to contain the L&R S meter cross coupling
+	optional string TensorGravity = 25; // field that has an FTG reading
+	optional string FreeAir = 26; // field with required Free Air
+	optional string SimpleBouguer = 27; // field with required simple bouguer
+	optional string TheoreticalGravity = 28; // field with required theorectical model at the station
+	optional string TerrainCorrection = 29; // stub name for calculated fields, vector and tensor terrain correction estimates
+	optional string Eotvos = 30; // field with required eotvos correction for a moving observation of gravity
+	optional string EarthTide = 31; // field with required earth tide estimate
+	optional string ReconstructedGravity = 32; // field to contain reduced gravity reading
+
+// c. moving platform gravity data processing
+	// Method L&R S meter Stabilized platform corrections
+	// note, the monitor data is collected in up to 7 separate readings,
+	//  you must set up "alias" for each of the standard monitors eg XACC
+	optional Traditional_Marine_Gravity Marine = 35;
+
+// d. terrain corrections
+//    	land, marine, airborne context, traditional and tensor cases
+	optional Terrain_Correction Terrain = 50;
+
+	//  now for default material density contrasts
+	optional Density_Material_Properties Properties = 60;
+
+	//  now for units ,datum and context types
+	optional Gravity_Units OutputUnits = 40 [default = MILLIGALS];
+	optional Gravity_Datum DatumType = 41 [default = WGS84]; // input observed
+	optional string OutputDatum = 42 [default = "WGS84"]; // required output
+
+	optional ctm.CoordinateReferenceSystem CoordinateSystemType = 44 [default = END];  // tensor/vector
+
+	optional string ReportFile = 70 [default = "gravity_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 71 [default = "gravity"];
+	optional int32 SavedStage = 72 [default = 0];	// for saving the wizard state at an intermediate stage
+}
+//  **************************************************
+//  when you have a measured gradient of component of a field
+message Vector_Fields {
+	optional string Input_X	= 2 ;  // the X gradient field..."Across"  wings
+	optional string Input_Y = 3;  // the Y gradient field..."Along"  plane body
+	optional string Input_Z	=  4;  // the Z gradient field  "Vertical"
+	optional string Field	=  5;  // the  gradient field as a pre-formed vector field
+	optional ctm.CoordinateReferenceSystem CoordinateSystemType = 6 [default = LOCAL];
+}
+//! way to specify a database, and the field within it for X/East Y/North and the signal fields
+message Input_Datasets_INT {
+	// important for bi-cubic splining in particular... what direction do the main lines go, so as to spline across at 90 degrees
+	message Survey_Lines_TT
+	{
+		optional double Bearing	= 1 [default = 0.0] ;  // what is the main acquisition bearing?
+		optional bool Heading_Correction	= 2 [default = false] ;  // can get used to help adjust bisline of gradients (poor man levelling)
+		optional string Field = 3;   //  line type field each line , usually set by alias  2 for acq, 4 for tie lines etc
+	}
+	optional string Input_Dataset	= 1;  // main path to the geophysical dataset
+	optional string Input_X	= 2 ;  // optional specification of the X field... can use the alias to simplify tasks
+	optional string Input_Y = 3;  // optional specification of the X field... can use the alias to simplify tasks
+	optional string Data	=  4;  // main path to the signal field within the dataset to be gridded
+	optional Vector_Fields Gradients = 5;  //  may have some observed gradients as well as a scalar magnitude (eg TMI)
+	optional int32 Band	= 6 [default = 1];  // signal field may be multi-band  ( eg radiometrics spectrum)
+	optional Survey_Lines_TT Survey_Lines = 7;  // pre-specification of the lines/ties and principal directions
+	optional string ProcessingField = 8;  // flag field you can set up to indicate which records you wish to use in the dataset for this grdding job
+	optional string Input_Data_Type  = 9;
+}
+//  some provision for input signal filtering on the fly
+message PreProcessing_INT {
+	optional string Name = 1;
+	optional double Maximum_Anomaly_Width = 2 [default=100.0];
+	optional double Tolerance = 3 [default=0.0001];
+	optional bool Use_Corrected_Data = 4 [default=true];
+	optional int32 Window_Size = 5 [default=2];
+}
+//  just create a subset of the dataset, to the defined polgon extents
+message Vector_Subset_INT {
+	optional string Name = 1;
+	optional string Polygon_Path = 2 [default="subset..DIR"];
+}
+//  methods to force origin and cellsizes, to align with a master set of specs for a national acquisition program
+//  avoid unnecessary resampling and therefore blurring.
+message Reference {
+	optional string Type = 1 [default = "Same_as"];
+	optional string Grid = 2 [default = "ReferenceGrid.ers"];
+	optional double Align_X = 3 [default=0.0];
+	optional double Align_Y = 4 [default=0.0];
+}
+// manage very large gridding tasks, by striping the job into various tiles
+// suitable for multi-tasking as well.
+message Tiling_INT {
+	optional int32 Row_Overlap = 1 [default=10];
+	optional int32 Start_Tile = 2 [default=1];
+	optional int32 Finish_Tile = 3 [default=1];
+}
+//!  quite a small set of possibilities, the larger the better, when reducing the cell size relative to line spacing
+// smoothing filters once grid is formed - Min Curvature and Mitre
+enum Kernel_Size {
+	K3_3 = 3;
+	K5_5 = 5;
+	K7_7 = 7;  // only for MITRE
+}
+// manage the edges of the grid you arew about to create
+enum Edge_Clipping {
+	Extrapolation_limits=0;
+	Original_data_limits = 1;
+	Strict_Extrapolate_Cells = 2;
+}
+// list of candidate algorithms to grid with
+enum Method_Name {
+	Neighbours=0;  // triangles
+	BoxFilter = 1;  // laplacian
+	BiSpline=2;  //  force a bi-cubic spline through the potential field data.. do not use for DTM's
+	VariableDensity = 3;  // multi-grid at various cell sizes, approaching the best / finest resolution - good for poorly sampled fields such as gravity
+}
+// conflict management of samples falling into the same grid cell
+enum Cell_Assignment_INT {
+	Closest =0;
+	First = 1;
+	Last = 2;
+	Average = 3;
+	Count = 4;
+	Minimum = 5;
+	Maximum = 6;
+	Sum = 7;  // not for extratds
+	Latest = 8;  // only for extractDS, allow a date to also be used
+}
+//  local interpolation to a cell from a sample, when multiple samples are being considered - to establish best original observation at a point.
+enum Weight_Type_INT {
+	Unity=0;
+	Magnitude = 1;
+	Square_Root = 2;
+}
+
+enum Spline_Type_INT {
+	BiCubic = 0;
+	Akima = 1;
+	Tension = 2;
+}
+message Gridding_Method_INT {
+	optional Method_Name Name = 1 [default = Neighbours];
+	optional int32 Extrapolation_Limit = 2[default=5];
+	optional string Orig_Pts_Dataset = 3 [default="OriginalPoints..DIR"];
+	optional Cell_Assignment_INT Cell_Assignment = 4 [default=Closest];
+	optional Weight_Type_INT Weight_Type = 5 [default=Unity] ;
+	// neighbours stuff
+	optional bool Save_Triangles = 6 [default= false] ;
+	optional int32 Iterations = 7 [default= 20] ;
+	optional bool use_Barycentric_Interpolation = 16 [default= false] ; // in nearest neighbours, triangles, inverse dist, of area weighting?
+	// bispline stuff
+	optional double Min_Scan_Distance = 8 [default= 0.0];
+	optional double Max_Scan_Distance = 9 [default= 2000];
+	optional Spline_Type_INT Spline_Type = 10 [default=Akima];
+	optional bool Spline_Gradient_Signal_Noise_Blending = 11 [default= false ] ;
+	optional double Spline_Gradient_Noise_Level = 12 [default= 0.01 ] ;
+	// variable density stuff
+	optional int32 Coarse_Iterations = 13 [default= 10] ;
+	repeated int32 Reduction_Factors = 14;  // up to 3 grid cell size multipliers  eg 2,2,2
+	optional string Coarse_Grid = 15 [default="coarse_grid.ers"];  // used for variable density, so you can see the intermediates
+}
+// container for both classical Min. Curvature and tensor MITRE operations
+message Minimum_Curvature_INT {
+	optional int32 Iterations = 1 [default=100];  // Red/Black iterative explicit solver,
+	optional bool Honour_Original_Data = 2 [default= true];  // use a sub-celling strategy to honour where the obs. is actually, not just place it at the centroid
+	optional bool Honour_2_Cells = 3 [default= false];  // extend the radius of influence of an original observation to next cell locally
+	optional double Max_Residual = 4 [default= 0.0];  // to minimize the Trace condition of the Tensor, as approximated in finite differences
+	optional double Tension = 5 [default= 0.0];  // only good for Min. Curvature.. range 0 to 1.0
+	optional double Relaxation_Factor = 6 [default=1.375];  // really an over-relaxation for scalar, needs to be under relax for tensor gradient data ( 0.2)
+	optional Kernel_Size size = 7 [default= K5_5];  // local convolution filter operator in "cell_sizes". Larger the better, but only 5*5 Min Curv, and 7*7 for MITRE
+}
+// extra step of forcing what you know about the physics of the signal onto the 2d draped surface representation
+// mainly for potential fields, where you know there must be good 2nd order continuity.
+message Grid_Refinement_INT {
+	optional Minimum_Curvature_INT Minimum_Curvature = 1;
+	optional int32 Laplace_Iterations = 2 [default= 0];
+	optional int32 Smoothing_Iterations = 3 [default= 2];
+	optional bool Fill_Holes = 4 [default=false];
+	optional Edge_Clipping Edge_Clipping = 5 [default=Extrapolation_limits];
+	optional string Curvature_Grid = 6 [default="QualityCurve.ers"];  // useful for checking standard scalar potential fields and how well they are being treated
+}
+// manage the output grid you wish to create,
+// depending upon which tool you are invoking, and what is the input data type,
+//  not all the products in the lists of options will actually be available
+//  we are adding support progressively for the more unusual cases, depending upon demand or requests from users
+// vector grids are an on-going activity.
+//  tensor grids are well established.
+message Output_Grid_INT {
+	optional Reference reference = 1;  // are you wanting to manage the origin?
+	optional string Output_Grid = 2 [default="output.ers"];
+	optional ctm.CoordinateSystem Projection = 3;
+	optional ctm.TensorProduct_list TensorProduct = 4 [default=TENSOR_Complete]; // if signal field is a tensor, what transform do you want gridded? default is a tensor grid
+	optional ctm.VectorProduct_list VectorProduct = 5 [default=ENHANCED_SIGNAL]; // if signal field is a vector, what transform do you want gridded? default is gradient enhanced field
+	optional double Cell_Size_X =6 [default=100.0];
+	optional double Cell_Size_Y =7 [default=100.0];
+	optional double Origin_X =8 [default= 0.0];
+	optional double Origin_Y =9 [default= 0.0];
+	optional int32 Rows =10 [default= 100];  // leave blank if not that interested
+	optional int32 Columns =11 [default= 100];
+	optional int32 Bands =12 [default= 1];
+	optional string Band_Name =13 [default=""];
+	optional int32 Band =14 [default= 1];
+	optional ctm.GridDataTypes DataType =15 [default= IEEE4ByteReal];  // warning, must match the datatype required by signal field and any choices of dynamic manipulations
+	optional double Rotation =16 [ default=0.0];
+	optional double Null_Value =17 [default=-99999.0];
+}
+//! main gridding tool
+message Gridding_INT {
+	repeated Input_Datasets_INT Input_Datasets =1;  // one or more geophysical line/point datasets
+	optional PreProcessing_INT PreProcessing = 2;
+	optional Vector_Subset_INT Vector_Subset = 3;  // clipping polygon
+	optional Gridding_Method_INT Gridding_Method = 4;
+	optional Tiling_INT Tiling = 5;
+	optional Grid_Refinement_INT Grid_Refinement = 6;
+	optional Output_Grid_INT Output_Grid = 7;
+	optional string ToolName = 199 [default = "GriddingPro"];
+}
+//  **************************************************
+//  merge multiple grids of the same geophysical signal, to form a best fit coherent super grid
+/* CoincidentPixels
+	 *
+	 *  Determines if the pixels being interpolated coincide with those of the disk image on which the interpolation is
+	 *based. To be considered coincident the following conditions must be met:
+	 *  1. If the cells sizes are not equal, that of the disk image must be the smallest
+	 *  2. Have cell sizes that are a multiple of each other.
+	 *  3. Their origins must be an exact number of cell sizes from each other.
+	 *
+	 *  If these conditions are met, then the data from the ioAnyClass object can be entered directly as this grid's grid
+	 * points without any interpolation. Important for sharpness of resulting grid
+	 */
+enum GridMergeOperations { // list of all available processes or operations
+	 Resample_GRIDS = 0; // Resample grids
+	 Shift = 1;   // DC shift grids by weighted least squares solution using SVD
+	 Scale = 2;   // Scale grids by weighted least squares solution using SVD
+	 ScaleThenShift = 3; // Scale then DC shift grids by weighted least squares solution using SVD. The scaling parameters are calculated first and then, using these new scaling factors, the DC shifts determined.
+	 ScaleAndShift  = 4;  // The scaling and DC shift parameters are determined simultaneously from their initial estimates.
+	 SurfaceAdjust = 5;  // Level grids by fitting polynomial surfaces to overlap differences.
+	 Merge = 6;          // Merge all grids into a single grid.
+	 Feather = 7;        // Seamless feather of overlapping grid boundaries.
+	 Feather_Merge =8;   // Seamless feather and merge grids into a single grid.
+	 Condition = 9;     // DC shift and scalegrids via conditioning.
+	 BoundaryView = 10;  // Adjust grids to allow their overlaps to be displayed if they are subsequently merged into a single grid.
+	 AdjustToReference = 11; // Adjust grids to reference data by fitting polynomial surfaces to overlap differences.
+	 // You need GridMerge/Pro to enable this next function
+	 AdjustLineData = 12;  // Adjust line data by differences between uncorrected grids and grids previously corrected by gridMerge.
+	 AdjustGridData = 13;  // Adjust grids by differences between uncorrected grids and grids previously corrected by gridMerge.
+	 Trim = 14;  // option to cut round the edges of all the grids, as you do not trust the extrapolation of the gridding algorithm to get the field trends right on the edges
+}
+
+enum GridInterpolationMethod {
+	// Interpolation/resampling options Cubic_Spline Newton_4th_Order Minimum_curvature Linear Akima
+	Cubic_Spline_INTERP = 0;  //resample grids locally
+	Newton_4th_Order_INTERP = 1; // turns out to be fastest and most satisfactory most of the time
+	Minimum_curvature_INTERP = 2;
+	Linear_Interpolation_INTERP = 3;
+	Akima_INTERP = 4;
+}
+message GridReference_INT {  // way to force a grid merge resampling operation to line up with a global scheme tied to a common origin, cell size offset
+	optional double Cellsize = 1;  // ends up minimizing any resampling, therefore blurring of signal grids
+	optional double x_origin = 2;
+	optional double y_origin = 3;
+}
+message GridSurfaceAdjustOptions {  // options for doing a surface adjust of grids,
+	optional bool RejectOutliers = 1 [default = false];
+	optional bool AllowDCshift = 2 [default = false];
+	optional bool DegreeZeroFirst = 3 [default = false];
+	optional bool UseRowColAverages = 4 [default = false];
+	optional int32 WeightPointLimit = 5 [default = 10];
+	optional bool ListCoefficients = 6 [default = false];
+	optional bool PlotSurfaceFits = 7 [default = false];
+	optional int32 Degree = 8 [default = 2];
+	optional double Degree1Limit = 9 [default = 20];
+	optional double DegreeNLimit = 10 [default = 90];
+	optional double DifferenceLimit = 11 [default = 99];
+}
+message GridFeatheringOptions { // what to do on grid overlaps to make the joins disappear
+	optional bool Final3x3Pass = 1 [default = true];
+	optional bool TrimResampledGrids = 2 [default = false];
+	optional double filterLength = 3 [default = 5000];
+	optional int32 filterPasses = 4 [default = 6];
+	optional double FinalSmoothMaxResidual = 5 [ default = 0.0];
+	optional int32 FinalSmoothIterations = 6 [ default = 3];
+}
+
+// Create Overlap DataBase
+// An Intrepid data base can be defined to store shift and scale information. It will be created with the name "gridDB" by default and placed in the currently defined output directory.
+message GridScaleAndAdjustOptions {  // possible to save/retrieve weighst for large gridmerge jobs fronm a database
+	enum LevelRunType {
+		Standard = 0;  // do not use a database
+		SaveToDataBase = 1; // save all info to a database
+		UseDataBase = 2;  // use an existing overlap database
+	}
+	enum LevelAlgorithm {
+		Statistics = 0;  // standard deviations & means of overlaps
+		DownHill = 1;  // Down Hill Simplex
+		LeastSquares = 2;
+	}
+	optional double BaseGridWeight = 1 [default = 200];
+	optional int32 ScaleAndShiftDBgroupID = 2 [default = -1];  // no default for a database group ID
+	optional LevelRunType RunType = 3 [ default = Standard];
+	optional LevelAlgorithm Algorithm = 4 [ default = Statistics];
+}
+
+message Gridmerge_INT {
+	// set of possible inputs
+	repeated string InputDirectory=1;
+	optional string PolygonWindow=2;
+	optional string ReferenceZfield=3;
+	optional string ReferenceGrid = 4;
+	optional string UncorrectedGridDirectory = 5;
+	optional string CorrectedGridDirectory = 6;
+	optional string OriginatingLineDatasets = 7;
+	// if we have line datasets for microlevelling
+	optional string InputXfield = 8;
+	optional string InputYfield = 9;
+	optional string InputSignalfield = 10;
+
+	// ! output grid or directories of grids
+	optional string OutputGrid = 11;  	// If no extension for output grid is given, then make it ers by default
+	//  following output required for 	RESAMPLE  FEATHER  SURFACE_ADJUST AdjustToReference TRIM  ADJUST_GRID_DATA
+	optional string OutputDirectory = 12;
+	optional string ReportFile = 13 [default = "gridmerge_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ShiftAndScaleDataBase = 14;
+
+	optional string OutputSignalfield = 15;  // You need GridMerge/Pro to enable this function
+	optional int32 Band = 20 [ default = 1];  	// ! input grid band to select
+	repeated string BaseGrids = 21;  	// ! list of base grids
+	repeated string HighRankedGrids = 22;  // ranking sequence high to low
+	repeated string LowRankedGrids = 23;  // ranking sequence low to high
+
+	required GridMergeOperations Operation = 25 [ default = Shift];  // main key to set what you actually want to do
+	optional GridInterpolationMethod Interpolation = 26 [ default = Newton_4th_Order_INTERP];  // Interpolation/resampling options
+
+	/** specify a reference coord setting */
+	optional GridReference_INT Reference = 27;
+ 	optional GridSurfaceAdjustOptions SurfaceAdjust = 28;
+ 	optional GridFeatheringOptions Feathering = 29;
+ 	optional GridScaleAndAdjustOptions ScaleAndAdjust = 30;
+
+	optional double MaxResidual = 31 [ default = 0.05];//  minimum curvature options
+	optional int32 Iterations = 32 [ default = 100];
+	// now for possible line data adjustments
+	optional bool CalculateScaleFactor = 40 [ default = false];
+	optional int32 SurfaceDegree = 41 [ default = 2];
+//  parameters for the number of points in overlap regions between grids
+	optional int32 MinOverlapLimit = 45 [ default = 500];
+	optional int32 MaxOverlapLimit = 46 [ default = 5000];
+	enum GridTrimUnits {
+		Pixels =0 ;
+		Metres = 1;
+	}
+	optional GridTrimUnits trimUnits = 47 [default = Pixels ];
+	optional double trimWidthMetres = 48 [ default = 1];
+	// ! clip of output grid
+	optional ctm.BoundingBox2D Box = 50;
+	optional string ToolName = 199 [default = "gridmerge"];
+}
+//  **************************************************
+message Grid_Subsample {
+	optional int32 SS=1;  // start sample
+	optional int32 NS=2;  // number samples
+	optional int32 SINC=3 [default = 2];  // sample increment
+	optional int32 SL=4;  // start line/row
+	optional int32 NL=5;  // number lines
+	optional int32 LINC=6 [default = 2];  // increment
+}
+
+enum Grid_Operation_Tasks {
+	Cubic_Spline = 0;  // resample to another grid, using a cubic spline
+	Newton_4th_Order = 1; // resample to another grid, using a newton 4th order method
+	Minimum_curvature = 2; // resample to another grid, using a minimum curvature method
+	Smoothing = 3;  // de-noise a grid by doing extra smoothing
+	Rotate = 4;  // do a grid rotation, so resample onto a new grid with a different rotation angle
+	SubSample = 5;
+	GetBand = 6;  // extract a band
+	PutBand = 7;  // insert a band
+	Cubic_OP = 8;  // resample with a cubic equations, not  a spline
+	Promote = 9;  // upgrade grid to double preecision
+	Dump_Dataset = 10;  // dump any non-null data into a database from the grid by rows
+	MakeSame = 11;  // take a collection of grids from same area, find smallest cellsize, resample and output all grids to finest cellsize
+	Detrend = 12;  // take out a long wavelength trend from the grid
+	GeoMagnetic = 13;  // create Geomagnetic grids of inclination, declination and field
+	Resample = 14;
+	Outline = 15;  // create a polygon of the bounding edge of a grid
+	Difference = 16;  // do a spatial grid difference.. does not require 100% overlap, or same cell size
+	ManipulateTensor = 17;  // either create a tensor grid or extract the component gradients into seperate grids
+	Dump_Dataset_Cols = 18;  // dump any non-null data into a database from the grid by cols
+	Create_Null_Grid = 19;  // create a new NULL grid, with rows,cols,bands, origin and cell size specified
+}
+
+
+// grid operations
+// a toolbox of useful operations to perform on one or more grids
+// general support for tensor grids here as well, not so strong on vector grids
+message GridOperations_INT {
+	repeated string Input		=1;  // primary grid dataset to do work on! only option "MakeSame" uses the list of grids
+	optional string Reference    =2;  // refernce to do comparisons, or differnces
+	optional string Output 		= 3;  // main output grid after a process
+	optional string Outline		 = 4;  // store output polygon of input grid
+	optional Grid_Operation_Tasks Method = 5 [default = Newton_4th_Order ];
+	optional ctm.SetReferenceMagneticField IGRF = 9;
+	optional int32 Number_CPUs 	= 10 [ default = 1];  // here is the way to get more CPUs into the act
+	optional ctm.CoordinateSystem OutputProjectionHint = 12; // you can request a reprojection of the output polygon dataset
+	// a block of tensor optional args for inputs
+	optional string XX          =20;   // a set of individual grids with tensor components
+	optional string XY          =21;
+	optional string ZX          =22;
+	optional string YY          =23;
+	optional string YZ          =24;
+	optional string ZZ          =25;
+	// now for falcon component grids
+	optional string AUV          =26;
+	optional string ANE          =27;
+	optional string BUV          =28;
+	optional string BNE          =29;
+// if input grid a tensor grid, request a transformation to any of the possible transforms
+	optional ctm.TensorProduct_list TensorOperation = 30 [default = TENSOR_ZZ];
+	optional ctm.Falcon_Reading_Options FalconQuery = 32 [default = FALCON_AVERAGE];
+	optional ctm.CoordinateReferenceSystem CoordinateSystemType = 34 [default = END];
+
+	optional SignalResampleMethod RotateMethod = 35 [default = Cubic];
+	optional double Cellsize = 40;  // output grid cell size
+	optional double OutputRotation = 41;  // angle for a rotated grid
+	optional double MaxResidual = 42 [default =0.001];  // for min. curvature
+	optional ctm.GridDataTypes OutputPrecision = 43 [default = IEEE4ByteReal];
+	optional int32 Iterations = 44 [default = 100];  // for min. curvature
+	optional Grid_Subsample Subsample = 45;  // if you want to the resampling by row/column counts
+	// resampling to a new cell size, a subset in world coords
+	optional double Maximum_Tensor_Trace_Error = 46 [default =20];  // for forming tensor from the parts, null the tensor if trace too bad.
+	optional ctm.BoundingBox2D Resample = 50;
+	optional int32 GetBand = 55 [default = 1];
+	optional int32 PutBand = 56;
+	optional int32 NBands = 57 [default = 1];
+	optional int32 DetrendDegree=59 [default = 1];  // what order poly to remove when detrending?
+	// magnetic field date, when you want to dump out grids of the IGRF components
+	optional int32 Year=60;
+	optional int32 Month=61;
+	optional int32 Day=62;
+	optional ctm.Grid_INT CreateGrid = 65;  // way to specify grid parameters for a new NULL grid
+	repeated double required_profile = 66;  // way to seed repeated rows or columns with non-null values
+	optional bool row_profile = 67 [ default = true];  // way to say row or column for above profile data
+	optional string ReportFile = 47 [default = "gridop.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "gridop"];
+}
+// # MMM  start of FFT filtering methods
+enum DetrendOptions {
+	DC_SHIFT=0;
+	LINEAR_ENDPOINTS=1;
+	LEAST_SQUARES=3;
+}
+
+
+//  here is the main line filtering tool, FFT and spatial convolution
+// also has access to geophysical filters that are gravity/magnetic specific
+message Line_Filter_INT {
+	optional string InputLines		=1;  // dataset to do the filtering operations upon
+	optional string Signal_Field  = 2;  // primary signal
+	optional string Clearance  = 3;  // optional observed field clearance above topography
+	optional string DrapeField  = 4;  // optional required drape clearance of athe output signal abobe topography
+
+	optional string Output_Signal_Field  = 7;  // primary signal
+	optional string OutputSpectrum  = 8;  // optional observed field FFT spectrum
+	optional string OutputCoefficients  = 9;  // optional observed field FFT coefficients, in an ASCII file
+
+	optional string InputFilter = 10;  // refer to a filter description file
+	// or
+	optional fdf.CompositeFilter_FDF CompositeFilter	=11;  // conventional one for 1D line filter use
+	optional fdf.GetWindowTypeList WindowType		=5 [default = HANNING]; // how to condition the edge padded signal estimates to force the cyclic nature
+	optional fdf.PadType Pad_Type = 12 [default = MIRROR_PAD];  // how to fill the added edge padding
+
+	optional SignalResampleMethod InterpolationMethod = 13 [default = Linear];
+	optional DetrendOptions DetrendMethod =14 [default = LINEAR_ENDPOINTS]; // each line is done in isolation
+	optional LineDataSampleMode SampleMode = 15 [default = XY_BASED];
+	optional DatabaseLineSelection processType =16 [default = ALL_LINES] ;
+	// depending upon option chosen, specify some line to work on
+	optional string StartLineNumber = 63;
+	optional string EndLineNumber = 64;
+	optional int32 NoOfLines = 65 [default = 0];
+	repeated string SelectedLines = 66;
+	// -- Set Process parameters
+	optional double FidFactor = 17 [default = 10];  // 10 Hz magnetic?
+	optional double FixedSampleIncr = 18 [default = 0.0];  // you can force a sample interval to use, rather than the average value
+	optional int32 NumEndPoints = 19 [default = 10];
+	optional string ReportFile = 46 [default = "line_filter.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "lfilter"];
+
+}
+//  **************************************************
+//## 2D FFT grid conditioning parameters
+
+enum diskUsageRules {
+	AUTO = 0; // automatic
+	FORCE_MEMORY = 1; // favour memory
+	FORCE_DISK = 2;  // always use disk
+}
+message grid_subset_INT {
+		// subset support during fft filtering ops
+		// option to define a box explicitly
+	optional double XLower           =1;  // all default to NULL
+	optional double XUpper           =2;
+	optional double YLower           =3;
+	optional double YUpper           =4;
+	optional double FFT_BorderPercentExpansion         =5 [ default =120]; // subset border in percentage
+	optional string SubsetGridName    =6 [ default = "subset.ers"];
+	// option to define a square subset in terms of cells, for purpose of a moving window power spectra
+	optional int32 NumberCellsForFFTPower = 7 [ default = 32];  // should be power of 2 eg 32,64,128 etc
+	optional bool AutoPowerSpectrumReporting = 8 [ default = false]; // just dump out power spectra reports
+}
+// list of special, compound filtering options, all mutually exclusive of each other
+// if you choose one of these, standard filtering is off
+enum Special_GridFilter_Operations
+{
+	NO_OP = 1;  // default setting, assume doing standard grid filtering
+	AnalyticSignal	 = 2;  // sqrt( dX*dX + dY * dY + dZ * dZ).
+	TiltAngle 			= 3;  // atan2 of ( dZ / sqrt( dX*dX + dY * dY)).  recover the "horizontal gradient direction", between +180 degrees, and - 180 degrees in the horizontal plane.
+	TotalHorizontalTiltAngle = 4; // calc the tilt angle, then calc its total horizonal derivative
+	HorizontalDerivative = 5;  // sqrt( dX*dX + dY * dY).
+// stuff for tensor filtering, requires tensor grids
+	TensorIntegration	 = 6;
+	FalconTransform	 = 7;
+	// TMI specials, manipulate a TMI to recover its components, or the magnetization direction etc.
+	TMI_Transform = 8;
+}
+//##
+//  primary tool for 2D FFT geophysical filtering
+//  this tool is designed to primarily work in a cartesian map space
+//  some support for working on spheroid is allowed, but you are advised to be very cautious
+// you get to do this by using a grid that has geodetic projection
+message GridFourierFiltering_INT {
+//  the input database and any relevant fields
+	required string InputGridName=1;  // primary grid dataset to do work on!
+	optional ctm.GeophysicsSignalType Signal_Type 	= 2 [ default = Magnetism];  // most usual geophysics data type
+	optional grid_subset_INT Subset = 3;  // use if you just want a subset of your gridded data
+	optional fdf.GetRolloffTypeList RolloffType		=4 [default = NO_RollOff];
+	optional fdf.GetWindowTypeList WindowType		=5 [default = NO_Window];
+	optional fdf.GetFillTypeList FillType		  =6 [default = NO_Fill];
+	optional bool FillStopAtEdge 			= 8 [default = false];
+	optional int32 DetrendDegree 			= 7 [default = 1];  // detrend the input grid
+	optional ctm.SetReferenceMagneticField IGRF = 9;
+	optional int32 Number_CPUs 				= 10 [ default = 1];  // here is the way to get more CPUs into the act
+
+	optional string FilteredGridName          =11 [ default ="filtered_grid.ers"];
+	optional string FftGridName               =12 [ default = "fftGridName.ers"];  // input grid transformed to Fourier coefficients
+	optional string OutputFftGridName         =13 [ default = "OutfftGridName.ers"];  // this is the Fourier coeffiecents grid
+	optional string InputRadialPowerSpectrumReport=14 [ default = "inputRadial.rpt"];
+	optional string OutputRadialPowerSpectrumReport=15 [ default = "outputRadial.rpt"];
+	// options to keep intermediate grids
+	optional string WindowedGridName          =16 [ default = "windowGrid.ers"];
+	optional string ExpandedGridName          =17 [ default = "expandedGrid.ers"];
+	optional string AmplitudeGridName         =18 [ default = "amplitudeGrid.ers"];
+	optional string PhaseGridName        	  =19 [ default = "phaseGrid.ers"];
+	optional string CoefficientGridName       =20 [ default = "coefficientsGrid.ers"];
+	optional int32 Band                       =21 [ default = 1];  // first band in a multi-band grid
+	optional ctm.GridDataTypes OutputPrecision=22 [ default = IEEE4ByteReal];
+	optional bool ReApplyTrendAfterReverseFft =23 [default = false]; // not an ordinary filter
+	optional bool ApplyMaskAfterReverseFft    =24 [default = true];
+	optional bool UseSymmetry                 =25 [default = true]; // save memory by using symmetry in coefficients
+	optional diskUsageRules DiskUsageRule     =26 [default = AUTO];
+
+  // access to filter descriptions
+	optional  fdf.CompositeFilter_FDF CompositeFilter	=28;  // conventional one for 2D grid filter use, also shared with all filtering programs
+// list of special, compound filtering options, all mutually exclusive of each other
+	optional Special_GridFilter_Operations special_op = 29 [default = NO_OP]; // default to standard
+	// next 4 are deprecated
+	//optional bool CalculateAnalyticSignal	 = 30 [default = false];
+	//optional bool CalculateTiltAngle 			= 31 [default = false];
+	//optional bool CalculateTotalHorizontalTiltAngle = 32 [default = false];  // calc the tild angle, then calc its total horizonal derivative
+	//optional bool CalculateHorizontalDerivative = 33 [default = false];
+	optional double HorizontalDegree 		= 34 [ default = 1.0];
+// stuff for tensor filtering
+	// next 2 are deprecated
+	//optional bool CalculateTensorIntegration	 = 35 [default = false];
+	//optional bool CalculateFalconTransform	 = 36 [default = false];
+	optional bool ScaleTensorIntegration 	= 37 [default = false];  // units change from EOTVOS to mGal, scale by 10000
+	optional bool LowPassFalconIntegration	 = 38 [default = false];  // anti-alias filter for falcon before integration
+	optional ctm.Tensor_Integration_Method InputTensorComponents = 40 [default = INT_XZ_YZ_ZZ];
+	optional ctm.Falcon_FFT_TRANSFORM_Option RequiredFalconTransform = 41 [default = FALCON_TZ];
+	optional ctm.Falcon_Reading_Options RequiredFalconQuery = 42 [default = FALCON_AVERAGE];
+	optional ctm.CoordinateReferenceSystem InputGridCoordSysType = 43 [default = END]; // for vector/tensor fields
+// some magnetic products as well
+	optional ctm.TMI_Products TMIProduct = 44 [default = TMItoVector];  // require TMI grid and the IGRF
+
+	optional string ReportFile = 46 [default = "grid_filter.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "gfilt"];
+}
+//##
+/*  ISOStatic correction for gravity
+ * Input is a standard ERMapper format grid of topography. The surface
+	 'load' grid option allowed in Airyroot is not supported at present.
+	 Contact Intrepid Support if you would like this option to be added
+	 to the Isostatic tool (see discussion below regarding this option).
+	 The topographic grid must be in a projected coordinate system.
+	 You can now supply an externally sourced Depth to Moho Grid.
+	 The DEM is not used to estimate the Moho in this case. This must be in a projected coordinate system.
+	 Geodetic projections/coordinates are not supported.
+
+	 The topography grid must contain elevation values in metres at
+	 grid points. Ocean depths must have 50000m subtracted from them
+	 as a flag to distinguish negative on-land elevations (eg. Death Valley).
+
+	 If a surface load grid, then values at grid points are equal to the
+	 mass excess (or deficiency if negative) resulting from the topographic
+	 features in units of g/cm**2.  Note that ocean depths give a negative
+	 load because the water ought to be granite in this scheme.
+	 A load grid is necessary as input if lakes, glaciers, and variable
+	 densities for topographic features are to be properly handled.
+
+	 Gravitational attraction of Airy root on a flat earth is calculated
+	 using Parker's fast Fourier transform algorithm.  Attraction of a flat
+	 earth root beyond 166.7 is calculated using an approx to an integral
+	 containing a Bessel function.  This latter is subtracted (subroutine
+	 subtract_far) to leave attraction of root out to 166.7 km.  Beyond
+	 that approximate distance the curvature of the earth becomes important.
+	 ie 'SupplyMohoGrid			= 0 ' means the Moho grid is supplied, not calculated.
+	 The calculation and subtraction of the flat earth root correction
+	 is provided as an option in the batch file
+	 ie 'ApplyEarthCurvatureCorrection = 1' turns the calculation on.
+	 Believers in the flat earth hypothesis can turn this calculation off.
+	 ie 'SubtractFlatEarthRoot = 1' turns the calculation on.
+
+	 Outputs are written as standard ERMapper format grids. The first output
+	 is the Moho depth grid containing the airy root depth in km. This grid
+	 is used to derive the second output, the gravitational attraction in
+	 milligals at sea level of an Airy root system out to a distance of
+	 166.7 km from each observation point.
+	 The output grid must be combined with a solution beyond 166.7km to make
+	 a complete Airy regional. The break occurs at 166.7 km,
+	  (a) because terrain corrections for Bouguer gravity generally stop at
+	      this distance and
+	  (b) because the earth's curvature, which is not accounted for in this
+	      program, starts to become important at about this distance.
+
+	 Please note the following warnings:
+
+	 Avoid using high resolution grids for input. The wavelengths in the
+	 isostatic are long so 1km cell grids are sufficient for computing the
+	 correction unless topography contains extreme gradients.
+
+	 It is important not use any detrending during the FFT processing as
+	 this will impact long wavelengths in the isostatic.
+
+	 Use of the FFT based algorithm causes some errors on the boundaries of
+	 the isostatic gravity correction grid due to the wrapping procedure
+	 employed. If this is of concern then it is recommended that the
+	 input DEM/bathymetry grid be approximately 30%% larger than the area
+	 for which the isostatic is being calculated.
+
+	 To remove any edge effects it is possible to use the Source_Grid
+	 option in the FFT options and set a subarea for the final result
+	 so that it is free of any edge effects.
+*/
+message ISOStatic_INT {
+//  the input database and any relevant fields
+	required string InputGridName=1;
+	required string DepthMohoGridName=2;
+	// subset support
+	optional grid_subset_INT subset = 3;
+
+	optional fdf.GetRolloffTypeList RolloffType		=4 [default = NO_RollOff];
+	optional fdf.GetWindowTypeList WindowType		=5 [default = NO_Window];
+	optional fdf.GetFillTypeList FillType		  =6 [default = NO_Fill];
+	optional bool ReApplyTrendAfterReverseFft =7 [default = false]; // not an ordinary filter
+	optional bool ApplyMaskAfterReverseFft    =8 [default = true];
+	optional bool SubtractFlatEarthRoot       =9 [default = false];// flat earth??
+	optional bool SupplyMohoGrid              =10 [default = false];// calculate this from DTM and loadings as default, yuo can supply one however.
+	optional string FilteredGridName          =11 [ default ="isostatic.ers"];
+	optional string FftGridName               =12 [ default = "fftGridName.ers"];
+	optional string OutputFftGridName         =13 [ default = "OutfftGridName.ers"];
+	optional string InputRadialPowerSpectrumReport=14 [ default = "inputRadial.rpt"];
+	optional string OutputRadialPowerSpectrumReport=15 [ default = "outputRadial.rpt"];
+	optional string WindowedGridName          =16 [ default = "windowGrid.ers"];
+	optional string ExpandedGridName          =17 [ default = "expandedGrid.ers"];
+	optional int32 Band                       =18 [ default = 1];  // first band in a multi-band grid
+	optional ctm.GridDataTypes OutputPrecision=19 [ default = IEEE4ByteReal];
+	optional bool UseSymmetry                 =20 [default = true];
+	optional diskUsageRules DiskUsageRule     =21 [default = AUTO];
+	// specific isostatic paramaters
+	optional double Sea_Level_Root_Depth      =25 [default = 32.0]; // kms
+	optional double Crust_Density             =26 [default = 2.67];  // g/cc
+	optional double Density_Constrast_Depth   =27 [default = -0.6];  // g/cc
+	optional double Max_Tolerance             =28 [default = 0.001];  // error difference
+	optional int32 Max_Iterations             =29 [default = 6];  // moho depth only
+	optional int32 MaxBesselSize              =30 [default = 150000];
+	optional string ToolName = 99 [default = "isostatic"];
+}
+//  **************************************************
+/* grid decorrugation
+   decorrugate : decorrugate an image.
+
+   Author : Tony Luyendyk, September, 1993.
+
+   Given an image file that contains parallel corrugations (streaks),
+  this class attempts to delineate them. The resulting corugations can
+  be regarded as corrections that when subtracted from the original
+  image would produce a levelled grid.
+
+   Output is a new image file which can be either a levelled version
+  of the input image or an image of the actual corrections.
+
+   The streaks or corrugations are defined by :
+
+   1. Their direction, or strike, measured in degrees clockwise from
+      the +ve Y axis.
+   2. Their minimum length along the strike direction. A streak must
+      exceed this length to be considered as a corrugation.
+   3. Their maximum width perpendicular to the strike direction. A
+      streak must be narrower than this width to be considered as a
+      corrugation.
+*/
+enum Decorrugate_Request {
+	ROWS = 0;
+	COLUMNS = 1;
+}
+enum GridFilterType {  // frequency band pass filter
+	FULLER = 0;
+	NAUDY=1;
+	NAUDYFULLER=2;
+	SMOOTHEDFULLER = 3;
+	NONE = 4;
+	}
+enum ExtractorType {  // used in conjunction with the pass filter.
+	MIRROR = 0;
+	FLIPPEDMIRROR=1;
+}
+message Decorrugate_INT {
+	//  the input database and any relevant fields
+	required string InputGrid=1;
+	optional string InputPolygon=2;  // limit the decorrgation to an area defined by a closed polygon
+	optional string OutputGrid=3;   // output grid to create
+	optional int32 Band       =5 [ default = 1];  // first band in a multi-band grid
+	optional GridFilterType HighPassFilter = 6 [default = NAUDYFULLER];  // High (frequency) band pass filter to be used for    |
+	                 // high pass filtering, to delineate the streaks perpendicular to the strike
+	optional double HighPassTolerance = 7 [default = 0.01];  // typical for nT
+	optional ExtractorType HighPassExtrapolator = 8 [default = MIRROR];
+	optional GridFilterType LowPassFilter = 9 [default = SMOOTHEDFULLER];  // Low (frequency) band pass filter to be used for low |
+	              //  pass filtering, to delineate the streaks along the strike direction.
+	optional ExtractorType LowPassExtrapolator = 10 [default = MIRROR];
+	optional double StreakLength = 11 [default = 5000];  // Minimum length of the corrugations, or streaks,     |
+	 					 //    along the strike direction. Distance units the same as those used on the input grid.
+	optional double StreakWidth = 12 [default = 1600];  // Width of corrugations, or streaks, perpendicular to |
+	                 // the strike direction. Distance units the same as those used on the input grid.
+	optional double MinimumCorrection = 13 [default = -30.0];  // Minimum allowed value for any corrugation.
+	optional double MaximumCorrection = 14 [default = 30.0];  // Maximum allowed value for any corrugation.
+	optional Decorrugate_Request DecorrugateAlong = 19 [default = ROWS];  // design the filter to go after corrugations along rows, or down columns
+	optional bool CorrectionGrid = 20 [default = true];  // output the corrections, not the corrected grid
+	optional string ReportFile = 46 [default = "decorrugate.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "decorrugate"];
+}
+/**
+ *  microLevel :    Micro-levelling point located data.
+ *
+ *  \author : Tony Luyendyk, July 1993.
+ *
+ *  This class applies levelling corrections derived from gridded data to point located survey data. The program can
+ *work with either a grid of the actual corrections to be applied or derive them from a grid representing the
+ *levelled data.
+ *
+ *  For a grid of corrections, the program interpolates the grid values to the position of the point located data. If
+ *a point does not fall within the grid it is assigned a correction value of zero. These corrections can be further
+ *filtered before being applied.
+ *
+ *  If the input is a levelled grid, the program calculates the differences between the grid and the point located
+ *data and these values are used as a first estimate of the corrections to be applied to the point located data. As
+ *the survey data has a much higher frequency content than the gridded data, the actual corrections to be applied are
+ *extracted from the first estimates by applying a low pass filter with a long wavelength cutoff to remove the high
+ *frequency component.
+ *
+ *  Whatever the source of the corrections, their dynamic range can be
+ *  restricted.
+ *
+ *  The option also exists to save the corrections as a new data field and the program can also be run in a "TEST"
+ * mode where the corrections are calculated but not actually applied.
+ *
+ *  The corrections are described by :
+ *  1. Their strike measured in degrees anti-clockwise from the +ve Y axis.
+ *  2. Their minimum length along the strike direction. A streak must exceed this length to be considered as a
+ *corrugation.
+ */
+
+message MicroLevel_INT {
+	optional GridFilterType FilterMethod = 1 [default = SMOOTHEDFULLER];
+	optional SignalResampleMethod InterpolationMethod = 2 [default = MinimumCurvature];
+	optional double CutOffWavelength = 3 [default = 1000.0];
+	optional bool TaperCorrections = 4 [default = false];
+	optional double TaperLength = 5 [default = 500];
+	optional double MinimumCorrection = 6 [default = -30];  // restrict the change to no less than
+	optional double MaximumCorrection = 7 [default = 30];  // restrict change to no more than
+	optional int32 GridBand = 8 [ default = 1];  // first band in a multi-band grid
+	optional double StrikeDirection = 9 [default = 90];  // east-west
+	optional bool TestRun = 10 [default = false];
+	optional bool CorrectionGrid = 11 [default =true];  // the input grid is a corrections grid
+	required string InputGrid=15;
+	optional string XIN = 16;  // the X or East channel in the database
+	optional string YIN = 17;
+	optional string SIGNAL_IN = 18;
+	optional string LineType = 19;
+	optional string SIGNAL_OUT = 20;
+	optional string CorrectionField = 21;  // output channel of the corrections to the microlevelled signal
+	optional string ReportFile = 46 [default = "microlevel.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "mlevel"];
+}
+
+//  **************************************************
+// start of levelling
+// to get an aero survey back onto a strict temperoral basis as well as spatial basis
+enum Flight_Reconstruct_Methods {
+	DEFAULTFLIGHTS = -1;
+	Date_Fid=0;  //  use a combination of a date and a fiducial tick count from midnight.
+	Julian_Fid=1;  // use a julian day plus tick count from midnight
+	Fid=2;  // just use a tick count, maybe survey was done within the day.
+}
+// list of levelling methods that could only apply to tensor data
+//  other levelling methods, such as LOOP and Heading corrections are tensor aware, but also generic
+enum Tensor_Levelling_Methods{
+	RemoveEarthModel=0;  // for gravity, the 3048 eotvos earth effect maybe in the signal as delivered fronma contractor, not usual any more
+	AddEarthModel=1;  // opposite of above
+	RemoveSurveyAverage=2;  // remove the full surveys average tensor from each reading,
+	RemoveFlightAverage=3;  // for each flight, work out the average tensor, then remove it
+	AltitudeCorrection=4;  // now improved and more stable than profile method, uses smart local points finder (VTK) to find nearest neighbours
+	Profile_Adjust_Altitude=5;  // just a profile method, that has trouble with cross term gradients if you go to far.
+	Estimate_Error_Norms=6;  // use a 11 point moving window down a profile, estimate the tensor at a mid point, subtract from estimate, get the norm
+	Vertical_Component=7;  // use the local potential to then estimate a vertical Gz directly off a moving window , uses 3d Fourier series
+}
+
+//	weighting for each observed signal point compared to its neighbours, during a moving, local poly window fitting
+enum PolyNomial_weight_methods{
+	 Gradient=0;  // de-emphasise based upon inverse of local gradient ( higher gradient, less imprtance)
+	  Sqrt=1;  // same as above , but use a square root, less drastic. Often used for radiometrics levelling
+	 Equal=2;  // each point treated the same as its neighbours
+}
+// standard model of how magnetic field is varying
+enum GrfModelType{
+	Agrf=0;  // australian model
+	Igrf=1;  // international model
+	Manual=2;
+	Iusgs=3;// US model
+	}
+// list of the available airborne survey levelling corrections available
+enum LevellingProcess {
+	Heading=0;  // systematic errors associated with the direction the aeroplane is flying in
+	Parallax=1; // systematic erros associated with the position of the insturment relative to the logged plane location
+	Diurnal=2;  //  daily fluctions, usually in the mag field, logged in a nearby base station, can be removed
+	Grf=3;      // the geomagetic reference field model of the earth's field, to be removed to show anomalies
+	Polynomial=4; // major up to 4 stages, of polynomial drift correction
+	LevelXY=5;    // systematic error in the actual east/north coord, compared to where the plane thinks it is
+	Loop=6;		//  loop correction method, smears the errors, to minimize any one mis-fit at the cross-overs
+	Tensor_Level=7;	// gravity and magnetic tensor signal corrections
+	Flight=8;
+
+	}
+//###
+//! levelling tool functions
+// tool is designed to do multiple corrections in the same pass
+// generally, however, better to just do one thing at a time
+// actions/ processes are turned on by various switches
+// old behaviour... if a paramter block was present, do that option
+// a. data reduction and levelling of airborne potential field survey data
+// b. professional/leading edge methods to deal with tensor signals
+// c. creates a cross-over dataset that mimics the original topology
+message Levelling_INT {
+	// set of required fields within a geophysical database in order to access this tool
+	required string InputZ=1; // signal field
+	required string InputX=2; // Easting
+	required string InputY=3; // northing
+	required string inputFid=4; // fiucial or wall clock
+	required string TYPEName=5; // line type field eg Line/Tie
+	required string inputLine=6; // line number
+	optional string inputFlights=7; // flight number
+	optional string InputHeightAboveSpheroid=8; // optional flying height
+	optional string InputRequiredHeightAboveSpheroid=9; // optional drape height for a re-estimate of the signal
+	optional string inputDate=10;
+	optional string inputTime=11;
+	// diurnal basestation fields for magnetics
+	optional string DiurnalFlight=20;
+	optional string DiurnalFid=21;
+	optional string DiurnalReading=22;
+	optional string DiurnalJulian=23;
+	// separate cross-over database of points that captures the exact same topology of the survey lines
+	optional string inputXover=30;
+
+// fields to capture the reults on any levelling operation
+	optional string OutputZ=40;
+	optional string OutputX=41;
+	optional string OutputY=42;
+	optional string outputXover=45;
+	optional string ReportFile = 46 [default = "levelling.rpt"];// a name for a comprehensive report file from any process
+	optional string tensorQC=47;
+	// parameters
+	optional LevellingProcess runType=49 [default = Heading]; // main option to specify what you want to do
+	optional bool Save_Changes_Only=50 [ default = false];
+	optional bool Use_XY_Accuracy=51 [ default = false];
+	optional double Gradient_Radius = 52 [default = 10.0];  //  meters
+	optional string Cross_Over_Condition = 53;
+	optional double FID_Factor=54 [default = 0.1]; // 1/10 of a second
+	// method to get a temporal view of the order in which the survey was acquired
+	optional bool Estimate_FlightReconstruct=130 [default = true];
+	optional Flight_Reconstruct_Methods Reconstruct_Flight_Method=60 [ default = DEFAULTFLIGHTS];
+	optional ctm.date_styles Date_Style=61 [ default = YYMMDD];
+	optional ctm.diurnal_styles Diurnal_Style=62 [default = JULIAN_TIME ];
+	// filter parameters for the input signal
+	optional ctm.filter_methods ZFilter=63 [default = None];
+//	optional string ZPass InputFilters", FilterPass(), "Pass Reject");
+	optional int32 Window_Size=65 [default = 11];
+	optional double Tolerance=66 [ default = 0.01];
+	// audit_->SetParmKeyword("DiurnalFilter InputFilters",diurnal_filter_method, filter_methods);
+// light weight levelling corrections
+	optional double Cable_Length=68; // ParallaxCorrection;
+	optional double Time_Lag=69; //  DiurnalCorrection
+	optional string Bearing_Corrections=70 [ default = "0/0/0/0"]; // HeadingCorrection
+	optional bool Estimate_Heading_Stats=71; //  HeadingCorrection;
+	optional bool UseEstimates=72 [default = true]; // HeadingCorrection;
+	optional int32 FlightDirection=73; // FlightCorrection;
+	optional bool Estimate_Flight_Stats=74; // FlightCorrection;
+// geomagnetic field corrections
+	// audit_->SetParmYesNo("Use_Variable_Elevation GrfCorrection
+	optional double Sensor_Elevation=80; // GrfCorrection;
+	optional int32 Year=81; // GrfCorrection
+	optional int32 Month=82; // GrfCorrection
+	optional int32 Day=83; // GrfCorrection
+	optional double Inclination=84; // GrfCorrection Manual
+	optional double Declination=85; // GrfCorrection Manual
+	optional double Field=86; // GrfCorrection Manual
+	optional GrfModelType GrfType=87 [default = Igrf]; // GrfCorrection
+	optional double Recalculation_Interval=88; // GrfCorrection
+	optional int32 Print_Epoch=89 [ default = 2010]; // GrfCorrection, dumps the model to the report file
+
+//  positional error fixes
+	optional double Radius=90; // LevelXYCorrection
+//  loop leveling
+	optional double Max_Change=95; // LoopCorrection
+	optional double OverRelaxation=96 	[default = 1.2]; // LoopCorrection
+	optional int32 Max_Iterations=97 	[default = 100]; // LoopCorrection
+// tie line levelling section
+	optional bool Level_to_Principal_Tie=100 	[default = true];
+	optional bool DistanceWeighting=101 		[default = false];
+	optional int32 Poly_Order_Tie_line=102 [default = 0];
+	optional int32 Piecewise_Window_Tie_line=103 [default = 11];
+	optional int32 Smoothing_Length_Tie_line=104 [default = 3];
+	optional bool Drift_Flights_onto_Ties=105 [default = true];
+	optional int32 Poly_Order_Flight=106 		[default = 1];
+	optional int32 Piecewise_Window_Flight=107 [default=11];
+	optional int32 Smoothing_Length_Flight=108 [ default = 3];
+	optional bool Drift_Traverses_onto_Ties=109 [default=true];
+	optional int32 Poly_Order_Traverse=110 [default = 1];
+	optional int32 Piecewise_Window_Traverse=111 [default = 11];
+	optional int32 Smoothing_Length_Traverse=112 [default = 3];
+	optional bool Drift_Ties_onto_Traverses=113 [default = true];
+	optional int32 Poly_Order_Tie_Traverse=114 [default=1];
+	optional int32 Piecewise_Window_Tie_Traverse=115 [default=11];
+	optional int32 Smoothing_Length_Tie_Traverse=116 [default=3];
+	optional int32 Poly_Iterations=117 [default = 1];
+		// filename of a list of tie lines required to process the survey lines, best ones first
+	optional string PolyTieList=118 [ default = "default.parm"]; // list of tie lines, in the order to process them
+	optional PolyNomial_weight_methods WeightMethod=119 [default = Gradient]; // PolynominalCorrection
+// tensor specific parametrs
+	optional bool FlightBiases=120 [default = false];  // a tensor heading option
+	optional Tensor_Levelling_Methods Tensor_Adjustment=121 [default = Estimate_Error_Norms];
+	// used for loop levelling a tensor signal, how to measure convergence?
+	optional ctm.TensorProduct_list Tensor_Forcing=122 [default =TENSOR_Norm];
+	optional double SurveyHeight=123; // TensorCorrection - use the measured values , not constants
+	optional double SurveyLatitude=124; // TensorCorrection - use the measured values , not constants
+	optional int32 NumberSamples_EstimatePotential=125 [default = 21]; // TensorCorrection
+
+
+	optional string ToolName = 199 [default = "levelPro"];
+	}
+//  **************************************************
+
+	//#
+	// start of marine levelling
+enum MarineRunType {
+	LevelLoop=0 ;
+	LevelDC=1;
+	LevelDrape=2;
+	LevelLinesDC = 3;
+	LevelSurface=4;
+	LevelPolynomialMarine=5;
+	LevelPolynomial=6;
+	CarterCorrection=7;
+	MLevelXY=8;
+}
+	//#
+	// marine levelling, a batch only tool
+message MarineLevelling_INT {
+	// set of required fields within a geophysical database in order to access this tool
+	required MarineRunType RunType = 20;
+	required string Dataset=1; // primary or "A" marine dataset
+	required string InputZ=2; // signal field
+	optional string OtherDataset=3; // Secondary or "B" dataset
+	optional string OtherInputZ=4; // signal
+	optional string InputXover=5; // reload a previously computed set of cross-over points
+	optional string OutputXover=6; // save a cross-over dataset
+	optional string OutputZ=7; // name of output signal field
+	optional string Output_New_Xover=8; // after corrections, a post cross-over datasets save.
+	optional string ReportFile = 9 [default = "marine_level.rpt"];// a name for a comprehensive report file from any process
+	optional string OutputX=10; // optional new X when doing a navigation levelling job
+	optional string OutputY=11;
+	repeated string InputZArray = 13;  // array of signal fields for each dataset
+	repeated string OtherInputZArray = 14; // array of signal fields in the B dataset lists
+	repeated string OutputZArray = 15;  // array of signal channel names for the output dataset
+
+	repeated Data_Replacer ReplaceData = 18; // list of line-type replacements (for sea-g) 
+
+	optional bool ByCruise=109 [default=true];
+	optional bool PopulationAnalysis=110 [default=true];
+	optional bool SaveEmptyGroupsInXover=111 [default=true];  // preserve the topology of the original database in the cross-over dataset
+	optional bool DoPseudoFidsAsRecords=112 [default=false];  // if you do not have a time/fiducial channel, manufacture a pseudo one
+	optional double RejectXoverPercent=95; // Bathymetry levelling, swathe data
+	optional double RejectXoverCorrection=96; // Bathymetry levelling, swathe data
+	//  cross-over point management
+	optional string Cross_Over_Condition = 53;
+	optional double DuplicateCrossOver_Fid_Tolerance=97; // sometimes, get 2 cross-overs calculated at same point due to wall clock issues, reduce to just one.
+	optional double MaximumPointSeparation=98; // sometimes, get 2 cross-overs calculated at same point due to wall clock issues, reduce to just one.
+	optional double MaximumInterpolationGap=99; // do not interpolate a drift correction over a distance longer than this value
+	optional double MinimumAngleBetweenSegments=100;	// Two line segments have a crossover only if they intersect AND the angle between them is >=MinimumAngleBetweenSegments
+	optional double MaximumXYShift=101; // XY/ navigation error analysis, limit how far a point can be moved
+	optional double Misclosure_Threshold=102; // XY move to minimize the misclosure
+	optional bool ReferenceNavIsGood=103 [default=false];  // distinguish good/bad navigation data, assume A is the good one, B is the potential bad one
+
+// poly levelling
+	optional int32 Poly_Order=114 [default=1];
+	optional int32 Piecewise_Window=115 [default=11];
+	optional int32 Smoothing_Length=116 [default=3];
+	optional int32 Poly_Iterations=117 [default = 1];
+	optional int32 Poly_Min_Points=118 [default = 3];
+	optional int32 ConvolveWidth=119 [default=11];
+	optional bool DistanceWeighted=120 [default=true];
+	optional PolyNomial_weight_methods WeightMethod=121 [default = Gradient]; // PolynominalCorrection
+	optional int32 Surface_Order=122 [default=1];
+	optional string ToolName = 199 [default = "marineLevel"];
+}
+//  **************************************************
+//#
+// automatic modelling off the magnetic line data
+// usually uses the TMI signal
+// also works on magnetic tensor data
+// option toi work on gravity FTG is also possible
+//  you have to propose a body type eg DYKE, SLAB of paleo channel
+//  the anomaly is decomposed into vertical and horizontal components, and
+// the body you choose has several representative geometries tested
+// at a geometriclly increasing set of depths , to fit the forward response against obersved
+// unlike the original NAUDY algorithm, this implimentation
+//  pre computesa best estimate of the strikes, so that a better fit is possible
+// adds a formal line inversion stratgey to refine the fit, once an initial body that is close has been found.
+// The option to form 3D worms, linking like with like over many profiles, is a major extenstiuon as well.
+enum LineDataSampleMode
+{
+	XY_BASED = 0;   // spatially located survey data
+	FID_BASED = 1;  // time series assumption
+	FIXED_MODE = 2; // raw sampling, without time or spatial context
+	GEODETIC_MODE = 3;
+}
+enum DatabaseLineSelection  // generally, you do not do the tie lines
+{
+	SINGLE_LINE = 0;  // just pick out one line
+	LINE_RANGE = 1;  // specify a range
+	LINE_SELECTION = 2; // specify a list
+	ALL_LINES = 3; // do everything
+}
+enum Auto_ModelBody_Type
+{
+	Step = 0;  // a contact with no thickness eg fault
+	StringBody = 1;  // a thick squat body, near surface, maybe a paleo channel??
+	Dyke = 2;  // traditional dyke shape, has thickness, near vertical
+}
+// options for setting strike information during Naudy Auto modelling
+enum StrikeTypeOptions
+{
+	ST_PERPENDICULAR = 0; // assume all bodies at right angle to the flight line
+	ST_USER = 1;  // allow the user to specify a constant strike angle for all bodies in the survey
+	ST_TRENDS = 2;  // NOT supported  now, provide a grid with estimated strikes in the survey area
+	ST_CALC = 3;  // smartest option, do a dynamic estimation of the strike locally, by matching bumps between 3 lines at a time
+}
+enum eMagWormsType
+{
+	MAG_ALL = 0; // take all linear dykes
+	MAG_NORMAL = 1; // just the normal induced linear ones
+	MAG_REMANENT = 2; // suspected remenant dykes, linears
+	MAG_RING    = 3;  // find just the ring dykes, require near dykes but strikes at right angles to the joins
+}
+//
+message Trend_Management_INT
+{
+	optional StrikeTypeOptions StrikeCode = 1 [ default = ST_PERPENDICULAR];
+	// next are for calculating strikes
+	optional string ShallowFilter = 3 [ default = "naudyShallowTrendFilter.fdf"]; // 1D line filter description high pass!!
+	optional string DeepFilter = 4 [ default = "naudyDeepTrendFilter.fdf"];
+	optional string VeryDeepFilter = 5 [ default = "naudyVeryDeepTrendFilter.fdf"];
+	optional double ShallowTolerance = 10 [ default = 0.5];  // min anomaly for TMI matching between lines ( 0.005 nT/m for gradients)
+	optional double DeepTolerance = 11 [ default = 0.5];  // min anomaly for TMI matching between lines
+	optional double VeryDeepTolerance = 12 [ default = 0.5];  // min anomaly for TMI matching between lines
+	optional double AlongLine = 13 [default = 3.0];  // specify a search rectangle to find bumps to match too
+	optional double AcrossLine = 14 [default = 3.5]; // specify a search rectangle to find bumps to match too
+	// just set a constant
+	optional double BodyStrike = 15 [ default = 0];  // user settable strike
+}
+// 3D clustering of the profile based solutions, build up enough for co-krig
+// surface generation of dyke network
+message Worm_Management_INT // use recursive searches to build up long runs of 3D dyke worms, CSV format
+{
+	optional int32 Geomodeller_minimum_number_hot_spots = 1 [ default = 3];  // only create a worm when at least 3 points a joined
+	optional bool Create3D_DykeLinears = 2 [ default = true];  // a summary report of each dyke found, expressed as a linear feature
+	optional bool ForceNormalPolarity = 3 [ default = true]; // any dyke that has a left hand strike/dip instead of right handed
+	optional bool BestFitting = 4 [ default = false];  // percentage of dykes with best RMS calculated vs measured anomaly rating
+	optional int32 BestFittingRMSPercent = 5 [ default = 50];  // percentage of dykes with best RMS calculated vs measured anomaly rating
+	optional eMagWormsType RequiredMagnetization_Worms = 6 [ default = MAG_ALL];  // choose magentization type
+	//  geomodeller requires this, but not needed for Intrepid rendering
+	optional bool MakeFinite = 7 [ default = false];  // add a close off to zero thickness both ends
+	optional string OutputGeomodeller=10  [default = "naudy_dykes.csv"];  // stub name for an output report
+	optional bool Create3D_ForwardTask = 11 [default = false]; // create a task file for MTdyke, so that a simple grid forward model of the response can be generated for checking
+	optional string ForwardTaskFile=12  [default = "naudy_3Ddykes.task"];  // stub name for an output task file
+	optional bool useInfiniteThinFormulae = 13 [default = false]; // use facets or inifite sheet formula
+	optional bool CreateExplicitObservationTask = 14 [default = false]; // create a task file for MTdyke, so that a simple grid forward model of the response can be generated for checking
+	optional string  ExplicitObservationsTask =15  [default = "Explicit_3Ddykes.task"]; // dyke individual obs, for uncertainty work
+
+	//  this is the skeleton with thickness case
+
+}
+message Make3D_Dykes {		//  3D dyke surface via triangulation
+	optional int32 discretization_intervals = 2 [default=40]; // marching cube discretization in x,y,z, on a fault by fault basis
+	optional double project_zmin 			= 3 [default = -3000.0];  // depth of the 3d project window, used for co-krig range estiamtion
+	optional double project_zmax 			= 4 [default = 500.0];
+	optional int32 subsample_dtm 			= 5 [default = 1];  //  for high resolution DTM, you may want to subsample, to speed things up
+	// also, this is used to set the surface resolution of the required triangles.. roughly related to DTM resolution.
+	//  for geophysics, or very large dyke networks, render the centre line skeleton, and capture the dyke thickness as a property of each triangle
+	optional bool do_skeleton 				= 6 [default =false];  // skeleton, or volume rendering
+	optional bool do_decimate_with_depth 	= 7 [default = false];  // adapt the triangles to e coarser with depth
+	optional int32 depth_thinning_factor 	= 8 [default = 12];  // bottom triangfles are times the surface ones in size
+	optional bool calculate_thickess 		= 9 [default =false]; // for the triangles, add a thickness field for the skeleton case
+	optional bool do_limited_dykes 			= 10 [default = true];  // truncate each 3D dyke to a 20% exntended range from the observation extents
+	optional bool do_dyke_dtm_clip 			= 11 [default = true];  // with the DTM, clip the dykes to the surface
+	optional bool dump_dyke_XML 			= 12 [default = false];  // dump to the VTK polydata format eg *.vtp
+	optional string Dyke_Surfaces	 		= 13 [default="output/"];  // neutral format ascii files capturing the dyke geometries
+	optional ctm.MeasuredGrid_INT drape			= 14;  // possile flying height drape grid, or mean clearance
+	optional ctm.MeasuredGrid_INT elevation		= 15;  // elevation of the surface for clipping the dykes
+	optional double thickness				= 24 [default = 10.0];  // constant default width for whole dyke, usually this is variable and calculated from data
+	optional double minimum_thickness		= 25 [default = 1.0]; // for a bounded dyke, minimum thickness to render, when thinner, stop
+	optional double minimum_vertical_extent	= 26 [default = 500]; //  minimum vertical extent to render, make sure the near surface aspect is extended to depth
+}
+// 3d openGL visualization window of the dyke network produced using co-krig of dip/strike and
+//  derived from magnetic data mostly, though support for magnetic tensor and FTG gravity salso in the mix
+message View3D_Dykes {		//  3D visualization, an OpenGL 3D VTK display window
+	optional bool show_3D_viewer 			= 1 [default = true];  //control the pop-up of the viewer
+	optional bool show_limited_dykes		= 2 [default = true];  // show triangulated dykes trimmed
+	optional bool show_original_signal_grid = 3 [default = true];  // show signal grid as a grey scale image
+	optional bool show_DTM_grid 			= 4 [default = true];  // show the DTM as a true warped 3D surface
+	optional bool show_simple_dyke_hot_spots= 5 [default = true];
+	optional bool show_all_naudy_solutions  = 6 [default = true];  //2D line based solutions
+	optional bool show_survey_flight_lines  = 7 [default = true];
+	optional double vertical_scale			= 8 [default = 1.0];
+	optional ctm.MeasuredGrid_INT signal		= 9;  // can provide a grid of the signal for visualization, uses profiles otherwise
+//  you can position the grid on any z plane, using the mean_elevation
+	optional double Minimum_Fault_Vertical_Extent = 18 [default = 1000];  //  1 km
+}
+// MMMMM
+//start of magnetic profile dyke/channel detection
+message  Naudy_Observation
+{
+	required string Body_Name=1; // name of the dyke
+	required ctm.Point3d location = 2;  // hot spot point
+	optional ctm.GeologyObsType3D type = 3 [default = Dyke_3D];
+	optional double Thickness=4 [default = 1.0];
+	optional double Height=5 [default = 100.0];
+	optional double Length=6 [default = 100.0];
+	optional double Strike=7 [default = 0.0];
+	optional double Dip=8 [default = 90.0];
+	optional double Susceptibility=9 [default = 0.0];
+	optional double Similarity=10 [default = 5.0];
+	optional double RMS_ERROR=11 [default = -1.0];
+	optional double Inclination=12; // magnetic field vector
+	optional double Declination=13; //  magnetic field vector
+};
+
+
+// main Naudy auto model options
+message Naudy_AutoModelling_INT
+ {
+ 	// dataset and fields to find the dykes, faults, intrasediment channels
+ 	required string InputLines=1; // path to geophysical database
+	optional string InputModel=2;  // re load a previously saved naudy model
+//	optional string InputTrends=3; // old option to pre-compute the trends,save and reload
+	required string InputSignal = 4;  // name of signal field in the database
+	optional string InputClearance = 5; // name of clearance field in the database
+	optional string OutputNaudyModel=6; // save a set of Hot-Spot Models, with same form as the line dataset
+	optional string OutputTrends=7; // name of output trends, as points, with estimated strikes
+	optional string OutputTrendWorms=8; // join the strikes to form a crude set of surface worms, not supported by modelling. ( dataset)
+	optional string ReportFile = 9 [default = "naudy_depths.rpt"];// a name for a comprehensive report file from any process
+	optional LineDataSampleMode SampleMode = 11 [ default = XY_BASED];  // assume survey is properly geolocated
+
+	optional ctm.SetReferenceMagneticField MagneticField = 20; // inducing magentic field strength and direction estimates
+	optional bool VerticalDerivative = 21 [default = false]; //  if you use the vertical gradient, gets better resolution on near surface features
+	optional bool AutoIGRF = 22 [default = false]; // use the survey data, the location of the survey, to then calculate the Magentic field inducing vector
+	optional double StartDepth = 25 [default = 50];  // depth below a magnetic profile where you can find the first magnetic bodies ( air gap)
+	optional double EndDepth = 26 [ default = 5000]; // maximum depth to find bodies - note you need longer lines to search deeper
+	// optional double DepthIncrement NaudyOptions", naudyDepthIncrement);
+	optional double WindowFactor = 27 [default = 1.5]; // geometric depth multiplier , for testing bodies below surface
+	optional double MinAmplitudeCutoff = 28 [ default = 1];  // an anomaly must exceed 1 nTesla to be considered
+	optional double MaxAmplitudeCutoff = 29 [ default = 1000]; // do not consider anomalies with an amplitude greater than this
+	// optional double BinSizeX NaudyOptions", naudyBinSizeP);
+	// optional double BinSizeZ NaudyOptions", naudyBinSizeZ);
+	optional double LineSpacing = 31 [ default = 200]; // line spaing for your survey, units meters, critical, as the dyke bodies use this as a length
+	optional bool DipRange = 33 [ default = true];  // try 3 different dips as part of initial best fitting, if false, just assume body is vertical
+	optional bool WidthRange = 34 [ default = true];  // use a range of width to depth ratios to search for the initial best fit
+	optional bool UseDerivedDip = 35 [ default = true]; // the algorithm can calculate a best dip
+	optional bool UseFinerVerticalSampling = 36 [ default = false]; // bias towards shallow solutions, by testing more near the surface
+	optional Auto_ModelBody_Type BodyType = 37 [default = Dyke];
+	optional bool allowNegativeSusc = 40 [ default = false];  // poor man method to allow some bodies to create negative magnetic anomolies, via a negative susceptibility
+	optional bool AlwaysInvert = 41 [ default = false];  // do a quick solution without inversion improvements
+	// optional int32 StringentMinima NaudyOptions", stringentMinima);
+	optional bool CullOnNaudyDip = 43 [ default = true];  // if a poorly calculated dip is proposed,  delete the bad body
+	optional bool FixOnNaudyDip = 44 [ default = true]; // if a poorly calculated dip is proposed,  adjust the bad dip to something more admissable
+	optional bool DumpSimilarity = 45 [ default = false];  // each raw solution at depth on a profile, can have it's detail attributes dumped to an ascii file
+	optional bool ForceOntoProfile = 46 [ default = false]; // if the lines are not very straight ( land based surveying, work hard to locate the XY position)
+	optional int32 MaxInvertIterations = 47 [ default = 5];  // when inverting to get a better fit, how many iterations
+	optional double MaximumBodySimilarityToKeep = 48 [default = 3]; //  the fit of the model to the anomaly ranges from 0 to 5, with 0 being perfect (naudyBinThreshold)
+	optional bool RemoveClearance = 49 [ default = false];  // subtract the clearance at the point, to better estimate the top to the body
+	// start of 3D part
+	optional Worm_Management_INT cluster = 50;  // what sort of csv dump of dykes, faults
+	optional Make3D_Dykes surfaces = 51;
+		// openGL 3D viewer, render the 3D dyke clusters,
+	// also provision for generating either hangingwall/footwall surfaces, or the skeleton plus thickness
+	optional View3D_Dykes view = 52;
+
+	optional Trend_Management_INT Trends = 60;  // methods to set strike
+	optional DatabaseLineSelection processType = 62 [ default = ALL_LINES];
+// depending upon option chosen, specify some line to work on
+	optional string StartLineNumber = 63;
+	optional string EndLineNumber = 64;
+	optional int32 NoOfLines = 65 [default = 0];
+	repeated string SelectedLines = 66;
+	// magnetic tensor extras
+	optional bool Solve_Remenance_Direction = 70 [default = true];	// stuff for mag tensors
+	optional int32 Tensor_Inversion_Iterations = 71 [default = 15];  // fitting model to observed
+	optional double tensor_errorFloor = 72 [ default = 0.002]; // stop parametric inversion if error less than
+	optional ctm.CoordinateReferenceSystem FieldCoordSysType = 73	[default = NED];
+
+	optional string ToolName = 99 [default = "naudyd"];
+}
+//  **************************************************
+//#
+// euler/werner grid deconvolution
+// euler is not good on ground gravity as the signal quality is usually too poor
+// two main sections
+// a. solver section
+// b. sorting/clustering section
+//
+// there are 3 equations commonly available for scalar potential fields
+// the classic equation ( a la Reid et al)
+// supplemeneted by The 2 Werner Hilbert transform versions
+enum EulerEquationOptions {
+	Classic =0;  // Classic/trraditional equation
+	Hilbert_Only = 1;  // just use the 2 Hilbert equations
+	All3_Fixed_SI = 2;  // use the 3 equations and also still assume a fixed SI
+	All3_For_Contact_Case = 3;
+	No_SI = 4;  // re-arrange the 3 equations back to two, eliminating the SI unknown
+	Hilbert_Then_NOSI = 5;
+	Known_Depth = 6;  // rearrange the equations, so that a known depth to basement can be used to estimate the source SI
+	Located_XY = 7;
+	//  Now for measured tensor gradient signals, require FTG, not just Falcon
+	Tensor_Tz = 8;  // after Zang
+	Tensor_Gravity_Estimator = 9;
+	//  Balanced Gradient options, exploration geophysics, 2014  Guoqing Ma
+	// these do not require a structural index
+	FirstBalanced_Gradient = 10;  // like a tilt angle
+	SecondBalanced_Gradient = 11;  // more like analytic signal
+}
+
+message EulerSolver_INT {
+		// now for the FFT and SVD part
+	optional EulerEquationOptions EquationCombo  = 1 [default = Hilbert_Only];
+	optional double StructuralIndex = 2 [default = 1];  // classic euler requires you to set a value
+	optional int32 LateralSize = 3 [default = 7];  // moving square window size across the grid
+	//  FFT pre-processing and gradient grid calculation options
+	optional fdf.GetRolloffTypeList RolloffType		=4 [default = NO_RollOff];
+	optional fdf.GetWindowTypeList WindowType		=5 [default = NO_Window];
+	optional fdf.GetFillTypeList FillType		  =6 [default = NO_Fill];
+	optional bool FillStopAtEdge 			= 8 [default = false];
+	optional int32 DetrendDegree 			= 7 [default = 1];  // detrend the input grid
+	optional double Minimum_Gradient_Threshold = 14 [default = 0.00001];  // possible way to limit part of an anomaly with very low gradient values from being used to calc an answer.. noise protection
+
+	optional string FilteredGridName          =11 [ default ="filtered_grid.ers"];
+	optional string FftGridName               =12 [ default = "fftGridName.ers"];  // input grid transformed to Fourier coefficients
+	optional string OutputFftGridName         =13 [ default = "OutfftGridName.ers"];  // this is the Fourier coeffiecents grid
+	optional string WindowedGridName          =16 [ default = "windowGrid.ers"];
+	optional string ExpandedGridName          =17 [ default = "expandedGrid.ers"];
+	optional bool UseSymmetry                 =20 [default = true];
+	optional ctm.GridDataTypes OutputPrecision=22 [ default = IEEE4ByteReal];
+	optional ctm.GridDataTypes FFTPrecision   =23 [ default = IEEE4ByteComplex];  // can save some space for you
+	optional diskUsageRules DiskUsageRule     =24 [default = AUTO];  // store FFT on disk, or try for an in-memory for all the work
+	//  tensor/vector field options  - good for gravity and magnetics gradients
+	optional ctm.CoordinateReferenceSystem CoordinateSystemType = 34 [default = END];
+	// for scalar magentics,
+	optional bool DoReductionToPole = 27 [default = false];
+	optional ctm.SetReferenceMagneticField IGRF = 9;  // only supports the date as a string for now, as with old language
+	optional int32 Number_CPUs 					= 10 [ default = 1];  // here is the way to get more CPUs into the act
+	optional bool SaveDerivatives 				= 28 [ default = false];  // note, the method is critically dependent upon quality of the X, Y & Veritcal deriatives
+	optional string SaveDerivativeDirectoryName = 29 [ default = "SavedGrids"];
+}
+
+message EulerSort_INT {
+//  first section for solution selection and culling of less reliable ones
+	optional double LowerGoodnessClip = 2 [default = 0];
+	optional double UpperGoodnessClip = 3 [default = 1];
+	optional double LowerStructuralIndexClip = 4 [default = -0.5]; // contact is supposed to be around 0.0 magnetics
+	optional double UpperStructuralIndexClip = 5 [default = 4.5]; // sphere is around 3.0 for gravity
+		optional double StructuralIndexErrorClip = 6 [default = 0.2];  // if solving for SI, get an error estimate as well
+	optional double MinimumDepth = 7 [default = 0];  // set to exclude shallow solutions
+	optional double MaximumDepth = 8 [default = 5000]; // restrict solutions to nearer surface bodies
+	optional double MinimumObservationDip = 9 [default = 20];  // a goodway to cluster better conditioned  as you go closer to 90 degrees dip
+	optional double Maximum_Absolute_Alpha = 10 [default = 100];  // one of the extra Hilbert transform outputs - friend of properties
+	optional double MaximumSingularityRatio = 11 [default = 1000000000.0];
+	optional int32 Maximum_Percentage_Depth_Error = 18 [default = 900];  // not a very good discrimination factor
+// now for horizontal and vertical binning options
+// note some areas of your spatial data may have very strong responses
+// these can hide the quiter areas, say under a cover of sediments, so use binning to get these ones up
+	optional bool Binning_Analysis = 12 [default = false];
+	optional int32 NumberVerticalLayers = 13 [default = 5];
+	optional double DepthMultiplier = 14 [default = 1.4];  // do the binning vertically using a geometric progression
+	optional double XYBinEast = 15 [default = 10000000];
+	optional double XYBinNorth = 16 [default = 10000000];
+	optional bool Mask_Solutions = 17 [default = true]; // do not keep solutions outside original spatial grid
+// now for a 3D clustering attempt at simplyfying the point cloud solutions, find the  body hot-spots
+// old scheme
+	optional bool Cluster_Analysis = 19 [default = false];
+	// The following one line is deprecated
+	optional double Maximum_Point_separation  = 20 [default = 900];
+	// better access to the algorithm, now shared in a DLL, now also does anisotrophy for faults/edges
+	optional ClusterControl_INT Cluster=21;																// to improve the significance of the statistical analysis of the clusters
+}
+
+// 3d openGL visualization window of the depth/Structural Index solutions from Euler Decon
+// before and after they are thinned using clustering strategy.
+message View3D_Solutions {
+		//  3D visualization, an OpenGL 3D VTK display window
+	optional bool show_3D_viewer 			= 1 [default = true];  //control the pop-up of the viewer
+	optional double project_zmin 			= 3 [default = -3000.0];  // depth of the 3d project window, used for co-krig range estiamtion
+	optional double project_zmax 			= 4 [default = 500.0];
+	optional bool show_original_points 		= 5 [default = true];  // truncate the fault lengths to geophysical observed data
+	optional bool show_cluster_shape 		= 6 [default = true];  // show the bounds as either sphere or plane
+	optional bool show_original_signal_grid = 8 [default = true];  // show signal grid as a grey scale image
+	optional bool show_DTM_grid 			= 9 [default = true];  // show the DTM as a true warped 3D surface
+	optional bool show_Cluster_FormingStages = 10 [default = false];  // show the progressive 3D graphics during cluster forming
+	optional double vertical_scale			= 14 [default = 1.0]; // for the 3D viewer, what exaggeration??
+	optional double Minimum_Fault_Vertical_Extent = 18 [default = 1000];  //  1 km
+}
+ enum EulerOutputOptions {
+ 		Database = 0;  // standard Intrepid database IO options for the point dataset
+ 		XYZ = 1;  // dump as ASCII XYZ style file.. suitable for Excel etc
+ 		DXF = 2;  // autoCad style output
+ }
+message EulerDeconvolution_INT {
+//  the input database and any relevant fields
+	// The following one line is deprecated
+	optional string InputGridName	= 1;  // primary grid dataset to do work on!
+	//  an elevation grid is required when going to 3D, as you need to do the height properly, not used for 2D worms, should be same map projection as signal
+	optional ctm.MeasuredGrid_INT ElevationGridName		= 2;  // primary surface topography grid, gravity is assumed to be measured on this surface
+	optional string InputRawSolutionsName=14;  // primary raw solutions dataset to do work on, from a previous solver run
+	// The following one line is deprecated
+	optional int32 Band          =21 [ default = 1];  // first band in a multi-band grid
+	optional grid_subset_INT Subset = 3;  // use if you just want a subset of your gridded data
+// optional extras on the input side, depending upon the equation options
+	optional string KnownDepth = 4;
+	optional string KnownGravity = 5;  // if doing the tensor known Gz case
+	optional string Solutions_Opt_Directory = 6;  //optional place to stash/find raw solutions
+	// pushed back into the inputgridname block
+	// next 1 line is deprecated
+	optional double SurveyHeight = 7 [default = 0];  // can be used to get corrected elevations in 3D
+
+	optional EulerSolver_INT Solver = 8;
+	optional EulerSort_INT Sort = 11;
+
+	optional View3D_Solutions view 	= 12;  // openGL pop-up viewer
+	// for testing or specific experimental purposes, you can request solutions for a set/list of XY points
+	// this is exclusive of using the full grid
+	repeated ctm.Point3d Required_Points = 15;
+	// now some output options for the solutions
+	optional EulerOutputOptions ExportTypes = 20 [default = Database];
+		// output files
+	optional string Output = 13 [default = "eulerOutputPts..DIR"];  // what to call the output dataset?
+	optional string ReportFile = 9 [default = "euler.rpt"];// a name for a comprehensive report file from any process
+	optional string Cluster = 10 [ default = "eulerCluster..DIR"];
+	optional bool Dump_VRML  = 17 [default = false];  // 3D VRML graphics extra
+	// The following one line is deprecated
+	optional bool Dump_BREP = 18 [default = false];  // 3D Boundary Representation graphics
+	optional bool Dump_VTK = 19 [default = false];  // 3D Boundary Representation graphics
+	optional string ToolName = 99 [default = "euler"];
+}
+//  **************************************************
+//#
+// marine levelling, a batch only tool
+message SplitCruise_INT {
+	// set of required fields within a geophysical database in order to access this tool
+	required string Input=1;
+	optional string ZIN=2;
+	required string Output=3;
+	optional string Turns=4;
+	optional double SharpAngleTolerance=5[default=50];
+	optional double TrendAngleTolerance=6[default=45];
+	optional int32 TrendDistanceInSamples=7[default=10];
+	optional int32 MinimumSamplesBeforeDrop=8[default=0]; // distance in metres
+	optional double MaximumDistanceBetweenSamples=9[default=2000]; // distance in metres
+	optional bool Preserve_All_Raw_Data=10[default=false]; // keep all the navigation
+	optional bool SplitOnNullsOnly=11[default=false]; // distance in metres
+	optional string ToolName = 99 [default = "splitcruise"];
+}
+//  **************************************************
+//###
+//! geophysical dataset and grid sub-sampling, subsetting, decimating tool functions
+// generic pairs of XY points that can define a clipping polygon
+message XY_Pair {
+	required double X = 1;
+	required double Y = 2;
+}
+
+message XY_Region {
+	repeated XY_Pair points = 1; // points to define a clipping polygon
+	optional ctm.CoordinateSystem Region_Projection = 21; // coords of the XY region can have a different projection/datum to the geophyscs dataset
+}
+// cookie cutting tool for most geophysics datasets and formats
+//  dangerous to also use this as a dataset format converter, tough it probably will work fine in some cases
+// main problem is going from an open design to one that is more restrictive
+// eg  Intrepid ..DIR format to a shapefile
+message Subset_INT {
+// either
+	optional string IN = 1; //  any geophysical dataset input
+	// or
+	optional string GRID = 2; //  any geophysical grid input
+	// or
+	optional string POLY = 3; // closed polygon(s) to cookie cut the data
+
+	// what name for the output?
+	optional string OUT = 5; // output spatial subset
+	optional string ReportFile = 6; // a name for a comprehensive report file from any process
+	// spatial test options
+	optional string CLIP_POLY = 10; // optional closed polygon(s) ... confusion about this, as actually the above POLY does the clipping
+	//  clipping regular box shape
+	optional ctm.BoundingBox2D Box = 11;
+	// clipping box via centroid, extent and angle
+	optional ctm.RotatableBoundingBox2D rotatableBox = 12;
+	// or Allow an arbitrary polygon as an XY array
+	optional XY_Region region = 13;
+
+	// logical test options
+	//  decimation, or output subsampling
+	optional int32 Output_Subsampling = 15 [default = 1];
+	optional bool Shrink = 18 [default = true]; // cull nulls if you can
+	optional bool SplitLines = 19 [default = true]; //  if a clipping polygon divides a line, create two output lines
+	optional bool Exclude = 20 [default = false]; // if using a spatial test, reverse the sense and exclude data in the box
+	optional ctm.CoordinateSystem Box_Projection = 21; // coords of the box can have a different projection/datum to the geophyscs dataset
+	optional ctm.CoordinateSystem OutputProjectionHint = 22; // you can request a reprojection of the output dataset
+	optional string Search_Condition = 30; // a calc class expression to logically choose required data, rather than a spatial test
+	// example, choose "LineType=2".... this ignores the tielines
+	optional string ToolName = 99 [default = "subset"];
+}
+//  **************************************************
+//####
+//! Radiometrics geophysical processing tools
+//####
+//! below is list of file formats supported by import tool
+//  normal rule is to seek no less than 5000 samples for statistical significance
+//  each manufactured spectral instrument has different Raw spectral characteristic curves
+// that need to be adjusted to conform to the IEAA standard via the Energy Calibrate option
+enum Manufacturer_GammaDetector {
+	SCINTREX_GR820 = 0; // GR820, 32 litre NaI crystal
+	PICODAS_SPEC = 1;
+	RADIATION_SOLUTIONS = 2;
+}
+enum GammaDetector_Volume {
+	litres_8 = 0;
+	litres_16 = 1;
+	litres_32 = 2; // 32 litre NaI crystal
+}
+enum SpectralNoiseAdjustStratgey {
+	BY_LINE = 0;
+	BY_FLIGHT = 1;
+	BY_SURVEY = 2;
+	BY_CONSTRUCT_FROM_PRINCIPAL_COMPONENTS = 3; //  if save the PCs to file, these can be edited, then a spectra reconstructed
+}
+
+enum EnergyCalibrateStratgey {
+	ECS_LINE = 0;
+	ECS_IntegrationPeriod = 1;
+	ECS_SKIP = 2; //  this is the one to turn off the option
+}
+// re-usable window limits
+message EnergyWindow {
+	required double start = 1; // lower channel limit of the ith calibration window
+	required double end = 2; // upper channel limit of the ith calibration window
+	optional double correct_peak_location = 3; // correct (IAEA) channel position of the ith calibration peak
+	optional double raw_peak_location = 4; // channel position of the ith peak in the current spectrum
+	optional double step = 5 [default = 1.0]; // channel step width
+	optional string name = 6;
+}
+
+//! AdjustSpectra tool
+//  the state of the art gamma ray spectral processing tool
+//  work on at least 256 channels or bins
+//  database Alias mechanism can be also used to set default field name values, but best set explicitly here
+message Radio256_INT {
+	required string DataBaseDirectory = 1;
+	optional string InputSpectraField = 2 [default = "SPECTRUM"];
+	optional string LineTypeName = 3 [default = "GS_LType"];
+	optional string ReportFile = 4 [default = "Spectra_processing.rpt"];
+	optional string CosmicField = 5 [default = "cosmic"];
+	optional string LiveTimeField = 6 [default = "livetime"];
+	optional string EnergyCalibrationFile = 7
+	[default = "/config/calibration_spectra/dfa_default.asc"];
+	optional string CosmicCalibrationFile = 8;
+	optional string RadonCalibrationFile = 9;
+	optional bool IgnoreLinesbyType = 10 [default = false]; // skip tie lines
+	optional double DataSampleInterval = 11 [default = 1.0]; // seconds
+	optional Manufacturer_GammaDetector instrument = 12 [default = SCINTREX_GR820];
+
+	// Noise adjusted PCA, improve signal to noise when we have a Poisson statistical distribution in the signal
+	optional bool PCAsmooth = 20 [default = false];
+	optional SpectralNoiseAdjustStratgey NASVD = 21 [default = BY_LINE];
+	optional bool Boost_Signal_to_Noise = 23 [default = false];
+	optional bool Add_Synthetic_Spectra_NASVD = 24 [default = false]; // warning, this is beforfe energy calibrate!
+	optional bool use_lapack = 25 [default = false];
+	optional int32 NumberOfPrincipalComponents = 26 [default = 8];
+
+	// we have up to 4 segments of a spectra to interpolate, with each one allowed to have a different
+	// rate of interpolation (ie: piece-wise linear representation of the drift which
+	// is not restricted to being linear although with modern spectrometers it should be!!
+	optional EnergyCalibrateStratgey EnergyCalibrate = 30 [default = ECS_IntegrationPeriod];
+	optional double LowSpectrumEnergy = 31 [default = 0.0]; // Million Electron Volts
+	optional double HighSpectrumEnergy = 32 [default = 3.0];
+	optional double IntegrationPeriod = 33 [default = 400]; // seconds
+	// Set calibration windows to default GR820 setup which is
+	// Radon     in channel  46
+	// Potassium in channel 114
+	// Thorium   in channel 205
+	repeated EnergyWindow CalibrationWindow = 34;
+
+	// what strategy is used by the instrument to be off-line, recording a measurement?
+	optional bool AdjustForDeadTime = 40 [default = false];
+	optional bool UseMeasuredLiveTime = 41 [default = true];
+	optional double LiveTimeMaximum = 42 [default = 1000.0];
+	optional double LiveTimeMinimum = 43 [default = 1.0];
+	optional double LiveTimeDefault = 44 [default = 950.0];
+	optional double LiveTimeConversionFactor = 45 [default = 0.001]; // milliseconds
+	optional bool UseFixedDeadTime = 46 [default = false];
+	optional double FixedSpectraDeadTime = 47 [default = 2.51]; // milliseconds
+	optional double SystemDeadTime = 48 [default = 11.0];
+	optional bool EffectiveHeight = 50 [default = false];
+	optional bool RemoveCosmic = 51 [default = false];
+	optional double MaximumCosmicCount = 52 [default = 180.0];
+	optional double MinimumCosmicCount = 53 [default = 1.0];
+	optional double DefaultCosmicCount = 54 [default = 120.0];
+	optional bool NormaliseCosmic = 55 [default = true];
+	optional bool RemoveAircraft = 60 [default = false];
+
+	//  multi-spectral way to remove the transient radon gas effects from a survey
+	optional bool RemoveRadon = 70 [default = false];
+	optional double C1 = 71 [default = 1.95]; //  the ratio of the low uranium peak to the standard uranium window from the Radon spectrum.
+	optional double C2 = 72 [default = 0.71]; // the ratio of the low uranium peak to the standard uranium window from the uranium spectrum
+	optional double C3 = 73 [default = 0.0268]; // the ratio of the low uranium peak to the standard thorium window from the thorium spectrum
+	optional double C4 = 74 [default = -0.0179]; // the ratio of the contribution of potassium in the low Uranium peak to the standard Potassium window from the potassium spectrum
+	optional double C1_HeightGradient = 75 [default = 0];
+	optional double C2_HeightGradient = 76 [default = 0];
+	optional double C3_HeightGradient = 77 [default = 0];
+	optional double C4_HeightGradient = 78 [default = 0];
+	optional double ReferenceTerrainClearance = 79 [default = 80.0]; // meters
+	//   stripping ratios for radon removal  .. currently turned off as only used in Method 1 for radon correction
+	optional double alphaGroundStrippingRatio = 90 [default = 0.2403];
+	optional double alphaSlopeStrippingRatio = 91 [default = 0.00049]; // height gradient
+	optional double betaGroundStrippingRatio = 92 [default = 0.4074];
+	optional double betaSlopeStrippingRatio = 93 [default = 0.00065];
+	optional double gammaGroundStrippingRatio = 94 [default = 0.7129];
+	optional double gammaSlopeStrippingRatio = 95 [default = 0.00069];
+	optional double reverse_a_StrippingRatio = 96 [default = 0.0292];
+	optional double reverse_b_StrippingRatio = 97 [default = 0.0];
+	optional double reverse_g_StrippingRatio = 98 [default = 0.0];
+
+	// output options for new database fields
+	optional bool GenerateStandardChannels = 100 [default = true];
+	repeated EnergyWindow StandardWindow = 101;
+	optional string OutputTotalCount = 102 [default = "outTC"];
+	optional string OutputPotassium = 103 [default = "outK"];
+	optional string OutputThorium = 104 [default = "outTh"];
+	optional string OutputUranium = 105 [default = "outU"];
+	optional bool GenerateLowUranium = 106 [default = false];
+	repeated EnergyWindow RadonUraniumWindow = 107;
+	optional string OutputLowUranium = 108 [default = "outLowU"];
+	optional bool GenerateEstimatedRadon = 109 [default = false];
+	optional string OutputEstimatedRadon = 110 [default = "outEstRadon"]; // note this is an estimate for each integration period only
+	optional bool Save256Channels = 111 [default = false];
+	optional string OutputSpectraField = 112 [default = "outSpectrum"];
+	optional bool SavePCA = 113 [default = false]; // amplitudes and PC spectra, Intrepid format only
+	optional bool GenerateCosmicSpectra = 120 [default = false];
+	optional bool GenerateIntegratedSpectra = 121 [default = false];
+	optional bool GenerateRadonSpectra = 122 [default = false];
+	optional bool GenerateGroundSpectra = 123 [default = false];
+	optional string ToolName = 99 [default = "mrad256"];
+}
+//  **************************************************
+/**
+ *   Green et al.'s mnf noise reduction)
+ *
+ *  Smoothing of multichannel airborne spectra using the mnf method.
+ * The code is actually an implementation a Noise-Adjusted Principle Component Transform (Lee et. al.).
+ *
+ * Usually for gamma-ray spectra (256 or more), but
+ * Looking at AEM spectra (say 20+)as well
+ *  The smoothed spectra are saved as a new field.
+ * The numpc PC's (eigenvectors) are stored as a new npc*NumCH band
+ * "group by"  field.
+ *
+ *  Note: In this implementation the data are centred by subtracting the average of each channel from both the noise
+ *and signal. The covariance matrices are then calculated as just a.at
+ *       - ie. correlation marix, since the data are already centred.
+ *
+ *  Green, A.G., Berman, M., Switzer, P., and Craig, M.D., 1988. A transformation for ordering multispectral data in
+ *terms of image quality with implications for noise removal. IEEE Transactions on Geoscience and Remote Sensing,
+ *26(1), 65-74.
+ *
+ *  Lee, J.B., Woodyatt, A.S., and Berman, M, 1990. Enhancement of high spectral resolution remote-sensing data by a
+ *noise-
+ *     adjusted principle components transform. IEEE Transactions on Geoscience and Remote Sensing, 28(3), 295-304.
+ *
+ *  07/04/00 - \author B.R.S. Minty 18/8/2001 - \author djf
+ */
+//  **************************************************
+message MinimumNoiseFraction_INT {
+	required string Flight = 1;  // just a field name
+	optional string InputSpectraField = 2;  // includes full path name
+	optional string OutputSpectraField = 3; // includes full path name
+	optional string ReportFile = 4 [default = "Spectra_processing.rpt"];
+	optional string OutputPCcomp = 5; // only active as a stub for saved PC's
+	optional int32 NumberOfPC = 7 [default =8];  // geared to radiometrics, but can be used elsewhere
+	optional int32 LastChannel = 8 [default =254];
+	optional int32 FirstChannel = 9 [default =12];  // old AGSO convertion for 32 flag leading channles
+	// Noise adjusted PCA, improve signal to noise when we have a Poisson statistical distribution in the signal
+	optional bool save_PC = 20 [default = false];
+	optional bool forceLineProcessing = 21 [default = false]; // ignore flights, do line by line
+}
+
+
+//####
+message MeasuredGridList_INT {
+	repeated ctm.MeasuredGrid_INT ObservedGrid = 1;
+}
+
+//####
+// main methods for computing rapid forward model responses using FFT
+enum Dyke_Style // what style of modelling code to use?
+{
+	DS_TRIANGLES = 0; //  triangular facets
+	DS_SKELETON_SHEET = 1; // limit sheet formulae
+	DS_PRISM = 2; // prism formulae
+}
+//####
+// main methods for computing rapid forward model response for dykes
+// designed for magnetics, gravity... gdyke tool
+message ForwardModelFromDykes_INT {
+	// Database with dyke model geometries ( ex-Naudyd tool)
+	optional string InputDykesName = 1;
+	optional string InputField = 2; // Already a field within the database
+	 // or a network of triangles eg ioTsurf
+	 //       a Tsurf cannot carry a property number, so only one property is used and is in contrast to background
+	optional string DykeSurfaceTrianglesName = 3;  // dyke_style = DS_TRIANGLES;
+	// or lists of simple DYKE prisms
+	repeated geophy.cModel worms = 4;
+	// elevation drape surface to compute the response grid
+	optional string drape_elevation_grid = 5;
+	// or a fixed height ?
+	optional double ObservationHeight = 13;
+	// lists of property values, to match with lithology number
+
+	optional ctm.RepeatedDouble Density = 6;
+	optional ctm.RepeatedDouble Susceptibility = 7;
+	//used to do deltas during inversion
+	optional double SetReferenceDensity = 21 [default = 2.67];
+	optional double SetReferenceSusceptibility = 22 [default = 0.0];
+	 // what do you want to calculate?
+	required ctm.GeophysicsSignalType product = 8 [default = Magnetism];
+	optional ctm.SetReferenceMagneticField IGRF = 9;
+	optional ctm.ComputationalMethod method = 10 [default = Dyke_Skeletons]; // computational method, Facets, FFT no available as yet
+	optional Dyke_Style dyke_style = 11 [default = DS_SKELETON_SHEET]; // the way of presenting the dyke geometry for computation
+	optional string ComputedGridName = 12; // main output grid
+	optional double Grid_Size = 15; // output grid cell size
+	optional ctm.BoundingBox2D projectBox = 30;  //  define a box for the observation grid extent
+	optional ctm.CoordinateReferenceSystem OutputGridCoordSysType = 14	[default = END];
+	optional double Average_Dyke_Length = 16; // database field already
+	optional int32 TopographySampling = 17 [default = 1];
+	optional bool include_border_effect = 18; // do we want to do this for dykes?
+//	optional string POSC_CoordinateSystem = 19; // geolocation
+	optional ctm.CoordinateSystem ProjectionHint = 19; // you can set a projection of the output dataset
+	optional string log = 20;
+	optional string ReportFile = 32 [default = "grid_dyke.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "mtdyke"];
+}
+//  **************************************************
+
+//####
+// main methods for computing rapid forward model response for closed/open surfaces
+//  mainly triangulated closed volume, Can only do one closed Volume at a time??
+//  also supports HOT Spot simple body definitions from a database eg XYZ, widt, heigth, strike, depth etc
+// also supports tsurf style closed volumes
+// designed for magnetics, gravity... MTVol tool
+message ForwardModelFromSurfaces_INT {
+	optional string InputSurfaceName = 1; // Intrepid Database/io driver with triangulated surface model geometries
+	optional string InputField = 2;
+		 // or a volume defined by triangles eg ioTsurf, and VTK surface triangles
+	 //       a Tsurf cannot carry a property number, so only one property is used and is in contrast to background
+	optional string SurfaceTrianglesName = 3; //  an file with a network of triangles eg Tsurf or vtk binary XML
+		// or lists of simple prisms or facets to define a closed volume
+	repeated geophy.cModel facets = 4;
+
+	optional string drape_elevation_grid = 5; // any standard geophysical supported grid to specify variable elevation surface io Driver
+	optional double ObservationHeight = 6; // or at a fixed elevation above the body
+	// property specification has to be done by following at present,  background values ignored, so set anomalous densities etc., in order of the bodies.
+	optional ctm.RepeatedDouble Density = 7; // lists of property values, to match with lithology number
+	optional ctm.RepeatedDouble Susceptibility = 8;
+	required ctm.GeophysicsSignalType product = 9 [default = Gravimetry]; // what do you want to calculate?
+	optional ctm.SetReferenceMagneticField IGRF = 10;
+	optional double SetReferenceDensity = 11 [default = 2.67]; //used to do do deltas during inversion
+	optional double SetReferenceSusceptibility = 22 [default = 0.0]; //used to do deltas during inversion
+	optional ctm.ComputationalMethod method = 12 [default = Facets]; // computational method, FFT not available as yet
+	optional string ComputedGridName = 13; // main way to deliver the outcome, standard geophysical grid
+	optional double Grid_Size = 14; // cell size of computed grid
+	optional ctm.BoundingBox2D projectBox = 30;  //  define a box for the observation grid extent
+	optional ctm.CoordinateReferenceSystem OutputGridCoordSysType = 15	[default = END]; // vector reference frame
+	optional int32 TopographySampling = 16 [default = 1];
+	optional bool include_border_effect = 17 [default = true];
+//	optional string POSC_CoordinateSystem = 18; // geo location
+	optional ctm.CoordinateSystem ProjectionHint = 19; // you can set a projection of the output dataset
+	optional string log = 20;
+	optional string ReportFile = 32 [default = "grid_geology_body.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName = 99 [default = "mtvol"];
+}
+
+//////////////////////////////////////////////////////////////////////////////
+message ScaleOption_INT {
+	optional bool doLog = 1 [default = false];
+	optional double minClip = 2;
+	optional double maxClip = 3;
+}
+//  **************************************************
+//####
+//! Create a Histogram report for an inversion run using the specified file.
+//! Message definition:\n
+//! <b>filename</b> Filename to load the project from
+//! <b>log</b> Optional string to add to the report log when the message is processed. [optional]
+message MakeHistogram_INT {
+	required string filename = 1;
+	required string run = 2;
+	optional string case = 3;
+	required string voxet = 4;
+	required string lithology_field = 5;
+	required string property_field = 6;
+	required int32 number_of_bins = 7;
+	required ScaleOption_INT Scaling = 8;
+	required string report = 9;
+	optional string log = 17;
+	optional string ToolName = 99 [default = "histo"];
+}
+
+
+//####
+enum ColourScheme {
+	LithologyColours = 0;
+	Colours = 1;
+	GreyScale = 2;
+}
+//  **************************************************
+
+//####
+// this is a predefined list of the super summary statistical field names
+// so when you do stats, you can then rely on being able
+// to interrogate a derived statistical voxet to create movies, and images
+//  there are also non predefined fields added to this list
+//  each lithology field has a probability of occurance in each 3D cell
+// this is stored in a field with the form  "Prob_UnitName"
+enum StatisticalFieldWithinStatsVoxet {
+	ChangeCount = 0;
+	MeanDensity = 1;
+	StdDevDensity = 2;
+	MeanSusceptibility = 3;
+	StdDevSusceptibility = 4;
+	MeanRemanenceEast = 5;
+	StdDevRemanenceEast = 6;
+	MeanRemanenceNorth = 7;
+	StdDevRemanenceNorth = 8;
+	MeanRemanenceUp = 9; // note, default is ENU for magnetics
+	StdDevRemanenceUp = 10;
+	MostProbable = 11;
+	MostProbableThresholded = 12;
+	Prob_AboveTopo = 13;
+	MeanHeatFlow = 14; // this one is an odd man out!!
+}
+//  **************************************************
+// generalised projection conversion tool
+// all geolocated data supported
+// tensor grids are a special case, as some resampling is required as a grid warps.
+message	ProjectionConversion_INT {
+	optional string XIN = 1;  // a line/point dataset
+	optional string YIN = 2;
+	optional string ZIN = 3;
+	optional string InputImage = 4;  // grid
+	optional string XOUT = 5;  // reprojected line/point
+	optional string YOUT = 6;
+	optional string ZOUT = 7;
+	optional string OutputImage = 8;
+	optional string OutputTable = 9;
+	optional string ToProj = 10;
+	optional string ToDatum = 11;
+	optional double OutputMesh = 12[default=50];  // cell size
+	optional double Angle = 13[default=0.0];
+	optional double X_Origin_Reference = 14[default=10];
+	optional double Y_Origin_Reference = 15[default=0];
+	optional double UseReference_Reference = 16[default=2000];
+	optional bool Reference = 17[default=false];
+	optional SignalResampleMethod ResampleMethod = 18[default=Cubic];
+	optional bool UpdateSurveyInfo = 19[default=true];
+	optional string ToolName = 99 [default = "projConv"];
+}
+// tensor resampling on a grid reprojection, or rotation is a special case!
+//  the rows and columns orientation does not effect the gradient refernce frame
+// however, if the cartesian coordinate refernce frame does rotate,
+// that wpould effect what portions of the gradient shows up in each component
+// there is a DBEDIT function to do a tensor refernce frame rotate
+enum SignalResampleMethod
+{
+	Linear = 0;
+	MinimumCurvature = 1;
+	InverseDistance= 2;
+	Cubic = 3;
+	Nearest_Neighbour = 4;
+}
+//  **************************************************
+
+//! wormE  automatic methods for a scalar potential grid, or Full tensor gradient grid or Falcon
+// traditional gravity/mag method relies on finding maximum total horizontal derivative/gradient ridge points.
+// Fedi has shown that there is an advantage in tracking the zero crossing of the vertical derivatives, to aid solving the Euler equations.
+enum MultiScaleEdgeDetectionMethod
+{
+	Blakely = 0;  // as described in the text book
+	Canny = 1;  // this is shown to do a better job, find max. horizontal gradient points
+	TopHat= 2;  // original image processing idea
+	Zero_Vertical_Gradient = 3; // Use the zero crossing point to help solve Euler dervied stuff (Fedi paper)
+}
+// dilemma of which horizontal amplitude to use for picking
+// Blakely uses TotalHorizontal, and this is traditional
+// CurvatureAmplitude indicates a differing phenomena, not just contact edge - depature from sphere
+enum HorizontalDerivativeMethod
+{
+	TotalHorizontal = 0;  // as described in the text book, ZX,YZ, or horizontal derivative of vertical component
+	CurvatureAmplitude = 1;  // Falcon Horizontal tensor measure as a hilbert pair (Txy, Tuv) - depature from a spherical body
+}
+
+// worms or multi-scale edge detection, together with Euler deconvolution estimates
+message Point_Picking {
+	optional MultiScaleEdgeDetectionMethod Method = 1 [ default=Canny];
+	optional double Minimum_Anomaly = 2 [default=0.00005];  // a Horizontal Gradient min. amplitude to detect a feature
+	optional string Point_Dataset = 3 [default="output/points..DIR"];
+	optional HorizontalDerivativeMethod Amplitude_Option = 4 [default=TotalHorizontal];  // what to use for anomaly picking? currently only a place holder
+	//  these following only operate if turned on, otherwise ignored
+	optional double MaximumSignalValue = 5 [default=0.0000];  // Maximum Threshold in the original gridded signal to detect a feature, pick negative features  eg granites
+	optional double MinimumSignalValue = 6 [default=0.0000];  //  Minimum Threshold in the original gridded signal to detect a feature, pick positive features
+}
+message Worm_Processing {
+	optional double Maximum_Point_Separation = 1 [default=2.0];  // number of cells maximum, allowable to join across
+	optional string Worm_Dataset = 2 [default="output/worms..DIR"];  // polyline dataset with all the worms and attributes
+	optional int32 Worm_Min_Nr_Points = 3 [default=3];  // minimum length of a worm
+	optional string Worm_Image = 4 [default="wormImage.tif"];  // an image of worm amplitude intensity
+	//  FTG grids not able to do Euler style depth estimates.. turn off
+	optional bool Depth_Estimation = 5 [default=false];  // flag to also do a depth to worm estimate using Euler decon.
+	optional double Euler_Minimum_Gradient_Amplitude = 6 [default=0.1];  //  noise floor for local gradients, estimate too unreliable
+	optional CONTACT_STYLE style = 7 [default = ALL];  // new to V5.0, only in task files, be discrimantory
+}
+message Line_Processing {
+	optional double Maximum_Straight_Line_Deviation = 1 [default=8000.0];  // maximum SD of the points with regard to the fitted line.
+	optional int32 Minimum_Points_For_Linear = 2 [default=15];  // a feature must be composed of at least these many points
+	optional string Linear_Dataset = 3 [default="output/linears..DIR"];
+}
+//  options for picking a 3D surface feature, as you join/cluster from one cont. level to another
+enum CONTACT_STYLE {
+	ALL = 0;  // collect all worms into a 3D fault , intersecting bounding rectangles for each worm polyline is enough
+	LINEARS = 1;  //  bias to linear faults within 20 degrees strike of each other
+	CURVY = 2;  // new option, not fully integrated as yet, to try and pick out more circular features from level to level.
+};
+// we project local profiles across the fault, to estimate what the dip is.
+// an important paramterer is the origin of the local coordinates.
+// you can estimate the near surface or outcrop position of the fault , or have it estimated for you
+enum FAULT_ORIGIN {
+	FROM_WORM = 0;  // the THDerivative position at lowest upwards continuation
+	FROM_UPWARDS_CURVE = 1;  //  interpolate from the profile upwards continuation dip step out curve
+	FROM_DERIVATIVES = 2;  // estimate from maximum change in the gravity signal - find this interval
+};
+// starting from highest continuation level, group  worms that are common to a contact into one 3D surface
+// produce output in a flat csv file suitable for import into Geomodeller
+//  in other words, try to find the most persistent deep features and track their shallower friends, by a stacking algorithm
+// contacts tend to be faults in a basin setting
+// conventional DIP methods owe inspiration to - mcgrath, geophysics Vol 56, No10,  P 1533-1542
+//  "dip and depth extent of density boundaries using horizontal
+// derivatives of upward-continued gravity data"
+// this method uses a simple profile block model of a fault, with a sloping contact face.
+// the "toe" of the fault, depth to top of block, thickness of the block, depth to bottom of block
+// *************  tensor workflow variation *****
+// reference SEG 2014 abstract -Structural geology observations derived from full tensor gravity gradiometry over rift systems
+// use worming to find known points on a significant 2D structure eg fault/contact
+// extract 16 near tensor samples over the feature around selected points
+// verify the mid eigenvector has a near zero amplitude
+// compare the strike from THD to that of the averaged eigenvector ( must be close)
+// extract tensor samples over the fault, along a profile at right angles to the strike!!
+// to build the curve, at least 20 samples required, plus far field 0,0
+// rotate the tensors into a local coordinate frame using averaged eigenvector
+// so Gxx, Gxz are aligned locally across the fault
+// least squares best fit the ellipsoid, check its variance and stability
+// find the co-dip
+// convert to dip/strike
+// find the throw
+message Fault3D_Processing {
+	optional double Maximum_Straight_Line_Deviation = 1 [default=8000.0];  // maximum SD of the points with regard to the fitted line.
+	optional int32 Minimum_Points_For_3D 	= 2 [default=7];  // prior to subsampling, what is minimum length?
+	optional string Contact_Dataset 		= 3 [default="output/contacts3d"];  // a stub for 3 csv files suitable for Geomodeller import
+	optional ctm.MeasuredGrid_INT drape			= 4;  // possile flying height drape grid, or mean clearance
+	optional bool subsample_contacts 		= 5 [default = true];  // decimate the contacts down a worm ( approx. every 5th interface point is kept)
+	optional int32 Reject_Strike_Divergence_Angle = 6 [default=45];  // do not join crossing worms if the strike diverges more than this
+	optional CONTACT_STYLE style 			= 7 [default = ALL];  // linear or curvy?
+	optional int32 Minimum_Continuation_Levels = 8 [default = 2];
+	optional int32 Dip_Estimates_per100km 	= 9 [default = 2];  // for long features, how many dips should we request?
+	optional bool disallow_poor_low_dip_estimates = 10 [ default = true]; // marginal estimates for dip  treatment
+	optional int32 default_low_dip_estimate = 11 [default = 40];  // substitute dip value when we have a low dipp estimate
+	optional Gravity_Units Units 			= 40 [default = MILLIGALS];  // require to scale the upwards profiles when modelling for dip
+	optional bool dump_dip_logs 			= 41 [default = false];   // dump profiles and reports for fault/dip calculations
+	// properties of the 2D block model used to figure out the dip
+	optional FAULT_ORIGIN origin_method 	= 42 [default = FROM_WORM]; // estimate where the fault outcrops ( toe position)
+	optional double Fault_Thickness 		= 44 [default = 0.0];  // if zero, let the value be estimated during dip calcs, units in meters
+	optional double Fault_Block_Depth 		= 45 [default = 0.0]; // depth to top of fault block, if zero, let the value be estimated, units meters
+	optional string Contact_Profiles 		= 43 [default="output"];  // a directory for csv files suitable for Excell display of profiles
+	optional int32 subsample_dtm 			= 46 [default = 1];  //  for high resolution DTM, you may want to subsample, to speed things up
+	//  specific tensor grid eigenvalue/noise params
+	optional double Tyy_minimum_test 		= 47 [default = 2.0]; // absolute value in Eotvos, for Gyy approximation for a 2D body in local rotated system
+	optional double minimum_Total_Vertical_Plane_Derivative	= 48 [default = 10.0]; // minimum value in Eotvos, for Total Vertical Gradient before a dip calculation should be considered - avoid low anomalies
+	optional int32 Minimum_2D_Responses		= 49 [ default = 11];  //  minimum number of profile observation points to record a 2D body
+	optional bool Correct_For_FaultBlock_Tilt = 50 [default = true]; //  tilt the eigensystem for 2D body
+
+	// next option also requires loggin to be on
+	optional bool capture_gravity_profiles_from_dip_calcs 	= 60 [default = false];  //  a profile is created at right angles to each fault structure for dip cals
+
+	// a minimum bounding rectangle is constructed for each worm, by continuation height
+	// the margin of this box is expanded by the cell size multiplied by the factor below
+	// the case of flat dipping, extremely straight worms, need a bigger value to get the clustering to work
+	//  we look for intersecting bounding rectangles as part of the clustering
+	optional int32 intersecting_worms_margin_multiplier = 61 [default = 2];
+	optional double Minimum_Fault_Vertical_Extent = 62 [default = 1000];  //  1 km
+}
+// 3d openGL visualization window of the fault network produced using co-krig of dip/strike and
+// nearest surface interfaces, after they are thinned using clustering strategy.
+message View3D_Faults {
+		//  3D visualization, an OpenGL 3D VTK display window
+	optional bool show_3D_viewer 			= 1 [default = false];  //control the pop-up of the viewer
+	optional int32 discretization_intervals = 2 [default=40]; // marching cube discretization in x,y,z, on a fault by fault basis, keep this modest
+	optional double project_zmin 			= 3 [default = -3000.0];  // depth of the 3d project window, used for co-krig range estiamtion
+	optional double project_zmax 			= 4 [default = 500.0];
+	optional bool show_limited_faults 		= 5 [default = true];  // truncate the fault lengths to geophysical observed data
+	// withdrawn
+	optional bool show_limited_fault_ellipsoid_bounds = 6 [default = true];  // show the bounds as an ellipse
+	//. withdrawn
+	optional bool show_fault_unit_normal 	= 7 [default = false];  // show the centre point and fault unit vector normal
+	optional bool show_original_signal_grid = 8 [default = true];  // show signal grid as a grey scale image
+	optional bool show_DTM_grid 			= 9 [default = true];  // show the DTM as a true warped 3D surface
+	optional bool trim_faults_to_DTM 		= 10 [default = true];  // poor man's clip, better result with higher discretization
+	optional bool show_worms 				= 11 [default = true];  // traditional upward continued worms
+	optional bool show_interface_foliation	= 12 [default = false];	// construction points for 3D surfaces
+	optional bool write_3D_surfaces			= 13 [default = false];  // dump the fault traingles to a ASCII vtp file
+	optional double vertical_scale			= 14 [default = 1.0]; // for the 3D viewer, what exaggeration??
+	optional bool show_dip_calc_profiles 	= 15 [default = false];
+	optional bool show_FormingStages 		= 16 [default = false];  // show the progressive 3D graphics during worm forming
+	optional double Minimum_Fault_Vertical_Extent = 18 [default = 1000];  //  1 km
+}
+// the physics indicates a larger cell size is better as you search for deeper features
+//  The basic idea is to do a decimation in FFT space of the source grid as you upward continue
+// however, only trigger the "rarifying" when upward continuation height is greater than current mesh size  times the mulitplier
+// if (ht >= mesh_ * height_multiple && (nRows > min_rows))
+// the final control stops the process if the main source grid is getting too small
+message Rarify_INT {  // Bracewell FFT book describes how to rarify your signal grid
+	optional int32 Minimum_Rows = 1 [default=8];  // leave a minimum number of rows in the new resampled grid
+	optional int32 Height_Mesh_Multiple = 2 [default=100];  // parameter to control the cell size reduction as a factor of the continuation height
+//   the default is more appropriate for coarse grids, so reduce the value for high resolution, large grids to say 15.
+}
+// grid FFT parameters
+message Pre_FFT_Transform_INT {
+	optional string FFT_Grid_Path 				= 1 [default="fftGrid.ers"];
+	optional double FFT_Border 					=2 [default=120.0]; //  percent expansion
+	optional string WindowedGridName          =16 [ default = "windowGrid.ers"];
+	optional string ExpandedGridName          =17 [ default = "expandedGrid.ers"];
+	optional int32 Band                       =21 [ default = 1];  // first band in a multi-band grid
+	optional ctm.GridDataTypes FFT_Grid_Precision=22 [ default = IEEE4ByteComplex];
+	optional grid_subset_INT Subset = 3;  // use if you just want a subset of your gridded data
+	optional fdf.GetRolloffTypeList RolloffType		=4 [default = Cosine_RollOff];
+	optional fdf.GetWindowTypeList WindowType		=5 [default = NO_Window];
+	optional fdf.GetFillTypeList FillType		  =6 [default = ARTHUR];
+	optional bool FillStopAtEdge 			= 8 [default = false];
+	optional int32 DetrendDegree 			= 7 [default = 0];  // detrend the input grid
+	optional ctm.SetReferenceMagneticField IGRF = 9;
+	optional int32 Number_CPUs 				= 10 [ default = 1];  // here is the way to get more CPUs into the act
+}
+
+message Output_Grids_INT {
+	optional string Folder_Path = 1 [default="output/grids"];
+	optional string THD_Prefix = 2 [default="total_hz_deriv"];  // the main grid used for edge picking
+	optional string XD_Prefix = 3 [default="x_deriv"];
+	optional string YD_Prefix = 4 [default="y_deriv"];
+	optional ctm.GridDataTypes Grid_Precision = 5 [default=IEEE4ByteReal];
+}
+
+message Continuation_Grids_INT {  // support for scalar, full tensor, falcon in FFT space
+	optional string Output_Folder=1 [default="output/grids"];
+	optional string Prefix=2  [default="cont"];  // primary signal grid, upward continued at each level
+	optional ctm.GridDataTypes Grid_Precision = 3 [default=IEEE4ByteReal];  // warning, nothing really tested for vector grids
+}
+// converting the TMI to a gravity like signal ( dipole to monopole responses)
+message Pseudo_Gravity_Filter_INT {
+	optional double Continuation_Distance=1 [default=100.0]; // if ommited, actually use the upwards height to downwards cont.. dangerous
+	optional double Contrast_Ratio=2 [default=0.1];  // what is the susceptibility/density contrast for the rocks in question?
+	optional double Field_Strength=3 [default=0.0];  // what is the average background inducing field strength, defaults to the IGRF value
+}
+// the main FFT process is upwards continuation
+// can be a scalar signal grid or a vector/tensor signal grid
+message UpwardContinuation_Filtering_INT {
+	optional Rarify_INT Rarify=1;  // optional resampling to a larger cell size as go up  ( not implimented for tensors)
+	optional Pre_FFT_Transform_INT Pre_FFT_Transform = 2;  // precondition the signal grid in to FFT land.
+	optional Output_Grids_INT Output_Grids=3;
+	optional Continuation_Grids_INT Continuation_Grids=4;  // manage the continuation layers
+	optional Pseudo_Gravity_Filter_INT Pseudo_Gravity_Filter=5;  // ( nonapplic for tensors)
+	optional ctm.SetReferenceMagneticField IGRF = 7;  // manage the magnetic field vector mis-locating the worms
+	optional bool Perform_RTP = 8 [default=false];  // manage the magnetic field vector mis-locating the worms
+	optional bool Perform_VD = 9 [default=false];  // for near surface work, a vertical derivative sharpens the process ( nonapplic for tensors)
+	repeated double Levels = 10 ;  //  a list of upward continuation levels, usually a geometric progression eg 100, 150 300
+}
+
+message Supplementry_Outputs_INT {  // what is your favourite GIS??
+	optional string Ascii_Point_Dataset = 1 [default="output/asciiPts.wrm"];
+	optional string Ascii_Worm_Dataset = 2 [default="output/asciiWorms.str"];
+	optional string Ascii_Line_Dataset = 3 [default="output/asciiLines.lin"];
+	optional string ArcShape_Point_Dataset = 4 [default="output/arcshapePts.shp"];
+	optional string ArcShape_Worm_Dataset = 5 [default="output/arcshapeWorms.shp"];
+//	optional string ArcShape_Line_Dataset = 6 [default="output/arcshapeLines.shp"]; // not supported
+	optional string MapInfo_Point_Dataset = 7 [default="output/mapInfoPts.mif"];
+	optional string MapInfo_Worm_Dataset = 8 [default="output/mapInfoWorms.mif"];
+	optional string MapInfo_Line_Dataset = 9 [default="output/mapInfoLines.mif"];
+	optional string GoCad_Point_Dataset = 10 [default="output/gocadPts.cad"];
+	optional string GoCad_Worm_Dataset = 11 [default="output/gocadWorms.pl"];
+//	optional string GoCad_Line_Dataset = 12 [default="output/gocadLines.pl"];  // not supported
+	optional string Vrml_Point_Dataset = 13 [default="output/vrmlPts.wrl"];
+	optional string Vrml_Worm_Dataset = 14 [default="output/vrmlWorms.wrl"];
+	optional string Vrml_Line_Dataset = 15 [default="output/vrmlLines.wrl"];
+	//  leave out the geomodeller stuff, as this is now really done by the fault_3d stuff
+}
+//! automatic structural trends, deeper features (sub-vertical faults, contacts) from potential field gridded data
+//! can be used on a geodetic projected grid, the continuation heights are converted using Robbins formulae
+//! to equivalent distances expressed in degrees
+//! also compute a direct depth estimate using a modified 3 Euler equation stratgey ( Classic plus 2 Hilbert Transforms)
+//!  Euler does not do so well on geodetic grids, so avoid
+//!  good for FTG and Falcon tensor grids as well
+//!  uses the ZX and YZ components for FTG, to be compatible with old algorithm when FTG
+//!  Horizontal Curvature gradient for Falcon, does not pick the same structures!!
+message WormE_INT {
+	optional ctm.MeasuredGrid_INT InputGridName			= 1;  // primary grid dataset to do work on!
+	//  an elevation grid is required when going to 3D, as you need to do the height properly, not used for 2D worms, should be same map projection as signal
+	optional ctm.MeasuredGrid_INT ElevationGridName		= 2;  // primary surface topography grid, gravity is assumed to be measured on this surface
+	//  magnetics is more likely airborne with a notional flying height clearance, this can also be indicated in the mean_elevation field
+	//  nb if you also have a drape surface, specify this as part of the fault 3d surface block
+	optional grid_subset_INT Subset 				= 3;  // use if you just want a subset of your gridded data
+	optional Point_Picking point					= 4;  // first part of process is to pick the maximums of the THG
+	optional Worm_Processing worm 					= 5;  // find the worms
+	optional Line_Processing linears 				= 6;  // are the worms close to a linear feature?
+	optional Fault3D_Processing surfaces			= 7;  // go for a 3D surface clustering of the results
+	optional UpwardContinuation_Filtering_INT UC_Filtering = 8;  // main controls for looking deeper
+	optional Supplementry_Outputs_INT Supplementry_Outputs = 9;
+	optional View3D_Faults view 					= 10;  // openGL pop-up viewer
+	optional ctm.Distance_Units Distance_Units 		= 13 [ default = meters];
+	optional string ReportFile 						= 32 [default = "wormE_processing.rpt"];// a name for a comprehensive report file from any process
+	optional string ToolName						= 199 [default = "WormE"];
+}
+message MapCompExport_INT {
+	optional string mapfile = 1;
+	optional string map = 2;
+	optional string contextfile = 3;
+	optional string context = 4;
+	required string format = 5;
+	required string outputfile = 6;
+}
+
+//####
+//! A set of intrepid tool tasks.
+//!
+//! IntrepidTask {
+//! 	ForwardModelFromDykes {  // this is a gdykes task file
+//!		InputDykesName: 	"bifdatadyke_imported..DIR";
+//!		InputField:  		"Lithology";
+//!		POSC_CoordinateSystem: 		"AGD84/AUSTRALIAN_MAP_GRID_ZONE_53";
+//!		ComputedGridName:	"teisa_dyketest.ers"
+//!		product: 			MagneticTensors
+//!# 		DrapeSurfaceGridName =
+//!#		OutputPrecision =  IEEE4ByteReal
+//!		OutputGridCoordSysType: END;
+//!		maximum_elevation:	1000;
+//!		ObservationHeight: 	0.0;
+//!		Grid_Size:         	10.0;
+//!		Average_Dyke_Length: 140.;
+//!		Susceptibility 	{  node: 0.01; node: 0.01; };
+//!		IGRF {	Date: "01/01/2005";	};
+//!		method: 			Dyke_Skeletons;
+//!}
+//! </pre>
+message IntrepidTask {
+// database/ file based operations
+	optional Import_INT Import = 1;
+	optional Export_INT ExportDB = 2;
+	optional Subset_INT Subset = 3;
+	optional GridOperations_INT GridOp = 4;
+	optional ProjectionConversion_INT ProjConv = 5;
+	optional SpreadSheet_INT dbedit = 6;
+// survey/line based tools
+	optional Dataset_Resampler_INT Dataset_Resampler =7;
+	optional SurveyDistance_INT SurveyDistance = 8;
+	optional DataBase_Manipulation_INT FileManager = 9;
+	optional ClusterAnalysis_INT ClusterAnalysis = 10;
+
+// spatial grid filtering
+	optional ConvolveGrid_INT Convolve = 15;
+	optional GridFourierFiltering_INT GridFilter = 16;
+	optional Decorrugate_INT Decorrugate  = 17;
+	optional MicroLevel_INT MicroLevel  = 18;
+	optional Line_Filter_INT LineFilter = 19;
+// grid interpolators, tools
+	optional Gridding_INT Gridding = 25;
+	optional Gridmerge_INT Gridmerge = 26;
+// gravity tools
+	optional Gravity_INT Gravity = 30;
+	optional Terrain_Correction_QuadTree_INT Terrain_Correction_QuadTree = 31;
+	optional ISOStatic_INT isostatic = 32;
+	optional Levelling_INT Levelling = 33;
+	optional MarineLevelling_INT MarineLevel = 34;
+	optional SplitCruise_INT SplitCruise = 35;
+// some gamma ray tools
+	optional Radio256_INT Radio256 = 20;
+	optional MinimumNoiseFraction_INT MinimumNoiseFraction = 21;
+	//  interpretation stuff
+	optional Naudy_AutoModelling_INT Naudy = 40;
+	optional MakeHistogram_INT MakeHistogram = 71;
+	optional WormE_INT WormE = 73;
+	optional EulerDeconvolution_INT Euler = 74;
+
+	// forward modelling commands
+	optional ForwardModelFromDykes_INT ForwardModelFromDykes = 84; // Horst various dyke methods
+	optional ForwardModelFromSurfaces_INT ForwardModelFromSurfaces = 85; // facet modelling of closed arbitary volume
+
+	optional MapCompExport_INT MapCompExport  = 87;
+
+	optional string log = 255;
+}
+

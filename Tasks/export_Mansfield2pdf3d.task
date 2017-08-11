@@ -1,0 +1,12 @@
+# this is the test of the Geomodeller export to pdf3d 
+# uses the vtp files and converts them to u3d
+
+GeomodellerTask {
+  ExportProjectSite {
+	vtp_files: "../Meshing/outputs/Mansfield_versionZero400_Faults.vtp" 
+	output_pdf3d: "mansfield.pdf"
+	output_report_file: "mansfield.rpt"
+    log: "Open, then dump to protobuf syntax, the project"
+  }
+}
+

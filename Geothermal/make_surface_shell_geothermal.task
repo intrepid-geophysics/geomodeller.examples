@@ -1,0 +1,12 @@
+InversionTask {
+	MakeSurfaceShells {
+		inputvoxet: "testArea_2suites_imported/Case_1/Stats/testArea_2_uncertainty.vo";
+		inputfield: "Mean_Temperature";
+ 	 	operand:  INSIDERANGE;  # eg "EQ, NE, LT, GT LE, GE, INSIDERANGE"
+   		value1: 150;
+   		value2: 180;
+		output: "outputDS.ts";  # also supports .vtp  for triangles
+		Do_Tops: false;
+		ReportFile: "testArea_2suites_imported/SurfaceShell.rpt";
+		}
+}

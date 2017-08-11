@@ -1,0 +1,2363 @@
+name: "dumb query of a  project "
+description: "arbitary query of points underground, for geology, and also the anisotropic gradient trends of the geology, dump to csv"
+
+
+GeomodellerTask {
+CreateProject {
+	name: "MyProject"
+	author: "Vitaliy"
+Extents {
+	xmin: 0
+	ymin: 0
+	zmin: -1000
+	xmax: 1000
+	ymax: 1000
+	zmax: 0
+}
+	referenceTop: true
+HorizontalDTM {
+	name: "Topography"
+	elevation: 0
+}
+}
+}
+
+GeomodellerTask {
+CreateSection {
+	name: "Section1"
+	dip: -90
+PointList {
+Point {
+	x: 1000
+	y: 1000
+	z: 0
+}
+Point {
+	x: 0
+	y: 0
+	z: 0
+}
+}
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "Formation1"
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "Formation2"
+}
+}
+
+GeomodellerTask {
+SetSeries {
+	name: "Series1"
+	position: 1
+	relation: "erode"
+}
+}
+
+GeomodellerTask {
+SetSeries {
+	name: "Series2"
+	position: 2
+	relation: "erode"
+}
+}
+
+GeomodellerTask {
+CreateFault {
+	name: "Fault_1"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Series1"
+	formation: "Formation1"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Series2"
+	formation: "Formation2"
+}
+}
+
+GeomodellerTask {
+LinkFaultsWithSeries {
+FaultSeriesLinks {
+	fault: "Fault_1"
+	series: "Series1"
+	series: "Series2"
+	series: "DykeSeries"
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "Fault_1"
+point {x:500; y:500; z:-500}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Fault_1"
+foliation {
+Point3D {
+	x: 400
+	y: 500
+	z: -500
+}
+	dip: 45
+	direction: 0
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Fault_1"
+foliation {
+Point3D {
+	x: 400
+	y: 500
+	z: -500
+}
+	dip: 46
+	direction: 0
+	polarity: Normal_Polarity
+}
+}
+}
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Formation2"
+foliation {
+Point3D {
+	x: 400
+	y: 800
+	z: -500
+}
+	dip: 45
+	direction: 0
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Formation1"
+foliation {
+Point3D {
+	x: 400
+	y: 800
+	z: -500
+}
+	dip: 45
+	direction: 0
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Formation1"
+foliation {
+Point3D {
+	x: 500
+	y: 500
+	z: -500
+}
+	dip: 45
+	direction: 180
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Formation2"
+foliation {
+Point3D {
+	x: 500
+	y: 500
+	z: -500
+}
+	dip: 45
+	direction: 180
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+AddInterfaceToSection {
+PointList {
+Point {
+	u: 130
+	v: -265
+}
+Point {
+	u: 510
+	v: -830
+}
+}
+	section: "Section1"
+	topFormation: "Formation2"
+	bottomFormation: ""
+}
+}
+
+GeomodellerTask {
+AddInterfaceToSection {
+PointList {
+Point {
+	u: 540
+	v: -925
+}
+Point {
+	u: 400
+	v: -340
+}
+}
+	section: "Section1"
+	topFormation: "Formation1"
+	bottomFormation: ""
+}
+}
+
+GeomodellerTask {
+AddFoliationToSection {
+	section: "Section1"
+	formation: "Formation1"
+foliation {
+Point {
+	u: 650
+	v: -700
+}
+	dip: 10
+	direction: 1
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+AddFoliationToSection {
+	section: "Section1"
+	formation: "Formation1"
+foliation {
+Point {
+	u: 990
+	v: -450
+}
+	dip: 10
+	direction: 45
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+AddFoliationToSection {
+	section: "Section1"
+	formation: "Formation2"
+foliation {
+Point {
+	u: 75
+	v: -75
+}
+	dip: 10
+	direction: 1
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+AddFoliationToSection {
+	section: "Section1"
+	formation: "Formation2"
+foliation {
+Point {
+	u: 900
+	v: -75
+}
+	dip: 10
+	direction: 45
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+ComputeModel {
+FaultList {
+	node: "Fault_1"
+}
+SeriesList {
+	node: "All"
+}
+SectionList {
+	node: "All"
+}
+BoreholeList {
+	node: "All"
+}
+}
+}
+
+GeomodellerTask {
+SaveLithologyVoxet {
+	nx: 10
+	ny: 10
+	nz: 10
+	LithologyVoxetFileStub: "GOCAD_litho_voxet_layer_cake"
+}
+}
+
+GeomodellerTask {
+GetComputedLithoAtXYZ {
+	filename: "litho_voxet_layer_cake.csv"
+Point {x:1000; y:1000; z:0}
+Point {x:900; y:1000; z:0}
+Point {x:800; y:1000; z:0}
+Point {x:700; y:1000; z:0}
+Point {x:600; y:1000; z:0}
+Point {x:500; y:1000; z:0}
+Point {x:400; y:1000; z:0}
+Point {x:300; y:1000; z:0}
+Point {x:200; y:1000; z:0}
+Point {x:100; y:1000; z:0}
+Point {x:1000; y:900; z:0}
+Point {x:900; y:900; z:0}
+Point {x:800; y:900; z:0}
+Point {x:700; y:900; z:0}
+Point {x:600; y:900; z:0}
+Point {x:500; y:900; z:0}
+Point {x:400; y:900; z:0}
+Point {x:300; y:900; z:0}
+Point {x:200; y:900; z:0}
+Point {x:100; y:900; z:0}
+Point {x:1000; y:800; z:0}
+Point {x:900; y:800; z:0}
+Point {x:800; y:800; z:0}
+Point {x:700; y:800; z:0}
+Point {x:600; y:800; z:0}
+Point {x:500; y:800; z:0}
+Point {x:400; y:800; z:0}
+Point {x:300; y:800; z:0}
+Point {x:200; y:800; z:0}
+Point {x:100; y:800; z:0}
+Point {x:1000; y:700; z:0}
+Point {x:900; y:700; z:0}
+Point {x:800; y:700; z:0}
+Point {x:700; y:700; z:0}
+Point {x:600; y:700; z:0}
+Point {x:500; y:700; z:0}
+Point {x:400; y:700; z:0}
+Point {x:300; y:700; z:0}
+Point {x:200; y:700; z:0}
+Point {x:100; y:700; z:0}
+Point {x:1000; y:600; z:0}
+Point {x:900; y:600; z:0}
+Point {x:800; y:600; z:0}
+Point {x:700; y:600; z:0}
+Point {x:600; y:600; z:0}
+Point {x:500; y:600; z:0}
+Point {x:400; y:600; z:0}
+Point {x:300; y:600; z:0}
+Point {x:200; y:600; z:0}
+Point {x:100; y:600; z:0}
+Point {x:1000; y:500; z:0}
+Point {x:900; y:500; z:0}
+Point {x:800; y:500; z:0}
+Point {x:700; y:500; z:0}
+Point {x:600; y:500; z:0}
+Point {x:500; y:500; z:0}
+Point {x:400; y:500; z:0}
+Point {x:300; y:500; z:0}
+Point {x:200; y:500; z:0}
+Point {x:100; y:500; z:0}
+Point {x:1000; y:400; z:0}
+Point {x:900; y:400; z:0}
+Point {x:800; y:400; z:0}
+Point {x:700; y:400; z:0}
+Point {x:600; y:400; z:0}
+Point {x:500; y:400; z:0}
+Point {x:400; y:400; z:0}
+Point {x:300; y:400; z:0}
+Point {x:200; y:400; z:0}
+Point {x:100; y:400; z:0}
+Point {x:1000; y:300; z:0}
+Point {x:900; y:300; z:0}
+Point {x:800; y:300; z:0}
+Point {x:700; y:300; z:0}
+Point {x:600; y:300; z:0}
+Point {x:500; y:300; z:0}
+Point {x:400; y:300; z:0}
+Point {x:300; y:300; z:0}
+Point {x:200; y:300; z:0}
+Point {x:100; y:300; z:0}
+Point {x:1000; y:200; z:0}
+Point {x:900; y:200; z:0}
+Point {x:800; y:200; z:0}
+Point {x:700; y:200; z:0}
+Point {x:600; y:200; z:0}
+Point {x:500; y:200; z:0}
+Point {x:400; y:200; z:0}
+Point {x:300; y:200; z:0}
+Point {x:200; y:200; z:0}
+Point {x:100; y:200; z:0}
+Point {x:1000; y:100; z:0}
+Point {x:900; y:100; z:0}
+Point {x:800; y:100; z:0}
+Point {x:700; y:100; z:0}
+Point {x:600; y:100; z:0}
+Point {x:500; y:100; z:0}
+Point {x:400; y:100; z:0}
+Point {x:300; y:100; z:0}
+Point {x:200; y:100; z:0}
+Point {x:100; y:100; z:0}
+Point {x:1000; y:1000; z:-100}
+Point {x:900; y:1000; z:-100}
+Point {x:800; y:1000; z:-100}
+Point {x:700; y:1000; z:-100}
+Point {x:600; y:1000; z:-100}
+Point {x:500; y:1000; z:-100}
+Point {x:400; y:1000; z:-100}
+Point {x:300; y:1000; z:-100}
+Point {x:200; y:1000; z:-100}
+Point {x:100; y:1000; z:-100}
+Point {x:1000; y:900; z:-100}
+Point {x:900; y:900; z:-100}
+Point {x:800; y:900; z:-100}
+Point {x:700; y:900; z:-100}
+Point {x:600; y:900; z:-100}
+Point {x:500; y:900; z:-100}
+Point {x:400; y:900; z:-100}
+Point {x:300; y:900; z:-100}
+Point {x:200; y:900; z:-100}
+Point {x:100; y:900; z:-100}
+Point {x:1000; y:800; z:-100}
+Point {x:900; y:800; z:-100}
+Point {x:800; y:800; z:-100}
+Point {x:700; y:800; z:-100}
+Point {x:600; y:800; z:-100}
+Point {x:500; y:800; z:-100}
+Point {x:400; y:800; z:-100}
+Point {x:300; y:800; z:-100}
+Point {x:200; y:800; z:-100}
+Point {x:100; y:800; z:-100}
+Point {x:1000; y:700; z:-100}
+Point {x:900; y:700; z:-100}
+Point {x:800; y:700; z:-100}
+Point {x:700; y:700; z:-100}
+Point {x:600; y:700; z:-100}
+Point {x:500; y:700; z:-100}
+Point {x:400; y:700; z:-100}
+Point {x:300; y:700; z:-100}
+Point {x:200; y:700; z:-100}
+Point {x:100; y:700; z:-100}
+Point {x:1000; y:600; z:-100}
+Point {x:900; y:600; z:-100}
+Point {x:800; y:600; z:-100}
+Point {x:700; y:600; z:-100}
+Point {x:600; y:600; z:-100}
+Point {x:500; y:600; z:-100}
+Point {x:400; y:600; z:-100}
+Point {x:300; y:600; z:-100}
+Point {x:200; y:600; z:-100}
+Point {x:100; y:600; z:-100}
+Point {x:1000; y:500; z:-100}
+Point {x:900; y:500; z:-100}
+Point {x:800; y:500; z:-100}
+Point {x:700; y:500; z:-100}
+Point {x:600; y:500; z:-100}
+Point {x:500; y:500; z:-100}
+Point {x:400; y:500; z:-100}
+Point {x:300; y:500; z:-100}
+Point {x:200; y:500; z:-100}
+Point {x:100; y:500; z:-100}
+Point {x:1000; y:400; z:-100}
+Point {x:900; y:400; z:-100}
+Point {x:800; y:400; z:-100}
+Point {x:700; y:400; z:-100}
+Point {x:600; y:400; z:-100}
+Point {x:500; y:400; z:-100}
+Point {x:400; y:400; z:-100}
+Point {x:300; y:400; z:-100}
+Point {x:200; y:400; z:-100}
+Point {x:100; y:400; z:-100}
+Point {x:1000; y:300; z:-100}
+Point {x:900; y:300; z:-100}
+Point {x:800; y:300; z:-100}
+Point {x:700; y:300; z:-100}
+Point {x:600; y:300; z:-100}
+Point {x:500; y:300; z:-100}
+Point {x:400; y:300; z:-100}
+Point {x:300; y:300; z:-100}
+Point {x:200; y:300; z:-100}
+Point {x:100; y:300; z:-100}
+Point {x:1000; y:200; z:-100}
+Point {x:900; y:200; z:-100}
+Point {x:800; y:200; z:-100}
+Point {x:700; y:200; z:-100}
+Point {x:600; y:200; z:-100}
+Point {x:500; y:200; z:-100}
+Point {x:400; y:200; z:-100}
+Point {x:300; y:200; z:-100}
+Point {x:200; y:200; z:-100}
+Point {x:100; y:200; z:-100}
+Point {x:1000; y:100; z:-100}
+Point {x:900; y:100; z:-100}
+Point {x:800; y:100; z:-100}
+Point {x:700; y:100; z:-100}
+Point {x:600; y:100; z:-100}
+Point {x:500; y:100; z:-100}
+Point {x:400; y:100; z:-100}
+Point {x:300; y:100; z:-100}
+Point {x:200; y:100; z:-100}
+Point {x:100; y:100; z:-100}
+Point {x:1000; y:1000; z:-200}
+Point {x:900; y:1000; z:-200}
+Point {x:800; y:1000; z:-200}
+Point {x:700; y:1000; z:-200}
+Point {x:600; y:1000; z:-200}
+Point {x:500; y:1000; z:-200}
+Point {x:400; y:1000; z:-200}
+Point {x:300; y:1000; z:-200}
+Point {x:200; y:1000; z:-200}
+Point {x:100; y:1000; z:-200}
+Point {x:1000; y:900; z:-200}
+Point {x:900; y:900; z:-200}
+Point {x:800; y:900; z:-200}
+Point {x:700; y:900; z:-200}
+Point {x:600; y:900; z:-200}
+Point {x:500; y:900; z:-200}
+Point {x:400; y:900; z:-200}
+Point {x:300; y:900; z:-200}
+Point {x:200; y:900; z:-200}
+Point {x:100; y:900; z:-200}
+Point {x:1000; y:800; z:-200}
+Point {x:900; y:800; z:-200}
+Point {x:800; y:800; z:-200}
+Point {x:700; y:800; z:-200}
+Point {x:600; y:800; z:-200}
+Point {x:500; y:800; z:-200}
+Point {x:400; y:800; z:-200}
+Point {x:300; y:800; z:-200}
+Point {x:200; y:800; z:-200}
+Point {x:100; y:800; z:-200}
+Point {x:1000; y:700; z:-200}
+Point {x:900; y:700; z:-200}
+Point {x:800; y:700; z:-200}
+Point {x:700; y:700; z:-200}
+Point {x:600; y:700; z:-200}
+Point {x:500; y:700; z:-200}
+Point {x:400; y:700; z:-200}
+Point {x:300; y:700; z:-200}
+Point {x:200; y:700; z:-200}
+Point {x:100; y:700; z:-200}
+Point {x:1000; y:600; z:-200}
+Point {x:900; y:600; z:-200}
+Point {x:800; y:600; z:-200}
+Point {x:700; y:600; z:-200}
+Point {x:600; y:600; z:-200}
+Point {x:500; y:600; z:-200}
+Point {x:400; y:600; z:-200}
+Point {x:300; y:600; z:-200}
+Point {x:200; y:600; z:-200}
+Point {x:100; y:600; z:-200}
+Point {x:1000; y:500; z:-200}
+Point {x:900; y:500; z:-200}
+Point {x:800; y:500; z:-200}
+Point {x:700; y:500; z:-200}
+Point {x:600; y:500; z:-200}
+Point {x:500; y:500; z:-200}
+Point {x:400; y:500; z:-200}
+Point {x:300; y:500; z:-200}
+Point {x:200; y:500; z:-200}
+Point {x:100; y:500; z:-200}
+Point {x:1000; y:400; z:-200}
+Point {x:900; y:400; z:-200}
+Point {x:800; y:400; z:-200}
+Point {x:700; y:400; z:-200}
+Point {x:600; y:400; z:-200}
+Point {x:500; y:400; z:-200}
+Point {x:400; y:400; z:-200}
+Point {x:300; y:400; z:-200}
+Point {x:200; y:400; z:-200}
+Point {x:100; y:400; z:-200}
+Point {x:1000; y:300; z:-200}
+Point {x:900; y:300; z:-200}
+Point {x:800; y:300; z:-200}
+Point {x:700; y:300; z:-200}
+Point {x:600; y:300; z:-200}
+Point {x:500; y:300; z:-200}
+Point {x:400; y:300; z:-200}
+Point {x:300; y:300; z:-200}
+Point {x:200; y:300; z:-200}
+Point {x:100; y:300; z:-200}
+Point {x:1000; y:200; z:-200}
+Point {x:900; y:200; z:-200}
+Point {x:800; y:200; z:-200}
+Point {x:700; y:200; z:-200}
+Point {x:600; y:200; z:-200}
+Point {x:500; y:200; z:-200}
+Point {x:400; y:200; z:-200}
+Point {x:300; y:200; z:-200}
+Point {x:200; y:200; z:-200}
+Point {x:100; y:200; z:-200}
+Point {x:1000; y:100; z:-200}
+Point {x:900; y:100; z:-200}
+Point {x:800; y:100; z:-200}
+Point {x:700; y:100; z:-200}
+Point {x:600; y:100; z:-200}
+Point {x:500; y:100; z:-200}
+Point {x:400; y:100; z:-200}
+Point {x:300; y:100; z:-200}
+Point {x:200; y:100; z:-200}
+Point {x:100; y:100; z:-200}
+Point {x:1000; y:1000; z:-300}
+Point {x:900; y:1000; z:-300}
+Point {x:800; y:1000; z:-300}
+Point {x:700; y:1000; z:-300}
+Point {x:600; y:1000; z:-300}
+Point {x:500; y:1000; z:-300}
+Point {x:400; y:1000; z:-300}
+Point {x:300; y:1000; z:-300}
+Point {x:200; y:1000; z:-300}
+Point {x:100; y:1000; z:-300}
+Point {x:1000; y:900; z:-300}
+Point {x:900; y:900; z:-300}
+Point {x:800; y:900; z:-300}
+Point {x:700; y:900; z:-300}
+Point {x:600; y:900; z:-300}
+Point {x:500; y:900; z:-300}
+Point {x:400; y:900; z:-300}
+Point {x:300; y:900; z:-300}
+Point {x:200; y:900; z:-300}
+Point {x:100; y:900; z:-300}
+Point {x:1000; y:800; z:-300}
+Point {x:900; y:800; z:-300}
+Point {x:800; y:800; z:-300}
+Point {x:700; y:800; z:-300}
+Point {x:600; y:800; z:-300}
+Point {x:500; y:800; z:-300}
+Point {x:400; y:800; z:-300}
+Point {x:300; y:800; z:-300}
+Point {x:200; y:800; z:-300}
+Point {x:100; y:800; z:-300}
+Point {x:1000; y:700; z:-300}
+Point {x:900; y:700; z:-300}
+Point {x:800; y:700; z:-300}
+Point {x:700; y:700; z:-300}
+Point {x:600; y:700; z:-300}
+Point {x:500; y:700; z:-300}
+Point {x:400; y:700; z:-300}
+Point {x:300; y:700; z:-300}
+Point {x:200; y:700; z:-300}
+Point {x:100; y:700; z:-300}
+Point {x:1000; y:600; z:-300}
+Point {x:900; y:600; z:-300}
+Point {x:800; y:600; z:-300}
+Point {x:700; y:600; z:-300}
+Point {x:600; y:600; z:-300}
+Point {x:500; y:600; z:-300}
+Point {x:400; y:600; z:-300}
+Point {x:300; y:600; z:-300}
+Point {x:200; y:600; z:-300}
+Point {x:100; y:600; z:-300}
+Point {x:1000; y:500; z:-300}
+Point {x:900; y:500; z:-300}
+Point {x:800; y:500; z:-300}
+Point {x:700; y:500; z:-300}
+Point {x:600; y:500; z:-300}
+Point {x:500; y:500; z:-300}
+Point {x:400; y:500; z:-300}
+Point {x:300; y:500; z:-300}
+Point {x:200; y:500; z:-300}
+Point {x:100; y:500; z:-300}
+Point {x:1000; y:400; z:-300}
+Point {x:900; y:400; z:-300}
+Point {x:800; y:400; z:-300}
+Point {x:700; y:400; z:-300}
+Point {x:600; y:400; z:-300}
+Point {x:500; y:400; z:-300}
+Point {x:400; y:400; z:-300}
+Point {x:300; y:400; z:-300}
+Point {x:200; y:400; z:-300}
+Point {x:100; y:400; z:-300}
+Point {x:1000; y:300; z:-300}
+Point {x:900; y:300; z:-300}
+Point {x:800; y:300; z:-300}
+Point {x:700; y:300; z:-300}
+Point {x:600; y:300; z:-300}
+Point {x:500; y:300; z:-300}
+Point {x:400; y:300; z:-300}
+Point {x:300; y:300; z:-300}
+Point {x:200; y:300; z:-300}
+Point {x:100; y:300; z:-300}
+Point {x:1000; y:200; z:-300}
+Point {x:900; y:200; z:-300}
+Point {x:800; y:200; z:-300}
+Point {x:700; y:200; z:-300}
+Point {x:600; y:200; z:-300}
+Point {x:500; y:200; z:-300}
+Point {x:400; y:200; z:-300}
+Point {x:300; y:200; z:-300}
+Point {x:200; y:200; z:-300}
+Point {x:100; y:200; z:-300}
+Point {x:1000; y:100; z:-300}
+Point {x:900; y:100; z:-300}
+Point {x:800; y:100; z:-300}
+Point {x:700; y:100; z:-300}
+Point {x:600; y:100; z:-300}
+Point {x:500; y:100; z:-300}
+Point {x:400; y:100; z:-300}
+Point {x:300; y:100; z:-300}
+Point {x:200; y:100; z:-300}
+Point {x:100; y:100; z:-300}
+Point {x:1000; y:1000; z:-400}
+Point {x:900; y:1000; z:-400}
+Point {x:800; y:1000; z:-400}
+Point {x:700; y:1000; z:-400}
+Point {x:600; y:1000; z:-400}
+Point {x:500; y:1000; z:-400}
+Point {x:400; y:1000; z:-400}
+Point {x:300; y:1000; z:-400}
+Point {x:200; y:1000; z:-400}
+Point {x:100; y:1000; z:-400}
+Point {x:1000; y:900; z:-400}
+Point {x:900; y:900; z:-400}
+Point {x:800; y:900; z:-400}
+Point {x:700; y:900; z:-400}
+Point {x:600; y:900; z:-400}
+Point {x:500; y:900; z:-400}
+Point {x:400; y:900; z:-400}
+Point {x:300; y:900; z:-400}
+Point {x:200; y:900; z:-400}
+Point {x:100; y:900; z:-400}
+Point {x:1000; y:800; z:-400}
+Point {x:900; y:800; z:-400}
+Point {x:800; y:800; z:-400}
+Point {x:700; y:800; z:-400}
+Point {x:600; y:800; z:-400}
+Point {x:500; y:800; z:-400}
+Point {x:400; y:800; z:-400}
+Point {x:300; y:800; z:-400}
+Point {x:200; y:800; z:-400}
+Point {x:100; y:800; z:-400}
+Point {x:1000; y:700; z:-400}
+Point {x:900; y:700; z:-400}
+Point {x:800; y:700; z:-400}
+Point {x:700; y:700; z:-400}
+Point {x:600; y:700; z:-400}
+Point {x:500; y:700; z:-400}
+Point {x:400; y:700; z:-400}
+Point {x:300; y:700; z:-400}
+Point {x:200; y:700; z:-400}
+Point {x:100; y:700; z:-400}
+Point {x:1000; y:600; z:-400}
+Point {x:900; y:600; z:-400}
+Point {x:800; y:600; z:-400}
+Point {x:700; y:600; z:-400}
+Point {x:600; y:600; z:-400}
+Point {x:500; y:600; z:-400}
+Point {x:400; y:600; z:-400}
+Point {x:300; y:600; z:-400}
+Point {x:200; y:600; z:-400}
+Point {x:100; y:600; z:-400}
+Point {x:1000; y:500; z:-400}
+Point {x:900; y:500; z:-400}
+Point {x:800; y:500; z:-400}
+Point {x:700; y:500; z:-400}
+Point {x:600; y:500; z:-400}
+Point {x:500; y:500; z:-400}
+Point {x:400; y:500; z:-400}
+Point {x:300; y:500; z:-400}
+Point {x:200; y:500; z:-400}
+Point {x:100; y:500; z:-400}
+Point {x:1000; y:400; z:-400}
+Point {x:900; y:400; z:-400}
+Point {x:800; y:400; z:-400}
+Point {x:700; y:400; z:-400}
+Point {x:600; y:400; z:-400}
+Point {x:500; y:400; z:-400}
+Point {x:400; y:400; z:-400}
+Point {x:300; y:400; z:-400}
+Point {x:200; y:400; z:-400}
+Point {x:100; y:400; z:-400}
+Point {x:1000; y:300; z:-400}
+Point {x:900; y:300; z:-400}
+Point {x:800; y:300; z:-400}
+Point {x:700; y:300; z:-400}
+Point {x:600; y:300; z:-400}
+Point {x:500; y:300; z:-400}
+Point {x:400; y:300; z:-400}
+Point {x:300; y:300; z:-400}
+Point {x:200; y:300; z:-400}
+Point {x:100; y:300; z:-400}
+Point {x:1000; y:200; z:-400}
+Point {x:900; y:200; z:-400}
+Point {x:800; y:200; z:-400}
+Point {x:700; y:200; z:-400}
+Point {x:600; y:200; z:-400}
+Point {x:500; y:200; z:-400}
+Point {x:400; y:200; z:-400}
+Point {x:300; y:200; z:-400}
+Point {x:200; y:200; z:-400}
+Point {x:100; y:200; z:-400}
+Point {x:1000; y:100; z:-400}
+Point {x:900; y:100; z:-400}
+Point {x:800; y:100; z:-400}
+Point {x:700; y:100; z:-400}
+Point {x:600; y:100; z:-400}
+Point {x:500; y:100; z:-400}
+Point {x:400; y:100; z:-400}
+Point {x:300; y:100; z:-400}
+Point {x:200; y:100; z:-400}
+Point {x:100; y:100; z:-400}
+Point {x:1000; y:1000; z:-500}
+Point {x:900; y:1000; z:-500}
+Point {x:800; y:1000; z:-500}
+Point {x:700; y:1000; z:-500}
+Point {x:600; y:1000; z:-500}
+Point {x:500; y:1000; z:-500}
+Point {x:400; y:1000; z:-500}
+Point {x:300; y:1000; z:-500}
+Point {x:200; y:1000; z:-500}
+Point {x:100; y:1000; z:-500}
+Point {x:1000; y:900; z:-500}
+Point {x:900; y:900; z:-500}
+Point {x:800; y:900; z:-500}
+Point {x:700; y:900; z:-500}
+Point {x:600; y:900; z:-500}
+Point {x:500; y:900; z:-500}
+Point {x:400; y:900; z:-500}
+Point {x:300; y:900; z:-500}
+Point {x:200; y:900; z:-500}
+Point {x:100; y:900; z:-500}
+Point {x:1000; y:800; z:-500}
+Point {x:900; y:800; z:-500}
+Point {x:800; y:800; z:-500}
+Point {x:700; y:800; z:-500}
+Point {x:600; y:800; z:-500}
+Point {x:500; y:800; z:-500}
+Point {x:400; y:800; z:-500}
+Point {x:300; y:800; z:-500}
+Point {x:200; y:800; z:-500}
+Point {x:100; y:800; z:-500}
+Point {x:1000; y:700; z:-500}
+Point {x:900; y:700; z:-500}
+Point {x:800; y:700; z:-500}
+Point {x:700; y:700; z:-500}
+Point {x:600; y:700; z:-500}
+Point {x:500; y:700; z:-500}
+Point {x:400; y:700; z:-500}
+Point {x:300; y:700; z:-500}
+Point {x:200; y:700; z:-500}
+Point {x:100; y:700; z:-500}
+Point {x:1000; y:600; z:-500}
+Point {x:900; y:600; z:-500}
+Point {x:800; y:600; z:-500}
+Point {x:700; y:600; z:-500}
+Point {x:600; y:600; z:-500}
+Point {x:500; y:600; z:-500}
+Point {x:400; y:600; z:-500}
+Point {x:300; y:600; z:-500}
+Point {x:200; y:600; z:-500}
+Point {x:100; y:600; z:-500}
+Point {x:1000; y:500; z:-500}
+Point {x:900; y:500; z:-500}
+Point {x:800; y:500; z:-500}
+Point {x:700; y:500; z:-500}
+Point {x:600; y:500; z:-500}
+Point {x:500; y:500; z:-500}
+Point {x:400; y:500; z:-500}
+Point {x:300; y:500; z:-500}
+Point {x:200; y:500; z:-500}
+Point {x:100; y:500; z:-500}
+Point {x:1000; y:400; z:-500}
+Point {x:900; y:400; z:-500}
+Point {x:800; y:400; z:-500}
+Point {x:700; y:400; z:-500}
+Point {x:600; y:400; z:-500}
+Point {x:500; y:400; z:-500}
+Point {x:400; y:400; z:-500}
+Point {x:300; y:400; z:-500}
+Point {x:200; y:400; z:-500}
+Point {x:100; y:400; z:-500}
+Point {x:1000; y:300; z:-500}
+Point {x:900; y:300; z:-500}
+Point {x:800; y:300; z:-500}
+Point {x:700; y:300; z:-500}
+Point {x:600; y:300; z:-500}
+Point {x:500; y:300; z:-500}
+Point {x:400; y:300; z:-500}
+Point {x:300; y:300; z:-500}
+Point {x:200; y:300; z:-500}
+Point {x:100; y:300; z:-500}
+Point {x:1000; y:200; z:-500}
+Point {x:900; y:200; z:-500}
+Point {x:800; y:200; z:-500}
+Point {x:700; y:200; z:-500}
+Point {x:600; y:200; z:-500}
+Point {x:500; y:200; z:-500}
+Point {x:400; y:200; z:-500}
+Point {x:300; y:200; z:-500}
+Point {x:200; y:200; z:-500}
+Point {x:100; y:200; z:-500}
+Point {x:1000; y:100; z:-500}
+Point {x:900; y:100; z:-500}
+Point {x:800; y:100; z:-500}
+Point {x:700; y:100; z:-500}
+Point {x:600; y:100; z:-500}
+Point {x:500; y:100; z:-500}
+Point {x:400; y:100; z:-500}
+Point {x:300; y:100; z:-500}
+Point {x:200; y:100; z:-500}
+Point {x:100; y:100; z:-500}
+Point {x:1000; y:1000; z:-600}
+Point {x:900; y:1000; z:-600}
+Point {x:800; y:1000; z:-600}
+Point {x:700; y:1000; z:-600}
+Point {x:600; y:1000; z:-600}
+Point {x:500; y:1000; z:-600}
+Point {x:400; y:1000; z:-600}
+Point {x:300; y:1000; z:-600}
+Point {x:200; y:1000; z:-600}
+Point {x:100; y:1000; z:-600}
+Point {x:1000; y:900; z:-600}
+Point {x:900; y:900; z:-600}
+Point {x:800; y:900; z:-600}
+Point {x:700; y:900; z:-600}
+Point {x:600; y:900; z:-600}
+Point {x:500; y:900; z:-600}
+Point {x:400; y:900; z:-600}
+Point {x:300; y:900; z:-600}
+Point {x:200; y:900; z:-600}
+Point {x:100; y:900; z:-600}
+Point {x:1000; y:800; z:-600}
+Point {x:900; y:800; z:-600}
+Point {x:800; y:800; z:-600}
+Point {x:700; y:800; z:-600}
+Point {x:600; y:800; z:-600}
+Point {x:500; y:800; z:-600}
+Point {x:400; y:800; z:-600}
+Point {x:300; y:800; z:-600}
+Point {x:200; y:800; z:-600}
+Point {x:100; y:800; z:-600}
+Point {x:1000; y:700; z:-600}
+Point {x:900; y:700; z:-600}
+Point {x:800; y:700; z:-600}
+Point {x:700; y:700; z:-600}
+Point {x:600; y:700; z:-600}
+Point {x:500; y:700; z:-600}
+Point {x:400; y:700; z:-600}
+Point {x:300; y:700; z:-600}
+Point {x:200; y:700; z:-600}
+Point {x:100; y:700; z:-600}
+Point {x:1000; y:600; z:-600}
+Point {x:900; y:600; z:-600}
+Point {x:800; y:600; z:-600}
+Point {x:700; y:600; z:-600}
+Point {x:600; y:600; z:-600}
+Point {x:500; y:600; z:-600}
+Point {x:400; y:600; z:-600}
+Point {x:300; y:600; z:-600}
+Point {x:200; y:600; z:-600}
+Point {x:100; y:600; z:-600}
+Point {x:1000; y:500; z:-600}
+Point {x:900; y:500; z:-600}
+Point {x:800; y:500; z:-600}
+Point {x:700; y:500; z:-600}
+Point {x:600; y:500; z:-600}
+Point {x:500; y:500; z:-600}
+Point {x:400; y:500; z:-600}
+Point {x:300; y:500; z:-600}
+Point {x:200; y:500; z:-600}
+Point {x:100; y:500; z:-600}
+Point {x:1000; y:400; z:-600}
+Point {x:900; y:400; z:-600}
+Point {x:800; y:400; z:-600}
+Point {x:700; y:400; z:-600}
+Point {x:600; y:400; z:-600}
+Point {x:500; y:400; z:-600}
+Point {x:400; y:400; z:-600}
+Point {x:300; y:400; z:-600}
+Point {x:200; y:400; z:-600}
+Point {x:100; y:400; z:-600}
+Point {x:1000; y:300; z:-600}
+Point {x:900; y:300; z:-600}
+Point {x:800; y:300; z:-600}
+Point {x:700; y:300; z:-600}
+Point {x:600; y:300; z:-600}
+Point {x:500; y:300; z:-600}
+Point {x:400; y:300; z:-600}
+Point {x:300; y:300; z:-600}
+Point {x:200; y:300; z:-600}
+Point {x:100; y:300; z:-600}
+Point {x:1000; y:200; z:-600}
+Point {x:900; y:200; z:-600}
+Point {x:800; y:200; z:-600}
+Point {x:700; y:200; z:-600}
+Point {x:600; y:200; z:-600}
+Point {x:500; y:200; z:-600}
+Point {x:400; y:200; z:-600}
+Point {x:300; y:200; z:-600}
+Point {x:200; y:200; z:-600}
+Point {x:100; y:200; z:-600}
+Point {x:1000; y:100; z:-600}
+Point {x:900; y:100; z:-600}
+Point {x:800; y:100; z:-600}
+Point {x:700; y:100; z:-600}
+Point {x:600; y:100; z:-600}
+Point {x:500; y:100; z:-600}
+Point {x:400; y:100; z:-600}
+Point {x:300; y:100; z:-600}
+Point {x:200; y:100; z:-600}
+Point {x:100; y:100; z:-600}
+Point {x:1000; y:1000; z:-700}
+Point {x:900; y:1000; z:-700}
+Point {x:800; y:1000; z:-700}
+Point {x:700; y:1000; z:-700}
+Point {x:600; y:1000; z:-700}
+Point {x:500; y:1000; z:-700}
+Point {x:400; y:1000; z:-700}
+Point {x:300; y:1000; z:-700}
+Point {x:200; y:1000; z:-700}
+Point {x:100; y:1000; z:-700}
+Point {x:1000; y:900; z:-700}
+Point {x:900; y:900; z:-700}
+Point {x:800; y:900; z:-700}
+Point {x:700; y:900; z:-700}
+Point {x:600; y:900; z:-700}
+Point {x:500; y:900; z:-700}
+Point {x:400; y:900; z:-700}
+Point {x:300; y:900; z:-700}
+Point {x:200; y:900; z:-700}
+Point {x:100; y:900; z:-700}
+Point {x:1000; y:800; z:-700}
+Point {x:900; y:800; z:-700}
+Point {x:800; y:800; z:-700}
+Point {x:700; y:800; z:-700}
+Point {x:600; y:800; z:-700}
+Point {x:500; y:800; z:-700}
+Point {x:400; y:800; z:-700}
+Point {x:300; y:800; z:-700}
+Point {x:200; y:800; z:-700}
+Point {x:100; y:800; z:-700}
+Point {x:1000; y:700; z:-700}
+Point {x:900; y:700; z:-700}
+Point {x:800; y:700; z:-700}
+Point {x:700; y:700; z:-700}
+Point {x:600; y:700; z:-700}
+Point {x:500; y:700; z:-700}
+Point {x:400; y:700; z:-700}
+Point {x:300; y:700; z:-700}
+Point {x:200; y:700; z:-700}
+Point {x:100; y:700; z:-700}
+Point {x:1000; y:600; z:-700}
+Point {x:900; y:600; z:-700}
+Point {x:800; y:600; z:-700}
+Point {x:700; y:600; z:-700}
+Point {x:600; y:600; z:-700}
+Point {x:500; y:600; z:-700}
+Point {x:400; y:600; z:-700}
+Point {x:300; y:600; z:-700}
+Point {x:200; y:600; z:-700}
+Point {x:100; y:600; z:-700}
+Point {x:1000; y:500; z:-700}
+Point {x:900; y:500; z:-700}
+Point {x:800; y:500; z:-700}
+Point {x:700; y:500; z:-700}
+Point {x:600; y:500; z:-700}
+Point {x:500; y:500; z:-700}
+Point {x:400; y:500; z:-700}
+Point {x:300; y:500; z:-700}
+Point {x:200; y:500; z:-700}
+Point {x:100; y:500; z:-700}
+Point {x:1000; y:400; z:-700}
+Point {x:900; y:400; z:-700}
+Point {x:800; y:400; z:-700}
+Point {x:700; y:400; z:-700}
+Point {x:600; y:400; z:-700}
+Point {x:500; y:400; z:-700}
+Point {x:400; y:400; z:-700}
+Point {x:300; y:400; z:-700}
+Point {x:200; y:400; z:-700}
+Point {x:100; y:400; z:-700}
+Point {x:1000; y:300; z:-700}
+Point {x:900; y:300; z:-700}
+Point {x:800; y:300; z:-700}
+Point {x:700; y:300; z:-700}
+Point {x:600; y:300; z:-700}
+Point {x:500; y:300; z:-700}
+Point {x:400; y:300; z:-700}
+Point {x:300; y:300; z:-700}
+Point {x:200; y:300; z:-700}
+Point {x:100; y:300; z:-700}
+Point {x:1000; y:200; z:-700}
+Point {x:900; y:200; z:-700}
+Point {x:800; y:200; z:-700}
+Point {x:700; y:200; z:-700}
+Point {x:600; y:200; z:-700}
+Point {x:500; y:200; z:-700}
+Point {x:400; y:200; z:-700}
+Point {x:300; y:200; z:-700}
+Point {x:200; y:200; z:-700}
+Point {x:100; y:200; z:-700}
+Point {x:1000; y:100; z:-700}
+Point {x:900; y:100; z:-700}
+Point {x:800; y:100; z:-700}
+Point {x:700; y:100; z:-700}
+Point {x:600; y:100; z:-700}
+Point {x:500; y:100; z:-700}
+Point {x:400; y:100; z:-700}
+Point {x:300; y:100; z:-700}
+Point {x:200; y:100; z:-700}
+Point {x:100; y:100; z:-700}
+Point {x:1000; y:1000; z:-800}
+Point {x:900; y:1000; z:-800}
+Point {x:800; y:1000; z:-800}
+Point {x:700; y:1000; z:-800}
+Point {x:600; y:1000; z:-800}
+Point {x:500; y:1000; z:-800}
+Point {x:400; y:1000; z:-800}
+Point {x:300; y:1000; z:-800}
+Point {x:200; y:1000; z:-800}
+Point {x:100; y:1000; z:-800}
+Point {x:1000; y:900; z:-800}
+Point {x:900; y:900; z:-800}
+Point {x:800; y:900; z:-800}
+Point {x:700; y:900; z:-800}
+Point {x:600; y:900; z:-800}
+Point {x:500; y:900; z:-800}
+Point {x:400; y:900; z:-800}
+Point {x:300; y:900; z:-800}
+Point {x:200; y:900; z:-800}
+Point {x:100; y:900; z:-800}
+Point {x:1000; y:800; z:-800}
+Point {x:900; y:800; z:-800}
+Point {x:800; y:800; z:-800}
+Point {x:700; y:800; z:-800}
+Point {x:600; y:800; z:-800}
+Point {x:500; y:800; z:-800}
+Point {x:400; y:800; z:-800}
+Point {x:300; y:800; z:-800}
+Point {x:200; y:800; z:-800}
+Point {x:100; y:800; z:-800}
+Point {x:1000; y:700; z:-800}
+Point {x:900; y:700; z:-800}
+Point {x:800; y:700; z:-800}
+Point {x:700; y:700; z:-800}
+Point {x:600; y:700; z:-800}
+Point {x:500; y:700; z:-800}
+Point {x:400; y:700; z:-800}
+Point {x:300; y:700; z:-800}
+Point {x:200; y:700; z:-800}
+Point {x:100; y:700; z:-800}
+Point {x:1000; y:600; z:-800}
+Point {x:900; y:600; z:-800}
+Point {x:800; y:600; z:-800}
+Point {x:700; y:600; z:-800}
+Point {x:600; y:600; z:-800}
+Point {x:500; y:600; z:-800}
+Point {x:400; y:600; z:-800}
+Point {x:300; y:600; z:-800}
+Point {x:200; y:600; z:-800}
+Point {x:100; y:600; z:-800}
+Point {x:1000; y:500; z:-800}
+Point {x:900; y:500; z:-800}
+Point {x:800; y:500; z:-800}
+Point {x:700; y:500; z:-800}
+Point {x:600; y:500; z:-800}
+Point {x:500; y:500; z:-800}
+Point {x:400; y:500; z:-800}
+Point {x:300; y:500; z:-800}
+Point {x:200; y:500; z:-800}
+Point {x:100; y:500; z:-800}
+Point {x:1000; y:400; z:-800}
+Point {x:900; y:400; z:-800}
+Point {x:800; y:400; z:-800}
+Point {x:700; y:400; z:-800}
+Point {x:600; y:400; z:-800}
+Point {x:500; y:400; z:-800}
+Point {x:400; y:400; z:-800}
+Point {x:300; y:400; z:-800}
+Point {x:200; y:400; z:-800}
+Point {x:100; y:400; z:-800}
+Point {x:1000; y:300; z:-800}
+Point {x:900; y:300; z:-800}
+Point {x:800; y:300; z:-800}
+Point {x:700; y:300; z:-800}
+Point {x:600; y:300; z:-800}
+Point {x:500; y:300; z:-800}
+Point {x:400; y:300; z:-800}
+Point {x:300; y:300; z:-800}
+Point {x:200; y:300; z:-800}
+Point {x:100; y:300; z:-800}
+Point {x:1000; y:200; z:-800}
+Point {x:900; y:200; z:-800}
+Point {x:800; y:200; z:-800}
+Point {x:700; y:200; z:-800}
+Point {x:600; y:200; z:-800}
+Point {x:500; y:200; z:-800}
+Point {x:400; y:200; z:-800}
+Point {x:300; y:200; z:-800}
+Point {x:200; y:200; z:-800}
+Point {x:100; y:200; z:-800}
+Point {x:1000; y:100; z:-800}
+Point {x:900; y:100; z:-800}
+Point {x:800; y:100; z:-800}
+Point {x:700; y:100; z:-800}
+Point {x:600; y:100; z:-800}
+Point {x:500; y:100; z:-800}
+Point {x:400; y:100; z:-800}
+Point {x:300; y:100; z:-800}
+Point {x:200; y:100; z:-800}
+Point {x:100; y:100; z:-800}
+Point {x:1000; y:1000; z:-900}
+Point {x:900; y:1000; z:-900}
+Point {x:800; y:1000; z:-900}
+Point {x:700; y:1000; z:-900}
+Point {x:600; y:1000; z:-900}
+Point {x:500; y:1000; z:-900}
+Point {x:400; y:1000; z:-900}
+Point {x:300; y:1000; z:-900}
+Point {x:200; y:1000; z:-900}
+Point {x:100; y:1000; z:-900}
+Point {x:1000; y:900; z:-900}
+Point {x:900; y:900; z:-900}
+Point {x:800; y:900; z:-900}
+Point {x:700; y:900; z:-900}
+Point {x:600; y:900; z:-900}
+Point {x:500; y:900; z:-900}
+Point {x:400; y:900; z:-900}
+Point {x:300; y:900; z:-900}
+Point {x:200; y:900; z:-900}
+Point {x:100; y:900; z:-900}
+Point {x:1000; y:800; z:-900}
+Point {x:900; y:800; z:-900}
+Point {x:800; y:800; z:-900}
+Point {x:700; y:800; z:-900}
+Point {x:600; y:800; z:-900}
+Point {x:500; y:800; z:-900}
+Point {x:400; y:800; z:-900}
+Point {x:300; y:800; z:-900}
+Point {x:200; y:800; z:-900}
+Point {x:100; y:800; z:-900}
+Point {x:1000; y:700; z:-900}
+Point {x:900; y:700; z:-900}
+Point {x:800; y:700; z:-900}
+Point {x:700; y:700; z:-900}
+Point {x:600; y:700; z:-900}
+Point {x:500; y:700; z:-900}
+Point {x:400; y:700; z:-900}
+Point {x:300; y:700; z:-900}
+Point {x:200; y:700; z:-900}
+Point {x:100; y:700; z:-900}
+Point {x:1000; y:600; z:-900}
+Point {x:900; y:600; z:-900}
+Point {x:800; y:600; z:-900}
+Point {x:700; y:600; z:-900}
+Point {x:600; y:600; z:-900}
+Point {x:500; y:600; z:-900}
+Point {x:400; y:600; z:-900}
+Point {x:300; y:600; z:-900}
+Point {x:200; y:600; z:-900}
+Point {x:100; y:600; z:-900}
+Point {x:1000; y:500; z:-900}
+Point {x:900; y:500; z:-900}
+Point {x:800; y:500; z:-900}
+Point {x:700; y:500; z:-900}
+Point {x:600; y:500; z:-900}
+Point {x:500; y:500; z:-900}
+Point {x:400; y:500; z:-900}
+Point {x:300; y:500; z:-900}
+Point {x:200; y:500; z:-900}
+Point {x:100; y:500; z:-900}
+Point {x:1000; y:400; z:-900}
+Point {x:900; y:400; z:-900}
+Point {x:800; y:400; z:-900}
+Point {x:700; y:400; z:-900}
+Point {x:600; y:400; z:-900}
+Point {x:500; y:400; z:-900}
+Point {x:400; y:400; z:-900}
+Point {x:300; y:400; z:-900}
+Point {x:200; y:400; z:-900}
+Point {x:100; y:400; z:-900}
+Point {x:1000; y:300; z:-900}
+Point {x:900; y:300; z:-900}
+Point {x:800; y:300; z:-900}
+Point {x:700; y:300; z:-900}
+Point {x:600; y:300; z:-900}
+Point {x:500; y:300; z:-900}
+Point {x:400; y:300; z:-900}
+Point {x:300; y:300; z:-900}
+Point {x:200; y:300; z:-900}
+Point {x:100; y:300; z:-900}
+Point {x:1000; y:200; z:-900}
+Point {x:900; y:200; z:-900}
+Point {x:800; y:200; z:-900}
+Point {x:700; y:200; z:-900}
+Point {x:600; y:200; z:-900}
+Point {x:500; y:200; z:-900}
+Point {x:400; y:200; z:-900}
+Point {x:300; y:200; z:-900}
+Point {x:200; y:200; z:-900}
+Point {x:100; y:200; z:-900}
+Point {x:1000; y:100; z:-900}
+Point {x:900; y:100; z:-900}
+Point {x:800; y:100; z:-900}
+Point {x:700; y:100; z:-900}
+Point {x:600; y:100; z:-900}
+Point {x:500; y:100; z:-900}
+Point {x:400; y:100; z:-900}
+Point {x:300; y:100; z:-900}
+Point {x:200; y:100; z:-900}
+Point {x:100; y:100; z:-900}
+}
+}
+
+GeomodellerTask {
+SavePotentialGradientVoxet {
+	nx: 10
+	ny: 10
+	nz: 10
+	VoxetFileStub: "GOCAD_grad_voxet_layer_cake"
+}
+}
+
+GeomodellerTask {
+GetComputedGradientAtXYZ {
+	filename: "grad_voxet_layer_cake.csv"
+Point {x:1000; y:1000; z:0}
+Point {x:900; y:1000; z:0}
+Point {x:800; y:1000; z:0}
+Point {x:700; y:1000; z:0}
+Point {x:600; y:1000; z:0}
+Point {x:500; y:1000; z:0}
+Point {x:400; y:1000; z:0}
+Point {x:300; y:1000; z:0}
+Point {x:200; y:1000; z:0}
+Point {x:100; y:1000; z:0}
+Point {x:1000; y:900; z:0}
+Point {x:900; y:900; z:0}
+Point {x:800; y:900; z:0}
+Point {x:700; y:900; z:0}
+Point {x:600; y:900; z:0}
+Point {x:500; y:900; z:0}
+Point {x:400; y:900; z:0}
+Point {x:300; y:900; z:0}
+Point {x:200; y:900; z:0}
+Point {x:100; y:900; z:0}
+Point {x:1000; y:800; z:0}
+Point {x:900; y:800; z:0}
+Point {x:800; y:800; z:0}
+Point {x:700; y:800; z:0}
+Point {x:600; y:800; z:0}
+Point {x:500; y:800; z:0}
+Point {x:400; y:800; z:0}
+Point {x:300; y:800; z:0}
+Point {x:200; y:800; z:0}
+Point {x:100; y:800; z:0}
+Point {x:1000; y:700; z:0}
+Point {x:900; y:700; z:0}
+Point {x:800; y:700; z:0}
+Point {x:700; y:700; z:0}
+Point {x:600; y:700; z:0}
+Point {x:500; y:700; z:0}
+Point {x:400; y:700; z:0}
+Point {x:300; y:700; z:0}
+Point {x:200; y:700; z:0}
+Point {x:100; y:700; z:0}
+Point {x:1000; y:600; z:0}
+Point {x:900; y:600; z:0}
+Point {x:800; y:600; z:0}
+Point {x:700; y:600; z:0}
+Point {x:600; y:600; z:0}
+Point {x:500; y:600; z:0}
+Point {x:400; y:600; z:0}
+Point {x:300; y:600; z:0}
+Point {x:200; y:600; z:0}
+Point {x:100; y:600; z:0}
+Point {x:1000; y:500; z:0}
+Point {x:900; y:500; z:0}
+Point {x:800; y:500; z:0}
+Point {x:700; y:500; z:0}
+Point {x:600; y:500; z:0}
+Point {x:500; y:500; z:0}
+Point {x:400; y:500; z:0}
+Point {x:300; y:500; z:0}
+Point {x:200; y:500; z:0}
+Point {x:100; y:500; z:0}
+Point {x:1000; y:400; z:0}
+Point {x:900; y:400; z:0}
+Point {x:800; y:400; z:0}
+Point {x:700; y:400; z:0}
+Point {x:600; y:400; z:0}
+Point {x:500; y:400; z:0}
+Point {x:400; y:400; z:0}
+Point {x:300; y:400; z:0}
+Point {x:200; y:400; z:0}
+Point {x:100; y:400; z:0}
+Point {x:1000; y:300; z:0}
+Point {x:900; y:300; z:0}
+Point {x:800; y:300; z:0}
+Point {x:700; y:300; z:0}
+Point {x:600; y:300; z:0}
+Point {x:500; y:300; z:0}
+Point {x:400; y:300; z:0}
+Point {x:300; y:300; z:0}
+Point {x:200; y:300; z:0}
+Point {x:100; y:300; z:0}
+Point {x:1000; y:200; z:0}
+Point {x:900; y:200; z:0}
+Point {x:800; y:200; z:0}
+Point {x:700; y:200; z:0}
+Point {x:600; y:200; z:0}
+Point {x:500; y:200; z:0}
+Point {x:400; y:200; z:0}
+Point {x:300; y:200; z:0}
+Point {x:200; y:200; z:0}
+Point {x:100; y:200; z:0}
+Point {x:1000; y:100; z:0}
+Point {x:900; y:100; z:0}
+Point {x:800; y:100; z:0}
+Point {x:700; y:100; z:0}
+Point {x:600; y:100; z:0}
+Point {x:500; y:100; z:0}
+Point {x:400; y:100; z:0}
+Point {x:300; y:100; z:0}
+Point {x:200; y:100; z:0}
+Point {x:100; y:100; z:0}
+Point {x:1000; y:1000; z:-100}
+Point {x:900; y:1000; z:-100}
+Point {x:800; y:1000; z:-100}
+Point {x:700; y:1000; z:-100}
+Point {x:600; y:1000; z:-100}
+Point {x:500; y:1000; z:-100}
+Point {x:400; y:1000; z:-100}
+Point {x:300; y:1000; z:-100}
+Point {x:200; y:1000; z:-100}
+Point {x:100; y:1000; z:-100}
+Point {x:1000; y:900; z:-100}
+Point {x:900; y:900; z:-100}
+Point {x:800; y:900; z:-100}
+Point {x:700; y:900; z:-100}
+Point {x:600; y:900; z:-100}
+Point {x:500; y:900; z:-100}
+Point {x:400; y:900; z:-100}
+Point {x:300; y:900; z:-100}
+Point {x:200; y:900; z:-100}
+Point {x:100; y:900; z:-100}
+Point {x:1000; y:800; z:-100}
+Point {x:900; y:800; z:-100}
+Point {x:800; y:800; z:-100}
+Point {x:700; y:800; z:-100}
+Point {x:600; y:800; z:-100}
+Point {x:500; y:800; z:-100}
+Point {x:400; y:800; z:-100}
+Point {x:300; y:800; z:-100}
+Point {x:200; y:800; z:-100}
+Point {x:100; y:800; z:-100}
+Point {x:1000; y:700; z:-100}
+Point {x:900; y:700; z:-100}
+Point {x:800; y:700; z:-100}
+Point {x:700; y:700; z:-100}
+Point {x:600; y:700; z:-100}
+Point {x:500; y:700; z:-100}
+Point {x:400; y:700; z:-100}
+Point {x:300; y:700; z:-100}
+Point {x:200; y:700; z:-100}
+Point {x:100; y:700; z:-100}
+Point {x:1000; y:600; z:-100}
+Point {x:900; y:600; z:-100}
+Point {x:800; y:600; z:-100}
+Point {x:700; y:600; z:-100}
+Point {x:600; y:600; z:-100}
+Point {x:500; y:600; z:-100}
+Point {x:400; y:600; z:-100}
+Point {x:300; y:600; z:-100}
+Point {x:200; y:600; z:-100}
+Point {x:100; y:600; z:-100}
+Point {x:1000; y:500; z:-100}
+Point {x:900; y:500; z:-100}
+Point {x:800; y:500; z:-100}
+Point {x:700; y:500; z:-100}
+Point {x:600; y:500; z:-100}
+Point {x:500; y:500; z:-100}
+Point {x:400; y:500; z:-100}
+Point {x:300; y:500; z:-100}
+Point {x:200; y:500; z:-100}
+Point {x:100; y:500; z:-100}
+Point {x:1000; y:400; z:-100}
+Point {x:900; y:400; z:-100}
+Point {x:800; y:400; z:-100}
+Point {x:700; y:400; z:-100}
+Point {x:600; y:400; z:-100}
+Point {x:500; y:400; z:-100}
+Point {x:400; y:400; z:-100}
+Point {x:300; y:400; z:-100}
+Point {x:200; y:400; z:-100}
+Point {x:100; y:400; z:-100}
+Point {x:1000; y:300; z:-100}
+Point {x:900; y:300; z:-100}
+Point {x:800; y:300; z:-100}
+Point {x:700; y:300; z:-100}
+Point {x:600; y:300; z:-100}
+Point {x:500; y:300; z:-100}
+Point {x:400; y:300; z:-100}
+Point {x:300; y:300; z:-100}
+Point {x:200; y:300; z:-100}
+Point {x:100; y:300; z:-100}
+Point {x:1000; y:200; z:-100}
+Point {x:900; y:200; z:-100}
+Point {x:800; y:200; z:-100}
+Point {x:700; y:200; z:-100}
+Point {x:600; y:200; z:-100}
+Point {x:500; y:200; z:-100}
+Point {x:400; y:200; z:-100}
+Point {x:300; y:200; z:-100}
+Point {x:200; y:200; z:-100}
+Point {x:100; y:200; z:-100}
+Point {x:1000; y:100; z:-100}
+Point {x:900; y:100; z:-100}
+Point {x:800; y:100; z:-100}
+Point {x:700; y:100; z:-100}
+Point {x:600; y:100; z:-100}
+Point {x:500; y:100; z:-100}
+Point {x:400; y:100; z:-100}
+Point {x:300; y:100; z:-100}
+Point {x:200; y:100; z:-100}
+Point {x:100; y:100; z:-100}
+Point {x:1000; y:1000; z:-200}
+Point {x:900; y:1000; z:-200}
+Point {x:800; y:1000; z:-200}
+Point {x:700; y:1000; z:-200}
+Point {x:600; y:1000; z:-200}
+Point {x:500; y:1000; z:-200}
+Point {x:400; y:1000; z:-200}
+Point {x:300; y:1000; z:-200}
+Point {x:200; y:1000; z:-200}
+Point {x:100; y:1000; z:-200}
+Point {x:1000; y:900; z:-200}
+Point {x:900; y:900; z:-200}
+Point {x:800; y:900; z:-200}
+Point {x:700; y:900; z:-200}
+Point {x:600; y:900; z:-200}
+Point {x:500; y:900; z:-200}
+Point {x:400; y:900; z:-200}
+Point {x:300; y:900; z:-200}
+Point {x:200; y:900; z:-200}
+Point {x:100; y:900; z:-200}
+Point {x:1000; y:800; z:-200}
+Point {x:900; y:800; z:-200}
+Point {x:800; y:800; z:-200}
+Point {x:700; y:800; z:-200}
+Point {x:600; y:800; z:-200}
+Point {x:500; y:800; z:-200}
+Point {x:400; y:800; z:-200}
+Point {x:300; y:800; z:-200}
+Point {x:200; y:800; z:-200}
+Point {x:100; y:800; z:-200}
+Point {x:1000; y:700; z:-200}
+Point {x:900; y:700; z:-200}
+Point {x:800; y:700; z:-200}
+Point {x:700; y:700; z:-200}
+Point {x:600; y:700; z:-200}
+Point {x:500; y:700; z:-200}
+Point {x:400; y:700; z:-200}
+Point {x:300; y:700; z:-200}
+Point {x:200; y:700; z:-200}
+Point {x:100; y:700; z:-200}
+Point {x:1000; y:600; z:-200}
+Point {x:900; y:600; z:-200}
+Point {x:800; y:600; z:-200}
+Point {x:700; y:600; z:-200}
+Point {x:600; y:600; z:-200}
+Point {x:500; y:600; z:-200}
+Point {x:400; y:600; z:-200}
+Point {x:300; y:600; z:-200}
+Point {x:200; y:600; z:-200}
+Point {x:100; y:600; z:-200}
+Point {x:1000; y:500; z:-200}
+Point {x:900; y:500; z:-200}
+Point {x:800; y:500; z:-200}
+Point {x:700; y:500; z:-200}
+Point {x:600; y:500; z:-200}
+Point {x:500; y:500; z:-200}
+Point {x:400; y:500; z:-200}
+Point {x:300; y:500; z:-200}
+Point {x:200; y:500; z:-200}
+Point {x:100; y:500; z:-200}
+Point {x:1000; y:400; z:-200}
+Point {x:900; y:400; z:-200}
+Point {x:800; y:400; z:-200}
+Point {x:700; y:400; z:-200}
+Point {x:600; y:400; z:-200}
+Point {x:500; y:400; z:-200}
+Point {x:400; y:400; z:-200}
+Point {x:300; y:400; z:-200}
+Point {x:200; y:400; z:-200}
+Point {x:100; y:400; z:-200}
+Point {x:1000; y:300; z:-200}
+Point {x:900; y:300; z:-200}
+Point {x:800; y:300; z:-200}
+Point {x:700; y:300; z:-200}
+Point {x:600; y:300; z:-200}
+Point {x:500; y:300; z:-200}
+Point {x:400; y:300; z:-200}
+Point {x:300; y:300; z:-200}
+Point {x:200; y:300; z:-200}
+Point {x:100; y:300; z:-200}
+Point {x:1000; y:200; z:-200}
+Point {x:900; y:200; z:-200}
+Point {x:800; y:200; z:-200}
+Point {x:700; y:200; z:-200}
+Point {x:600; y:200; z:-200}
+Point {x:500; y:200; z:-200}
+Point {x:400; y:200; z:-200}
+Point {x:300; y:200; z:-200}
+Point {x:200; y:200; z:-200}
+Point {x:100; y:200; z:-200}
+Point {x:1000; y:100; z:-200}
+Point {x:900; y:100; z:-200}
+Point {x:800; y:100; z:-200}
+Point {x:700; y:100; z:-200}
+Point {x:600; y:100; z:-200}
+Point {x:500; y:100; z:-200}
+Point {x:400; y:100; z:-200}
+Point {x:300; y:100; z:-200}
+Point {x:200; y:100; z:-200}
+Point {x:100; y:100; z:-200}
+Point {x:1000; y:1000; z:-300}
+Point {x:900; y:1000; z:-300}
+Point {x:800; y:1000; z:-300}
+Point {x:700; y:1000; z:-300}
+Point {x:600; y:1000; z:-300}
+Point {x:500; y:1000; z:-300}
+Point {x:400; y:1000; z:-300}
+Point {x:300; y:1000; z:-300}
+Point {x:200; y:1000; z:-300}
+Point {x:100; y:1000; z:-300}
+Point {x:1000; y:900; z:-300}
+Point {x:900; y:900; z:-300}
+Point {x:800; y:900; z:-300}
+Point {x:700; y:900; z:-300}
+Point {x:600; y:900; z:-300}
+Point {x:500; y:900; z:-300}
+Point {x:400; y:900; z:-300}
+Point {x:300; y:900; z:-300}
+Point {x:200; y:900; z:-300}
+Point {x:100; y:900; z:-300}
+Point {x:1000; y:800; z:-300}
+Point {x:900; y:800; z:-300}
+Point {x:800; y:800; z:-300}
+Point {x:700; y:800; z:-300}
+Point {x:600; y:800; z:-300}
+Point {x:500; y:800; z:-300}
+Point {x:400; y:800; z:-300}
+Point {x:300; y:800; z:-300}
+Point {x:200; y:800; z:-300}
+Point {x:100; y:800; z:-300}
+Point {x:1000; y:700; z:-300}
+Point {x:900; y:700; z:-300}
+Point {x:800; y:700; z:-300}
+Point {x:700; y:700; z:-300}
+Point {x:600; y:700; z:-300}
+Point {x:500; y:700; z:-300}
+Point {x:400; y:700; z:-300}
+Point {x:300; y:700; z:-300}
+Point {x:200; y:700; z:-300}
+Point {x:100; y:700; z:-300}
+Point {x:1000; y:600; z:-300}
+Point {x:900; y:600; z:-300}
+Point {x:800; y:600; z:-300}
+Point {x:700; y:600; z:-300}
+Point {x:600; y:600; z:-300}
+Point {x:500; y:600; z:-300}
+Point {x:400; y:600; z:-300}
+Point {x:300; y:600; z:-300}
+Point {x:200; y:600; z:-300}
+Point {x:100; y:600; z:-300}
+Point {x:1000; y:500; z:-300}
+Point {x:900; y:500; z:-300}
+Point {x:800; y:500; z:-300}
+Point {x:700; y:500; z:-300}
+Point {x:600; y:500; z:-300}
+Point {x:500; y:500; z:-300}
+Point {x:400; y:500; z:-300}
+Point {x:300; y:500; z:-300}
+Point {x:200; y:500; z:-300}
+Point {x:100; y:500; z:-300}
+Point {x:1000; y:400; z:-300}
+Point {x:900; y:400; z:-300}
+Point {x:800; y:400; z:-300}
+Point {x:700; y:400; z:-300}
+Point {x:600; y:400; z:-300}
+Point {x:500; y:400; z:-300}
+Point {x:400; y:400; z:-300}
+Point {x:300; y:400; z:-300}
+Point {x:200; y:400; z:-300}
+Point {x:100; y:400; z:-300}
+Point {x:1000; y:300; z:-300}
+Point {x:900; y:300; z:-300}
+Point {x:800; y:300; z:-300}
+Point {x:700; y:300; z:-300}
+Point {x:600; y:300; z:-300}
+Point {x:500; y:300; z:-300}
+Point {x:400; y:300; z:-300}
+Point {x:300; y:300; z:-300}
+Point {x:200; y:300; z:-300}
+Point {x:100; y:300; z:-300}
+Point {x:1000; y:200; z:-300}
+Point {x:900; y:200; z:-300}
+Point {x:800; y:200; z:-300}
+Point {x:700; y:200; z:-300}
+Point {x:600; y:200; z:-300}
+Point {x:500; y:200; z:-300}
+Point {x:400; y:200; z:-300}
+Point {x:300; y:200; z:-300}
+Point {x:200; y:200; z:-300}
+Point {x:100; y:200; z:-300}
+Point {x:1000; y:100; z:-300}
+Point {x:900; y:100; z:-300}
+Point {x:800; y:100; z:-300}
+Point {x:700; y:100; z:-300}
+Point {x:600; y:100; z:-300}
+Point {x:500; y:100; z:-300}
+Point {x:400; y:100; z:-300}
+Point {x:300; y:100; z:-300}
+Point {x:200; y:100; z:-300}
+Point {x:100; y:100; z:-300}
+Point {x:1000; y:1000; z:-400}
+Point {x:900; y:1000; z:-400}
+Point {x:800; y:1000; z:-400}
+Point {x:700; y:1000; z:-400}
+Point {x:600; y:1000; z:-400}
+Point {x:500; y:1000; z:-400}
+Point {x:400; y:1000; z:-400}
+Point {x:300; y:1000; z:-400}
+Point {x:200; y:1000; z:-400}
+Point {x:100; y:1000; z:-400}
+Point {x:1000; y:900; z:-400}
+Point {x:900; y:900; z:-400}
+Point {x:800; y:900; z:-400}
+Point {x:700; y:900; z:-400}
+Point {x:600; y:900; z:-400}
+Point {x:500; y:900; z:-400}
+Point {x:400; y:900; z:-400}
+Point {x:300; y:900; z:-400}
+Point {x:200; y:900; z:-400}
+Point {x:100; y:900; z:-400}
+Point {x:1000; y:800; z:-400}
+Point {x:900; y:800; z:-400}
+Point {x:800; y:800; z:-400}
+Point {x:700; y:800; z:-400}
+Point {x:600; y:800; z:-400}
+Point {x:500; y:800; z:-400}
+Point {x:400; y:800; z:-400}
+Point {x:300; y:800; z:-400}
+Point {x:200; y:800; z:-400}
+Point {x:100; y:800; z:-400}
+Point {x:1000; y:700; z:-400}
+Point {x:900; y:700; z:-400}
+Point {x:800; y:700; z:-400}
+Point {x:700; y:700; z:-400}
+Point {x:600; y:700; z:-400}
+Point {x:500; y:700; z:-400}
+Point {x:400; y:700; z:-400}
+Point {x:300; y:700; z:-400}
+Point {x:200; y:700; z:-400}
+Point {x:100; y:700; z:-400}
+Point {x:1000; y:600; z:-400}
+Point {x:900; y:600; z:-400}
+Point {x:800; y:600; z:-400}
+Point {x:700; y:600; z:-400}
+Point {x:600; y:600; z:-400}
+Point {x:500; y:600; z:-400}
+Point {x:400; y:600; z:-400}
+Point {x:300; y:600; z:-400}
+Point {x:200; y:600; z:-400}
+Point {x:100; y:600; z:-400}
+Point {x:1000; y:500; z:-400}
+Point {x:900; y:500; z:-400}
+Point {x:800; y:500; z:-400}
+Point {x:700; y:500; z:-400}
+Point {x:600; y:500; z:-400}
+Point {x:500; y:500; z:-400}
+Point {x:400; y:500; z:-400}
+Point {x:300; y:500; z:-400}
+Point {x:200; y:500; z:-400}
+Point {x:100; y:500; z:-400}
+Point {x:1000; y:400; z:-400}
+Point {x:900; y:400; z:-400}
+Point {x:800; y:400; z:-400}
+Point {x:700; y:400; z:-400}
+Point {x:600; y:400; z:-400}
+Point {x:500; y:400; z:-400}
+Point {x:400; y:400; z:-400}
+Point {x:300; y:400; z:-400}
+Point {x:200; y:400; z:-400}
+Point {x:100; y:400; z:-400}
+Point {x:1000; y:300; z:-400}
+Point {x:900; y:300; z:-400}
+Point {x:800; y:300; z:-400}
+Point {x:700; y:300; z:-400}
+Point {x:600; y:300; z:-400}
+Point {x:500; y:300; z:-400}
+Point {x:400; y:300; z:-400}
+Point {x:300; y:300; z:-400}
+Point {x:200; y:300; z:-400}
+Point {x:100; y:300; z:-400}
+Point {x:1000; y:200; z:-400}
+Point {x:900; y:200; z:-400}
+Point {x:800; y:200; z:-400}
+Point {x:700; y:200; z:-400}
+Point {x:600; y:200; z:-400}
+Point {x:500; y:200; z:-400}
+Point {x:400; y:200; z:-400}
+Point {x:300; y:200; z:-400}
+Point {x:200; y:200; z:-400}
+Point {x:100; y:200; z:-400}
+Point {x:1000; y:100; z:-400}
+Point {x:900; y:100; z:-400}
+Point {x:800; y:100; z:-400}
+Point {x:700; y:100; z:-400}
+Point {x:600; y:100; z:-400}
+Point {x:500; y:100; z:-400}
+Point {x:400; y:100; z:-400}
+Point {x:300; y:100; z:-400}
+Point {x:200; y:100; z:-400}
+Point {x:100; y:100; z:-400}
+Point {x:1000; y:1000; z:-500}
+Point {x:900; y:1000; z:-500}
+Point {x:800; y:1000; z:-500}
+Point {x:700; y:1000; z:-500}
+Point {x:600; y:1000; z:-500}
+Point {x:500; y:1000; z:-500}
+Point {x:400; y:1000; z:-500}
+Point {x:300; y:1000; z:-500}
+Point {x:200; y:1000; z:-500}
+Point {x:100; y:1000; z:-500}
+Point {x:1000; y:900; z:-500}
+Point {x:900; y:900; z:-500}
+Point {x:800; y:900; z:-500}
+Point {x:700; y:900; z:-500}
+Point {x:600; y:900; z:-500}
+Point {x:500; y:900; z:-500}
+Point {x:400; y:900; z:-500}
+Point {x:300; y:900; z:-500}
+Point {x:200; y:900; z:-500}
+Point {x:100; y:900; z:-500}
+Point {x:1000; y:800; z:-500}
+Point {x:900; y:800; z:-500}
+Point {x:800; y:800; z:-500}
+Point {x:700; y:800; z:-500}
+Point {x:600; y:800; z:-500}
+Point {x:500; y:800; z:-500}
+Point {x:400; y:800; z:-500}
+Point {x:300; y:800; z:-500}
+Point {x:200; y:800; z:-500}
+Point {x:100; y:800; z:-500}
+Point {x:1000; y:700; z:-500}
+Point {x:900; y:700; z:-500}
+Point {x:800; y:700; z:-500}
+Point {x:700; y:700; z:-500}
+Point {x:600; y:700; z:-500}
+Point {x:500; y:700; z:-500}
+Point {x:400; y:700; z:-500}
+Point {x:300; y:700; z:-500}
+Point {x:200; y:700; z:-500}
+Point {x:100; y:700; z:-500}
+Point {x:1000; y:600; z:-500}
+Point {x:900; y:600; z:-500}
+Point {x:800; y:600; z:-500}
+Point {x:700; y:600; z:-500}
+Point {x:600; y:600; z:-500}
+Point {x:500; y:600; z:-500}
+Point {x:400; y:600; z:-500}
+Point {x:300; y:600; z:-500}
+Point {x:200; y:600; z:-500}
+Point {x:100; y:600; z:-500}
+Point {x:1000; y:500; z:-500}
+Point {x:900; y:500; z:-500}
+Point {x:800; y:500; z:-500}
+Point {x:700; y:500; z:-500}
+Point {x:600; y:500; z:-500}
+Point {x:500; y:500; z:-500}
+Point {x:400; y:500; z:-500}
+Point {x:300; y:500; z:-500}
+Point {x:200; y:500; z:-500}
+Point {x:100; y:500; z:-500}
+Point {x:1000; y:400; z:-500}
+Point {x:900; y:400; z:-500}
+Point {x:800; y:400; z:-500}
+Point {x:700; y:400; z:-500}
+Point {x:600; y:400; z:-500}
+Point {x:500; y:400; z:-500}
+Point {x:400; y:400; z:-500}
+Point {x:300; y:400; z:-500}
+Point {x:200; y:400; z:-500}
+Point {x:100; y:400; z:-500}
+Point {x:1000; y:300; z:-500}
+Point {x:900; y:300; z:-500}
+Point {x:800; y:300; z:-500}
+Point {x:700; y:300; z:-500}
+Point {x:600; y:300; z:-500}
+Point {x:500; y:300; z:-500}
+Point {x:400; y:300; z:-500}
+Point {x:300; y:300; z:-500}
+Point {x:200; y:300; z:-500}
+Point {x:100; y:300; z:-500}
+Point {x:1000; y:200; z:-500}
+Point {x:900; y:200; z:-500}
+Point {x:800; y:200; z:-500}
+Point {x:700; y:200; z:-500}
+Point {x:600; y:200; z:-500}
+Point {x:500; y:200; z:-500}
+Point {x:400; y:200; z:-500}
+Point {x:300; y:200; z:-500}
+Point {x:200; y:200; z:-500}
+Point {x:100; y:200; z:-500}
+Point {x:1000; y:100; z:-500}
+Point {x:900; y:100; z:-500}
+Point {x:800; y:100; z:-500}
+Point {x:700; y:100; z:-500}
+Point {x:600; y:100; z:-500}
+Point {x:500; y:100; z:-500}
+Point {x:400; y:100; z:-500}
+Point {x:300; y:100; z:-500}
+Point {x:200; y:100; z:-500}
+Point {x:100; y:100; z:-500}
+Point {x:1000; y:1000; z:-600}
+Point {x:900; y:1000; z:-600}
+Point {x:800; y:1000; z:-600}
+Point {x:700; y:1000; z:-600}
+Point {x:600; y:1000; z:-600}
+Point {x:500; y:1000; z:-600}
+Point {x:400; y:1000; z:-600}
+Point {x:300; y:1000; z:-600}
+Point {x:200; y:1000; z:-600}
+Point {x:100; y:1000; z:-600}
+Point {x:1000; y:900; z:-600}
+Point {x:900; y:900; z:-600}
+Point {x:800; y:900; z:-600}
+Point {x:700; y:900; z:-600}
+Point {x:600; y:900; z:-600}
+Point {x:500; y:900; z:-600}
+Point {x:400; y:900; z:-600}
+Point {x:300; y:900; z:-600}
+Point {x:200; y:900; z:-600}
+Point {x:100; y:900; z:-600}
+Point {x:1000; y:800; z:-600}
+Point {x:900; y:800; z:-600}
+Point {x:800; y:800; z:-600}
+Point {x:700; y:800; z:-600}
+Point {x:600; y:800; z:-600}
+Point {x:500; y:800; z:-600}
+Point {x:400; y:800; z:-600}
+Point {x:300; y:800; z:-600}
+Point {x:200; y:800; z:-600}
+Point {x:100; y:800; z:-600}
+Point {x:1000; y:700; z:-600}
+Point {x:900; y:700; z:-600}
+Point {x:800; y:700; z:-600}
+Point {x:700; y:700; z:-600}
+Point {x:600; y:700; z:-600}
+Point {x:500; y:700; z:-600}
+Point {x:400; y:700; z:-600}
+Point {x:300; y:700; z:-600}
+Point {x:200; y:700; z:-600}
+Point {x:100; y:700; z:-600}
+Point {x:1000; y:600; z:-600}
+Point {x:900; y:600; z:-600}
+Point {x:800; y:600; z:-600}
+Point {x:700; y:600; z:-600}
+Point {x:600; y:600; z:-600}
+Point {x:500; y:600; z:-600}
+Point {x:400; y:600; z:-600}
+Point {x:300; y:600; z:-600}
+Point {x:200; y:600; z:-600}
+Point {x:100; y:600; z:-600}
+Point {x:1000; y:500; z:-600}
+Point {x:900; y:500; z:-600}
+Point {x:800; y:500; z:-600}
+Point {x:700; y:500; z:-600}
+Point {x:600; y:500; z:-600}
+Point {x:500; y:500; z:-600}
+Point {x:400; y:500; z:-600}
+Point {x:300; y:500; z:-600}
+Point {x:200; y:500; z:-600}
+Point {x:100; y:500; z:-600}
+Point {x:1000; y:400; z:-600}
+Point {x:900; y:400; z:-600}
+Point {x:800; y:400; z:-600}
+Point {x:700; y:400; z:-600}
+Point {x:600; y:400; z:-600}
+Point {x:500; y:400; z:-600}
+Point {x:400; y:400; z:-600}
+Point {x:300; y:400; z:-600}
+Point {x:200; y:400; z:-600}
+Point {x:100; y:400; z:-600}
+Point {x:1000; y:300; z:-600}
+Point {x:900; y:300; z:-600}
+Point {x:800; y:300; z:-600}
+Point {x:700; y:300; z:-600}
+Point {x:600; y:300; z:-600}
+Point {x:500; y:300; z:-600}
+Point {x:400; y:300; z:-600}
+Point {x:300; y:300; z:-600}
+Point {x:200; y:300; z:-600}
+Point {x:100; y:300; z:-600}
+Point {x:1000; y:200; z:-600}
+Point {x:900; y:200; z:-600}
+Point {x:800; y:200; z:-600}
+Point {x:700; y:200; z:-600}
+Point {x:600; y:200; z:-600}
+Point {x:500; y:200; z:-600}
+Point {x:400; y:200; z:-600}
+Point {x:300; y:200; z:-600}
+Point {x:200; y:200; z:-600}
+Point {x:100; y:200; z:-600}
+Point {x:1000; y:100; z:-600}
+Point {x:900; y:100; z:-600}
+Point {x:800; y:100; z:-600}
+Point {x:700; y:100; z:-600}
+Point {x:600; y:100; z:-600}
+Point {x:500; y:100; z:-600}
+Point {x:400; y:100; z:-600}
+Point {x:300; y:100; z:-600}
+Point {x:200; y:100; z:-600}
+Point {x:100; y:100; z:-600}
+Point {x:1000; y:1000; z:-700}
+Point {x:900; y:1000; z:-700}
+Point {x:800; y:1000; z:-700}
+Point {x:700; y:1000; z:-700}
+Point {x:600; y:1000; z:-700}
+Point {x:500; y:1000; z:-700}
+Point {x:400; y:1000; z:-700}
+Point {x:300; y:1000; z:-700}
+Point {x:200; y:1000; z:-700}
+Point {x:100; y:1000; z:-700}
+Point {x:1000; y:900; z:-700}
+Point {x:900; y:900; z:-700}
+Point {x:800; y:900; z:-700}
+Point {x:700; y:900; z:-700}
+Point {x:600; y:900; z:-700}
+Point {x:500; y:900; z:-700}
+Point {x:400; y:900; z:-700}
+Point {x:300; y:900; z:-700}
+Point {x:200; y:900; z:-700}
+Point {x:100; y:900; z:-700}
+Point {x:1000; y:800; z:-700}
+Point {x:900; y:800; z:-700}
+Point {x:800; y:800; z:-700}
+Point {x:700; y:800; z:-700}
+Point {x:600; y:800; z:-700}
+Point {x:500; y:800; z:-700}
+Point {x:400; y:800; z:-700}
+Point {x:300; y:800; z:-700}
+Point {x:200; y:800; z:-700}
+Point {x:100; y:800; z:-700}
+Point {x:1000; y:700; z:-700}
+Point {x:900; y:700; z:-700}
+Point {x:800; y:700; z:-700}
+Point {x:700; y:700; z:-700}
+Point {x:600; y:700; z:-700}
+Point {x:500; y:700; z:-700}
+Point {x:400; y:700; z:-700}
+Point {x:300; y:700; z:-700}
+Point {x:200; y:700; z:-700}
+Point {x:100; y:700; z:-700}
+Point {x:1000; y:600; z:-700}
+Point {x:900; y:600; z:-700}
+Point {x:800; y:600; z:-700}
+Point {x:700; y:600; z:-700}
+Point {x:600; y:600; z:-700}
+Point {x:500; y:600; z:-700}
+Point {x:400; y:600; z:-700}
+Point {x:300; y:600; z:-700}
+Point {x:200; y:600; z:-700}
+Point {x:100; y:600; z:-700}
+Point {x:1000; y:500; z:-700}
+Point {x:900; y:500; z:-700}
+Point {x:800; y:500; z:-700}
+Point {x:700; y:500; z:-700}
+Point {x:600; y:500; z:-700}
+Point {x:500; y:500; z:-700}
+Point {x:400; y:500; z:-700}
+Point {x:300; y:500; z:-700}
+Point {x:200; y:500; z:-700}
+Point {x:100; y:500; z:-700}
+Point {x:1000; y:400; z:-700}
+Point {x:900; y:400; z:-700}
+Point {x:800; y:400; z:-700}
+Point {x:700; y:400; z:-700}
+Point {x:600; y:400; z:-700}
+Point {x:500; y:400; z:-700}
+Point {x:400; y:400; z:-700}
+Point {x:300; y:400; z:-700}
+Point {x:200; y:400; z:-700}
+Point {x:100; y:400; z:-700}
+Point {x:1000; y:300; z:-700}
+Point {x:900; y:300; z:-700}
+Point {x:800; y:300; z:-700}
+Point {x:700; y:300; z:-700}
+Point {x:600; y:300; z:-700}
+Point {x:500; y:300; z:-700}
+Point {x:400; y:300; z:-700}
+Point {x:300; y:300; z:-700}
+Point {x:200; y:300; z:-700}
+Point {x:100; y:300; z:-700}
+Point {x:1000; y:200; z:-700}
+Point {x:900; y:200; z:-700}
+Point {x:800; y:200; z:-700}
+Point {x:700; y:200; z:-700}
+Point {x:600; y:200; z:-700}
+Point {x:500; y:200; z:-700}
+Point {x:400; y:200; z:-700}
+Point {x:300; y:200; z:-700}
+Point {x:200; y:200; z:-700}
+Point {x:100; y:200; z:-700}
+Point {x:1000; y:100; z:-700}
+Point {x:900; y:100; z:-700}
+Point {x:800; y:100; z:-700}
+Point {x:700; y:100; z:-700}
+Point {x:600; y:100; z:-700}
+Point {x:500; y:100; z:-700}
+Point {x:400; y:100; z:-700}
+Point {x:300; y:100; z:-700}
+Point {x:200; y:100; z:-700}
+Point {x:100; y:100; z:-700}
+Point {x:1000; y:1000; z:-800}
+Point {x:900; y:1000; z:-800}
+Point {x:800; y:1000; z:-800}
+Point {x:700; y:1000; z:-800}
+Point {x:600; y:1000; z:-800}
+Point {x:500; y:1000; z:-800}
+Point {x:400; y:1000; z:-800}
+Point {x:300; y:1000; z:-800}
+Point {x:200; y:1000; z:-800}
+Point {x:100; y:1000; z:-800}
+Point {x:1000; y:900; z:-800}
+Point {x:900; y:900; z:-800}
+Point {x:800; y:900; z:-800}
+Point {x:700; y:900; z:-800}
+Point {x:600; y:900; z:-800}
+Point {x:500; y:900; z:-800}
+Point {x:400; y:900; z:-800}
+Point {x:300; y:900; z:-800}
+Point {x:200; y:900; z:-800}
+Point {x:100; y:900; z:-800}
+Point {x:1000; y:800; z:-800}
+Point {x:900; y:800; z:-800}
+Point {x:800; y:800; z:-800}
+Point {x:700; y:800; z:-800}
+Point {x:600; y:800; z:-800}
+Point {x:500; y:800; z:-800}
+Point {x:400; y:800; z:-800}
+Point {x:300; y:800; z:-800}
+Point {x:200; y:800; z:-800}
+Point {x:100; y:800; z:-800}
+Point {x:1000; y:700; z:-800}
+Point {x:900; y:700; z:-800}
+Point {x:800; y:700; z:-800}
+Point {x:700; y:700; z:-800}
+Point {x:600; y:700; z:-800}
+Point {x:500; y:700; z:-800}
+Point {x:400; y:700; z:-800}
+Point {x:300; y:700; z:-800}
+Point {x:200; y:700; z:-800}
+Point {x:100; y:700; z:-800}
+Point {x:1000; y:600; z:-800}
+Point {x:900; y:600; z:-800}
+Point {x:800; y:600; z:-800}
+Point {x:700; y:600; z:-800}
+Point {x:600; y:600; z:-800}
+Point {x:500; y:600; z:-800}
+Point {x:400; y:600; z:-800}
+Point {x:300; y:600; z:-800}
+Point {x:200; y:600; z:-800}
+Point {x:100; y:600; z:-800}
+Point {x:1000; y:500; z:-800}
+Point {x:900; y:500; z:-800}
+Point {x:800; y:500; z:-800}
+Point {x:700; y:500; z:-800}
+Point {x:600; y:500; z:-800}
+Point {x:500; y:500; z:-800}
+Point {x:400; y:500; z:-800}
+Point {x:300; y:500; z:-800}
+Point {x:200; y:500; z:-800}
+Point {x:100; y:500; z:-800}
+Point {x:1000; y:400; z:-800}
+Point {x:900; y:400; z:-800}
+Point {x:800; y:400; z:-800}
+Point {x:700; y:400; z:-800}
+Point {x:600; y:400; z:-800}
+Point {x:500; y:400; z:-800}
+Point {x:400; y:400; z:-800}
+Point {x:300; y:400; z:-800}
+Point {x:200; y:400; z:-800}
+Point {x:100; y:400; z:-800}
+Point {x:1000; y:300; z:-800}
+Point {x:900; y:300; z:-800}
+Point {x:800; y:300; z:-800}
+Point {x:700; y:300; z:-800}
+Point {x:600; y:300; z:-800}
+Point {x:500; y:300; z:-800}
+Point {x:400; y:300; z:-800}
+Point {x:300; y:300; z:-800}
+Point {x:200; y:300; z:-800}
+Point {x:100; y:300; z:-800}
+Point {x:1000; y:200; z:-800}
+Point {x:900; y:200; z:-800}
+Point {x:800; y:200; z:-800}
+Point {x:700; y:200; z:-800}
+Point {x:600; y:200; z:-800}
+Point {x:500; y:200; z:-800}
+Point {x:400; y:200; z:-800}
+Point {x:300; y:200; z:-800}
+Point {x:200; y:200; z:-800}
+Point {x:100; y:200; z:-800}
+Point {x:1000; y:100; z:-800}
+Point {x:900; y:100; z:-800}
+Point {x:800; y:100; z:-800}
+Point {x:700; y:100; z:-800}
+Point {x:600; y:100; z:-800}
+Point {x:500; y:100; z:-800}
+Point {x:400; y:100; z:-800}
+Point {x:300; y:100; z:-800}
+Point {x:200; y:100; z:-800}
+Point {x:100; y:100; z:-800}
+Point {x:1000; y:1000; z:-900}
+Point {x:900; y:1000; z:-900}
+Point {x:800; y:1000; z:-900}
+Point {x:700; y:1000; z:-900}
+Point {x:600; y:1000; z:-900}
+Point {x:500; y:1000; z:-900}
+Point {x:400; y:1000; z:-900}
+Point {x:300; y:1000; z:-900}
+Point {x:200; y:1000; z:-900}
+Point {x:100; y:1000; z:-900}
+Point {x:1000; y:900; z:-900}
+Point {x:900; y:900; z:-900}
+Point {x:800; y:900; z:-900}
+Point {x:700; y:900; z:-900}
+Point {x:600; y:900; z:-900}
+Point {x:500; y:900; z:-900}
+Point {x:400; y:900; z:-900}
+Point {x:300; y:900; z:-900}
+Point {x:200; y:900; z:-900}
+Point {x:100; y:900; z:-900}
+Point {x:1000; y:800; z:-900}
+Point {x:900; y:800; z:-900}
+Point {x:800; y:800; z:-900}
+Point {x:700; y:800; z:-900}
+Point {x:600; y:800; z:-900}
+Point {x:500; y:800; z:-900}
+Point {x:400; y:800; z:-900}
+Point {x:300; y:800; z:-900}
+Point {x:200; y:800; z:-900}
+Point {x:100; y:800; z:-900}
+Point {x:1000; y:700; z:-900}
+Point {x:900; y:700; z:-900}
+Point {x:800; y:700; z:-900}
+Point {x:700; y:700; z:-900}
+Point {x:600; y:700; z:-900}
+Point {x:500; y:700; z:-900}
+Point {x:400; y:700; z:-900}
+Point {x:300; y:700; z:-900}
+Point {x:200; y:700; z:-900}
+Point {x:100; y:700; z:-900}
+Point {x:1000; y:600; z:-900}
+Point {x:900; y:600; z:-900}
+Point {x:800; y:600; z:-900}
+Point {x:700; y:600; z:-900}
+Point {x:600; y:600; z:-900}
+Point {x:500; y:600; z:-900}
+Point {x:400; y:600; z:-900}
+Point {x:300; y:600; z:-900}
+Point {x:200; y:600; z:-900}
+Point {x:100; y:600; z:-900}
+Point {x:1000; y:500; z:-900}
+Point {x:900; y:500; z:-900}
+Point {x:800; y:500; z:-900}
+Point {x:700; y:500; z:-900}
+Point {x:600; y:500; z:-900}
+Point {x:500; y:500; z:-900}
+Point {x:400; y:500; z:-900}
+Point {x:300; y:500; z:-900}
+Point {x:200; y:500; z:-900}
+Point {x:100; y:500; z:-900}
+Point {x:1000; y:400; z:-900}
+Point {x:900; y:400; z:-900}
+Point {x:800; y:400; z:-900}
+Point {x:700; y:400; z:-900}
+Point {x:600; y:400; z:-900}
+Point {x:500; y:400; z:-900}
+Point {x:400; y:400; z:-900}
+Point {x:300; y:400; z:-900}
+Point {x:200; y:400; z:-900}
+Point {x:100; y:400; z:-900}
+Point {x:1000; y:300; z:-900}
+Point {x:900; y:300; z:-900}
+Point {x:800; y:300; z:-900}
+Point {x:700; y:300; z:-900}
+Point {x:600; y:300; z:-900}
+Point {x:500; y:300; z:-900}
+Point {x:400; y:300; z:-900}
+Point {x:300; y:300; z:-900}
+Point {x:200; y:300; z:-900}
+Point {x:100; y:300; z:-900}
+Point {x:1000; y:200; z:-900}
+Point {x:900; y:200; z:-900}
+Point {x:800; y:200; z:-900}
+Point {x:700; y:200; z:-900}
+Point {x:600; y:200; z:-900}
+Point {x:500; y:200; z:-900}
+Point {x:400; y:200; z:-900}
+Point {x:300; y:200; z:-900}
+Point {x:200; y:200; z:-900}
+Point {x:100; y:200; z:-900}
+Point {x:1000; y:100; z:-900}
+Point {x:900; y:100; z:-900}
+Point {x:800; y:100; z:-900}
+Point {x:700; y:100; z:-900}
+Point {x:600; y:100; z:-900}
+Point {x:500; y:100; z:-900}
+Point {x:400; y:100; z:-900}
+Point {x:300; y:100; z:-900}
+Point {x:200; y:100; z:-900}
+Point {x:100; y:100; z:-900}
+}
+}
+
+GeomodellerTask {
+SaveProjectAs {
+	filename: "./out/layer_cake.xml"
+}
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+	level: 2
+    }
+}
+

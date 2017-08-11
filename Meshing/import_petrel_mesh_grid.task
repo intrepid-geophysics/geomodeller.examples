@@ -1,0 +1,19 @@
+# "Import a petrel semi-regular grid and vtk visualise "
+# actually a seismic velocity section
+
+PetrelTask{
+    Examine{
+        filename: "./V-S.GRDECL";
+		FormatType: PETREL;  # the full simulation language being parsed
+		property: "S-VELOCITY";
+		show_3D_viewer 	: true;  #control the pop-up of the viewer
+		show_property :true; # a property such as s-velocity, permerability
+		show_pillars :false;  # truncate the fault lengths to geophysical observed data
+		show_zcorners :false;  # show the bounds as either sphere or plane
+		show_3dimage: false;  # show the permeabilities as 3d image
+		Marker_Size: 2;
+		vertical_scale: 2; # exaggeration
+		ReportFile :"shear_wave_example.rpt";
+    }
+}
+

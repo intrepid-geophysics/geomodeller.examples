@@ -1,0 +1,118 @@
+INV {
+	Inversion_Control {
+		Ppm_Convert:1.0;
+		Altimeter_Difference:0.0;
+		All_Lines:True;
+		Inversion_Targets_Invlog:'EM1DInv_targets_invlog.fmt';
+		Inversion_Targets_Dat_File:'EM1DInv_targets.dat';
+		Target_Data_File:'EM1DInv_1.dat';
+		Target_Number:1;
+		Data_File_Header:'LOOP LINE FID EAST NORTH TER ALT TxRx_Inc TxRx_Z TxRx_X TxRx_Y MAG EM1_Z01 EM1_Z02 EM1_Z03 EM1_Z04 EM1_Z05 EM1_Z06 EM1_Z07 EM1_Z08 EM1_Z09 EM1_Z10'
+		Inversion_Number:1;
+		}
+	Tuning {
+		INV_Control:1;
+		User_Parameters {
+			Title:'Tempest Transmitter Waveform Sample Time information';
+			Number_Of_Transmitters:1;
+			Max_Number_Of_Channels:10;
+			Max_Number_Of_NSX:1;
+			Waveform_Descriptor:-5;
+			FD_3D_Control:0;
+			Output_Voltages_Profile:1;
+			DC_Normalization_Control:1;
+			Norm_Conversion_Factor:3;
+			Stop_The_Program:0;	
+			Number_Of_Reciever_Channels:10;									
+			Offtime:0;
+			Frequency_Bipolar_Wave:25;
+			Zero_To_Peak_Current_Amplitude:1;
+			Centre_RX_Window:[0.0260,0.0651,0.14325,0.29945,0.6120,1.23695,2.4870,4.98695,9.9870,16.6536];
+			Width_RX_Window:[0.0001,0.0260,0.0781,0.1823,0.3906,0.8073,1.6406,3.3073,6.6406,6.6667];
+			Flight_Path_Angle:0.0;
+			Transmitter_Altitude:0.0;
+			Tx_East:0.0;
+			Tx_North:0.0;
+			Tx_Position_Number:1;
+			Level:1;
+			Transmitter_Incline:0.0;
+			Transmitter_Area:400000.0;
+			Number_Of_Turns:1;
+			Number_of_Rx_Positions:1;
+			Reciever_Area:1000000.0;
+			T_Rx_Seperation_Z:41.0;				
+			T_Rx_Seperation_Along:121.0;			
+			T_Rx_Seperation_Across:0.0;			
+			Number_Of_Layers:16;
+			Layer_Stats{
+				Thickness:[6.0,8.9,11.9,17.9,23.8,23.8,23.8,23.8,23.8,23.8,23.8,23.8,23.8,23.8,300.0];
+				Resistivity:[394.7,364.9,288.2,153.1,40.7,189.1,384.1,544.5,671.3,779.5,904.6,1080.6,1182.7,1205.4,1200.4,25.0];
+				}
+			}
+		Maximum_Iterations:30;
+		Estimate_Of_Signal_To_Noise_Ratio:0.05;
+		Alpha1:1.5;
+		Alpha2:15.0;
+		Number_of_Sectors:3;
+		Layer_Info {
+			Upper_Depth_Sector_Limit:[0.0,40.0,100.0];
+			Lower_Depth_Sector_Limit:[40.0,100.0,600.0];
+			}
+		Layer_Resistivity_Guesses:[20.0,200.0,4000.0];
+		Lower_Resistivity_Bound:[2.5,2.5,2.5];
+		Upper_Resistivity_Bound:[10000.0,10000.0,10000.0];
+		Maximum_Apparent_Res:7.5;
+		Half_Space_Switch:0;
+		TimeInfo {
+			Early_Time_Channel:[1];
+			Late_Time_Channel:[10];
+			}
+		No_Of_Chl_Weights:3;
+		Channel_Weights {
+			Channel_No:[18,19,20];
+			New_Channel_Weight:[0.50,0.50,0.50];
+			}
+		No_Of_Layer_Weights:9;
+		Layer_Weights {
+			Layer_No:[1,2,3,4,5,11,12,13,14];
+			New_Layer_Weight:[0.175,0.25,0.55,0.75,0.50,0.25,0.35,0.50,0.75];
+			}
+		Smoothing_Par:0.05;
+		Number_of_Samples:50.0;
+		Reslimit_Factor:1.00000;
+		Depth_Limit:400;
+		Ort_Smoothing:False;
+		Ort_Smoothing_Parameters {
+			Ort_Data_File:'';					
+			Goodness_Dv_Fit_Limit:0;			
+			Nort_Check:0;						
+			Factor_Fit:0;						
+			Factor_Noise:0;						 
+			Int_Smooth:0;						
+			Ppm_Convert_Ort:0;
+			}
+		Files_Overwrite:true;
+		Variable_Altitude:True;
+		Noise_Transmitter_1:[1365.273,863.0478,581.6343,402.6163,281.4135,197.8253,139.3136,98.91265,69.65680,53.63573];
+		Transmitter_Time_1:0.0;
+		Noise_Transmitter_2:[0];
+		Transmitter_Time_2:0.0;
+		}
+	ChannelZ {
+		Max_No_Channels:10;
+		Noise_Data_X {
+			Noise_X:[69.6568,69.6568,69.6568,69.6568,69.6568,69.6568,69.6568,69.6568,69.6568,69.6568];
+			Multiple_X:[19.6,12.39,8.35,5.78,4.04,2.84,2.00,1.42,1.00,0.77];		
+			}
+		Noise_Data_Z {
+			Noise_Z:[0];
+			Multiple_Z:[0];			
+			}
+		Start_Channel:1;
+		End_Channel:10;
+		}
+	EM1DInv_target {
+		X_Target:734792.5592365451;
+		Y_Target:7171655.4292866085;
+	}
+}

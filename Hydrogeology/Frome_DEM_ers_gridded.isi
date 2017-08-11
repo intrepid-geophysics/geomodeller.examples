@@ -1,0 +1,15 @@
+MetaData Begin
+	Name	= Frome_DEM_ers_gridded.ers
+	Version	= "Intrepid GeoModeller v3.4.0 product for Windows (x64) by PELAGIAN optimised build 6636506edf8d+ "
+	Frome_DEM_ers_gridded Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= quad
+		Alias	= Frome_DEM_ers_gridded
+		Bands	= 1
+		Projection	= "MGA54"
+		Datum	= "GDA94"
+		Units	= "none"
+	Frome_DEM_ers_gridded End
+MetaData End

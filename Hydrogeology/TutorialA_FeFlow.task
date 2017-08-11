@@ -1,0 +1,116 @@
+# this is the test of the Geomodeller/FEFLOW unstructured mesh
+# primary resolution is controlled by the Ball Radius, set to 120
+# faults are resolved with a 1/20 factor applied to this factor as well.
+# this makes a big difference on the execution time.
+# creating the Triple lines can also take quite a while depending upon the
+# complexity of the internal boundaries between units and faults
+# being able to save and reuse Triple lines is a feature also being added
+# balls are added regularly to the triple lines to protect and force the meshing to honour
+# the break lines in the geology formations.
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./Completed_Project/TutorialA6.xml"
+    log: "Opening project for meshing"
+  }
+}
+
+GeomodellerTask {
+  BuildMeshCGAL {
+      geomodeller_output {
+        formations: true  # we want the geology!
+        faults: true; # one fault in this project
+        volumes: true;  # export these
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true;
+        smooth: 0
+      }
+      build_triple_lines {
+   		topolimited: true;  # clip the triple points to the top surface, not top of the project box
+	    borderline: true;  # box of project is not interesting, but still required to get a CGAL mesh!!
+	    insideline: true
+    	point_spacing: 500.0; # divide the box into sections using this delta
+    	precision: 100
+    	divide_model_using_regular_sections: true
+        export_triple_lines {
+        	output_directory: "."  # this dictates the output filename
+        	format: TripleLine_VTK;
+        }
+    }
+    mesh_criteria {
+        min_facet_angle: 15.0
+        min_facet_radii: 1.0
+        radius_edge_ratio: 20.0
+        min_protect_ball_radius: 100
+        default_discretization {
+            max_facet_radii: 1000.0
+            precision: 500.0;  #  also a ball radius factor
+            max_tet_radii: 1000.0
+            max_edge_length: 10.0
+        }
+        formation_discretization {
+            formation: "Dyke"
+            max_facet_radii: 100.0
+            precision: 150.0;  #  also a ball radius factor
+            max_tet_radii: 100.0
+            max_edge_length: 50.0
+        }
+    }
+    refine_mesh {
+        lloyd {time_limit:5}
+        perturb {time_limit:5}
+        exude {time_limit:5}
+    }
+     export_mesh {
+#  we want to force a *.gmod file to appear
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: FEFLOW;
+  		output_directory: "."
+  	}
+  	export_mesh {
+#  we want to force a *.medit file to appear, for checking
+   		mesh_type: VOLUME;
+  		file_type: MEDIT;
+  		output_directory: "."
+  	}
+  	export_mesh {
+#  we want to force a *.vtu file to appear,
+# now includes all isopotentials and geology gradients, and geology pile & colours
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+		wantTetrahedra: true
+		filterout_triangles_from_inner_tetrahedrons: true
+        output_directory: "."
+        property: Density;  # pass the required lithological property from Geomodeller to the mesh as a fielddata array
+  	}
+  	 log: "Building Tutorial A meshing, full triple line calcs, export most tetrahedral format meshes, also fault plane as mesh"
+  }
+}
+# now for a formal mesh quality report
+GeomodellerTask {
+  GenerateMeshReport {
+    output_report_file: "tutorialA_mesh.rpt";
+    # do a vtk unstructured mesh report
+    input_mesh_file: "./TutorialA3500.vtu";
+    vtk: true;
+    sharp_angle_threshold: 20;
+    facet_angle_threshold { first: 20; second: 70;}
+    facet_size_threshold { first: 50; second: 1000;}
+
+    vtp_dir: ".";
+    write_vtp_files: false;
+    output_mesh_report: "mesh_quality.rpt";
+
+    report_vertices: true;
+    report_edges: true;
+    report_facets: true;
+    tolerance: 0.0001;
+	}
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./TutA/TutA_geological_model.xml"
+    }
+}

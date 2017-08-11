@@ -1,0 +1,205 @@
+MetaData Begin
+	Name	= zuma_2DBodies..DIR
+	Version	= "rename"
+	EVMax_amplitude Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=   16.2098789215
+		Maximum	=   76.6056213379
+		Mean	=   36.7258102039
+		Variance	=   181.957755292
+		Skew	=  0.801560275923
+		Kurtosis	= -0.356352453657
+		Width	= 12
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	EVMax_amplitude End
+	EVMid_amplitude Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=  -1.94788396358
+		Maximum	=    1.9513065815
+		Mean	= -0.147022348088
+		Variance	=   1.08065702147
+		Skew	=  0.170447936374
+		Kurtosis	=  -1.21984014384
+		Width	= 12
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	EVMid_amplitude End
+	EVMin_amplitude Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=  -77.9536743164
+		Maximum	=  -15.0628547668
+		Mean	=  -36.5788026295
+		Variance	=   186.893023961
+		Skew	= -0.804600850047
+		Kurtosis	=  -0.35438407684
+		Width	= 12
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	EVMin_amplitude End
+	EigenVectorMax Begin
+		GroupBy	= no
+		DataType	= Vector
+		IsVec2d	= 0
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	= 0.00887965282608
+		Maximum	=  0.999997528971
+		Mean	=  0.965525421586
+		Variance	= 0.0216988389314
+		Skew	=               0
+		Kurtosis	=               0
+		Angular_Declination	=  -4.47067760226
+		Angular_Inclination	=  -26.4992508276
+		Angular_Dispersion	=   67.0610394447
+		Width	= 12
+		DisplayNullAs	= 99999
+	EigenVectorMax End
+	EigenVectorMid Begin
+		GroupBy	= no
+		DataType	= Vector
+		IsVec2d	= 0
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	= 0.00905740900067
+		Maximum	=  0.999997787964
+		Mean	=  0.996454947981
+		Variance	= 0.00268287851191
+		Skew	=               0
+		Kurtosis	=               0
+		Angular_Declination	=   54.7666724769
+		Angular_Inclination	= -0.336027671778
+		Angular_Dispersion	=   36.0216486916
+		Width	= 12
+		DisplayNullAs	= 99999
+	EigenVectorMid End
+	EigenVectorMin Begin
+		GroupBy	= no
+		DataType	= Vector
+		IsVec2d	= 0
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	= 0.00449782702178
+		Maximum	=   0.99999902306
+		Mean	=  0.965283396455
+		Variance	= 0.0219355930411
+		Skew	=               0
+		Kurtosis	=               0
+		Angular_Declination	=   -67.807063584
+		Angular_Inclination	=   52.7772875435
+		Angular_Dispersion	=   61.5858944264
+		Width	= 12
+		DisplayNullAs	= 99999
+	EigenVectorMin End
+	Number Begin
+		GroupBy	= no
+		DataType	= Signed32BitInteger
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=               9
+		Maximum	=              15
+		Mean	=         12.6625
+		Variance	=   4.76620609248
+		Skew	= -0.388348071371
+		Kurtosis	=  -1.29623458008
+		Width	= 6
+		DisplayNullAs	= 99999
+	Number End
+	X Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= X
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=          535480
+		Maximum	=          553400
+		Mean	=   544252.230159
+		Variance	=   15755594.6285
+		Skew	= 0.00798376356956
+		Kurtosis	= -0.416885300807
+		Projection	= "NUTM11"
+		Datum	= "NAD27"
+		Width	= 15
+		Decimals	= 6
+		DisplayNullAs	= 99999
+	X End
+	Y Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Y
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=         4461800
+		Maximum	=         4485920
+		Mean	=   4477221.30159
+		Variance	=   19553418.2694
+		Skew	= -0.547423706601
+		Kurtosis	=  0.178210118777
+		Projection	= "NUTM11"
+		Datum	= "NAD27"
+		Width	= 15
+		Decimals	= 6
+		DisplayNullAs	= 99999
+	Y End
+	fault_tilt Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=  -44.8450469971
+		Maximum	=   55.0975494385
+		Mean	= -0.215764872131
+		Variance	=   178.915244357
+		Skew	= 0.00302152355416
+		Kurtosis	=    0.2778037656
+		Width	= 6
+		Decimals	= 2
+		DisplayNullAs	= 99999
+	fault_tilt End
+	strike Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 5040
+		Nulls	= 0
+		Minimum	=  -87.6327972412
+		Maximum	=    163.74520874
+		Mean	=   58.9704224641
+		Variance	=   1332.41692338
+		Skew	=   1.59009930833
+		Kurtosis	=    1.0633953165
+		Width	= 6
+		Decimals	= 2
+		DisplayNullAs	= 99999
+	strike End
+MetaData End

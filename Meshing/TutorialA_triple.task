@@ -1,0 +1,85 @@
+# this is the test of the Geomodeller method of finding the triple points and lines
+# primary resolution is controlled by the triple point spacing
+#  the method of sampling by using 3 orthogoinal planes/sections is really the only way to go.
+#  cleaning looks for points that are very close to each other
+# the methods for points is deprecated, as lines are the way to go now.
+#  each line has attributes for what this line is eg border, fault/formation etc
+# the break lines in the geology formations.
+# the reusable aspect for these triple lines requires the TripleLine_ASCII_CGAL format
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./Completed_Project/TutorialA6.xml"
+    log: "Opening project for meshing"
+  }
+}
+
+GeomodellerTask {
+  BuildTripleLines {
+   		topolimited: true;  # clip the triple points to the top surface, not top of the project box
+	    borderline: true;  # box of project is not interesting, but still required to get a CGAL mesh!!
+	    insideline: true
+    	point_spacing: 400.0; # divide the box into sections using this delta
+    	precision: 20
+    	divide_model_using_regular_sections: true
+    	clean_lines: true;  # eliminate confusion in points too close to each other
+        export_triple_lines {
+            output_directory: "."
+    	    format: TripleLine_VTK;
+        }
+    	log: "Building Tutorial A triple lines and save for re-use"
+    }
+}
+
+GeomodellerTask {
+  BuildMeshCGAL {
+    geomodeller_output {
+        formations: true  # we want the geology!
+        faults: true; # no faults in this project
+        volumes: true;  # export these
+        surfaces: false
+        draw_shapes: false;  # in batch!
+        tetrahedrons: true;
+        smooth: 0
+    }
+    import_triple_lines {
+        filename: "./triple_lines.vtp"
+      }
+    mesh_criteria {
+        default_discretization {
+            max_facet_radii: 400.0
+            max_tet_radii: 400.0
+            precision: 400.0;  #  also a ball radius factor
+            max_edge_length: 200
+        }
+        min_protect_ball_radius: 50
+        min_facet_angle: 20.0
+        min_facet_radii: 50.0
+        radius_edge_ratio: 3.0
+    }
+    refine_mesh {
+        lloyd {time_limit:5}
+        perturb {time_limit:5}
+        exude {time_limit:5}
+    }
+    export_mesh {
+		#model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: FEFLOW;
+  		output_directory: "."
+  	}
+  	
+  	#  we want a vtk file to appear, for checking
+  	export_mesh {
+   		mesh_type: VOLUME;
+  		file_type: VTU;
+  		output_directory: "."
+  	}
+  }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./TutA/TutA_geological_model.xml"
+    }
+}

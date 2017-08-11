@@ -1,0 +1,79 @@
+#  Orebody resource modelling, driven by geology and sampling from 187 drill holes
+#  Assays: Fe, Al2O3, Mn, P ans SiO2
+#  model has 2 mineralized horizons: ORE1, ORE2, WASTE rock, basement SUB and cover TOP
+#  Sections: 29
+
+name: "kriging calc borehole assays - Bernard"
+description: "use variogram model parameters for field, write results to external gridmesh as well"
+auditfile: "audit_domain_kriging.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "g3d_test/G3D.xml"
+    }
+}
+GeomodellerTask {
+	InterpolateNumericalReadings { 
+		method: IM_Kriging;	
+		MeshGrid_Source {
+	    		SourceType: Project;  # take the drillhole records into a composited point cloud mesh
+	    		MeshGrid_Name: "DrillholesFields"
+	    		FileType: FT_IGMESH;
+	    		Field_Name: "Fe";  
+			}   	    
+	    OutputStyle: IOT_D3;  #  completely 3D
+	    Output_Mesh {
+	    		CreateDestinationType: Project;
+		    	MeshGrid_Name : "Estimates";
+		    	FileType: FT_IGMESH;
+		    	Field_Name: "Fe"; 
+				Field_Variance: "Fe_stddev";
+		    	dx: 100; 
+		    	dy: 100;
+		    	dz: 50; 
+				Extents {	    	
+	            	xmin: 100;
+	            	ymin: -500;
+	            	zmin: 250;
+	           		xmax: 2200;
+	            	ymax: 3100;
+	            	zmax: 850;
+				}
+		#	nx: 165;			
+		#	ny: 212;
+		#	nz: 200;
+	        }
+	    #   Analysis_Type: UVT;
+        Analysis_Type: OnlyT;
+        Variogram_Model {
+ 			lag:	100.; 
+ 			variance1 { node: [ 0.00779,0.00897,0.010699,0.0119043,0.0126211,0.009882,0.012135,0.01467,0.01816,0.020518,0.0209038,0.0238, 
+								0.0258526,0.02588,0.03414,0.046688,0.047096,0.05108,0.063748,0.0832875,0.0668,0.07893,0.09178,0.097539, 
+								0.0975597,0.10406,0.10454,0.099143,0.093249,0.10676,0.105799,0.1158493,0.1360,0.15444,0.15315,0.112005, 
+								0.1189986,0.12207,0.13717,0.144858,0.130289,0.13965231600547,0.1235121,0.1198,0.11559,0.12233,0.119505, 
+								0.1373523,0.12371,0.11752,0.126377,0.133621,0.14381,0.140458,0.1451395,0.1386,0.14414,0.15050,0.133752, 
+								0.1383811,0.13917,0.14548,0.149681,0.156487,0.14353003450115,0.1146627,0.114822871993,0.12341,0.126347, 
+								0.1367521,0.15979,0.16406,0.156618,0.143090,0.14770,0.15717,0.17413983,0.170872434425,0.16432,0.159655 ]; }
+			which1: Kriging_T;  # would be Kriging_UV if doing full domain kriging
+			variance2 { node: [ 0.0,0.050530, 0.100491,0.149312,0.196425,0.241260,0.283247,0.321817,0.356400,0.386427,0.411328,0.430534,
+								0.443475,0.449582,0.45,0.45, 0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45, 0.45,0.45,0.45,0.45,0.45,0.45,
+								0.45,0.45,0.45,0.45, 0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45, 0.45,0.45,0.45,0.45,0.45,0.45,0.45,0.45,
+								0.45,0.45,0.45,0.45,0.45,0.45,0.45]; }
+			which2: Kriging_T;
+ 	 		number_points: 80;  # number of points to use from variogram curve
+			}	
+	    Neighbour: NS_RegularGridBox;
+	    Maximum_Observations: 30;
+	    Minimum_Observations: 3;
+        Maximum_Radius: 2000; 
+         
+        Domain:  Formation;  # just one geological formation to interpolate within               
+        Data_Name: "ORE2";  # the required formation
+        #  if you want to do a simple traditional variogram model
+#       VariogramModelType: VMT_Spherical; 
+#	    NuggetEffect: 0;
+#	    Range: 15000;
+#	    Sill: 0.15;		
+    }
+}
+

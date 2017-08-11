@@ -1,0 +1,357 @@
+# designed to run very quickly in the auto test system, so coarse meshing, but dyke is done fine
+name: "Schumm test"
+description: "mock up of dyke rendering to test flat features, topo clip"
+
+GeomodellerTask {
+    CreateProject {
+        name: "sch_zero"
+        author: "batchrun"
+        date: "16/2/2017  0: 0: 0"
+        projection { map_projection: "local / local"}
+        version: "2.0"
+        units: meters
+        precision: 1.0
+        Extents {
+            xmin: 0
+            ymin: 0
+            zmin: -1000
+            xmax: 1000
+            ymax: 1000
+            zmax: 100.0
+        }
+        deflection2d: 0.01
+        deflection3d: 0.001
+        discretisation: 1.0
+        referenceTop: false
+        HorizontalDTM {
+            name: "SurfaceTopography"
+            elevation: 0.
+        }
+     }
+}
+
+GeomodellerTask {
+    CreateDyke {
+        name: "dyke"
+        red: 50
+        green: 50
+        blue: 238
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "f"
+        red: 255
+        green: 165
+        blue: 0
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "BasalSeries"
+        position: 1
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "BasalSeries"
+        formation: "f"
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "DykeSeries"
+        position: 2
+        relation: "erode"
+    }
+}
+GeomodellerTask {
+    AddDykeToSeries {
+        series: "DykeSeries"
+        dyke: "dyke"
+    }
+}
+
+GeomodellerTask {
+    AddInterfaceToSection {
+        section: "SurfaceTopography"
+        topFormation: "f"
+        bottomFormation: "Basement"
+        PointList {
+            Point {u:322.663; v:  871.601;}
+ 			Point {u:332.336; v: 633.003;}
+ 			Point {u:401.659; v:  476.624;}
+ 			Point {u:501.612; v:  387.955;}
+ 			Point {u:638.645; v:  289.614;}
+        }
+    }
+}
+
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "SurfaceTopography"
+        formation: "f"
+		foliation {
+        	Point {u: 327.4995; v: 752.302;}
+	        direction: 87.678
+	        dip: 45
+	        polarity: Normal_Polarity
+		}
+    }
+}
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "SurfaceTopography"
+        formation: "f"
+		foliation {
+        	Point {u: 366.9975 ; v: 554.8135;}
+	        direction: 66.092
+	        dip: 45
+	        polarity: Normal_Polarity
+		}
+    }
+}
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "SurfaceTopography"
+        formation: "f"
+		foliation {
+        	Point {u: 451.6355 ; v: 432.2895;}
+	        direction: 41.57
+	        dip: 45
+	        polarity: Normal_Polarity
+		}
+    }
+}
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "SurfaceTopography"
+        formation: "f"
+		foliation {
+        	Point {u: 570.1285 ; v: 338.7845;}
+	        direction: 35.66
+	        dip: 45
+	        polarity: Normal_Polarity
+		}
+    }
+}
+GeomodellerTask {
+    AddInterfaceToSection {
+        section: "SurfaceTopography"
+        topFormation: "dyke"
+        bottomFormation: "Basement"
+        PointList {
+			 Point {u:250; v:  18;}
+			 Point {u:420; v:  600;}
+			 Point {u:710; v:  980;}		
+        }
+    }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "dyke"
+    Point {
+      u: 687.49762686567158
+      v: 879.9551343283581
+    }
+    direction: 89.999999988248433
+    Provenance: none
+    observationID: "2"
+    thickness: 30
+    OrientationMethod: DIPAZIMUTH
+    polarity: Normal_Polarity
+    dip: 80
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "dyke"
+    Point {
+      u: 503.16226865671644
+      v: 657.91676119402985
+    }
+    direction: 90
+    Provenance: none
+    observationID: "3"
+    thickness: 140
+    OrientationMethod: DIPAZIMUTH
+    polarity: Normal_Polarity
+    dip: 50
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "dyke"
+    Point {
+      u: 411.455
+      v: 535.515
+    }
+    direction: 89.999999988248433
+    Provenance: none
+    observationID: "4"
+    thickness: 120
+    OrientationMethod: DIPAZIMUTH
+    polarity: Normal_Polarity
+    dip: 80
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "dyke"
+    Point {
+      u: 359.08820895522388
+      v: 353.57826865671638
+    }
+    direction: 89.999999988248433
+    Provenance: none
+    observationID: "5"
+    thickness: 100
+    OrientationMethod: DIPAZIMUTH
+    polarity: Normal_Polarity
+    dip: 80
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "dyke"
+    Point {
+      u: 282.
+      v: 60
+    }
+    direction: 89.999999988248433
+    Provenance: none
+    observationID: "6"
+    thickness: 100
+    OrientationMethod: DIPAZIMUTH
+    polarity: Normal_Polarity
+    dip: 80
+  }
+}
+
+GeomodellerTask {
+    ComputeModel {
+        SectionList {
+            node: "SurfaceTopography"
+        }
+        SeriesList { node: ["BasalSeries","DykeSeries"]   }
+        radius: 1.0
+    }
+}
+
+GeomodellerTask {
+	GetModelSummary {
+		level: 2;
+		filename: "summary.rpt";
+}}
+
+
+GeomodellerTask {
+  BuildMeshCGAL {
+      geomodeller_output {
+        formations: true
+        faults: true
+        volumes: false
+        surfaces: true
+        draw_shapes: true
+        tetrahedrons: true
+        smooth: 0
+      }
+      mesh_criteria {
+        default_discretization {
+            precision: 60.0
+            max_facet_radii: 60.0
+            max_tet_radii: 60.0
+            max_edge_length: 60
+        }
+        formation_discretization {
+        	formation: "dyke"
+            precision: 10.0
+            max_facet_radii: 20.0
+            max_tet_radii: 15.0
+            max_edge_length: 20
+        }
+        min_facet_angle: 15.0
+        radius_edge_ratio: 3.0
+        min_facet_radii: 5.0
+        min_protect_ball_radius: 5
+     }
+
+    build_triple_lines {
+    	topolimited: true  # test topo clip
+       precision: 15.0
+       point_spacing: 50.0
+	    borderline: true  # required to get a mesh in the older mesh scheme
+	    insideline: true
+	    thin_body_bias { x: 3;y: 3; z: 1}; # this is a near surface mesh, uses a vertical delta 	    
+        export_triple_lines {
+            output_directory: "."
+		    format: TripleLine_VTK;
+        }
+     }
+    refine_mesh {
+    	lloyd {time_limit:10}
+        perturb {time_limit:10}
+        exude {time_limit:10}
+    }
+
+    export_mesh {
+#  we want to force a *.gmod file to appear
+    # model_name:  # Allow a selection of the shapes to write. If none given write them all.
+  		mesh_type: VOLUME;
+  		file_type: FEFLOW;
+  		output_directory: "."
+  	}
+      	export_mesh {
+  		mesh_type: VOLUME;
+  		file_type: VTU;
+        output_directory: "."
+  	}
+    export_mesh {
+  		mesh_type: VOLUME;
+  		file_type: MEDIT;
+        output_directory: "."
+  	}
+
+    log: "Building tetrahedrons, very simple, very quick meshing test"
+  }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "Example/sch_zero.xml"
+    }
+}
+# now for a formal mesh quality report
+GeomodellerTask {
+  GenerateMeshReport {
+    output_report_file: "sch_zero_report.rpt";
+    # do a vtk unstructured mesh report, 50 is the precision of this run
+    input_mesh_file: "sch_zero50.vtu";
+    vtk: true;
+    sharp_angle_threshold: 20;
+    facet_angle_threshold { first: 20; second: 70;}
+    facet_size_threshold { first: 50; second: 1000;}
+
+    vtp_dir: ".";
+    write_vtp_files: false;
+    output_mesh_report: "sch_zero_mesh_quality.rpt";
+
+    report_vertices: true;
+    report_edges: true;
+    report_facets: true;
+    tolerance: 0.0001;
+	}
+}
+GeomodellerTask {
+  CloseProjectNoGUI {
+  }
+ }

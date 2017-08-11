@@ -1,0 +1,27 @@
+MetaData Begin
+	Name	= initial.vo
+	Version	= "Intrepid 3D GeoModeller v2.1.0 geomodeller_2013 for Linux (x86_64) by seneca debug build 46d2b42d974a+ "
+	Lithology Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= Lithology
+		Units	= "Lithology"
+	Lithology End
+	Density Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= Density
+	Density End
+	Extensions Begin
+		LithologyMapping Begin
+			Map = {
+				"4" "F1" "255a255r000g000b"
+				"3" "Intrusion" "255a000r000g205b"
+				"2" "F2" "255a255r255g000b"
+				"1" "G1" "255a000r255g000b"
+}
+		LithologyMapping End
+	Extensions End
+MetaData End

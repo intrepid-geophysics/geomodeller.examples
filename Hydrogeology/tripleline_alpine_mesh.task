@@ -1,0 +1,33 @@
+# this is the test of the Geomodeller ability to find the triple lines
+# primary resolution is controlled by the Ball Radius, set to 120
+# faults are resolved with a 1/20 factor applied to this factor as well.
+# this makes a big difference on the execution time.
+# creating the Triple lines can also take quite a while depending upon the
+# complexity of the internal boundaries between units and faults
+# being able to save and reuse Triple lines is a feature also being added
+# balls are added regularly to the triple lines to protect and force the meshing to honour
+# the break lines in the geology formations.
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./Feflow_Alpine/3Dgeomodeller_22_09_2014_Reviewed.xml"
+    log: "Opening project for meshing"
+  }
+}
+
+GeomodellerTask {
+  BuildTripleLines {
+    topolimited: false;  # clip the triple points to the top surface, not top of the project box
+    borderline: false;  # box of project is not interesting, but still required to get a CGAL mesh!!
+    insideline: true
+    point_spacing: 200.0; # divide the box into sections using this delta
+    precision: 25
+    divide_model_using_regular_sections: true
+    clean_lines: true;  # eliminate confusion
+    export_triple_lines {
+        output_directory: "."
+        format: TripleLine_ASCII_CGAL;
+    }
+  }
+}
+

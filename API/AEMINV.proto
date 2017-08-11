@@ -1,0 +1,159 @@
+//  set up language specification for genralized Airborne ElectroMagnetics processin, forward models and inversion
+// support 1D, Apparent Resistivity & Moksha 2.5D inversion,
+// first implementation, June 2017
+// author Mathew Roth, 2017
+
+syntax = "proto3";
+package AEMInversion;
+
+message INV_EM {
+	Inversion_Control_EM Inversion_Control = 1;
+	message Inversion_Control_EM {
+		double Ppm_Convert = 1; //[default =1.0];				//Ppm_Convert
+		double Altimeter_Difference = 2; //[default=0.0];		//alt_var
+		bool All_Lines = 3;										//all_lines
+		repeated string Inversion_Targets_Invlog = 4;			//inversion_log_file
+		repeated string Inversion_Targets_Dat_File = 5;			//target_location_file
+		repeated string Target_Data_File = 6;					//data_file
+		repeated int32 Target_Number = 7;						//ntarget
+		string Data_File_Header = 8;							//title_line
+		repeated int32 Inversion_Number = 9;
+	}
+	Tuning_EM Tuning = 2;
+	message Tuning_EM {
+		//READ_CONTROL_FILE
+		int32 INV_Control = 1; 		//NOINV=0 NO INVERSION=1 INVERSION PROCEEDS=-1 Forward model Only with No Comparison to Data
+		User_Parameters_EM User_Parameters = 2;
+		message User_Parameters_EM {
+			//AIR_LAY(CALC)
+			string Title = 1;									//TITLE:			Title Line
+			int32 Number_Of_Transmitters = 2; 					//NTX:			Number of Transmitters
+			int32 Max_Number_Of_Channels = 3; 					//NCHNL:		Maximum no. of transmitters
+			int32 Max_Number_Of_NSX = 4;						//NSX:			Number of digitised points in waveform including endpoints
+			int32 Waveform_Descriptor = 5;						//ISW:			TDEM or FDEM system indicator
+			int32 FD_3D_Control = 6;							//DO3D_I:		2=Use old FD data from OUTPUT.FRQ, 1=Compute new sheet model, 0= Compute Layered 1/2 space model only
+			int32 Output_Voltages_Profile = 7;					//PRFL:			1=OUTPUT VOLTAGES IN PROFILE MODE, 0=OUTPUT VOLTAGES IN TEMPORAL MODE
+			int32 DC_Normalization_Control = 8;					//DC_NORM:		2=Absolute Units instead of PPM, 1=Norm wrt corresponding DC component, 0=Norm wrt total DC component
+			int32 Norm_Conversion_Factor = 9;					//IUNITS:		1=nT,2=pT,3=fT
+			int32 Stop_The_Program = 10;						//ISTOP:		1=Stop program, 0=otherwise
+			//TIME DOMAIN ISW>0
+			int32 Number_Of_Reciever_Channels = 11;				//NCHNL:		Number of receiver channels
+			int32 Offtime = 12;									//OFFTIME:		Delay between pulses
+			repeated double Digitised_Time = 13;				//TXON^:		digitised time (in milliseconds)
+			repeated double Transmitter_Current = 14;			//TXAMP^:		transmitter current (in amps) at time TXON(J)
+			repeated double Zero_To_Peak_Current_Amplitude = 15;//TXAMP_FD^:	zero to peak current amplitude for ISW = 0
+			repeated int32 TDerivative_of_Current = 16;			//TXDER^:		time derivative of transmitter current
+			double Frequency_Bipolar_Wave = 17;					//TXFREQ:			Frequency of Bipolar square wave when ISW=0
+			repeated double Centre_RX_Window = 18;				//TMS^:			centre of RX window gates in millisec
+			repeated double Width_RX_Window = 19;				//WTMS^:		Width of Rx Window Gates
+			//FREQUENCY DOMAIN ISW=0
+			int32 Number_Frequencies = 20;						//NFREQ:		Number of Frequencies
+			repeated double List_Of_Frequencies = 21;			//FREQ^:		Frequencies listed
+			//Flight Path Information
+			double Flight_Path_Angle = 22;						//FANGLE:		Flight path angle wrt North
+			repeated double Transmitter_Altitude = 23;			//ALT^:			Altitude of transmitter locations
+			repeated double Tx_North = 24;						//NORTH^:		North Coordinate of transmitter location
+			repeated double Tx_East = 25;						//EAST^:		East Coordinate of transmitter location
+			int32 Tx_Position_Number = 26;						//NSTAT:		number of transmitter data positions
+			int32 Level =  27;									//LEVEL:		1=Altitude is constant,0=Not constant
+			repeated double Distance_Between_Transmitters = 28;	//DSTAT^:		Distance between J+1 and Jth positions
+			repeated double Transmitter_Incline = 29;			//TXCLN^:		angle in degrees that transmitter dipole axis makes with the vertical. Must have one for each Frequency
+			int32 Number_of_Rx_Positions = 30;					//NRX:			number of receiver positions per transmitter position (3 components are calculated for each RX position.)
+			double Transmitter_Area = 31;						//TXAREA:		Area of Transmitter Loop
+			int32 Number_Of_Turns = 32;							//NTRN:			Number of Transmitter Loop Turns
+			double Reciever_Area = 33;							//RXAREA:		Area of Reciever Loop
+			repeated double T_Rx_Seperation_Z = 34;				//RZ_OFFSET^:	Vertical Offset of Reciever J
+			repeated double T_Rx_Seperation_Along = 35;			//RX_OFFSET^:	Inline Horizontal Offset of Reciever J
+			repeated double T_Rx_Seperation_Across = 36;		//RY_OFFSET^:	Transverse Horizontal Offset of Reciever J
+			int32 Number_Of_Layers = 37;						//NLAYER:		Number of Layers including host. Negative for Cole-Cole
+			Layer_stats_EM Layer_Stats = 38;
+			message Layer_stats_EM {
+				repeated double Thickness = 1;					//THICK^:		Thickness of Layer J (does not include lowest layer)
+				repeated double Resistivity = 2;				//RES^:			Resistivity of Layer J
+				repeated double Chargeability = 3;				//CHRG^:		Chargeability of Layer J
+				repeated double Time_Constant = 4;				//CTAU^:		Time Constant of Layer J
+				repeated double Frequency_Constant = 5;			//CFREQ^:		Frequency Constant of Layer J
+			}
+		}
+		int32 Maximum_Iterations = 3;							//ITERS:		Maximum Iterations per Inversion
+		double Estimate_Of_Signal_To_Noise_Ratio = 4;			//BND:			Estimate of Signal to Noise Ratio
+		double Alpha1 = 5;										//ALPHA1:		The first derivative objective function damping parameter
+		double Alpha2 = 6;										//ALPHA2:		The second derivative objective function damping parameter
+		int32 Number_of_Sectors = 7;							//NSEC:			Number of sectors
+		Layer_Info_EM Layer_Info = 8;
+		message Layer_Info_EM {
+			repeated double Upper_Depth_Sector_Limit = 1;		//dep_sec1^:
+			repeated double Lower_Depth_Sector_Limit = 2;		//dep_sec2^:
+		}
+		repeated double Layer_Resistivity_Guesses = 9;			//vo_sec^:
+		repeated double Lower_Resistivity_Bound = 10;			//vl_sec^:		Lower bound for the layer resitivities in the section
+		repeated double Upper_Resistivity_Bound = 11;			//vu_sec^:		Upper bound for the layer resitivities in the section
+		double Maximum_Apparent_Res = 12;						//unreasonable_value:		Aparrent Resistivity value below whihc app_res calcualtion is unacceptable
+		int32 Half_Space_Switch = 13; 							//IHSWITCH:		0=Use interpreters guess, 1=User defined half space, 2=Estimate half space
+		TimeInfo_EM TimeInfo =14;
+		message TimeInfo_EM{
+			repeated int32 Early_Time_Channel = 1;				//CHE^:			Earliest time window number to be used in inversion per NTX
+			repeated int32 Late_Time_Channel = 2;				//CHL^:			Earliest time window number to be used in inversion	per NTX
+		}
+		int32 No_Of_Chl_Weights = 15;							//NWCH:			Number of time channel weights not equal to 1.0
+		Channel_Weights_EM Channel_Weights = 16;
+		message Channel_Weights_EM {
+			repeated int32 Channel_No = 1;						//NCH^:			Channel number
+			repeated double New_Channel_Weight = 2;				//WWT^:			Weighting
+			}
+		int32 No_Of_Layer_Weights = 17;
+		repeated Layer_Weights_EM Layer_Weights = 18;			//NLL:			Number of layer weights not equal to 1.0
+		message Layer_Weights_EM {
+			repeated int32 Layer_No = 1;						//NCH^:			Layer number
+			repeated double New_Layer_Weight = 2;				//WWT^:			Weighting
+		}
+		double Smoothing_Par = 19;								//DSMOOTH:		Lateral Smoothing Parameter
+		double Number_of_Samples = 20;							//STND:			Number of Samples per single Inversion
+		double Reslimit_Factor = 21;							//res_lim_factor:
+		int32 Depth_Limit = 22;									//depth_limit:
+		bool Ort_Smoothing = 23;								//ort_process:	Is Ort to be used
+		Ort_Smoothing_Parameters_EM Ort_Smoothing_Parameters = 24;
+		message Ort_Smoothing_Parameters_EM {
+			string Ort_Data_File = 1;							//Used for the Ort Statistics, can be the whole file
+			double Goodness_Dv_Fit_Limit = 2;					//Give goodness dv of fit up to this limit
+			int32 Nort_Check = 3;								//Check if data fits within specified vaule up to this Channel
+			double Factor_Fit = 4;								//Checks if data fitted to within factor_fit of principal component
+			double Factor_Noise =5;								//Lateral smoothing factor_noise*estimated*noise
+			bool Int_Smooth = 6;								//1=Signifies that line smoothing is done in pieces (where possible)
+			double Ppm_Convert_Ort = 7;
+		}
+		bool Files_Overwrite = 25; //[default = true];			//overwrite
+		bool Variable_Altitude = 26;							//ALT_VAR
+		repeated double Noise_Transmitter_1 = 27;				//EST_NOISE
+		double Transmitter_Time_1 = 28;
+		repeated double Noise_Transmitter_2 = 29;				//EST_NOISE
+		double Transmitter_Time_2 = 30;							//TXTIME
+	}
+	repeated ChannelZ_EM ChannelZ = 3;
+	message ChannelZ_EM {
+		int32 Max_No_Channels = 1;
+		Noise_Data_X_EM Noise_Data_X = 2;
+		message Noise_Data_X_EM {
+			repeated double Noise_X = 1;
+			repeated double Multiple_X = 2;
+			//double NOTUSED = 3;				/If the channel is not used, NOTUSED=-999.000, otherwise NOTUSED is empty
+		}
+		Noise_Data_Z_EM Noise_Data_Z = 3;
+		message Noise_Data_Z_EM {
+			repeated double Noise_Z = 1;
+			repeated double Multiple_Z = 2;
+			//double NOTUSED = 3;				//If the channel is not used, NOTUSED=-999.000, otherwise NOTUSED is empty
+		}
+		int32 Start_Channel = 4;
+		int32 End_Channel = 5;
+		//string title = 6 [default = Noise];
+	}
+	EM1DInv_target_EM EM1DInv_target = 5;
+	message EM1DInv_target_EM {
+		repeated double X_Target = 2;
+		repeated double Y_Target = 3;
+	}
+}
+message AEMTask {
+	INV_EM INV = 1;
+}

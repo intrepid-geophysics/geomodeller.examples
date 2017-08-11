@@ -1,0 +1,1610 @@
+# execute using fmanager -batch CURE_Mansfield.task, or
+#  geomodellerbatch CURE_Mansfield.task
+# or the VTK render version
+#  geomodellerbatch -vtk Uncertainty_CURE_Mansfield.task       nb note the RenderModel block
+# 10 variants quickly created and saved to a lithology voxet.
+
+description: "UWA generated geology uncertainty models for Mansfield Victoria, Foliation data perturbation"
+GeomodellerTask {
+CreateProject {
+	name: "Mansfield_versionZero"
+	author: "UWA - Evren"
+Extents {
+	xmin: 416000
+	ymin: 5.88e+006
+	zmin: -2000
+	xmax: 433000
+	ymax: 5.897e+006
+	zmax: 1000
+}
+	referenceTop: false
+HorizontalDTM {
+	name: "Topography"
+	elevation: 1000
+}
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "UpperMansfield"
+	red: 224
+	green: 255
+	blue: 0
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "MiddleMansfield"
+	red: 255
+	green: 0
+	blue: 25
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "LowerMansfield"
+	red: 255
+	green: 0
+	blue: 75
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "DelatiteGroup"
+	red: 0
+	green: 255
+	blue: 26
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "Walhalla"
+	red: 182
+	green: 255
+	blue: 0
+}
+}
+
+GeomodellerTask {
+CreateFormation {
+	name: "Basement"
+	red: 95
+	green: 255
+	blue: 0
+}
+}
+
+GeomodellerTask {
+SetSeries {
+	name: "Mansfield_Series"
+	position: 1
+	relation: "erode"
+}
+}
+
+GeomodellerTask {
+SetSeries {
+	name: "DelatiteGroup_Series"
+	position: 1
+	relation: "erode"
+}
+}
+
+GeomodellerTask {
+SetSeries {
+	name: "Walhalla_Series"
+	position: 1
+	relation: "erode"
+}
+}
+
+GeomodellerTask {
+SetSeries {
+	name: "Basement_Series"
+	position: 1
+	relation: "erode"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Basement_Series"
+	formation: "Basement"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Walhalla_Series"
+	formation: "Walhalla"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "DelatiteGroup_Series"
+	formation: "DelatiteGroup"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Mansfield_Series"
+	formation: "LowerMansfield"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Mansfield_Series"
+	formation: "MiddleMansfield"
+}
+}
+
+GeomodellerTask {
+AddFormationToSeries {
+	series: "Mansfield_Series"
+	formation: "UpperMansfield"
+}
+}
+
+GeomodellerTask {
+CreateFault {
+	name: "Mansfield_Fault"
+	red: 137
+    green: 103
+    blue: 205
+    Thickness: 0
+}
+}
+
+GeomodellerTask {
+  CreateFault {
+    name: "VicFault_Nth"
+    red: 255
+    green: 0
+    blue: 0
+    Thickness: 0
+  }
+}
+
+GeomodellerTask {
+  CreateFault {
+    name: "VicFault_Sth"
+    red: 255
+    green: 0
+    blue: 0
+    Thickness: 0
+  }
+  Set3dFaultLimits {
+    Fault_name: "VicFault_Sth"
+    Horizontal: 2000
+    Vertical: 2000
+    InfluenceDistance: 1200
+  }
+}
+
+GeomodellerTask {
+LinkFaultsWithSeries {
+FaultSeriesLinks {
+	fault: "Mansfield_Fault"
+	series: "DelatiteGroup_Series"
+	series: "Walhalla_Series"
+	series: "Basement_Series"
+}
+FaultSeriesLinks {
+	fault: "VicFault_Nth"
+	series: "Mansfield_Series"
+	series: "Basement_Series"
+}
+FaultSeriesLinks {
+	fault: "VicFault_Sth"
+	series: "Mansfield_Series"
+	series: "Basement_Series"
+}
+}
+}
+
+GeomodellerTask {
+LinkFaultsWithFaults {
+FaultStopsOnFaults {
+	fault: "VicFault_Nth"
+	stopson: "Mansfield_Fault"
+}
+FaultStopsOnFaults {
+	fault: "VicFault_Sth"
+	stopson: "Mansfield_Fault"
+	stopson: "VicFault_Nth"
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "UpperMansfield"
+point {x:428821; y:5.89695e+006; z:370.273}
+point {x:429219; y:5.89591e+006; z:389.17}
+point {x:429517; y:5.89491e+006; z:429.845}
+point {x:429716; y:5.89392e+006; z:394.074}
+point {x:429815; y:5.8931e+006; z:381.495}
+point {x:430039; y:5.89188e+006; z:360.823}
+point {x:430287; y:5.89101e+006; z:352.932}
+point {x:430909; y:5.88989e+006; z:360.627}
+point {x:431530; y:5.8887e+006; z:403.823}
+point {x:432052; y:5.88731e+006; z:436.819}
+point {x:432052; y:5.88577e+006; z:469.179}
+point {x:431729; y:5.88512e+006; z:465.733}
+point {x:430536; y:5.88512e+006; z:429.415}
+point {x:429418; y:5.8853e+006; z:414.699}
+point {x:428449; y:5.8853e+006; z:392.689}
+point {x:427753; y:5.88468e+006; z:394.558}
+point {x:427579; y:5.88398e+006; z:412.367}
+point {x:427132; y:5.88371e+006; z:387.985}
+point {x:426486; y:5.88398e+006; z:384.419}
+point {x:425864; y:5.8843e+006; z:401.448}
+point {x:425461; y:5.88451e+006; z:430.568}
+point {x:425268; y:5.88477e+006; z:413.428}
+point {x:425015; y:5.88511e+006; z:381.73}
+point {x:424895; y:5.88525e+006; z:375.335}
+point {x:424970; y:5.88599e+006; z:345.75}
+point {x:425026; y:5.8859e+006; z:347.472}
+point {x:425066; y:5.8858e+006; z:349.086}
+point {x:425094; y:5.88572e+006; z:350.327}
+point {x:424877; y:5.88634e+006; z:334.203}
+point {x:424660; y:5.88675e+006; z:325.924}
+point {x:424150; y:5.88778e+006; z:292.689}
+point {x:423380; y:5.889e+006; z:283.078}
+point {x:422485; y:5.89061e+006; z:321.512}
+point {x:421615; y:5.89228e+006; z:363.8}
+point {x:420795; y:5.89377e+006; z:367.296}
+point {x:420795; y:5.89499e+006; z:324.281}
+point {x:420820; y:5.89588e+006; z:302.934}
+point {x:420398; y:5.8965e+006; z:301.75}
+point {x:419951; y:5.89693e+006; z:308.015}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "UpperMansfield"
+foliation {
+Point3D {x:427293; y:5.88373e+006; z:391.608}
+	direction: 334.296
+	dip: 67.2295
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427515; y:5.88477e+006; z:374.211}
+	direction: 302.539
+	dip: 59.2292
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428204; y:5.88548e+006; z:375.239}
+	direction: 338.468
+	dip: 41.3168
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428646; y:5.88616e+006; z:360.602}
+	direction: 354.762
+	dip: 44.8061
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:430776; y:5.88563e+006; z:405.066}
+	direction: 21.5838
+	dip: 75.311
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426200; y:5.88943e+006; z:300.521}
+	direction: 8.46234
+	dip: 9.32138
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425068; y:5.89127e+006; z:322.396}
+	direction: 78.9319
+	dip: 5.50709
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:422159; y:5.89484e+006; z:301.413}
+	direction: 22.0243
+	dip: 10.864
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423515; y:5.89528e+006; z:336.213}
+	direction: 132.023
+	dip: 15.8665
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424619; y:5.89217e+006; z:391.255}
+	direction: 139.961
+	dip: 4.76212
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425461; y:5.89396e+006; z:432.394}
+	direction: 266.734
+	dip: 4.82073
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428212; y:5.89389e+006; z:445.256}
+	direction: 258.88
+	dip: 19.1367
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427983; y:5.88815e+006; z:320.955}
+	direction: 235.411
+	dip: 14.5175
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424656; y:5.89022e+006; z:307.162}
+	direction: 33.2035
+	dip: 8.63535
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424842; y:5.88961e+006; z:300.368}
+	direction: 27.641
+	dip: 3.54712
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429337; y:5.89489e+006; z:423.555}
+	direction: 317.687
+	dip: 17.0176
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426585; y:5.88598e+006; z:326.159}
+	direction: 22.4386
+	dip: 14.8964
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423563; y:5.8921e+006; z:359.894}
+	direction: 81.0817
+	dip: 28.088
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429732; y:5.88936e+006; z:340.703}
+	direction: 243.937
+	dip: 21.6621
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424071; y:5.88933e+006; z:294.708}
+	direction: 321.447
+	dip: 12.4627
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423911; y:5.8887e+006; z:285.023}
+	direction: 53.3667
+	dip: 26.5075
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423742; y:5.89304e+006; z:368.384}
+	direction: 82.3553
+	dip: 17.3596
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423853; y:5.89008e+006; z:294.402}
+	direction: 228.031
+	dip: 22.3415
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423786; y:5.88918e+006; z:289.135}
+	direction: 32.1897
+	dip: 10.5446
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424203; y:5.89077e+006; z:311.173}
+	direction: 66.3871
+	dip: 32.7304
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423890; y:5.89119e+006; z:319.839}
+	direction: 28.5175
+	dip: 28.0165
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429898; y:5.89042e+006; z:330.274}
+	direction: 237.121
+	dip: 29.4448
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423112; y:5.88984e+006; z:288.91}
+	direction: 71.5896
+	dip: 25.1892
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426377; y:5.88452e+006; z:358.968}
+	direction: 20.7519
+	dip: 63.7705
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427507; y:5.88617e+006; z:347.543}
+	direction: 323.917
+	dip: 38.3625
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424472; y:5.88928e+006; z:293.229}
+	direction: 237.46
+	dip: 36.6568
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423619; y:5.88855e+006; z:284.417}
+	direction: 56.3337
+	dip: 43.1448
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421253; y:5.89428e+006; z:320.932}
+	direction: 36.5354
+	dip: 37.5012
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423851; y:5.88863e+006; z:285.251}
+	direction: 218.88
+	dip: 51.5394
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "MiddleMansfield"
+point {x:430796; y:5.88398e+006; z:447.757}
+point {x:432303; y:5.88347e+006; z:577.151}
+point {x:428763; y:5.88352e+006; z:475.293}
+point {x:428898; y:5.88386e+006; z:505.494}
+point {x:429409; y:5.88404e+006; z:562.183}
+point {x:428440; y:5.8819e+006; z:347.072}
+point {x:428804; y:5.88215e+006; z:346.071}
+point {x:428831; y:5.88292e+006; z:418.908}
+point {x:427767; y:5.88206e+006; z:412.406}
+point {x:425990; y:5.88308e+006; z:465.046}
+point {x:425060; y:5.88374e+006; z:538.08}
+point {x:424586; y:5.88426e+006; z:499.151}
+point {x:424345; y:5.88469e+006; z:464.912}
+point {x:424220; y:5.88489e+006; z:437.731}
+point {x:424071; y:5.88511e+006; z:412.374}
+point {x:423514; y:5.88735e+006; z:366.265}
+point {x:424134; y:5.88636e+006; z:427.953}
+point {x:424403; y:5.8859e+006; z:408.41}
+point {x:419906; y:5.89408e+006; z:536.827}
+point {x:420700; y:5.8927e+006; z:451.977}
+point {x:421750; y:5.89074e+006; z:414.528}
+point {x:422827; y:5.88871e+006; z:281.279}
+point {x:417820; y:5.89685e+006; z:345.912}
+point {x:419125; y:5.89619e+006; z:346.089}
+point {x:420041; y:5.89525e+006; z:364.136}
+point {x:420148; y:5.8949e+006; z:386.57}
+point {x:420014; y:5.89456e+006; z:462.98}
+point {x:424373; y:5.88577e+006; z:414.19}
+point {x:424460; y:5.88556e+006; z:404.303}
+point {x:424583; y:5.88539e+006; z:392.891}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "MiddleMansfield"
+foliation {
+Point3D {x:432402; y:5.88364e+006; z:601.573}
+	direction: 29.0494
+	dip: 51.8435
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:431657; y:5.89639e+006; z:536.751}
+	direction: 207.411
+	dip: 2.91835
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:431362; y:5.89657e+006; z:567.113}
+	direction: 295.287
+	dip: 2.05947
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:431487; y:5.89601e+006; z:516.212}
+	direction: 279.208
+	dip: 6.43689
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429537; y:5.89671e+006; z:408.043}
+	direction: 330.558
+	dip: 8.65394
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:432790; y:5.89015e+006; z:480.647}
+	direction: 339.227
+	dip: 9.60186
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:430927; y:5.89033e+006; z:350.813}
+	direction: 249.982
+	dip: 5.85683
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:431340; y:5.88924e+006; z:387.417}
+	direction: 274.955
+	dip: 13.9392
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428257; y:5.88334e+006; z:579.854}
+	direction: 239.306
+	dip: 26.996
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426392; y:5.88346e+006; z:420.936}
+	direction: 17.6835
+	dip: 51.6034
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427412; y:5.88271e+006; z:442.535}
+	direction: 32.2714
+	dip: 63.9502
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427087; y:5.88281e+006; z:420.72}
+	direction: 41.1614
+	dip: 68.9546
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427645; y:5.88223e+006; z:420.565}
+	direction: 22.462
+	dip: 81.8308
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423022; y:5.88906e+006; z:282.052}
+	direction: 76.1791
+	dip: 75.1299
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423442; y:5.88843e+006; z:283.097}
+	direction: 53.7406
+	dip: 94.5791
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428737; y:5.88408e+006; z:534.46}
+	direction: 298.273
+	dip: 56.7951
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421942; y:5.89167e+006; z:347.532}
+	direction: 70.5547
+	dip: 78.5191
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:432552; y:5.8861e+006; z:583.549}
+	direction: 273.23
+	dip: 24.1153
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "LowerMansfield"
+point {x:420069; y:5.89481e+006; z:-14.321}
+point {x:420512; y:5.89502e+006; z:-587.745}
+point {x:421288; y:5.89539e+006; z:-935.895}
+point {x:422341; y:5.89589e+006; z:-1304.52}
+point {x:424162; y:5.89581e+006; z:-1591.24}
+point {x:425144; y:5.89576e+006; z:-1406.92}
+point {x:426310; y:5.8957e+006; z:-1243.09}
+point {x:428253; y:5.89561e+006; z:-935.895}
+point {x:429582; y:5.89555e+006; z:-710.621}
+point {x:430728; y:5.89549e+006; z:-526.306}
+point {x:431874; y:5.89544e+006; z:-485.348}
+point {x:432761; y:5.88237e+006; z:572.793}
+point {x:430599; y:5.88307e+006; z:438.384}
+point {x:430240; y:5.88313e+006; z:410.843}
+point {x:429915; y:5.88292e+006; z:386.827}
+point {x:429919; y:5.88245e+006; z:418.206}
+point {x:430122; y:5.88158e+006; z:478.741}
+point {x:429995; y:5.88115e+006; z:437.031}
+point {x:429653; y:5.88096e+006; z:392.902}
+point {x:428885; y:5.88108e+006; z:339.011}
+point {x:427132; y:5.88176e+006; z:432.554}
+point {x:425162; y:5.88298e+006; z:419.983}
+point {x:424368; y:5.88402e+006; z:450.632}
+point {x:424042; y:5.88468e+006; z:442.154}
+point {x:423916; y:5.88513e+006; z:399.438}
+point {x:424420; y:5.88531e+006; z:406.34}
+point {x:424300; y:5.88544e+006; z:412.917}
+point {x:424256; y:5.88557e+006; z:417.776}
+point {x:424220; y:5.88564e+006; z:421.69}
+point {x:424071; y:5.88598e+006; z:432.866}
+point {x:423934; y:5.88631e+006; z:430.293}
+point {x:423859; y:5.88648e+006; z:423.663}
+point {x:423690; y:5.88681e+006; z:396.281}
+point {x:422929; y:5.8878e+006; z:296.178}
+point {x:421666; y:5.89006e+006; z:442.986}
+point {x:420608; y:5.89135e+006; z:534.082}
+point {x:419750; y:5.89222e+006; z:565.008}
+point {x:419598; y:5.89263e+006; z:568.271}
+point {x:419334; y:5.89295e+006; z:515.232}
+point {x:419264; y:5.8934e+006; z:521.319}
+point {x:418719; y:5.89399e+006; z:502.417}
+point {x:418600; y:5.89442e+006; z:483.171}
+point {x:418826; y:5.89479e+006; z:414.462}
+point {x:419185; y:5.89485e+006; z:469.432}
+point {x:419410; y:5.8952e+006; z:438.338}
+point {x:419210; y:5.89559e+006; z:373.383}
+point {x:417878; y:5.89633e+006; z:343.228}
+point {x:417317; y:5.89689e+006; z:336.081}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "LowerMansfield"
+foliation {
+Point3D {x:427084; y:5.89567e+006; z:-1115.81}
+	direction: 293.002
+	dip: 9.63485
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421762; y:5.89562e+006; z:-1139.81}
+	direction: 76.4206
+	dip: 26.6895
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423046; y:5.88778e+006; z:305.007}
+	direction: 47.2002
+	dip: 86.1146
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425967; y:5.8827e+006; z:452.76}
+	direction: 57.0047
+	dip: 83.0725
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419482; y:5.89566e+006; z:361.36}
+	direction: 36.3802
+	dip: 87.7592
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426404; y:5.88223e+006; z:382.755}
+	direction: 33.8155
+	dip: 72.1874
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421347; y:5.89086e+006; z:484.613}
+	direction: 54.3851
+	dip: 69.3298
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428475; y:5.88173e+006; z:333.434}
+	direction: 9.14201
+	dip: 72.5338
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419912; y:5.89472e+006; z:467.059}
+	direction: 75.5234
+	dip: 66.0826
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418287; y:5.89648e+006; z:383.283}
+	direction: 37.3456
+	dip: 67.4397
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:430719; y:5.88365e+006; z:455.777}
+	direction: 17.5201
+	dip: 56.7623
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:430892; y:5.88353e+006; z:480.778}
+	direction: 25.8538
+	dip: 54.1121
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:420742; y:5.89177e+006; z:548.291}
+	direction: 54.6115
+	dip: 63.4552
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419727; y:5.89543e+006; z:374.547}
+	direction: 37.3278
+	dip: 64.6124
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428533; y:5.88161e+006; z:326.456}
+	direction: 0.638871
+	dip: 60.3218
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428429; y:5.88124e+006; z:315.737}
+	direction: 9.33978
+	dip: 56.2489
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429013; y:5.8826e+006; z:377.091}
+	direction: 247.833
+	dip: 54.8974
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418632; y:5.89624e+006; z:385.573}
+	direction: 24.8601
+	dip: 48.0537
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:430324; y:5.88333e+006; z:430.777}
+	direction: 28.4817
+	dip: 49.7076
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429496; y:5.88256e+006; z:391.069}
+	direction: 270.991
+	dip: 48.2084
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429562; y:5.88353e+006; z:529.586}
+	direction: 21.5507
+	dip: 47.5447
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:420572; y:5.89209e+006; z:557.038}
+	direction: 78.7932
+	dip: 49.1869
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419374; y:5.89358e+006; z:534.362}
+	direction: 40.6877
+	dip: 36.0116
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419457; y:5.89382e+006; z:534.346}
+	direction: 52.9363
+	dip: 42.7705
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419937; y:5.89298e+006; z:606.755}
+	direction: 71.9449
+	dip: 37.912
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429097; y:5.88254e+006; z:372.391}
+	direction: 279.002
+	dip: 61.497
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429901; y:5.88124e+006; z:446.882}
+	direction: 282.587
+	dip: 35.7359
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428902; y:5.88149e+006; z:351.721}
+	direction: 304.718
+	dip: 24.9226
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428987; y:5.88286e+006; z:405.447}
+	direction: 251.197
+	dip: 35.0359
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419440; y:5.89359e+006; z:540.894}
+	direction: 54.3346
+	dip: 21.8439
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:429942; y:5.882e+006; z:434.997}
+	direction: 275.307
+	dip: 32.5323
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:420552; y:5.89274e+006; z:485.754}
+	direction: 100.01
+	dip: 27.2067
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428587; y:5.8813e+006; z:321.984}
+	direction: 21.4169
+	dip: 23.0706
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419306; y:5.89442e+006; z:502.118}
+	direction: 64.5476
+	dip: 23.9004
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419431; y:5.89476e+006; z:528.943}
+	direction: 334.271
+	dip: 17.2775
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419857; y:5.89443e+006; z:518.33}
+	direction: 263.27
+	dip: 13.1227
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419862; y:5.89415e+006; z:540.309}
+	direction: 201.1
+	dip: 6.16871
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419363; y:5.89403e+006; z:511.049}
+	direction: 93.5134
+	dip: 20.7757
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419434; y:5.89481e+006; z:524.827}
+	direction: 247.853
+	dip: 16.1635
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "DelatiteGroup"
+point {x:423129; y:5.89586e+006; z:-981.977}
+point {x:424441; y:5.89579e+006; z:-763.049}
+point {x:426445; y:5.8957e+006; z:-525.877}
+point {x:428086; y:5.89562e+006; z:-252.217}
+point {x:417213; y:5.89344e+006; z:433.209}
+point {x:417106; y:5.89339e+006; z:711.986}
+point {x:417146; y:5.89341e+006; z:656.23}
+point {x:417012; y:5.89334e+006; z:935.008}
+point {x:417274; y:5.89347e+006; z:282.566}
+point {x:417592; y:5.89362e+006; z:-100.143}
+point {x:418019; y:5.89382e+006; z:-502.996}
+point {x:418326; y:5.89397e+006; z:-758.752}
+point {x:418720; y:5.89416e+006; z:-1122.75}
+point {x:419038; y:5.89431e+006; z:-1311.62}
+point {x:419420; y:5.89449e+006; z:-1460.16}
+point {x:419781; y:5.89467e+006; z:-1359.36}
+point {x:420077; y:5.89481e+006; z:-1138.51}
+point {x:420626; y:5.89507e+006; z:-1053.86}
+point {x:421212; y:5.89535e+006; z:-1133.3}
+point {x:421589; y:5.89553e+006; z:-1157.63}
+point {x:420691; y:5.88852e+006; z:429.237}
+point {x:420650; y:5.88851e+006; z:571.753}
+point {x:420603; y:5.88849e+006; z:757.642}
+point {x:421212; y:5.88869e+006; z:-473.588}
+point {x:421578; y:5.88882e+006; z:-799.996}
+point {x:422285; y:5.88905e+006; z:-1085.51}
+point {x:422733; y:5.8892e+006; z:-1111.25}
+point {x:416045; y:5.89482e+006; z:383.929}
+point {x:416613; y:5.89426e+006; z:393.417}
+point {x:417111; y:5.89367e+006; z:408.315}
+point {x:417466; y:5.89314e+006; z:346.403}
+point {x:417914; y:5.89262e+006; z:360.753}
+point {x:418256; y:5.8923e+006; z:380.022}
+point {x:418632; y:5.8919e+006; z:397.293}
+point {x:419045; y:5.8914e+006; z:435.1}
+point {x:419556; y:5.89087e+006; z:460.805}
+point {x:419876; y:5.89037e+006; z:400.47}
+point {x:420409; y:5.88955e+006; z:329.945}
+point {x:420857; y:5.88878e+006; z:343.596}
+point {x:421369; y:5.88775e+006; z:283.113}
+point {x:421973; y:5.88686e+006; z:301.562}
+point {x:422364; y:5.88603e+006; z:329.199}
+point {x:422684; y:5.88573e+006; z:337.119}
+point {x:423161; y:5.88512e+006; z:385.367}
+point {x:423694; y:5.88436e+006; z:434.064}
+point {x:423942; y:5.88388e+006; z:375.682}
+point {x:424525; y:5.88339e+006; z:396.351}
+point {x:424902; y:5.88304e+006; z:394.026}
+point {x:425130; y:5.88285e+006; z:384.504}
+point {x:425521; y:5.88228e+006; z:327.109}
+point {x:426096; y:5.88196e+006; z:342.623}
+point {x:426622; y:5.88166e+006; z:396.551}
+point {x:427369; y:5.88128e+006; z:345.297}
+point {x:427888; y:5.881e+006; z:326.814}
+point {x:428243; y:5.88076e+006; z:290.351}
+point {x:428577; y:5.88047e+006; z:259.671}
+point {x:428990; y:5.88006e+006; z:264.119}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "DelatiteGroup"
+foliation {
+Point3D {x:418071; y:5.89489e+006; z:432.992}
+	direction: 108.634
+	dip: 29.4478
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:417901; y:5.8927e+006; z:358.682}
+	direction: 39.4689
+	dip: 66.7662
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418522; y:5.89276e+006; z:362.287}
+	direction: 23.4213
+	dip: 28.0055
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418815; y:5.89332e+006; z:457.699}
+	direction: 37.996
+	dip: 37.3464
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419283; y:5.89193e+006; z:403.566}
+	direction: 46.5157
+	dip: 69.439
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419609; y:5.89193e+006; z:458.928}
+	direction: 54.1617
+	dip: 68.7129
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419652; y:5.89147e+006; z:423.382}
+	direction: 74.3638
+	dip: 44.0059
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419813; y:5.89129e+006; z:439.941}
+	direction: 39.6905
+	dip: 64.1465
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419916; y:5.8912e+006; z:440.369}
+	direction: 54.1456
+	dip: 54.0605
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:420051; y:5.89091e+006; z:431.136}
+	direction: 41.3609
+	dip: 57.8595
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:420598; y:5.88993e+006; z:341.478}
+	direction: 55.0129
+	dip: 58.8919
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421789; y:5.88959e+006; z:385.027}
+	direction: 42.8053
+	dip: 54.7314
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421990; y:5.88934e+006; z:365.183}
+	direction: 21.9571
+	dip: 71.0556
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426013; y:5.88221e+006; z:347.502}
+	direction: 50.0761
+	dip: 83.5858
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426977; y:5.88176e+006; z:432.614}
+	direction: 35.0267
+	dip: 73.441
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428378; y:5.88069e+006; z:277.016}
+	direction: 207.002
+	dip: 26.5091
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428760; y:5.88089e+006; z:301.33}
+	direction: 354.66
+	dip: 48.7886
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "Walhalla"
+point {x:423615; y:5.88438e+006; z:-580.291}
+point {x:422167; y:5.88376e+006; z:-1209.72}
+point {x:420138; y:5.8829e+006; z:-1486.66}
+point {x:418017; y:5.882e+006; z:-1675.49}
+point {x:417264; y:5.88169e+006; z:-1562.19}
+point {x:416835; y:5.8815e+006; z:-1373.37}
+point {x:417854; y:5.89375e+006; z:-1686.06}
+point {x:418316; y:5.89397e+006; z:-1318.78}
+point {x:416583; y:5.89314e+006; z:-1527.77}
+point {x:416701; y:5.89319e+006; z:-1225.03}
+point {x:416937; y:5.89331e+006; z:-840.951}
+point {x:417149; y:5.89341e+006; z:-434.282}
+point {x:417223; y:5.89344e+006; z:-239.985}
+point {x:421273; y:5.88872e+006; z:-1670.97}
+point {x:421775; y:5.88888e+006; z:-1479.75}
+point {x:419812; y:5.88823e+006; z:-801.37}
+point {x:420060; y:5.88831e+006; z:-614.183}
+point {x:420330; y:5.8884e+006; z:-277.246}
+point {x:420628; y:5.8885e+006; z:-127.497}
+point {x:420756; y:5.88854e+006; z:149.54}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Walhalla"
+foliation {
+Point3D {x:417610; y:5.89595e+006; z:318.241}
+	direction: 276.829
+	dip: 51.7078
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:430235; y:5.88422e+006; z:532.499}
+	direction: 190.032
+	dip: 63.9262
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:416773; y:5.88039e+006; z:545.481}
+	direction: 33.2318
+	dip: 46.0941
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419808; y:5.89015e+006; z:379.618}
+	direction: 252.886
+	dip: 70.4154
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421280; y:5.88747e+006; z:275.41}
+	direction: 246.932
+	dip: 76.3423
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "Basement"
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Basement"
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "Mansfield_Fault"
+point {x:423561; y:5.88435e+006; z:75.4429}
+point {x:423732; y:5.88443e+006; z:-666.32}
+point {x:423817; y:5.88446e+006; z:-1333.91}
+point {x:424030; y:5.88455e+006; z:-1982.95}
+point {x:417097; y:5.89338e+006; z:278.367}
+point {x:417314; y:5.89349e+006; z:-432.545}
+point {x:417659; y:5.89365e+006; z:-1384.07}
+point {x:417857; y:5.89375e+006; z:-1909.05}
+point {x:416066; y:5.89469e+006; z:385.211}
+point {x:416367; y:5.89431e+006; z:390.58}
+point {x:416680; y:5.89395e+006; z:406.746}
+point {x:416969; y:5.89353e+006; z:411.445}
+point {x:417330; y:5.89307e+006; z:346.644}
+point {x:417763; y:5.89259e+006; z:363.047}
+point {x:418269; y:5.89211e+006; z:389.862}
+point {x:418570; y:5.89178e+006; z:404.269}
+point {x:418955; y:5.89142e+006; z:435.831}
+point {x:419316; y:5.89096e+006; z:446.012}
+point {x:419774; y:5.89038e+006; z:413.211}
+point {x:420135; y:5.8897e+006; z:332.017}
+point {x:420713; y:5.88862e+006; z:348.059}
+point {x:421423; y:5.88741e+006; z:271.367}
+point {x:422001; y:5.88645e+006; z:325.338}
+point {x:422205; y:5.88594e+006; z:350.313}
+point {x:422590; y:5.88557e+006; z:357.259}
+point {x:423204; y:5.88494e+006; z:404.812}
+point {x:423373; y:5.88458e+006; z:441.585}
+point {x:423626; y:5.88422e+006; z:440.857}
+point {x:423710; y:5.88392e+006; z:402.988}
+point {x:423854; y:5.88368e+006; z:357.27}
+point {x:424131; y:5.8835e+006; z:330.995}
+point {x:424673; y:5.8832e+006; z:392.802}
+point {x:424998; y:5.88293e+006; z:381.35}
+point {x:425359; y:5.88242e+006; z:334.223}
+point {x:425780; y:5.88212e+006; z:331.62}
+point {x:426479; y:5.88172e+006; z:389.589}
+point {x:426924; y:5.88149e+006; z:373.839}
+point {x:427321; y:5.88127e+006; z:341.953}
+point {x:428248; y:5.88081e+006; z:294}
+point {x:428585; y:5.88067e+006; z:272.313}
+point {x:428970; y:5.88047e+006; z:281.64}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "Mansfield_Fault"
+foliation {
+Point3D {x:416216; y:5.8945e+006; z:391.665}
+	direction: 50.4861
+	dip: 90.2296
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:416523; y:5.89413e+006; z:400.11}
+	direction: 50.5744
+	dip: 68.6963
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:416824; y:5.89374e+006; z:414.949}
+	direction: 62.975
+	dip: 99.0673
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:417149; y:5.8933e+006; z:381.667}
+	direction: 44.8626
+	dip: 88.013
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:417547; y:5.89283e+006; z:352.134}
+	direction: 48.1459
+	dip: 80.3293
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418016; y:5.89235e+006; z:372.751}
+	direction: 42.7897
+	dip: 75.7431
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418419; y:5.89194e+006; z:394.232}
+	direction: 48.3716
+	dip: 80.9302
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:418762; y:5.8916e+006; z:419.175}
+	direction: 43.7961
+	dip: 79.7957
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419136; y:5.89119e+006; z:440.144}
+	direction: 44.0089
+	dip: 87.3724
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419545; y:5.89067e+006; z:456.648}
+	direction: 57.9701
+	dip: 89.3742
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:419954; y:5.89004e+006; z:362.316}
+	direction: 70.116
+	dip: 85.3733
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:420424; y:5.88916e+006; z:343.796}
+	direction: 58.1956
+	dip: 73.7344
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421068; y:5.88801e+006; z:304.837}
+	direction: 59.7437
+	dip: 76.2178
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:421712; y:5.88693e+006; z:293.934}
+	direction: 63.7966
+	dip: 88.0638
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:422103; y:5.8862e+006; z:337.906}
+	direction: 62.4315
+	dip: 91.1572
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:422398; y:5.88576e+006; z:346.945}
+	direction: 45.0687
+	dip: 82.4513
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:422897; y:5.88526e+006; z:378.987}
+	direction: 44.2066
+	dip: 74.9667
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423289; y:5.88476e+006; z:419.741}
+	direction: 65.8995
+	dip: 79.2648
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423499; y:5.8844e+006; z:450.936}
+	direction: 57.457
+	dip: 81.464
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423668; y:5.88407e+006; z:425.249}
+	direction: 70.8698
+	dip: 81.7234
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423782; y:5.8838e+006; z:379.104}
+	direction: 56.8606
+	dip: 80.1251
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423993; y:5.88359e+006; z:336.025}
+	direction: 40.6898
+	dip: 83.271
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424402; y:5.88335e+006; z:359.797}
+	direction: 30.2307
+	dip: 87.5952
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424835; y:5.88307e+006; z:390.297}
+	direction: 30.0543
+	dip: 83.93
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425179; y:5.88267e+006; z:361.341}
+	direction: 50.4356
+	dip: 84.8649
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425570; y:5.88227e+006; z:328.797}
+	direction: 37.006
+	dip: 78.607
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426130; y:5.88192e+006; z:346.514}
+	direction: 35.4601
+	dip: 76.1828
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:426701; y:5.8816e+006; z:392.939}
+	direction: 28.996
+	dip: 86.6485
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427123; y:5.88138e+006; z:353.189}
+	direction: 35.9482
+	dip: 79.7979
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:427785; y:5.88104e+006; z:330.463}
+	direction: 24.4542
+	dip: 74.2764
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428417; y:5.88074e+006; z:279.532}
+	direction: 24.7335
+	dip: 74.0051
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:428778; y:5.88057e+006; z:273.637}
+	direction: 24.3685
+	dip: 83.9678
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "VicFault_Nth"
+point {x:423774; y:5.88576e+006; z:382.868}
+point {x:424047; y:5.88573e+006; z:420.951}
+point {x:424369; y:5.88581e+006; z:414.422}
+point {x:424623; y:5.88593e+006; z:376.577}
+point {x:424837; y:5.88607e+006; z:349.039}
+point {x:424993; y:5.88624e+006; z:334.755}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "VicFault_Nth"
+foliation {
+Point3D {x:423910; y:5.88574e+006; z:405.115}
+	direction: 6.17159
+	dip: 92.4213
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424208; y:5.88577e+006; z:426.593}
+	direction: 342.589
+	dip: 78.5934
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424496; y:5.88587e+006; z:396.154}
+	direction: 336.955
+	dip: 88.6324
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424730; y:5.886e+006; z:361.058}
+	direction: 325.182
+	dip: 73.5055
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424915; y:5.88616e+006; z:340.814}
+	direction: 307.846
+	dip: 97.027
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+Add3DInterfacesToFormation {
+	formation: "VicFault_Sth"
+point {x:423579; y:5.88528e+006; z:364.877}
+point {x:423852; y:5.88522e+006; z:391.543}
+point {x:424135; y:5.88518e+006; z:413.862}
+point {x:424379; y:5.88522e+006; z:411.275}
+point {x:424740; y:5.88534e+006; z:380.513}
+point {x:425140; y:5.88557e+006; z:351.633}
+point {x:425433; y:5.88576e+006; z:336.923}
+point {x:425589; y:5.88594e+006; z:329.089}
+point {x:425755; y:5.88612e+006; z:325.192}
+}
+}
+
+GeomodellerTask {
+Add3DFoliationToFormation {
+	formation: "VicFault_Sth"
+foliation {
+Point3D {x:423715; y:5.88525e+006; z:378.401}
+	direction: 2.82155
+	dip: 35.8345
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:423993; y:5.8852e+006; z:403.252}
+	direction: 354.696
+	dip: 33.281
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424257; y:5.8852e+006; z:416.703}
+	direction: 343.684
+	dip: 35.2905
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424559; y:5.88528e+006; z:395.574}
+	direction: 342
+	dip: 39.8964
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:424940; y:5.88545e+006; z:364.72}
+	direction: 332.576
+	dip: 48.4503
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425286; y:5.88566e+006; z:343.891}
+	direction: 333.196
+	dip: 50.2578
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425511; y:5.88585e+006; z:332.638}
+	direction: 306.191
+	dip: 41.5669
+	polarity: Normal_Polarity
+}
+foliation {
+Point3D {x:425672; y:5.88603e+006; z:326.663}
+	direction: 323.824
+	dip: 54.2486
+	polarity: Normal_Polarity
+}
+}
+}
+
+GeomodellerTask {
+	ComputeModel {
+		FaultList {
+			node: "All"
+		}
+		SeriesList {
+			node: "All"
+		}
+		SectionList {
+			node: "All"
+		}
+		BoreholeList {
+			node: "All"
+		}
+	}
+}
+
+GeomodellerTask {
+	BuildMeshCGAL {
+		geomodeller_output {
+			formations: true
+      	faults: true
+      	volumes: true
+      	surfaces: false
+      	draw_shapes: false;  # in batch!
+      	tetrahedrons: true;
+     	smooth: 0
+      }
+    build_triple_lines {
+       	topolimited: true  # has topo
+	    borderline: false
+	    insideline: true
+	    point_spacing: 500.0   # this is sub-divided for precison by 10
+	    precision: 50
+	    divide_model_using_regular_sections: true
+    	clean_lines: true;  # eliminate confusion
+        export_triple_lines {
+            output_directory: "."
+	        format: TripleLine_VTK;
+        }
+    }
+    mesh_criteria {
+        min_facet_angle: 15.0
+        min_facet_radii: 2.0
+        radius_edge_ratio: 10.0
+        min_protect_ball_radius: 100
+        default_discretization {
+            precision: 400.0
+            max_facet_radii: 500.0
+            max_tet_radii: 500.0
+            max_edge_length: 100
+        }
+    }
+		refine_mesh {
+			perturb {time_limit:30}
+			exude {time_limit:30}
+		}
+		export_mesh {
+				mesh_type: VOLUME;
+			file_type: FEFLOW;
+			output_directory: "."
+		}
+		export_mesh {
+				mesh_type: VOLUME;
+			file_type: VTU;
+			output_directory: "."
+		}
+	log: "building CGAL mesh of mansfield project"
+	}
+}
+
+GeomodellerTask {
+	SaveProjectAs {
+		filename: "./Mansfield_upgraded_0/Mansfield_upgraded_0.xml"
+	}	
+}
+
+

@@ -1,0 +1,118 @@
+name: "Bet Bet Victoria,  gravity/TMI joint inversion post query, movies, stats sections"
+description: "LITHOLOGICALLY CONSTRAINED INVERSION OF MAGNETIC AND GRAVITY DATA SETS"
+	"By D. FitzGerald, A. Guillen, R. Lane, R. Seikel & P. McInerney"
+  "KEGS 2007."
+auditfile: "Bet_Bet_inversion.audit"
+
+
+InversionTask {
+	MakeSuperSummaryStats {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		RunInterval {
+			run: "run1";
+			start_iterations: 10000;
+			end_iterations: 200000;
+		}
+		threshold_percentage: 95;
+		statistical_voxet: "priorOnlyStats";
+	}
+}
+InversionTask {
+	MakeAllSectionImages   {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		run: "run1";
+		get_function {  # use default super summary voxet created above
+			statistical_field: MeanDensity;
+			transform: GetField;
+			threshold: 95;
+			existing_voxet: "priorOnlyStats";
+		}
+		#products: "..";  #  all the stats voxets are up one level
+		MaxPixelCols: 400;
+		MaxPixelRows: 1000;
+		VerticalExaggeration: 1;
+		QualityPercentage: 100;
+		lut: Colours;
+		Scaling {
+			doLog: false;  # linear
+		}	
+	}
+}				
+InversionTask {
+	MakeHistogram   {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		run: "run1";
+		voxet: "final.vo";
+		lithology_field: "Lithology";
+		property_field: "Density";
+		ttest: true;
+		number_of_bins: 256;
+		report: "Histogram_Density.rpt"
+		Scaling {
+			doLog: false;  # linear
+		}		
+	}
+}
+InversionTask {
+	MakeHistogram   {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		run: "run1";
+		voxet: "final.vo";
+		lithology_field: "Lithology";
+		property_field: "RemenenceEast";
+		number_of_bins: 256;
+		report: "Histogram_Remanence_East.rpt"
+		Scaling {
+			doLog: false;  # linear
+		}		
+	}
+}
+InversionTask {
+	MakeHistogram   {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		run: "run1";
+		voxet: "final.vo";
+		lithology_field: "Lithology";
+		property_field: "RemenenceNorth";
+		number_of_bins: 256;
+		report: "Histogram_Remanence_North.rpt"
+		Scaling {
+			doLog: false;  # linear
+		}		
+	}
+}
+InversionTask {
+	MakeHistogram   {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		run: "run1";
+		voxet: "final.vo";
+		lithology_field: "Lithology";
+		property_field: "RemenenceDown";
+		number_of_bins: 256;
+		report: "Histogram_Remanence_Down.rpt"
+		Scaling {
+			doLog: false;  # linear
+		}		
+	}
+}
+InversionTask {
+	MakeHistogram   {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Prior";
+		run: "run1";
+		voxet: "final.vo";
+		lithology_field: "Lithology";
+		property_field: "Susceptibility";
+		number_of_bins: 256;
+		report: "Histogram_Susceptibility.rpt"
+		Scaling {
+			doLog: false;  # linear
+		}		
+	}
+}								

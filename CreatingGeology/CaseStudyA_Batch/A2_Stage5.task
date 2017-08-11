@@ -1,0 +1,197 @@
+name: "A2_Stage5"
+description: "Tutorial A2 - stage 5 of 5, step 1 of 1"
+auditfile: "audit_A2_Stage5.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA1.xml"
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "Basement"
+        red: 238
+        green: 162
+        blue: 172
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "MiddleCover"
+        red: 255
+        green: 165
+        blue: 0.0
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "BasalSeries"
+        position: 1
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "BasalSeries"
+        formation: "Basement"
+    }
+} 
+
+GeomodellerTask {
+    SetSeries {
+        name: "LowerSeries"
+        position: 2
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "LowerSeries"
+        formation: "LowerCover"
+    }
+}
+GeomodellerTask {
+    SetSeries {
+        name: "UpperSeries"
+        position: 3
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "MiddleCover"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "UpperCover"
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section1"
+        filename: "./data/Section1_LowerCover_MiddleCover.data"
+        spatial_location_error: 1
+    }
+}
+
+
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+            node: "LowerSeries"         
+        }
+        SectionList {
+            node: "All"            
+        }
+        Extents { 
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Granite"
+        red: 205
+        green: 0
+        blue: 0
+    }
+}
+
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Topography"
+        filename: "./data/Map_Granite.data"
+        spatial_location_error: 1
+    }
+}
+
+GeomodellerTask {
+    CreateSection {
+        name: "Section2"
+        degrees: 1
+        direction: 0.0
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 100010.0
+                y: 2005000.0
+                z: 0.0
+            }
+            Point {
+                x: 109990.0
+                y: 2009990.0
+                z: 0.0
+            }
+        }
+    }        
+}
+
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section2"
+        filename: "./data/Section2_Granite.data"
+        spatial_location_error: 1
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "IntrusiveSeries"
+        position: 4
+        relation: "erode"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "IntrusiveSeries"
+        formation: "Granite"
+    }
+}
+
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+            node: "All"
+        }
+        SectionList {
+            node: "All"
+        }
+        Extents { 
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+
+GeomodellerTask {
+	 SaveLithologyVoxet {
+		nx: 10;  
+		ny: 10;
+		nz: 10;
+		LithologyVoxetFileStub: "dump_voxet"
+}}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./test2.xml"
+    }
+}
+

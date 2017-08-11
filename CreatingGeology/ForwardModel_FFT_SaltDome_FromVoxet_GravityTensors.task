@@ -1,0 +1,23 @@
+InversionTask {
+ForwardModelFromVoxet {
+  input_voxet: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/initial.vo"
+  fields {
+    node: "Density"
+  }
+  InputVoxetAlreadyProperty: true
+  OutputVoxelName: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/final_GravityTensors.vo"
+  product: GravityTensors
+  coordsys: END
+  drape_elevation_grid: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/compute_Surface_1.ers"
+  output_gridname: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/calculated_GravityTensors_1.ers"
+  expansionmethod: Mirror
+  horizontalexpansionfactor: 100
+  verticalexpansionfactor: 550
+  include_border_effect: true
+  LanczosTaper: true
+  POSC_CoordinateSystem: "Local"
+  method: FastFourierTransform
+  ObservedReferenceGrid: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/observed_GravityTensors_1.ers"
+  Number_CPUs: 7
+}
+}

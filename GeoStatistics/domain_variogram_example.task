@@ -1,0 +1,38 @@
+name: "variogram calc from fe drillhole"
+description: "Bernard's drill hole project with geology model, nominate the field"
+auditfile: "audit_variogram.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "g3d_test/G3D.xml"
+    }
+}
+GeomodellerTask {
+	ComputeVariogram { 
+		MeshGrid_Source {
+	    	SourceType: Project;
+	    	MeshGrid_Name: "DrillholesFields"
+	    	FileType: FT_IGMESH;
+	    	Field_Name: "Fe";  
+			}   	    
+		Analysis_Type { type: UVT};  # make 3D of the isopotential coordinate transform space
+    	Domain: Series; 
+     	Maximum_Distance: 1000; # the maximum distance, small so runs faster
+     	Data_Name: "ORE2";
+    	Variogram_Name: "fe_variogram";
+		Extents {	    	
+	            	xmin: 100;
+	            	ymin: -500;
+	            	zmin: 250;
+	           		xmax: 2200;
+	            	ymax: 3100;
+	            	zmax: 850;
+	}
+    NuggetEffect: 70;
+	Sill: 30;
+	Range: 800;
+	VariogramModelType: VMT_Gaussian;
+	lag: 100;
+	Number_Points: 30;
+    }
+}

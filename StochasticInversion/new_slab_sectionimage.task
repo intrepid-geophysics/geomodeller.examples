@@ -1,0 +1,48 @@
+name: "test image making run"
+InversionTask {
+	MakeSectionImage   {
+		filename: "InputGeology/vs/vs.xml";
+		run: "Run_1";
+		case: "Case_1";
+		get_function {
+			existing_voxet: "initialler.vo";
+			input_field: "Lithology";
+			transform: GetField;
+			threshold: 0;
+		}
+		Section: "500_mN";
+		MaxPixelCols: 900;
+		MaxPixelRows: 900;
+		VerticalExaggeration: 1;
+		QualityPercentage: 100;
+		lut: LithologyColours;
+		Scaling {
+			doLog: false;  # linear
+		}		
+		image: "SectionImage_Case_1_Run_1_Reference_VE1_500_mN_Lithology_LithologyColours"
+	}
+}
+InversionTask {
+	MakeSectionImage   {
+		filename: "InputGeology/vs/vs.xml";
+		run: "Run_1";
+		case: "Case_1";
+		get_function {
+			existing_voxet: "final.vo";
+			input_field: "Density";
+			transform: GetField;
+			threshold: 0;
+		}
+		Section: "500_mN";
+		MaxPixelCols: 900;
+		MaxPixelRows: 900;
+		VerticalExaggeration: 1;
+		QualityPercentage: 100;
+		lut: Colours;
+		Scaling {
+			doLog: false;  # linear
+		}		
+		image: "SectionImage_Case_1_Run_1_final_VE1_500_mN_Density_Colours"
+	}
+}				
+	

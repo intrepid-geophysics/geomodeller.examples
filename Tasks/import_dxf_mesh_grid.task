@@ -1,0 +1,33 @@
+name: "import 3D surface"
+description: "Import a dxf quadrilateral surface into Geomodeller"
+auditfile: "audit_surface.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "./Reed_Mine_Lenses_Top2_NoTilt/Reed_Mine_Lenses_Top2_NoTilt.xml"
+    }
+}
+
+GeomodellerTask {
+    LoadMeshGrid{
+    	SourceType: File;
+        File_Name: "./Reed Mine Ore_DXF/Top_Ore-BHPEM.dxf";
+		MeshGrid_Name: "top_ore";
+		FileType: FT_SURFACE;
+		Field_Name: "something";
+		log: "source_meshgrid.rpt";
+    }
+}
+
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./Reed_Mine_Lenses_Top2_meshes/test_dxf.xml"
+    }
+}

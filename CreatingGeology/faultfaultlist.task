@@ -1,0 +1,203 @@
+name: "2 faults test"
+description: "Set up one fault stopping on another - simplest method, in France"
+
+GeomodellerTask {
+    CreateProject {
+        name: "MyProject"
+        author: "batchrun"
+        date: "16/12/2005  0: 0: 0"
+        projection { map_projection: "NTF / LambertIIet"}
+        version: "2.0"
+        units: meters
+        precision: 1.0
+        Extents {
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        deflection2d: 0.001
+        deflection3d: 0.001
+        discretisation: 10.0
+        referenceTop: false
+        CustomDTM {
+            Extents {
+                xmin: 100000
+                ymin: 2000000
+                xmax: 110000
+                ymax: 2010000
+            }
+            name: "Topography"
+            filename {
+            Grid_Name:  "./data/DTM.semi"
+            }
+            spatial_location_error: 5
+            elevation_error: 2
+            degree1: 3
+            degree2: 2            
+            nx: 5
+            ny: 5
+        }
+     }
+}
+
+GeomodellerTask {
+    CreateSection {
+        name: "Section1"
+        degrees: 1
+        direction: 0.0
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 100010.0
+                y: 2009990.0
+                z: 0.0
+            }
+            Point {
+                x: 109990.0
+                y: 2000010.0
+                z: 0.0
+            }
+        }
+    }
+}
+
+GeomodellerTask {
+    CreateFault {
+        name: "SW_NE_Fault"
+        red: 68
+        green: 138
+        blue: 0
+    }
+}
+
+GeomodellerTask {
+    CreateFault {
+        name: "TEST_Fault"
+        red: 138
+        green: 68
+        blue: 0
+    }
+}
+GeomodellerTask {
+    LinkFaultsWithFaults {
+        FaultStopsOnFaults {
+		fault: "TEST_Fault"
+		stopson: "SW_NE_Fault"
+	}
+    }
+}
+
+
+GeomodellerTask {
+    AddInterfaceToSection {
+        section: "Topography"
+        topFormation: "SW_NE_Fault"
+        bottomFormation: "XXCover"
+        PointList {
+        	Point {
+            	u: 105000
+            	v: 2002500
+            	spatial_location_error: 1
+            	}
+		Point {
+            	u: 107500
+            	v: 2005000
+            	spatial_location_error: 1
+            	}
+        }
+    }
+}
+
+GeomodellerTask {
+    AddInterfaceToSection {
+        section: "Topography"
+        topFormation: "TEST_Fault"
+        bottomFormation: "XXCover"
+        PointList {
+        	Point {
+            	u: 105000
+            	v: 2005000
+            	spatial_location_error: 1
+            	}
+		Point {
+            	u: 107500
+            	v: 2002500
+            	spatial_location_error: 1
+            	}
+        }
+    }
+}
+
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "Topography"
+        formation: "TEST_Fault"
+        foliation {
+	        Point {
+	            u: 107500
+	            v: 2002500
+	        }
+	        direction: 220
+	        dip: 60
+			spherical_variance_kappa: 5; # measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	        polarity: Normal_Polarity
+	        Provenance: field_observation
+        }
+    }
+}
+
+GeomodellerTask {
+    AddFoliationToSection {
+        section: "Topography"
+        formation: "SW_NE_Fault"
+        foliation {
+	        Point {
+	            u: 107500
+	            v: 2005000
+	        }
+	        direction: 130
+	        dip: 80
+			spherical_variance_kappa: 5; # measurenment error for dip is best done by normal to the plane, ie a pole analysis
+	        polarity: Normal_Polarity
+	        Provenance: field_observation
+        }
+    }
+}
+
+GeomodellerTask {
+    ComputeModel {
+        FaultList {
+            node: "ALL"
+        }
+        SectionList {
+            node: "Topography"
+        }
+        Extents {
+            xmin: 100000
+            ymin: 2000000
+            zmin: -8000
+            xmax: 110000
+            ymax: 2010000
+            zmax: 2000
+        }
+        radius: 10.0
+    }
+}
+ 
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+	level: 2
+    }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./out/test.xml"
+    }
+}   
+

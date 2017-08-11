@@ -1,0 +1,37 @@
+MetaData Begin
+	Name	= Tunnel_dem.ers
+	Version	= "Intrepid Subsection v6.0.1 product for Windows (x64) by PELAGIAN optimised build b3df364bb21c "
+	Tunnel_dem Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Samples	= 67200
+		Nulls	= 0
+		Minimum	=   203.933700562
+		Maximum	=   434.078826904
+		Mean	=    335.53168138
+		Variance	=   4270.11835818
+		Skew	= -0.430528745493
+		Kurtosis	=  -1.07579427362
+		Projection	= "NTF(Paris)"
+		Datum	= "NTF"
+	Tunnel_dem End
+	Extensions Begin
+		JetStream Begin
+			Theme	= .ers
+			LABEL	= "Tunnel_grid_stitch"
+			Date	= "Unknown"
+			Price	= "Unknown"
+			CSDATA	= "NTF / NTF(Paris)"
+			RenderStyle	= "Unknown"
+			ReportFormat	= "Unknown"
+			CELLSIZE	= "10.000000"
+			DATEADDED	= "21/06/2015"
+			ASSET_TEAM	= "Unknown"
+			PUBLISHED	= "Unknown"
+			Survey	= "Unknown"
+			ScaleFactor	= "Unknown"
+		JetStream End
+	Extensions End
+MetaData End

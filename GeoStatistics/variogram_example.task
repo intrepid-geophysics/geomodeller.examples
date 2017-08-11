@@ -1,0 +1,37 @@
+name: "variogram calc from mining assays and drill hole sampling"
+description: "use a drillhole dataset to  nominate the field"
+auditfile: "audit_variogram.job"
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "g3d_test/G3D.xml"
+    }
+}
+GeomodellerTask {
+	ComputeVariogram { 
+		MeshGrid_Source {
+	    	SourceType: Project;
+	    	MeshGrid_Name: "DrillholesFields"
+	    	FileType: FT_IGMESH;
+	    	Field_Name: "AL2O3";  
+			}
+		Analysis_Type { type: UVT};
+    	Domain: Series; 
+     	Maximum_Distance: 1000; # the maximum distance
+		Data_Name: "ORE2";
+    	Variogram_Name: "aluminium_variogram";
+    	Extents {
+	            	xmin: 100;
+	            	ymin: -500;
+	            	zmin: 250;
+	           		xmax: 2200;
+	            	ymax: 3100;
+	            	zmax: 850;
+        }
+    NuggetEffect: 70;
+	Sill: 30;
+	Range: 800;
+	VariogramModelType: VMT_Gaussian;
+	lag: 100;
+	Number_Points: 30;
+    }
+}

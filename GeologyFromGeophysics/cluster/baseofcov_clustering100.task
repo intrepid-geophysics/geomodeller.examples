@@ -1,0 +1,48 @@
+# V6.0 New clustering tool Example job file -
+# A workflow for doing a sampling of a DTM
+# to define equivalent plates at centres, and foliations
+# Use the anisotropic covariance of 3D locations, after Ouillon
+# 0.  dump DTM grid to a cloud of XYZ points, say 100m cell size
+# a. perform a clustering, to get a number of plate regions,
+# b. the dip and dip direction then follow from the flat plates
+# c. If using Elevation, set ENU, if depth positive, use END
+#
+#  so, if the DTM is flat to within say 1m, you get a big flat plate
+# Usage: cluster -batch baseofcov_clustering100.task
+#
+
+IntrepidTask {
+	ClusterAnalysis {
+		DataBase:				"../datasets/DTM_Semi_Layer_minus220_Surf..DIR"		# dataset is a dump of cell centroid XYZ
+		OutputCluster:	"Plane_centres_Rogers_baseofcov100DesNoGeodNu..DIR"
+ElevationGridName {
+				grid: "../datasets/Rogers_Basalt_subset2.ers" ;  # original DTM
+				type: Elevation;
+			}				
+		ReportFile:			"cluster_Rogers_baseofcov100DesNoGeodNu.rpt"
+		ClusterType: Generic3D;											# points dataset coming from the Landers processed events
+		Distance_Units: meters;											# depths in meters, so convert XY as well
+		ElevationCoordinateSystem: ENU;									# default = END; For Depth below surface; For Elevation positive up use ENU; for vector fields ( strike/dip, from Cartesian coordinates)
+
+#Note use next block if cordinates are GEODETIC and need to be transformed
+
+		Cluster {  # do a cluster analysis
+			ClusterAlgorithm: Anisotropic;						# anisotropic clustering analysis,
+			Location_Uncertainty: 1;								  # out of fault plane distance, keep splitting if more than this value
+			Maximum_Recursion_Steps: 200							# default = 1000; for anisotropic fault cluster, stop when number of resursion steps exceeds this, if not before
+			Frequency_Cluster_Forming_Reports: 20;    # default = 11; for anisotropic forming, at what freq to report the cluster state?
+			}
+		view {																			# openGL pop-up window
+			show_3D_viewer: true;											# turn off for batch testing
+#			show_cluster_ellipsoids: true;						# show the bounds of each fault as an ellipse
+			show_original_signal_grid: false;					# show signal grid as a grey scale image
+			show_DTM_grid: true;											# show the DTM as a true warped 3D surface
+			show_Cluster_FormingStages: false;
+			show_interface_foliation : true;				# show/debug the cluster forming process in the 3D viewer
+			write_vtk_clusterPoints: true;
+			vtk_clusterPointsFile: "cluster_Rogers_baseofcov100DesNGeodNu.vtp";
+			vertical_scale: 3.0;
+			show_ImplicitFunction_Fault: true;			 # only for the anisotropic option, what does the implict function recover, compared to DTM
+			Minimum_Fault_Vertical_Extent: 1000;			 # chosen units
+		}
+}}

@@ -1,0 +1,31 @@
+DatasetHeader Begin
+	LastUpdated	= Mon Sep 29 20:05:42 GMT 2014
+	Version	= "5.0"
+	DataSetType	= ERStorage
+	DataType	= Raster
+	HeaderOffset	= 0
+	CoordinateSpace Begin
+		Projection	= "GEODETIC"
+		CoordinateType	= LATLONG
+		Datum	= "CH1903"
+		Rotation	= 0:0:0 
+	CoordinateSpace End
+	ByteOrder	= LSBFirst
+	RasterInfo Begin
+		CellType	= IEEE8ByteReal
+		NrOfLines	= 225
+		NrOfCellsPerLine	= 319
+		NrOfBands	= 1
+		NullCellValue	=          -99999
+		CellInfo Begin
+			Xdimension	=             100
+			Ydimension	=             100
+		CellInfo End
+		RegistrationCellX	= 0
+		RegistrationCellY	= 0
+		RegistrationCoord Begin
+			Longitude	= 605679:1098691:-65921460.000000000
+			Latitude	= 108524:0:0 
+		RegistrationCoord End
+	RasterInfo End
+DatasetHeader End

@@ -1,0 +1,78 @@
+#  V6.0 New clustering tool Example job file - 
+# A workflow for doing a confilter on a tensor grid,
+#  to define a point datasets where there is strong support for 2D Faults
+# a. perform a clustering, to get centres of 2D fault influenced regions, 
+# so that a dip calculation can be attempted
+# 
+# Usage: fmanager -batch tensor_2D_region_clustering.task  
+#
+
+IntrepidTask {
+	ClusterAnalysis {  
+		DataBase: "zuma_2DBodies..DIR"
+		OutputCluster: "Fault_centres_monza..DIR"
+		InputGridName {
+				grid: "zuma_tensor.ers";
+				type: GravityTensors;
+				Band: 1;
+				coordsys: END;				
+			}	
+		ElevationGridName {
+				grid: "mv_dem.grd" ; # meant to be the DTM, used for 3D
+				type: Elevation;
+				mean_elevation: 1500.0;
+			}				
+		ReportFile: "cluster_monza.rpt"		
+		ClusterType : Tensor_2DFaults;  # points dataset coming from the convolve filter on a tensor grid		
+		Distance_Units: meters
+		ElevationCoordinateSystem: ENU
+		Cluster {  # do a cluster analysis
+			ClusterAlgorithm : HorizontalFusion;  # isotropic clustering analysis, follow by fusion
+			Factor_MaxRadius_Confidence : 1.2;  # Factor that multiplies any pair clusters radii, to examine a possible fusion.
+			PerDistance : 500.0;  # the maximum distance allowed for two solutions to belong to the same cluster.
+			Minimum_Number_Points : 10;  # at least as many points needed to start a cluster
+			MaximumSeparationClusterToFirstPoint: 50; #  do not form a cluster if centre too far from at least one point
+			}
+		Subset {  #  this is for detail testing
+			XLower: 538600.0;
+			XUpper: 544240.0;
+			YLower: 4472800.0;
+			YUpper: 4479920.0;
+		}
+		tensor_dip {  #  for each cluster, estimate a dip/strike
+			InputGridName {  # must repeat this here to get the dip calcs done
+				grid: "zuma_tensor.ers";
+				type: GravityTensors;
+				Band: 1;
+				coordsys: END;
+			}	
+			Units: EOTVOS_UNITS; 
+			disallow_poor_low_dip_estimates: true; # marginal estimates for dip  treatment
+			default_low_dip_estimate: 40;  # substitute dip value when we 
+			dump_dip_logs: true;  # want to see the details of the dip calculations
+			Contact_Profiles: "profiles";
+			Tyy_minimum_test 	: 3.0; # absolute value in Eotvos, for Gyy approximation for a 2D body in local rotated system
+	 		minimum_Total_Vertical_Plane_Derivative : 20.0;  # minimum value in Eotvos, for Total  Gradient before a dip calculation should be considered - avoid low anomalies
+			capture_gravity_profiles_from_dip_calcs : true;  #  a profile is created at right angles to each fault structure for dip cals
+			Minimum_2D_Responses: 11
+			Correct_For_FaultBlock_Tilt: true;  # allow the fault block to tilt a bit for a better fit
+			Trim_Faults_to_DTM: true;  # still a bit problematic
+		}	
+		view { # openGL pop-up window
+			show_3D_viewer: false;   # turn off for batch testing
+			project_zmin: -1000;	# needed for co-variance range calcs
+			project_zmax: 3000;	 
+			show_cluster_shape: true;  # show the bounds of each fault as a 2D plan view ellipse
+			show_original_signal_grid: false;  # show signal grid as a grey scale image
+			show_DTM_grid: true;  # show the DTM as a true warped 3D surface
+			show_Cluster_FormingStages: true;  # show/deug the cluster forming process in the 3D viewer	
+			show_dip_calc_profiles: true;  # show the profile lines used to sample the tensor signal for dip calcs		
+			show_average_2DStructureEigenvectors: false;  # show the 3D elli[psoid of the average tensor signal
+			show_interface_foliation: true  # interface points and foliation symbols
+			show_ImplicitFunction_Fault: true
+			Minimum_Fault_Vertical_Extent: 1000.0
+			write_vtk_clusterPoints: true;	
+			vtk_clusterPointsFile: "cluster.vtp";		
+			vertical_scale: 1.0;
+		}
+}}

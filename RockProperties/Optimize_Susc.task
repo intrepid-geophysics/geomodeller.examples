@@ -1,0 +1,20 @@
+InversionTask {
+	Property_Optimization {
+		filename: "PropertyOpt.xml";
+		case: "Optimize_Susc";
+		run: "Run1";
+		ReportFile: "Optimize_Susc/Run1/Property_Optimization.rpt";
+		EstimateSusceptibility: true;
+		SetLaw {
+			LithologyProperty { lithology: "F1"; index_voxet_key: 4; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.010000; stddev: 0.010000;} lower_bound: -0.010000; upper_bound: 0.030000;}
+			LithologyProperty { lithology: "Intrusion"; index_voxet_key: 3; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.080000; stddev: 0.050000;} lower_bound: -0.020000; upper_bound: 0.180000;}
+			LithologyProperty { lithology: "F2"; index_voxet_key: 2; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.001000; stddev: 0.010000;} lower_bound: -0.019000; upper_bound: 0.021000;}
+			LithologyProperty { lithology: "G1"; index_voxet_key: 1; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.020000; stddev: 0.010000;} lower_bound: 0.000000; upper_bound: 0.040000;}
+		}
+		#maxAbsoluteObserved: 1000.0;
+		#MaximumIterations: 100000;
+		IGRF_Magnitude: 58201.700000;
+		IGRF_Inclination: -65.540000;
+		IGRF_Declination: 0.050000;
+	}
+}

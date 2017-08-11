@@ -1,0 +1,26 @@
+name: "import 3D events"
+description: "Import a seismic event cloud in time into Geomodeller"
+auditfile: "audit_worme.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/StartTutorialJ8/HotRox_Start_Ex8.xml"
+    }
+}
+
+GeomodellerTask {
+    ImportMicroSeismicEvents{
+        events_csv_file: "data/simulated_events2005.csv"
+        events_header_linestoSkip: 1
+		MeshGrid_Name: "micro_seismic"
+	log: "events_import.rpt";
+    }
+}
+
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "data/Events/test_render.xml"
+	log: "events_import.rpt";
+    }
+}

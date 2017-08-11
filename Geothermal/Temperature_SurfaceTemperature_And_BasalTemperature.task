@@ -1,0 +1,72 @@
+name: "Temperature/basal heat flow simulation for heat flow calcs"
+description: "Original validation work from initial implimentation, no topography, also no lithology, all zero!!"
+auditfile: "audit_Temperature_HeatFlow.rpt"
+InversionTask {
+	NewCase {
+		filename: "KurtCase1/KurtCase1.xml";	
+		case: "Case_1";
+		x_cell_size: 50.;
+		y_cell_size: 50.;
+		z_cell_size: 50.; 
+		east_minimum_voxet:0.000000;
+		east_maximum_voxet:1000.000000;
+		north_minimum_voxet:0.000000;
+		north_maximum_voxet:1000.000000;
+		elevation_minimum_voxet:-500.000000;
+		elevation_maximum_voxet:100.000000;
+		ObservedGridList {
+			ObservedGrid {
+				type: Temperature;
+				mean_elevation: 25.000000;
+				compute_surface_style: ConstantElevation;
+				precision: 0.100000;
+				Match_Trend: false;
+				Match_Trend_Degree: 0;
+				Match_Trend_Rate: 0;
+				grid: "none.semi";
+			}
+		}
+	}
+}
+InversionTask {
+	ForwardModelTemperatureForCreateCaseFromVoxet {	
+		filename: "KurtCase1/KurtCase1.xml";	
+		case: "Case_1";
+		run: "thermal";
+		input_voxet: "Case_7/Case_7.vo";
+		SetLaw {
+			LithologyProperty {
+				lithology: "Upper";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: Normal;mean: 2.0;stddev: 0.2;}
+				}
+			LithologyProperty {
+				lithology: "Middle";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: Normal;mean: 5.0;stddev: 0.2;}
+				}
+			LithologyProperty {
+				lithology: "Lower";
+				property: ThermalConductivity;
+				ProbabilityDistributionFunction {type: Normal;mean: 2.0;stddev: 0.0;}
+				}
+		}
+		Advanced: true;
+		Surface_Temperature_Law {type: Log_normal;mean: 25;	}
+		Base_Temperature_Law {	type: Log_normal;mean: 200;	}
+		MaxResidualTemperature: 0.0001;
+		NumberOfIterations: 10000;
+	}
+}
+InversionTask {
+	MakeSectionImage {
+		filename: "KurtCase1/KurtCase1.xml";	
+		case: "Case_1";		
+		run: "thermal";		
+		get_function {transform: GetField;input_field: "HorizontalTemperatureGradient";existing_voxet: "Case_1_Thermal.vo";	}
+		Section: "s500E";
+		lut: Colours;
+		Scaling {	doLog: false;	}
+		image: "TotalHorizontalTemperatureGradient_s500E";
+	}
+}

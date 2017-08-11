@@ -1,0 +1,32 @@
+# Capel Faust demonstation of marine seismic picks, previosusly imported from ADXCII into a database,
+# now coming into Geomodeller project, and then creating sections.
+# usage  geomodellerbatch -batch NAV_CF_CretRift_Basement_asc_seismic.task
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/empty_capel_faust/empty_capel_faust.xml"
+    }
+}
+GeomodellerTask {
+  ImportSeismicNav {
+    SectionSplineDegree: 1
+    ImportSeismic {
+      InGUI: false
+      InputDataFile: "data/NAV_cretrift_basement..DIR"
+      InputProjectFile: "data/empty_capel_faust/empty_capel_faust.xml"
+      ClipToProject: true
+      log: "capel_faust_nav.rpt"
+    }
+  }
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "summaryReport.rpt"
+    }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "new/CF_w_sections.xml"
+        log: "capel_faust_nav.rpt"
+    }
+}

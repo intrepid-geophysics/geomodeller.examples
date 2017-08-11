@@ -1,0 +1,65 @@
+
+#  Orebody resource modelling, driven by geology and sampling from 215 drill holes
+#  Assays: Pb, Zn, 
+#  model has 2 mineralized horizons: Cu_Series, OH_Series, rest of geology not done
+#  Sections: 25
+#  Faults: 2  Koff, Max
+#  author Rod paterson
+
+name: "kriging calc borehole assays - Lady Loretta Qld example"
+description: "use variogram model parameters for field, write results to external gridmesh as well"
+auditfile: "audit_domain_kriging.job"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "Domain_Demo_DTM2_mesh2/Domain_Demo_DTM2_mesh2.xml"
+    }
+}
+GeomodellerTask {
+	InterpolateNumericalReadings { 
+		ReportFile: "Lady_Loretta_Pb_OH_series.rpt"
+		method: IM_Kriging;	
+		MeshGrid_Source {
+	    		SourceType: Project;  # take the drillhole records into a composited point cloud mesh
+	    		MeshGrid_Name: "Drill_Sparse_2p5_nonulls"
+	    		FileType: FT_IGMESH;
+	    		Field_Name: "Pb_Reg_2.5";  
+			}   	    
+	    OutputStyle: IOT_D3;  #  completely 3D
+	    Output_Mesh {
+	    		CreateDestinationType: Project;
+			OutputMeshType: ODT_RegularMesh3D;
+		    	MeshGrid_Name : "Estimated_Pb";
+		    	FileType: FT_IGMESH;
+		    	Field_Name: "Pb"; 
+			Field_Variance: "Pb_stddev";
+		    	dx: 2; 
+		    	dy: 2;
+		    	dz: 2; 
+			Extents {	    	
+	            	xmin: 500;
+	            	ymin: 2200;
+	            	zmin: 800;
+	           	xmax: 1000;
+	            	ymax: 2500;
+	            	zmax: 1300;
+				}
+	        }
+	Analysis_Type: UVT;
+	Experimental_Variogram_Name: "Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1";
+        Neighbour: NS_RegularGridBox;
+	    Maximum_Observations: 11;
+	    Minimum_Observations: 2;
+        Maximum_Radius: 300; 
+         
+        Domain:  Series;  # just one geological formation to interpolate within               
+        Data_Name: "OH_Series";  # the required formation
+     }
+}
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "Test/Test1.xml"
+    }
+}
+
+

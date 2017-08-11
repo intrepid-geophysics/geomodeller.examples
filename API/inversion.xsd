@@ -1,0 +1,833 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- edited with XMLSpy v2009 sp1 (http://www.altova.com) by Desmond FitzGerald (Intrepid Geophysics) -->
+<xs:schema xmlns:inversion="http://www.geomodeller.com/inversion" xmlns:geo="http://www.geomodeller.com/geo" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmlns:xs="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.geomodeller.com/inversion">
+	<xs:import namespace="http://www.geomodeller.com/geo" schemaLocation="../PD/Geomodeller3DProject.xsd" />
+	<xs:element name="ManageLithoInversionState">
+		<xs:annotation>
+			<xs:documentation>Parameters for LithoInversion. Main element.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence minOccurs="0" maxOccurs="unbounded">
+				<xs:element ref="inversion:Case" />
+			</xs:sequence>
+			<xs:attribute name="Version">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RunResult">
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:element ref="inversion:RunFieldResult">
+					<xs:annotation>
+						<xs:documentation>One per observed grid</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+			<xs:attribute name="Counter" type="xs:integer" use="optional" />
+			<xs:attribute name="ProposalCount" type="xs:integer" use="optional" />
+			<xs:attribute name="ProposalRatePerHour" type="xs:integer" use="optional" />
+			<xs:attribute name="InterProposalSameFormationCount" type="xs:integer" use="optional" />
+			<xs:attribute name="InterProposalDifferentFormationCount" type="xs:integer" use="optional" />
+			<xs:attribute name="IntraProposalCount" type="xs:integer" use="optional" />
+			<xs:attribute name="AcceptanceRatePerHour" type="xs:integer" use="optional" />
+			<xs:attribute name="AcceptanceCount" type="xs:integer" use="optional" />
+			<xs:attribute name="InterAcceptanceSameFormationCount" type="xs:integer" use="optional" />
+			<xs:attribute name="InterAcceptanceDifferentFormationCount" type="xs:integer" use="optional" />
+			<xs:attribute name="IntraAcceptanceCount" type="xs:integer" use="optional" />
+			<xs:attribute name="PreserveTopologyRejectCount" type="xs:integer" use="optional" />
+			<xs:attribute name="PreserveTopologyTestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="PreserveVerticalRelationshipRejectCount" type="xs:integer" use="optional" />
+			<xs:attribute name="PreserveVerticalRelationshipTestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="CommonalityVolumeRejectCount" type="xs:integer" use="optional" />
+			<xs:attribute name="CommonalityVolumeTestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="CommonalityRejectCount" type="xs:integer" use="optional" />
+			<xs:attribute name="CommonalityTestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="VolumeRejectCount" type="xs:integer" use="optional" />
+			<xs:attribute name="VolumeTestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="ShapeRejectCount" type="xs:integer" use="optional" />
+			<xs:attribute name="ShapeTestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="ComputerName" type="xs:string" use="optional" />
+			<xs:attribute name="StartedDateTime" type="xs:string" use="optional" />
+			<xs:attribute name="FinishedDateTime" type="xs:string" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Model">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:FixCellLithology" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="LithologyInitialiseStyle" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="FromModel" />
+						<xs:enumeration value="FromVoxet" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FormationIndex">
+		<xs:complexType>
+			<xs:attribute name="index" type="xs:ID" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FormationIndexGroup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:FormationIndex" maxOccurs="unbounded" ecore:ordered="false"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DrillHole">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:ID" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DrillHoleGroup">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:DrillHole"
+					maxOccurs="unbounded" ecore:ordered="false" />
+			</xs:sequence>
+			<xs:attribute name="Radius" type="xs:double"></xs:attribute>
+		</xs:complexType>
+	</xs:element>	
+	<xs:element name="FixCellLithology">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="CSV" minOccurs="0" maxOccurs="unbounded">
+					<xs:simpleType>
+						<xs:restriction base="xs:string"/>
+					</xs:simpleType>
+				</xs:element>
+				<xs:element name="Box3D" minOccurs="0" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:complexContent>
+							<xs:extension base="geo:Box3DType">
+								<xs:attribute name="internal" type="xs:boolean" use="optional" default="true" />
+							</xs:extension>
+						</xs:complexContent>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="geo:ProvenanceGroup" minOccurs="0"/>
+				<xs:element ref="inversion:FormationIndexGroup" minOccurs="0"/>
+				<xs:element ref="inversion:DrillHoleGroup" minOccurs="0"/>
+			</xs:sequence>
+			<xs:attribute name="surface" type="xs:boolean" use="optional" default="false" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InitialGrids3D">
+		<xs:complexType>
+			<xs:attribute name="InitialLithologyVoxet" type="xs:string" use="optional" default="" >
+				<xs:annotation>
+					<xs:documentation>Voxet file name</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InitialLithologyVoxetField" type="xs:string" use="optional" default="" >
+				<xs:annotation>
+					<xs:documentation>Field of the voxet file (a voxet file can have more than one field).</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InitialDensityVoxet" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialDensityVoxetField" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialSusceptibilityVoxet" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialSusceptibilityVoxetField" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialRemanentMagnetisationVoxet" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialRemanentMagnetisationVoxetEastField" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialRemanentMagnetisationVoxetNorthField" type="xs:string" use="optional" default="" />
+			<xs:attribute name="InitialRemanentMagnetisationVoxetUpField" type="xs:string" use="optional" default="" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ReferenceGrid3D">
+		<xs:complexType>
+			<xs:attribute name="ReferenceGeologyVoxet" />
+			<xs:attribute name="ReferenceGeologyField" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InitialSettings">
+		<xs:annotation>
+			<xs:documentation>Add in the future an element to define how to fix the cells (geology map, dh, extent, a depth, ...)</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:all>
+				<xs:element ref="inversion:Model" />
+				<xs:element ref="inversion:InitialGrids3D" minOccurs="0" />
+				<xs:element ref="inversion:ReferenceGrid3D" minOccurs="0" />
+			</xs:all>
+			<xs:attribute name="DensityInitialiseStyle" default="FromLawMean" type="inversion:PropertyInitialiseStyle">
+				<xs:annotation>
+					<xs:documentation>Define how we fill this property at the start of the inversion (randomly, with the mean or with fixed value from a voxet file).</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="SusceptibilityInitialiseStyle" default="FromLawMean" type="inversion:PropertyInitialiseStyle" />
+			<xs:attribute name="RemanentMagnetisationInitialiseStyle" default="FromLawMean" type="inversion:PropertyInitialiseStyle" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="InversionControl">
+		<xs:complexType>
+			<xs:attribute name="NumberIterations"
+				type="xs:positiveInteger" default="100000">
+				<xs:annotation>
+					<xs:documentation>
+						Number of iterations to do during inversion.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Seed" type="xs:positiveInteger"
+				default="1234">
+				<xs:annotation>
+					<xs:documentation>
+						Seed to generate the random numbers.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Method" type="inversion:ComputationalMethod" use="optional"
+				default="Spatial">
+				<xs:annotation>
+					<xs:documentation>
+						Forward compute method to use
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Interpolate" type="xs:boolean" use="optional" default="false">
+				<xs:annotation>
+					<xs:documentation>
+						obsolete - only for backward compatibility, do not use
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="IncludeBorderEffect" type="xs:boolean" use="optional" default="true" />
+			<xs:attribute name="ExpansionMethod" type="inversion:ExpensionMethod" use="optional" default="Mirror"/>
+			<xs:attribute name="HorizontalExpansion" type="xs:int" use="optional" default="100"/>
+			<xs:attribute name="VerticalExpansion" type="xs:int" use="optional" default="400"/>
+			<xs:attribute name="allowLanczosTaper" type="xs:boolean" use="optional" default="true" />
+			<xs:attribute name="SaveResponseVoxet" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="SaveExpandedVoxet" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="WantForwardResponsePerLithology" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="MatchTrends" type="xs:boolean" use="optional" default="true"/>
+			<xs:attribute name="MaximumIterations" type="xs:int" use="optional" default="10000"/>
+			<xs:attribute name="MisfitThreshold" type="xs:double" use="optional" default="0.1"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MorphologicalFiltering">
+		<xs:complexType>
+			<xs:attribute name="AllowHomogeneousFilter" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation>Allow (default) an homegeneous process of the units.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="HomogeneousFilterRate" type="xs:integer" default="5000">
+				<xs:annotation>
+					<xs:documentation>specifies a 'repetition rate' for the application of this operation in terms of a number of iterations.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="AllowDilationOrErosionFilter" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation>Allow (default) process of erosion and dilation to remove the abnormal shapes (isthm, bay, isolated voxels, ...).</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="DilationOrErosionFilterRate" type="xs:integer" default="2500">
+				<xs:annotation>
+					<xs:documentation>specifies a 'repetition rate' for the application of this operation in terms of a number of iterations</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Commonality">
+		<xs:complexType>
+			<xs:attribute name="AllowCommonalityTest" type="xs:boolean" default="false" />
+			<xs:attribute name="CommonalityWeightType" default="none">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="none" />
+						<xs:enumeration value="LocalAbundance" />
+						<xs:enumeration value="LocalCommonality" />
+						<xs:enumeration value="GlobalCommonality" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="CommonalityVolume">
+		<xs:complexType>
+			<xs:attribute name="AllowCommonalityVolumeTest" type="xs:boolean" default="false" />
+			<xs:attribute name="CommonalityVolumeWeightType" default="none">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="none" />
+						<xs:enumeration value="LocalAbundance" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Volume">
+		<xs:complexType>
+			<xs:attribute name="AllowVolumeRatioTest" type="xs:boolean" default="false" />
+			<xs:attribute name="VolumeRatioWeightType" default="none">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="none" />
+						<xs:enumeration value="LocalAbundance" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Shape">
+		<xs:complexType>
+			<xs:attribute name="AllowShapeRatioTest" type="xs:boolean" default="false" />
+			<xs:attribute name="ShapeRatioWeightType" default="none">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="none" />
+						<xs:enumeration value="LocalAbundance" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RejectCriteria">
+		<xs:annotation>
+			<xs:documentation>Cf constraintlaw in formation.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:Commonality" minOccurs="0" />
+				<xs:element ref="inversion:CommonalityVolume" minOccurs="0" />
+				<xs:element ref="inversion:Volume" minOccurs="0" />
+				<xs:element ref="inversion:Shape" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="PreserveTopology" type="xs:boolean" default="false" />
+			<xs:attribute name="AllowPreserveVerticalRelationshipTest" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation>Cf vertical relation in the object formation.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="AllowPreserveVerticalDensityGradientTest" type="xs:boolean" default="false" />
+			<xs:attribute name="IncludeAboveTopoFacesInShapeRatio" type="xs:boolean" default="false" />
+			<xs:attribute name="IncludeOutsideFacesInShapeRatio" type="xs:boolean" default="false" />
+			<xs:attribute name="AllowGeologicalTest" type="xs:boolean" default="true" />
+			<xs:attribute name="AllowGeophysicalTest" type="xs:boolean" default="true">
+				<xs:annotation>
+					<xs:documentation>Must be used if you want know if the current algorithm used in inversion introduce a biais in the strategy of inversion. (reserved in general fto the developpers).
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ProposalsControl">
+		<xs:complexType>
+			<xs:attribute name="ProbabilityOfPropertyChangeOnly" default="50">
+				<xs:annotation>
+					<xs:documentation>Default 50 means 50% chance of doing a property change only, and 50% chance of possibly changing a boundary. 100 does property changes only; never a boundary change.
+                    </xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="100" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="AllowPropertyChangeOnFixedCell" type="xs:boolean" default="true">
+				<xs:annotation>
+					<xs:documentation>Allow the properties of fixed lithology voxels to be modified</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="AllowNeighbourPropertyDifferentCheck" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation>Do check neighbour properties.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AdvancedLikelihoodControl">
+		<xs:complexType>
+			<xs:attribute name="LargeMisfitRMSThresholdFactor" type="xs:double" default="1" />
+			<xs:attribute name="LargeMisfitTemperature" type="xs:double" default="1" />
+			<xs:attribute name="AllowDualTemperatureMode" type="xs:boolean" default="false" />
+			<xs:attribute name="Mode1TemperatureFactor" type="xs:double" default="1" />
+			<xs:attribute name="Mode1Duration" type="xs:integer" default="100" />
+			<xs:attribute name="Mode2TemperatureFactor" type="xs:double" default="1000000" />
+			<xs:attribute name="Mode2Duration" type="xs:integer" default="99900" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Results">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:RunResult" />
+				<xs:element ref="inversion:Trends" />
+				<xs:element ref="inversion:Products" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Run">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:InitialSettings" />
+				<xs:element ref="inversion:InversionControl" minOccurs="0" />
+				<xs:element ref="inversion:MorphologicalFiltering" minOccurs="0" />
+				<xs:element ref="inversion:RejectCriteria" minOccurs="0" />
+				<xs:element ref="inversion:ProposalsControl" minOccurs="0" />
+				<xs:element ref="inversion:AdvancedLikelihoodControl" minOccurs="0" />
+				<xs:element ref="inversion:Results" />
+			</xs:sequence>
+			<xs:attribute name="Name" type="xs:string" use="required" />
+			<xs:attribute name="AllowAdaptiveFilter" type="xs:boolean" />
+			<xs:attribute name="ResponseFilterType" type="xs:integer" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Trends">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:Grid2DResourceRef" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>2D trends</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Products">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:Grid2DResourceRef" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>2D trends</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Case">
+		<xs:annotation>
+			<xs:documentation>Parameters for an Inversion Case</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:Common" />
+				<xs:element ref="inversion:Run" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="Name" type="xs:string" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Extent3D">
+		<xs:annotation>
+			<xs:documentation>Define the box and size of the mesh of the inversion.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="geo:Box3DType">
+					<xs:sequence>
+						<xs:element ref="inversion:VariableZResolution" minOccurs="0"/>
+					</xs:sequence>
+					<xs:attribute name="Dx" type="xs:decimal" use="required" />
+					<xs:attribute name="Dy" type="xs:decimal" use="required" />
+					<xs:attribute name="Dz" type="xs:decimal" use="required">
+						<xs:annotation>
+							<xs:documentation>Dx Dy and Dz define the spacing of the meshing to define the voxels. The grid spacing Dx and Dy must agree with these parameters.
+	        	            </xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GeophysicalReferences">
+		<xs:annotation>
+			<xs:documentation>Define the referenes of each field used in the inversion.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="DensityRef" default="2.67">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minExclusive value="0.0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="AboveTopoDensity" default="2.67">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0.0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="UseRelativeGravityChanges" type="xs:boolean" use="optional" default="false">
+                <xs:annotation>
+                    <xs:documentation>Controls whether to run gravity using relative or absolute densities</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+			<xs:attribute name="AmbientMagneticMagnitude" default="50000">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minExclusive value="0" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="AmbientMagneticInclination" default="90">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:maxInclusive value="90" />
+						<xs:minInclusive value="-90" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="AmbientMagneticDeclination" default="0">
+				<xs:simpleType>
+					<xs:restriction base="xs:double">
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="360" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Common">
+		<xs:annotation>
+			<xs:documentation>All these data are shared by all the runs.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:Extent3D" />
+                <xs:element ref="geo:DigitalTerrainModel" minOccurs="0" />
+				<xs:element ref="inversion:GeophysicalReferences"
+					minOccurs="0" />
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element ref="inversion:Formation">
+						<xs:annotation>
+							<xs:documentation>
+								Define the units and physical properties
+								and constraints of these one.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element ref="inversion:ObservedGrid">
+						<xs:annotation>
+							<xs:documentation>
+								defines the fields used in the
+								inversion. The spacing and the sampling
+								must agree with the Dx and Dy defined in
+								the extend3D.
+							</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:element ref="inversion:Grid2DResource" />
+				</xs:sequence>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="FieldProperties">
+		<xs:complexType>
+			<xs:attribute name="Precision" type="xs:double" use="optional" default="0.1">
+				<xs:annotation>
+					<xs:documentation>Define the error on the data of the grid.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Sampling" type="xs:integer" use="optional" default="1">
+				<xs:annotation>
+					<xs:documentation>
+						Define the spacing sampling of the grid. The new
+						spacing on X for the grid is Dx *Sampling, this
+						spacing define the
+						voxels size (cf. Extent3D).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ElevationType" use="optional" default="OnTopography">
+				<xs:annotation>
+					<xs:documentation>Define the elevation (topography, surface, constant elevation, ...)</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="OnTopography" />
+						<xs:enumeration value="OnTopographyWithClearance" />
+						<xs:enumeration value="OnASurface" />
+						<xs:enumeration value="OnConstantElevation" />
+						<xs:enumeration value="OnTopOfVoxetWithClearance" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="ElevationSampling" type="xs:double" use="optional" default="1">
+				<xs:annotation>
+					<xs:documentation>Defines the interval in meters to sample the elevation surface. 0 indicates Brute-Force method</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="ClearanceOrConstantElevation" type="xs:decimal" use="optional" default="0">
+				<xs:annotation>
+					<xs:documentation>
+						If ontopography with clearance define clearance.
+						If constant elevation define the elevation.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute ecore:unsettable="true" name="ElevationGridIndex" type="xs:positiveInteger" use="optional">
+				<xs:annotation>
+					<xs:documentation>
+						If onasurface define the grid of this surface.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Interpolate" type="xs:boolean" use="optional" default="false">
+				<xs:annotation>
+					<xs:documentation>
+						If onasurface define if response should be interpolated between contour intervals
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="Type" type="inversion:FieldType"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TrendMatching">
+		<xs:annotation>
+			<xs:documentation>No trend matching means take the original field.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="MatchTrend" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation>false; do not match trend. true , match trend.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="MatchTrendDegree" default="1">
+				<xs:annotation>
+					<xs:documentation>Degree of the trend.</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0" />
+						<xs:maxInclusive value="3" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="MatchTrendRate" type="xs:integer" default="0">
+				<xs:annotation>
+					<xs:documentation>the repetition rate—in terms of numbers of iterations—for applying the detrending. To apply detrending once only (at the start), specify '0'.
+                    </xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+            <xs:attribute name="OutputTrends" type="xs:boolean" default="false">
+                <xs:annotation>
+                    <xs:documentation>Controls whether to save the trends</xs:documentation>
+                </xs:annotation>
+            </xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ObservedGrid">
+		<xs:annotation>
+			<xs:documentation>Define the fields used in the inversion.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:FieldProperties" />
+				<xs:element ref="inversion:TrendMatching" minOccurs="0" />
+			</xs:sequence>
+			<xs:attribute name="ObservedIndex" use="required">
+				<xs:annotation>
+					<xs:documentation>Reference to Grid2DResource</xs:documentation>
+				</xs:annotation>
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RunFieldResult">
+		<xs:complexType>
+			<xs:attribute name="Type" type="xs:string" use="optional">
+				<xs:annotation>
+					<xs:documentation>Type of the grid.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="RejectCount" type="xs:integer" use="optional">
+				<xs:annotation>
+					<xs:documentation>reject count for this grid</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="TestCount" type="xs:integer" use="optional" />
+			<xs:attribute name="ObservedGrid_ComputedIndex" type="xs:integer" use="optional" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Grid2DResourceRef">
+		<xs:complexType>
+			<xs:attribute name="Index" type="xs:integer" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Grid2DResource">
+		<xs:complexType>
+			<xs:attribute name="Index" use="optional">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1" />
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="ParentIndex" type="xs:integer" use="optional" />
+			<xs:attribute name="GridName" type="xs:string" />
+			<xs:attribute name="FieldName" type="xs:string" />
+			<xs:attribute name="Type" use="required" type="inversion:FieldType" />
+            <xs:attribute name="dataSource" type="xs:anyURI" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="PreserveVerticalRelationship">
+		<xs:complexType>
+			<xs:attribute name="ExcludeBelow" type="xs:string" />
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ReferenceConstraint">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="geo:PetrophysicalPropertyAtomAttributeType">
+					<xs:attribute name="ConstraintName" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="Commonality" />
+								<xs:enumeration value="CommonalityVolume" />
+								<xs:enumeration value="VolumeRatio" />
+								<xs:enumeration value="ShapeRatio" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GeologicalConstraints">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="inversion:ReferenceConstraint" minOccurs="0" maxOccurs="4" />
+				<xs:element ref="inversion:PreserveVerticalRelationship" minOccurs="0" maxOccurs="unbounded">
+					<xs:annotation>
+						<xs:documentation>This property is used in a geological test that is applied during a geometry optimisation ("inversion") Run to enforce normal (upward younging) young-over-old or reversed (overturned) old-over-young relationships between any pair of formations.
+                        </xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ConstraintsLaw" block="extension">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="geo:PetrophysicalPropertyAtomAttributeType">
+					<xs:attribute name="Name" use="required">
+						<xs:annotation>
+							<xs:documentation>Cf Rejectioncriterion:Name of the contraint (Commonality, CommonalityVolume, volume or shape)</xs:documentation>
+						</xs:annotation>
+						<xs:simpleType>
+							<xs:restriction base="xs:string">
+								<xs:enumeration value="VolumeRatio" />
+								<xs:enumeration value="ShapeRatio" />
+								<xs:enumeration value="Commonality" />
+								<xs:enumeration value="CommonalityVolume" />
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Formation">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="geo:GeophysicalPropertyType">
+					<xs:sequence minOccurs="0">
+						<xs:element ref="inversion:GeologicalConstraints" />
+					</xs:sequence>
+					<xs:attribute name="FrontierMoveable" type="xs:boolean" use="optional" default="true" />
+					<xs:attribute name="Name" type="xs:string" use="required" />
+					<xs:attribute name="Index" type="xs:integer" use="optional" />
+					<xs:anyAttribute processContents="lax"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+    <!-- types definitions -->
+    <xs:simpleType name="PropertyInitialiseStyle">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="FromLawRandom" />
+            <xs:enumeration value="FromLawMean" />
+            <xs:enumeration value="FromVoxet" />
+        </xs:restriction>
+    </xs:simpleType>
+
+	<xs:simpleType name="FieldType">
+		<xs:annotation>
+			<xs:documentation>Define which kind of field, gravity tensors component, ....</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="Gz" />
+			<xs:enumeration value="Gxx" />
+			<xs:enumeration value="Gyy" />
+			<xs:enumeration value="Gzz" />
+			<xs:enumeration value="Gxy" />
+			<xs:enumeration value="Gxz" />
+			<xs:enumeration value="Gyz" />
+			<xs:enumeration value="Guv" />
+			<xs:enumeration value="TMI" />
+			<xs:enumeration value="Mxx" />
+			<xs:enumeration value="Myy" />
+			<xs:enumeration value="Mzz" />
+			<xs:enumeration value="Mxy" />
+			<xs:enumeration value="Mxz" />
+			<xs:enumeration value="Myz" />
+			<xs:enumeration value="Mx" />
+			<xs:enumeration value="My" />
+			<xs:enumeration value="Mz" />
+			<xs:enumeration value="Temperature" />
+			<xs:enumeration value="Advection" />
+			<xs:enumeration value="GravityTensors" />
+			<xs:enumeration value="MagneticTensors" />
+			<xs:enumeration value="UNDEFINED" />
+			<!-- deprecated field names, do not use -->
+			<xs:enumeration value="Goo" />
+			<xs:enumeration value="Moo" />
+			<xs:enumeration value="Temp" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="ExpensionMethod">
+        <xs:annotation>
+            <xs:documentation>Define which kind of field, gravity tensors component, ....</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Zero" />
+            <xs:enumeration value="Mirror" />
+            <xs:enumeration value="Taper" />
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ComputationalMethod">
+        <xs:annotation>
+            <xs:documentation>Defines computational methods, keep in sync with ComputationalMethod@invtaskmodel.proto</xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Classic" />
+            <xs:enumeration value="Spatial" />
+            <xs:enumeration value="FFT" />
+            <xs:enumeration value="FastFourierTransform" />
+            <xs:enumeration value="Dyke_Skeletons" />
+            <xs:enumeration value="Surface_Integrals" />
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:element name="VariableZResolution">
+    	<xs:complexType>
+    		<xs:attribute name="UseVarZ" type="xs:boolean" default="false" />
+    		<xs:attribute name="TopoPartBoundaryAt" type="xs:double" />
+    		<xs:attribute name="LowerDz" type="xs:double" />
+    		<xs:attribute name="GeomFactor" type="xs:double" />
+    	</xs:complexType>
+    </xs:element>
+</xs:schema>

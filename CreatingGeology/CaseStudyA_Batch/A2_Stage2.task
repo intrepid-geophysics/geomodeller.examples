@@ -1,0 +1,87 @@
+name: "A2_Stage2"
+description: "Tutorial A2 - stage 2 of 5, step 3 of 3"
+auditfile: "A2_Stage2Step3.audit"
+
+GeomodellerTask {
+    OpenProjectNoGUI {
+        filename: "data/Completed_Project/TutorialA1.xml"
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "Basement"
+        red: 238
+        green: 162
+        blue: 172
+    }
+}
+
+GeomodellerTask {
+    CreateFormation {
+        name: "MiddleCover"
+        red: 255
+        green: 165
+        blue: 0.0
+    }
+}
+
+GeomodellerTask {
+    SetSeries {
+        name: "BasalSeries"
+        position: 1
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "BasalSeries"
+        formation: "Basement"
+    }
+} 
+
+GeomodellerTask {
+    SetSeries {
+        name: "LowerSeries"
+        position: 2
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "LowerSeries"
+        formation: "LowerCover"
+    }
+}
+GeomodellerTask {
+    SetSeries {
+        name: "UpperSeries"
+        position: 3
+        relation: "onlap"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "MiddleCover"
+    }
+}
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "UpperSeries"
+        formation: "UpperCover"
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section1"
+        filename: "./data/Section1_LowerCover_MiddleCover.data"
+        spatial_location_error: 1
+    }
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./tmp/test2.xml"
+    }
+}

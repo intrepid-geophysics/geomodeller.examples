@@ -1,0 +1,77 @@
+MetaData Begin
+	Name	= DTM_Semi_Layer_minus220_Surf..DIR
+	Version	= "Intrepid Project Manager Tool v5.6.0 intrepid_v5 for Windows (x64) by PELAGIAN optimised build 8f5f7d4e16ed+ "
+	East Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= X
+		Bands	= 1
+		Projection	= "SUTM53"
+		Datum	= "GDA94"
+		Width	= 16
+		Decimals	= 6
+		DisplayNullAs	= 99999
+	East End
+	Lat Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "GEODETIC"
+		Datum	= "GDA94"
+		Width	= 16
+		Decimals	= 10
+		DisplayNullAs	= 99999
+	Lat End
+	Long Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "GEODETIC"
+		Datum	= "GDA94"
+		Width	= 16
+		Decimals	= 10
+		DisplayNullAs	= 99999
+	Long End
+	North Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Y
+		Bands	= 1
+		Projection	= "SUTM53"
+		Datum	= "GDA94"
+		Width	= 16
+		Decimals	= 6
+		DisplayNullAs	= 99999
+	North End
+	RL Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Z
+		Bands	= 1
+		Width	= 16
+		Decimals	= 2
+		DisplayNullAs	= 99999
+	RL End
+	cluster Begin
+		GroupBy	= no
+		DataType	= Signed32BitInteger
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Projection	= "GEODETIC"
+		Datum	= "GDA94"
+		Width	= 16
+		DisplayNullAs	= 99999
+	cluster End
+	ReportFormat Begin
+		Default = {
+			13 6 99999 East:1
+			14 6 99999 North:1
+			11 6 99999 RL:1
+}
+	ReportFormat End
+MetaData End

@@ -1,0 +1,69 @@
+Input MeshGrid Drill_Sparse_2p5_nonulls
+Input data field Pb_Reg_2.5
+Interpolation using Kriging
+Input MeshGrid: Drill_Sparse_2p5_nonulls
+Input data field: Pb_Reg_2.5
+Interpolation using Kriging
+Output data Mesh: Estimated_Pb , field Pb
+Maximum Number for a neighbourhood 11 points
+Minimum Number for a neighbourhood 2 points
+Maximum Distance to interpolate 300.000000 
+Working inside a geomodeller project
+Working with project supplied variogram curves: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1.var
+Input MeshGrid: Drill_Sparse_2p5_nonulls
+Input data field: Pb_Reg_2.5
+Interpolation using Kriging
+Output data Mesh: Estimated_Pb , field Pb
+Maximum Number for a neighbourhood 11 points
+Minimum Number for a neighbourhood 2 points
+Maximum Distance to interpolate 300.000000 
+Working inside a geomodeller project
+Input MeshGrid: Drill_Sparse_2p5_nonulls
+Input data field: Pb_Reg_2.5
+Interpolation using Kriging
+Output data Mesh: Estimated_Pb , field Pb
+Maximum Number for a neighbourhood 11 points
+Minimum Number for a neighbourhood 2 points
+Maximum Distance to interpolate 300.000000 
+Working inside a geomodeller project
+Doing Domain Kriging
+Domain Kriging for a geological series: OH_Series
+Working with project supplied variogram curves: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1
+Input MeshGrid: Drill_Sparse_2p5_nonulls
+Input data field: Pb_Reg_2.5
+Interpolation using Kriging
+Output data Mesh: Estimated_Pb , field Pb
+Maximum Number for a neighbourhood 11 points
+Minimum Number for a neighbourhood 2 points
+Maximum Distance to interpolate 300.000000 
+Working inside a geomodeller project
+Doing Domain Kriging
+Domain Kriging for a geological series: OH_Series
+Working with project supplied variogram curves: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1
+Supplied name does not match the required one: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1 vs Drill_Sparse_2p5_nonulls_Pb_Serie_OH_Series_UVT_
+Input MeshGrid: Drill_Sparse_2p5_nonulls
+Input data field: Pb_Reg_2.5
+Interpolation using Kriging
+Output data Mesh: Estimated_Pb , field Pb
+Maximum Number for a neighbourhood 11 points
+Minimum Number for a neighbourhood 2 points
+Maximum Distance to interpolate 300.000000 
+Working inside a geomodeller project
+Doing Domain Kriging
+Domain Kriging for a geological series: OH_Series
+Working with project supplied variogram curves: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1
+Supplied name does not match the required one: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1 vs Drill_Sparse_2p5_nonulls_Pb_Serie_OH_Series_UVT_
+Finish Main Interpolation, Write Mesh D:/test_data/geostats/Domain_Demo_DTM2_mesh2/MeshGrids/Estimated_Pb
+Input MeshGrid: Drill_Sparse_2p5_nonulls
+Input data field: Pb_Reg_2.5
+Interpolation using Kriging
+Output data Mesh: Estimated_Pb , field Pb
+Maximum Number for a neighbourhood 11 points
+Minimum Number for a neighbourhood 2 points
+Maximum Distance to interpolate 300.000000 
+Working inside a geomodeller project
+Doing Domain Kriging
+Domain Kriging for a geological series: OH_Series
+Working with project supplied variogram curves: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1
+Supplied name does not match the required one: Variogram_Drill_Sparse_2p5_nonulls_Pb_Reg_2.5_Drill_Sparse_2p5_PbReg2p5_Unit_OH_UVT1 vs Drill_Sparse_2p5_nonulls_Pb_Serie_OH_Series_UVT_
+Finish Main Interpolation, Write Mesh d:/test_data/geostats/Domain_Demo_DTM2_mesh2/MeshGrids/Estimated_Pb

@@ -1,0 +1,6 @@
+Alias Begin
+	FA_FID	= Date
+	X	= Longitude
+	Y	= Latitude
+	Z	= DepthKM
+Alias End

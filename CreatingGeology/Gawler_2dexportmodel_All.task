@@ -1,0 +1,54 @@
+# gawler craton fault network
+# create a multiple 2d grid outputs to contain a systematic estimate of the 
+# 
+# 		 Isopachs  // equal thickness of formation
+#		 Isohyps  // height contour
+#		 Interfaces // depth to base of formation
+#		 Layercake  // X,Y,Z ASCII, from/to depth for each formation
+#		 Marthe // X,Y,Z of formation base ; separated
+#		 Tough  // Tough ASCII grid format
+#		// of valleys and rivers; running in the direction of the dip in surrounding rock strata
+#		 Cataclinal  // angle between topo slope, and formation that intersects
+
+# (c) 2017 Intrepid Geophysics
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "out/GawlerCraton3D.xml"
+  }
+}
+
+# Compute the fault network
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+	    node: "all"
+	}
+	SectionList {
+	    node: "all"
+	}
+	FaultList {
+	    node: "all"
+	}
+	faults_only: false;
+    }
+}
+
+
+# Save the plan view property queries of your model
+GeomodellerTask {
+    ExportModel {
+		dxy: 10000   # required  for 2d, coarse for auto testing purposes
+        output_directory: "Gawler_2dexports"
+        export2D {
+        	Isopachs: true;
+        	Isohyps: true;
+        	Interfaces: true;
+        	Layercake: true;
+        	Marthe: true;
+        	Tough: true;
+        	Cataclinal: true;
+        }
+        ReportFile: "Gawler_2dexports.rpt"
+    }
+}

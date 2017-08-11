@@ -1,0 +1,5 @@
+Type: FT_LINE
+Field {  name: "line";  from: 1;  to: 6;  alias: FA_LINE;  dtype: DT_CH;};
+Field {  name: "shot";  from: 7;  to: 23;  alias: FA_SHOT_ID;  dtype: DT_I4;};
+Field {  name: "depth";  from: 112;  to: 118;  dtype: DT_R8;  nosave: false;};
+GroupBy {  name: "line"}

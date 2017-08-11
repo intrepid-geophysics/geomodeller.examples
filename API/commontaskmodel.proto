@@ -1,0 +1,978 @@
+syntax = "proto2";
+
+// Here is the specification of the common low level or useful GOOGLE/Protobuf schema
+//  note, no XML, designed for fast message passing between processes.
+// (c) 2017 Intrepid Geophysics
+package ctm;  // commontaskmodel
+
+message PairInt32 {
+    required int32 first = 1;
+    required int32 second = 2;
+}
+
+message PairDouble {
+    required double first = 1;
+    required double second = 2;
+}
+
+message Point2d {
+   required double x = 1;
+   required double y = 2;
+}
+
+message Point3d {
+    required double x = 1;
+    required double y = 2;
+    required double z = 3;
+}
+message ReturnInt32 {
+    optional int32 value = 1 [default = 0];    
+}
+
+message RepeatedString {
+    repeated string node = 1;
+}
+
+message RepeatedBool {
+    repeated bool node = 1 [packed=true];
+}
+
+message RepeatedDouble {
+    repeated double node = 1 [packed=true];
+}
+
+message RepeatedInt32 {
+    repeated int32 node = 1 [packed=true];
+}
+
+//####
+/// ARGB colour
+message Colour {
+    optional double red = 1;
+    optional double green = 2;
+    optional double blue = 3;
+    optional double alpha = 4;    
+}
+    
+
+//####
+/// 3D bounding box
+message BoundingBox {
+    required double xmin = 1;
+    required double ymin = 2;
+    required double zmin = 3;
+    required double xmax = 4;
+    required double ymax = 5;
+    required double zmax = 6;
+    optional bool internal = 7 [ default = true];
+}
+
+//####
+/// 2D bounding boxes
+message BoundingBox2D {
+    required double xmin = 1;
+    required double ymin = 2;
+    required double xmax = 4;
+    required double ymax = 5;
+    optional bool internal = 6 [ default = true];      
+    optional double xcell = 7;  // possible cell size as well
+	optional double ycell = 8;
+}
+message RotatableBoundingBox2D {
+	required double Centroid_East=1;
+	required double Centroid_North=2;
+	required double Width=3;
+	required double Height=4;
+	optional double Rotation=5 [default = 0.0];
+}
+/// geodetic boxes, used in magnetic transcepts
+message GeodeticBox2D {
+    optional double long0 = 1 [default = -999];
+    optional double lat0 = 2 [default = -999];
+    optional double long1 = 4 [default = -999];
+    optional double lat1 = 5 [default = -999];
+    optional bool internal = 6 [ default = true];
+    optional Transect_Direction transect = 7 [default = WE];
+}
+message BasicStats {
+    optional double average = 1;
+    optional double std_dev = 2;
+    optional double minimum = 3;
+    optional double maximum = 4;
+    // Only need the above for now but we do want more. Add as required.
+}
+enum Transect_Direction {
+	 SN = 0;  // South-to-north transects selected
+	 WE = 1;  // west-to-east transect selected
+}
+enum Distance_Units {
+	 meters = 0;
+	 feet = 1;
+	 centimeters = 3;
+	 kilometers = 5;
+	 yard = 6;
+	 lab = 7;  // PETREL special  means testing, or synthetic
+	 decimal_degrees = 8; // geodetic
+}
+// is the vertical section Y axis time or a distance?
+enum Vertical_Units {
+	meters_elevation = 0;
+	travel_time = 1;
+}
+// list of generally supported grid formats in Intrepid/Geomodeller
+// you must use te correct default suffix to get the drivers to work properly
+enum Grid_Format {
+		INTREPIDGRID = 0;  // .ers
+		ASCIIArcGrid = 1;  // .grd
+		GEOSOFTGRID = 2; // .grd
+		NETCDFGRID= 3;  // .cdf
+		NETDODSGRID = 4;  // .nc
+		SEMIGRID = 5;  // .semi, an ascii, semi regular format
+		ZYCORGrid = 6;  // .zmap  an ascii format from ZYCOR
+		TIFF = 7;  //  .tif
+		DXF_AUTOCAD = 9;  // .dxf, also a triangulated surface rathger than a grid
+		GXFGrid = 10;   // excahnage format from ASEG  .gxf
+}
+// list of possible supported image formats - mainly Geomodeller
+enum Image_Format {
+		PNG_format = 1;
+		TIFF_format = 2;  //  .tif
+		JPEG_format = 3;  //
+		GIF_format = 4;
+}
+//  specify a grid, with optional supplemental of any meta data
+message Grid_INT {
+	required string Grid_Name = 1 [default="input.ers"];
+	optional Grid_Format format = 2 [default = INTREPIDGRID];
+	optional CoordinateSystem Projection = 3;
+	optional TensorProduct_list TensorProduct =4 [default=TENSOR_Complete];  // do a full tensor grid output
+	optional double Cell_Size_X =5 [default=100.0];
+	optional double Cell_Size_Y =6 [default=100.0];
+	optional double Origin_X =7 [default= 0.0];
+	optional double Origin_Y =8 [default= 0.0];
+	optional int32 Rows =9 [default= 100];
+	optional int32 Columns =10 [default= 100];
+	optional int32 Bands =11 [default= 1];
+	optional string Band_Name =12 [default=""];
+	optional int32 Band =13 [default= 1];
+	optional GridDataTypes DataType =14 [default= IEEE4ByteReal];
+	optional double Rotation =15 [ default=0.0];
+	optional double Null_Value =16 [default=-99999.0];
+	optional Distance_Units units = 17 [default = meters];
+}
+//####
+//! This is to allow for an optional observed geophysical grids
+//! <b>array</b> Array of observed geophysical data.
+message MeasuredGrid_INT {
+	optional GeophysicsSignalType type 	= 1 [ default = Gravimetry];
+	optional double mean_elevation 			= 2 [ default = 0.0];  // if a potential field grid, what elevation was it measured at?
+	optional double precision 				= 3 [default = 0.1];
+	optional bool Match_Trend 				= 4 [default = true];
+	optional int32 Match_Trend_Degree 		= 5 [default = 2];
+	optional int32 Match_Trend_Rate 		= 6 [default = 1000];
+	optional CoordinateReferenceSystem coordsys = 7 [default = END];  // comes in for tensor/vector grids
+	optional string grid 					= 8;  // named grid
+	optional int32 Band                       		= 9 [ default = 1];  // first band in a multi-band grid
+}
+/// all fundamental supported data types for a field, both in the Intrepid database, but also in all the tools
+// note the extension past the more normal IT data types into geophysics.
+// where we have to compromise, we sometime drop support or prohibit the user from trying to save a field
+//  to a native format that is not up to the job  ( eg shape files, SQL database, OASIS for proper vector/tensor fields etc)
+// and geology for geomodeller
+enum DataType
+{
+	DT_BYTE   = 0;
+	DT_I2     = 1;
+	DT_I4     = 2;
+	DT_R4     = 3;
+	DT_R8     = 4;
+	DT_CH     = 5;
+	DT_L4     = 6;
+	DT_DATE   = 7;
+	DT_STRING = 8;
+	DT_C16    = 9;
+	DT_U2     = 10;
+	DT_TENSOR = 11;
+	DT_SDO_GEOMETRY = 12;
+	DT_ARRAY_I2     = 13;
+	DT_ARRAY_I4     = 14;
+	DT_ARRAY_R4     = 15;
+	DT_ARRAY_R8     = 16;
+	DT_U4     = 17;
+	DT_VECTOR = 18;
+	DT_OBSERVED_FIELD   = 19;	// provision for an object of various field observations
+	DT_STRUCTURAL       = 20;	// a simple structural geology obs; dip;strike;unit
+	DT_OBSERVED_SEISMIC = 21;	// a single seismic trace
+	DT_FIELD_COMPONENTS = 22;	// grav/mag components
+	DT_FIELD_GRADIENTS  = 23;	// grav/mag gradients
+	DT_FIELD_SPECTRUM   = 24;	// radimetrics spectrum
+	DT_QUATERNION       = 25;	// quaternion for Euler Angles etc.
+	DT_COMPLEX_TENSOR   = 26;	// complex tensor for FFT etc.
+	DT_I1 = 27;	// signed byte (esp for geosoft)
+	DT_I8 = 28;	// signed 8 bit int
+	DT_U8 = 29;	// unsigned 8 bit int
+	DT_TENSOR2 = 30;  //  2D tensor for complex MT/EM frequencies
+	DT_COMPLEX_TENSOR2 = 31; //  2D complex tensor for MT
+//	DT_GR820 = -99;  // kludge support for raw complex radiometric data records
+}
+// supported data format types
+// historic lists of file formats that are part of the systematic support
+// there is generally a IO driver for all these formats, some not as good as others.
+enum DataFormat
+{
+	DF_UNKNOWN=0;
+	DF_PITS=1;  // original name for Intrepid, when it came into existance in 1992.
+	//DF_DDDIR,??
+	DF_ERM=2;  // Earth Reseorce mapper grid format
+	DF_EXT_BMR=3;
+	DF_EXT_ASCII=4;
+	DF_EXT_ARGUS=5;
+	DF_EXT_BASOS=6;
+	DF_EXT_ECSGRID=7;
+	DF_EXT_GRDUTE=8;
+	DF_EXT_ASEG_GXF=9;
+	DF_EXT_GEOSOFT=10;
+	DF_EXT_RAF=11;
+	DF_EXT_XYZ=12;
+	DF_EXT_GEOPAK=13;
+	DF_EXT_NETCDF=14;
+	DF_EXT_NETXYZ=15;
+	DF_JDBC=16;
+	DF_OASIS=17;
+	DF_CSV=18;
+	DF_EXT_DODSNETCDF=19;
+	DF_SHAPE=20;
+	DF_FRACSIS=21;
+	DF_3DWEG=22;
+	DF_GOCAD=23;
+	DF_GOCADSGRID=24;
+	DF_POTENT=25;
+	DF_SCINTREX=26;
+	//DF_SGY,
+	DF_SEGY=27;
+	DF_TIFF=28;
+	DF_JPEG=29;
+	DF_GIF=30;
+	DF_ECW=31;
+	DF_ALG=32;
+	DF_POSTSCRIPT=33;
+	DF_MSOFT=34;
+	DF_ADOBE=35;
+	DF_ZIP=36;
+	DF_PNG=37;
+	DF_SEMI=38;
+	DF_MAPINFO_TAB=39;
+	DF_GEOMODELLER=40;
+	DF_GOOGLE_KMZ=41;
+	DF_FLEDERMAUS_SCENE=42;
+	DF_GSF=43;
+	DF_HGT=44;
+	DF_TSURF=45;
+	DF_GEOSOFT_POLY=46;
+	DF_GLT=47;
+	DF_EV_GRID=48;
+	DF_VULCAN=49;
+	DF_ZMAP=50;
+	DF_LAS=51;
+	DF_BREP=52;
+	DF_OFF=53;
+	DF_DXF=54;
+	DF_UBC=55;
+	DF_IGMESH=56;
+	DF_NODDY=57;
+	DF_UBC_SUS=58;
+	DF_EDI=59;
+	DF_ESRI=60;
+	DF_VTK=61;
+	DF_PETREL=62;
+	DF_VARIOGRAM=63;
+}
+//  system wide data types for gridded data
+enum GridDataTypes {
+	UnSigned8BitInteger = 0;
+	Signed16BitInteger=1;
+	IEEE4ByteReal = 2;
+	IEEE8ByteReal=3;
+	IEEE4ByteComplex=4;
+	IEEE8ByteComplex=5;
+	TensorGrid = 6;
+	VectorGrid =7;
+	Complex_Tensor =8;
+}
+//  standard way to flag a special purpose or measure for a field in a database
+// we know in certain types of databases, there must be fields that perform this function.
+enum FieldAlias
+{   
+	FA_INFO = 0; FA_FID = 1; FA_LINE = 2; FA_FLIGHT = 3; FA_SURVEY = 4;
+	FA_LINE_TYPE = 5;
+	FA_MEAN_ALTITUDE = 6; FA_MEAN_CLEARANCE = 7; FA_BEARING = 8; FA_VELOCITY = 9;
+	FA_DATE_CODE = 10; FA_FID_FACTOR = 11; FA_TIME_OF_DAY = 12;
+	FA_X = 13; FA_Y = 14; FA_ELEVATION = 15; FA_CLEARANCE = 16; FA_ALTITUDE = 17;
+	FA_MAGNETICS = 20;
+	FA_POTASSIUM = 30; FA_URANIUM = 31; FA_THORIUM = 32; FA_TOTAL_COUNT = 33;
+	FA_DOPPLER_ACROSS = 34; FA_DOPPLER_ALONG = 35;
+	FA_GPS_TIME = 36; FA_GPS_TIME_SHIFT = 37; FA_GPS_DELAY = 38;
+	FA_VLF_P = 39; FA_VLF_Q = 40; FA_SPECTRUM = 41; FA_SPECTRUM_NEW = 42;
+	FA_TEMPERATURE = 43; FA_PRESSURE = 44; FA_COSMIC = 45;
+	FA_DEAD_TIME = 46; FA_LIVE_TIME = 47; FA_UPWARD_POTASSIUM = 48; FA_UPWARD_URANIUM = 49;
+	FA_UPWARD_THORIUM = 50; FA_UPWARD_TOTAL_COUNT = 51;
+	FA_UPWARD_DEAD_TIME = 52;
+	FA_LOW_U_PEAK = 53;
+	FA_ESTIMATED_RADON = 54;
+	FA_SHOT_ID = 55;  // Seismic
+
+	// Gravity Aliases
+	FA_STATION_NAME = 60; FA_OBSGRAVITY = 61; FA_METERELEV = 62; FA_STNELEVATION = 63; FA_NVALUE = 64;
+	FA_CORRECTEDGRAVITY = 65; FA_FREE_AIR = 66; FA_SIMPLE_BOUGUER = 67; FA_BULLARDB = 68;
+	FA_POINTTYPE = 69; FA_POINTGROUP = 70; FA_GRAVITY_UNITS = 71;
+
+	//  L&R marine moving meter
+	FA_BEAM = 75; FA_SPRING_TENSION = 76; FA_CROSS_COUPLING = 77;
+	FA_VCC = 78; FA_AL = 79; FA_AX = 80; FA_VE = 81; FA_AX2 = 82; FA_XACC2 = 83; FA_LACC2 = 84; FA_XACC = 85; FA_LACC = 86; FA_VCCPHASE = 87; FA_AXPHASE = 88; FA_ALPHASE = 89;
+
+	// LockheadMartin Gravity Gradiometry instrument platform gravity monitor fields
+	FA_BELL_I1 = 90; FA_BELL_I2 = 91; FA_BELL_I3 = 92; FA_BELL_C1 = 93; FA_BELL_C2 = 94; FA_BELL_C3 = 95; FA_BELL_THETA = 96;
+	FA_LITHOLOGY = 97;
+	
+	FA_NONE = 100;
+}
+// a list of supported file types in the design, coming from "dfaenums.h"
+enum DfaFileType {
+	FT_IMAGE    = 0;
+	FT_POINT    = 1;
+	FT_LINE     = 2;
+	FT_POLYGON  = 3;
+	FT_INDEX    = 4;
+	FT_LUT      = 5;	// Colour Tables (.lut)
+	FT_DIR      = 6;
+	FT_EXTERNAL = 7;
+	FT_ANY      = 8;
+	FT_JOB      = 9;	// Options file (.job)
+	FT_HISTORY  = 10;	// Audit Trail (HISTORY)
+	FT_HARDCOPY = 11;	// (.dlist)
+	FT_PC              = 12;	// Agso card image input for program control (.pc), old ascii control files
+	FT_ADF             = 13;	// Agso Aircraft Data Files (.adf)
+	FT_ASCII           = 14;	// Agso ASCII file (.asc)
+	FT_REPORT          = 15;	// Agso report file generated by the Tool (.rpt)
+	FT_MAP             = 16;	// Map Composition File (.map; .imf)
+	FT_MACRO           = 17;	// (.mac)
+	FT_LEGEND          = 18;	// Legend File (.leg)
+	FT_VOXET           = 19;	// a voxet for geomodeller
+	FT_SURFACE         = 20;	// a triangulated surface, tsurf, dxf ( including quads) etc
+	FT_DDF             = 21;	// Data Definition File (.ddf)
+	FT_KERNEL          = 22;	// Spatial Convolution Kernel Files (.ker)
+	FT_FFT             = 23;	// FFT status file (.fft)
+	FT_PROJ            = 24;	// Projection File (.proj)
+	FT_DATUM           = 25;	// Datum File (.datum)
+	FT_CONFIG          = 26;	// Configuration File (.cfg)
+	FT_FORM            = 27;	// Dialog Form File (.frm)
+	FT_HELP            = 28;	// Help File (.hlp)
+	FT_GEOMODELLER     = 29;	// Geomodeller project file  (.xml)
+	FT_EULER           = 30;	// Euler solutions (.rs)
+	FT_ANY_AGSO        = 31;	// Agso special for export
+	FT_SHELL           = 33;  // 3D surface, triangulaed usually, not necessarily closed, range of 3rd party formats supported
+	FT_BOREHOLE        = 34;
+	FT_PROTOBUF_TASK   = 35;  // message/control files using protobuf syntax
+	FT_IGMESH          = 36;  // more generic grid support for the full range of semi, regular, irregular 2d/3d, but Intrepid drivers only
+	FT_GRID            = 37;  // usually 2D only, use voxet for 3D
+	FT_BRGM_XYZ        = 38;
+	FT_EDI				= 39;  			// interface for EM/MT data transfer
+	FT_SEGY				= 40; // segy seismic data
+	FT_ANY_GRID        = -3;	//
+	FT_ANY_VECTOR      = -2;	//
+	FT_ANY_VECTOR_AGSO = -1;	// Agso special for export
+//	FT_VECTOR          = FT_POINT | FT_LINE | FT_POLYGON;
+//	FT_FIELD           = FT_POINT | FT_LINE | FT_POLYGON | FT_IMAGE
+}
+// a field can have a one to many relation, with other fields in a group eg linetype
+enum AccessType
+{
+	AT_DIRECT = 1;  //  group by
+	AT_INDEXED = 2;  //  ordinary record
+}
+
+	/**
+	 *      flights
+	 */
+enum FlightTypes
+{
+	LT_REDO = 1;
+	LT_FLIGHT = 2;
+	LT_TIE = 4;
+	LT_DIURNAL = 8;
+	LT_CALIB =	16;
+	LT_SPECTRA = 32;
+	LT_RANDOM = 64;
+	LT_IGNORE_TIE = 128;
+	LT_IGNORE = 16384;
+}
+
+//####
+/// below is exact enum order from Projet.cdl   do not upset this!! (RS It does'nt look like the same anymore?)
+enum  GeophysicsSignalType {
+   	Gravimetry = 0; // gravity section
+	Gxx = 1;  // tensot parts
+	Gyy = 2;
+	Gzz = 3;
+	Gxy = 4;
+	Gxz = 5;
+	Gyz = 6;
+	Gee = 7;
+	Gnn = 8;  //  now in END convention
+	Gdd = 9;
+	Gen = 10;
+	Ged = 11;
+	Gnd = 12;
+	Guv = 13;	// Falcon
+	Gz = 14;  // alias for vertical component of gravity	
+	Magnetism = 15; // magnetic section
+	Mxx = 16;  // tensor section
+	Myy = 17;
+	Mzz = 18;
+	Mxy = 19;
+	Mxz = 20;
+	Myz = 21;
+	Mx = 22;
+	My = 23;
+	Mz = 24;
+	Mee = 25;
+	Mnn = 26;  //  now in END convention
+	Mdd = 27;
+	Men = 28;
+	Med = 29;
+	Mnd = 30;
+	Me = 31;
+	Mn = 32;
+	Md = 33;	
+	TMI = 34;  // alias for Total Magnetic Intensity	
+	Temperature = 35;
+	UNKNOWN_SIGNAL = 36;
+    GravityTensors = 37;  // preferable to do whole of tensor work if possible
+    MagneticTensors = 38;
+// not fully supported as yet    
+    Temp= 39;  // not in the Geomodeller engine list
+    Trend= 40;  // digital terrain
+    Elevation= 41;
+    FalconTensors= 42;
+    Advection = 43;   
+    SiesmicVelocity = 44;  // seismic
+    Pwave = 45;
+    Swave = 46;
+	Goo = 47;  // alias for vertical component of gravity	
+	Moo = 48; // magnetic section
+	Bathymetry= 49;
+	Radiometrics= 50;
+	Potassium = 51;
+	Thorium = 52;
+	Uranium = 53;
+	Total_Count = 54;
+	ElectroMagnetic = 60;
+	Conductivity = 61;
+	Resistivity = 62;
+	MagnetoTelluric = 70;
+}
+enum GrfType
+{
+	GRF_AGRF=0;
+	GRF_IGRF=1;
+	GRF_MANUAL=2;
+	GRF_USGS=3;
+}
+
+//####
+/// generalised message to cope with geo-registration issues
+//  covers all of Intrepid/Geomodeller requirements
+//  it is a requirement that all data be properly geo-located
+//  The old ERMapper Projection/Datum
+// the newer POSC system as well... incomplete
+message CoordinateSystem {
+	optional string geographic2DCS =1;
+	optional string map_projection = 2;  // eg UTM56
+	optional sint32 CS_Number = 3;  // POSC coordinate system code number
+	optional string height_datum = 4;
+	optional string ellipsoid = 5;
+	optional string spatial_datum = 6;
+}
+//  mainly for vector/tensor field conventions
+//  fields such as magnetics, have a convention for right handed spec of positive
+// gradient directions, eg East North, Up
+enum CoordinateReferenceSystem {
+    NED = 0;
+    ENU = 1;
+    END = 2;
+    LOCAL = 3;
+    WSD   = 4;
+	WSU   = 5;
+}
+// start of Geomodeller specific enums.
+// these are designed to take over from the same stuff currently in the CDL files.
+// hence, some of the French versions of the words.
+//  when in the field, or doing a model, what is the reliability of each reading?
+enum Reliability {
+	Unspecified = 0;
+	Observed = 1;
+	Inferred = 2;
+	Interpreted = 3;
+	ModelConstructor = 4;
+}
+/// #####
+///  TODO needs to be same as main stream list in schema, this is at variance
+enum ProvenanceType {
+		none = 0;
+		GISmap = 1;
+		field_observation = 2;
+		inferred = 3;
+		seismic_pick = 4;
+		magnetic_pick = 5;
+		gravity_pick = 6;
+		 }
+//  also a right hand rule issue, this time for strike/dip pairs
+enum PolarityType {
+		Normal_Polarity = 1;
+		Reverse_Polarity = -1;
+		 }
+//  for geology map, relationship between series
+enum StratigraphicRelationship {
+	Onlap = 1;  // mainstream setting
+	Erode = 2;  // mainstream setting
+	Channel = 3;  // deep erosional channel - somewhat experimental, not in the GUI
+	Intrusion = 4;  // erosional relationship is what is normally used - somewhat experimental, not in the GUI
+	Any = 5;  // unknown eg borehole
+}
+
+enum SectionDataType {
+	rock_interface = 0;  // interface is a reserved word!!
+	foliation = 1; //ModelSession_Foliation)
+	contact = 2; //ModelSession_Contact)
+	trajectory = 3; //ModelSessiontrajectory)
+	sondage = 4; //ModelSession_Sondage)  , boreholes                      
+	intersection = 5; //ModelSession_Intersection)
+	fond = 6; //ModelSession_FOND)
+	dyke = 7;
+}
+// model object type
+enum GeologyObsType3D {  // mostly for CSV file importing
+	contact_3D = 0;  // interface is a reserved word!!
+	foliation_3D = 1; //ModelSession_Foliation
+	apparent_dip_3D = 3;
+	Dyke_3D = 4; // on DTM,  Hot spot dyke fragements, with keyword for each named dyke, short strike plus dip, thickness, susc
+	Interface_project2Section_3D = 5;
+	Orientation_project2Section_3D = 6;
+	fault_limits_3D = 7; // extra stuff to limit fault extents in 3D space
+}
+//####
+/// <b>orientationMethod</b> String representing an enumerated type [default = "undefined"]. One of:\n
+/// <pre>
+///     "undefined" (Structural2d_UNDEFINED)
+///     "dip" (Structural2d_DIP)
+///     "dip-azimuth" (Structural2d_DIPAZIMUTH)
+///     "line-orientation" (Structural2d_LINEORIENTATION)
+///     "orthogonal" (Structural2d_ORTHOGONAL)                        
+/// </pre>
+enum OrientationMethodType {
+	undefined = 0;
+	dip_direction = 1;
+	dip_azimuth = 2;
+	line_orientation = 3;
+	orthogonal = 4;    
+}
+//####
+//  for a given geological unit, specify a physical or behavioural property
+enum PropertyType {
+
+	Density = 0;				// geophysical properties
+	Susceptibility = 1;
+	Remanence = 2;
+	ThermalConductivity = 7;
+	HeatProductionRate = 8;
+	SpecificHeat = 9;
+	AdvectionRate = 10;
+	SonicVelocity = 12;
+	SonicShearVelocity = 19;
+	Porosity = 13;
+	FluidVelocity = 14;
+	ElectricalConductivity = 17;
+	ElectricalResistivity = 18;
+	IP_CHARGEABILITY = 20;
+	IP_TIME_DECAY = 21;
+	// now for geometry pertubation types, rather than material properties
+	Commonality = 3;			// geological laws
+	CommonalityVolume = 4;
+	ShapeRatio = 5;
+	VolumeRatio = 6;
+	PreserveVerticalRelationship = 11;
+	Movable = 15; 				// is the unit geometry changeable
+	Index = 16;
+}
+//####
+// This is to allow for various probability distribution function types and the possibility of multi-modal distributions for a lithology property
+message AngleProbabilityDistributionFunction {
+	required ProbabilityLawType type = 1 [default = FisherDistribution];
+	optional double mean = 2 [ default = 0.0];
+	optional double stddev = 3 [ default = 0.0];
+}
+
+//####
+//  probability distribution functions
+//  for any stochastic behaviour, the required law must be specified
+enum ProbabilityLawType {
+
+	NormalDistribution = 0;  // gaussian  make it very explicit by name
+	LogNormal = 1;
+	Log_normal = 2;  // magnetic properties
+	Poisson = 3;  // good for Gamma rays
+	Rayleigh = 4;
+	Uniform = 5;
+	Uniform_Plus = 6;
+	Uniform_Minus = 7;
+	Weibull = 8;  // geology shapes
+	FisherDistribution = 9;  // angular or vector directions
+}
+//####
+// Define lithology properties
+message LithologyProperty_GMT {
+
+	required string lithology = 1;														// Name of lithology to which this law applies
+	optional ctm.PropertyType property = 2;													// Propertytype, see below
+	optional ProbabilityDistributionFunction_GMT ProbabilityDistributionFunction = 3;   // Mono-modal
+	optional ProbabilityDistributionFunction_GMT ProbabilityDistributionFunction2 = 4;	// Bi-modal
+	optional ProbabilityDistributionFunction_GMT ProbabilityDistributionFunction3 = 5;	// Tri-modal
+	optional bool fixed = 6 [ default = false];  										// Is the geometry for this litho unit moveable?
+	optional int32 index_voxet_key = 7;  												// Index of this lithology in external voxet
+	optional double lower_bound = 8;													// used for bounded non-linear 3D property optimization
+	optional double upper_bound = 9;
+	//  bool array list to indicate possible formation below current formation
+	//  a normal pile ordering is achieved with "trues" in the top triangle
+	//  an overturned pile ordering is achieved with "trues" in the lower triangle
+	optional ctm.RepeatedBool preserve = 10; 	// PreserveVerticalRelationship in the pile for this unit relative to others
+}
+
+
+
+//####
+// This is to allow for various probability distribution function types and the possibility of multi-modal distributions for a lithology property
+message ProbabilityDistributionFunction_GMT {
+
+	required ctm.ProbabilityLawType type = 1 [default = NormalDistribution];
+	optional double mean = 2 [ default = 0.0];
+	optional double stddev = 3 [ default = 0.0];
+	optional double inclination = 4 [ default = 0.0];  // anisotropic ellipsoid axes
+	optional double declination = 5 [ default = 0.0];
+	optional int32 percentage = 6 [ default = 100];  // muti-modal sets
+	// original design wants XYZ depth funtion, from a smoothed reference surface
+	optional string depthvaluepairs = 7; // property varying with depth, only valid for density
+	optional string input_voxet = 8;  // take a predefined/external property voxet distribution
+	optional string input_voxet_field = 9; // field to use in that voxet
+	optional string input_grid = 10;
+}
+
+//####
+/// magnetics needs the ambient field vector
+message SetReferenceMagneticField {
+	optional double Magnitude = 1;
+	optional double Inclination = 2;
+	optional double Declination = 3;
+	optional double mag_error = 5 [default = 0];
+	optional double inclination_error = 6 [default = 0];
+	optional double declination_error = 7 [default = 0];
+	// some duality between programs wanting a date, as to how to dish it up
+	optional string Date = 11;  // if we want the program to calculate the IGRF
+	optional int32 SurveyYear = 8 [default = 2012];
+	optional int32 SurveyMonth = 9 [default = 1];
+	optional int32 SurveyDay = 10 [default = 1];
+	optional double Elevation = 12 [default = 100];  // this is usually a notional ground clearance
+	optional GrfType Field_Type = 13 [default = GRF_IGRF]; // IGRF is always available
+}
+//### mesh grids
+enum MeshGrid_TypeMeshGrid { 
+	MeshGrid_VERTEX = 1;
+	MeshGrid_TRIANGLE = 2;
+	MeshGrid_QUAD = 3;
+	MeshGrid_TETRA = 4;
+	MeshGrid_CUBE = 5;
+	MeshGrid_ANY = 6;
+}
+//###
+///  interpoation  2D and 3D methods
+enum InterpolationMethod {
+	IM_InverserveDistance = 1;
+	IM_Kriging = 2;
+	IM_Minimum_Curvature = 3;  //# only in Intrepid
+	IM_Tensor_Slerp = 4;  //# only in Intrepid
+}
+enum InputDataSource {
+	IDS_Points3D = 1;  // any random observations
+	IDS_DrillHoles = 2;
+	IDS_DrillHolesPlus3DPoints = 3;
+}
+enum OutputMeshType {
+	ODT_RegularMesh3D = 1;  // 
+	ODT_RegularMesh2D = 2;
+	ODT_TopographySurface = 3;
+	ODT_IrregularMesh3D = 4;
+	ODT_SemiRegularMesh3D = 5;
+	
+}
+/// Kriging interpolation section
+/// Output data description type, dimensionality
+enum InterpolationOutputType {
+	    IOT_D3 = 0;  // or XYZ, completely 3D
+ 	    IOT_D2_polar = 1;  // 2D polar, ie distance, angle in plan
+	    IOT_D1 = 2;  // 1 D only, isotropic
+	    IOT_GeologicalDomain = 3;  // domain krigging
+	    IOT_OnlyT = 4;  // geology unit thickness
+}
+///  in a multi-dimensional analysis world, which of many variogram types are we looking at
+enum VariogramComponent {
+	    VC_U = 1;
+ 	    VC_V = 2;
+	    VC_W = 3;
+	    VC_RHO = 4;
+	    VC_T = 5;
+        VC_UV = 6;
+}
+/// Variogram Model Law Type
+enum VariogramModelType {
+	    VMT_Spherical = 1;
+ 	    VMT_Exponential = 2;
+	    VMT_Gaussian = 3;
+	    VMT_PowerLaw = 4;
+	    VMT_CubicLaw = 5;
+	    VMT_GravityLaw = 6;
+	    VMT_MagneticsLaw = 7;
+}
+enum NeighbourStyle {
+    NS_Voisinage = 1;  // oblate spheroid
+    NS_RegularGridBox = 2;
+}
+
+enum ComputationalMethod {
+	Spatial = 0;  // older prism model formulae
+	FastFourierTransform = 1;  // if available ( just prisms for now)
+	Dyke_Skeletons = 2;  // infinite thin plate from Horst Holstein
+	Facets = 3;  // facets from Horst Holstein for regular simple bodies
+	Surface_Integrals = 4;  // facets for more complex surface descriptions of geology
+}
+
+
+//   Fault center types
+enum CENTER_TYPE {
+	MEAN_POSITION=1;
+	DATABOX_CENTER=2;
+	USER_DEFINED=3;
+	}
+
+enum VfiltExpansionMethod {
+    Zero = 0;
+    Mirror = 1;
+    Taper = 2;
+}
+// Total magnetic Intensity (TMI) manipulations
+//  Blakely and  DAClarke, needs FFT and IGRF, so only available in grid filtering
+enum TMI_Products
+{
+	TMItoXX=1;  // TMI to tensor
+	TMItoYY=2;
+	TMItoZZ=3;
+	TMItoXY=4;
+	TMItoYZ=5;
+	TMItoZX=6;
+	TMItoCOMPLETE=7;  // create a magnetic tensor grid from TMI, using the IGRF
+	TMItoX=8;  // TMI to vector components
+	TMItoY=9;
+	TMItoZ=10;
+	TMItoVector=11;  // create a magnetic vector components grid
+}
+//  start of tensor gradient data options
+//  this is when we store  tensor data using protobufs.. not often , as usually in the database as a binary object
+message Tensor {
+	optional double XX=1;
+	optional double YY=2;
+	optional double ZZ=3;
+	optional double XY=4;
+	optional double YZ=5;
+	optional double ZX=6;
+}
+//  firstly, if we have a full tensor measure in our database, or grid dataset, it can be queried for any of the following attributes
+// note inside Intrepid at present there is an extra 10 offset, due to Vector methods sharing same space
+//  some of the early members in the list are trivial, but other require FFT processes to estimate.
+enum TensorProduct_list {
+	TENSOR_XX=10;
+	TENSOR_YY=11;
+	TENSOR_ZZ=12;
+	TENSOR_XY=13;
+	TENSOR_YZ=14;
+	TENSOR_ZX=15;
+	TENSOR_UV=16;  // falcon equivalent gradient measure
+	TENSOR_Determinant=17;  // matrix property
+	TENSOR_Max_Eigen=18;
+	TENSOR_Mid_Eigen=19;
+	TENSOR_Min_Eigen=20;
+	TENSOR_Trace=21;
+	TENSOR_Second_Invariant=22;
+	TENSOR_Ratio=23;
+	TENSOR_Strike=24;
+	TENSOR_CubeRoot_of_Determinant=25;
+	TENSOR_SquareRoot_of_Second_Invariant=26;
+	TENSOR_Horizontal_Gradient_Amplitude=27;
+	TENSOR_Horizontal_Gradient_Direction=28;
+	TENSOR_Curvature_Gradient_Amplitude=29;
+	TENSOR_Curvature_Gradient_Direction=30;
+	TENSOR_Octahedral_Normal=31;
+	TENSOR_Octahedral_Shear=32;
+	TENSOR_Complete = 33;  // output a complete tensor grid;// just return the tensor as itself, especially in gridding
+	TENSOR_Norm=34;
+	// start of rotational properties, as expressed via a quaternion representation
+	TENSOR_Quaternion_Real_part=35;
+	TENSOR_Quaternion_I_part=36;
+	TENSOR_Quaternion_J_part=37;
+	TENSOR_Quaternion_K_part=38;
+	TENSOR_Maximum_Magnitude=39;
+	TENSOR_Unit_EigenVector_Volume=40;
+	TENSOR_Phase=41;
+	TENSOR_Modulo=42;
+	TENSOR_EigenAxis=43;
+	TENSOR_Quaternion_RGB_Phase=44;
+	TENSOR_FREQ = 45;  // EM/MT tensor frequency;
+	TENSOR_Quaternion_Isotropic_Phase=50;
+	TENSOR_Quaternion_Deviatoric_Phase=51;
+	TENSOR_Quaternion_Modulo_Phase=52;
+	TENSOR_TILT = 60;
+//  below nearly all require FFT processing, so only possible in Intrepid grid filter etc
+	TENSOR_ZZ_XXtoZ=69;  // rio vtk
+	TENSOR_ZZ_XXtoZZ=70;
+	TENSOR_ZZ_YYtoZ=71;
+	TENSOR_ZZ_YYtoZZ=72;
+	TENSOR_ZtoXX=73;  // mainly for vertical gravity to tensor
+	TENSOR_ZtoYY=74;
+	TENSOR_ZtoZZ=75;
+	TENSOR_ZtoXY=76;
+	TENSOR_ZtoYZ=77;
+	TENSOR_ZtoZX=78;
+	// how would gravity look if it was expressed as a Falcon Tensor grid??
+	TENSOR_ZtoFALCON=99;  // request from GSSA
+	//
+	TENSOR_2TMI=79;  // take a mag tensor and estimate the TMI
+	TENSOR_BRUTE = 81;   // brute force conjugate gradient integration for Falcon
+	TENSOR_SCALAR_MAGNITUDE = 82;   /// david clarke special
+	TENSOR_AUV = 83;  // falcon
+	TENSOR_ANE = 84;
+	TENSOR_BUV = 85;
+	TENSOR_BNE = 86;
+	TENSOR_BRUTE_B = 87;
+	// you can pack conjugate components into one complex number, eg Falcon raw measures
+	TENSOR_COMPLETE_FALCON_FFT = 88;  // aim to have the FFT done on the components, so that all the filtering is done on the parts!
+// balanced gradients, exploration geophysics, 2014  Guoqing Ma
+	// like a tilt angle
+	TENSOR_FirstBalancedGradientX = 90;
+	TENSOR_FirstBalancedGradientY = 91;
+	TENSOR_FirstBalancedGradientZ = 92;
+// second balanced gradients  ratio of horizontal derivatives to analytic signal
+	TENSOR_SecondBalancedGradientX = 93;
+	TENSOR_SecondBalancedGradientY = 94;
+	TENSOR_SecondBalancedGradientZ = 95;
+}
+// full tensor integration possibilities
+enum Tensor_Integration_Method {
+	 INT_XZ_YZ_ZZ = 0;  // use as many channels/gradients as possible to estimate the Gz
+	 INT_XZ_YZ = 1;  // just use 2 measures
+	 INT_ZZ = 4;
+	 INT_XZ = 2;
+	 INT_YZ = 3;
+	 INT_TMI = 5;  // if this is a magnetics tensor, integrate to estimate the TMI signal
+	 INT_TRACE = 6; // second approach to estimate the TMI signal
+	 INT_POTENTIAL = 7;  // underlying potential that has caused this signal
+	 INT_MEAN_CURVATURE = 8;  // all the Carlos Cevallos curvature products from geophysiucs Vol 78, July 2013
+	 INT_DIFFERENTIAL_CURVATURE = 9;
+	 INT_PLUMB_LINE = 10;
+	 INT_GAUSSIAN_CURVATURE = 11;
+	 INT_SHAPE_INDEX = 12;
+	 INT_MAG_VECTOR = 13;  // integrate a magnetic tensor to a vector components grid
+}
+//  now for the FALCON system, as supplied by Fugro
+enum Falcon_Reading_Options {  // falcon gravity gradiometry had duplicate A & B readings
+	FALCON_A = 0;
+	FALCON_B = 1;
+	FALCON_AVERAGE = 2;
+	FALCON_DIFFERENCE = 3;
+}
+//  transform the falcon system measurements into something more useful for interpretation
+enum Falcon_FFT_TRANSFORM_Option { // hilbert pair maths used to convert from horizontal 2D tensor, with A & B repeats
+	FALCON_FTG=0;
+	FALCON_TZZ=1;
+	FALCON_TXX=2;
+	FALCON_TYY=3;
+	FALCON_TXY=4;
+	FALCON_TXZ=5;
+	FALCON_TYZ=6;
+	FALCON_TZ=7;  //  most common requirement, integrate signal to get best estimate of vertical gravity component
+	FALCON_TX=8;
+	FALCON_TY=9;
+	FALCON_POTENTIAL=10;
+	FALCON_TUV=11;
+	FALCON_CHECK_PHASE=12;  // FFT method to check on the calibration of the instrument
+	FALCON_DIFFERENTIAL_CURVATURE=13;  // only thing close to what is measured
+}
+
+// start of the vector products list for handling generalized field vectors
+// starting with a vector field in a dataset, use this list to request a manipulation during an operation on the field
+// most of these can be produced in the gridding tool, when you start with a vector field
+// grid filtering also supports some of these products, especially manipulation of the TMI,
+// this is bacause FFT processes are required to calculate the outcomes
+enum VectorProduct_list {
+	ANALYTIC_SIGNAL = 100;
+	TOTAL_HORIZONTALGRAD = 101;
+	EAST_HORIZONTAL = 102;
+	NORTH_HORIZONTAL = 103;
+	VERTICAL_GRAD = 104;
+	ENHANCED_SIGNAL = 105;  // gridding product, use the horizontal gradient to improve the TMI
+	CALCULATED_DIURNAL = 106;
+	TRANS_HORIZONTAL = 107;  // body coords for airborne vector fields
+	LONG_HORIZONTAL = 108;
+	TILT_ANGLE = 109;
+	EAST_COMPONENT = 110;  //gridding, of a vector field, extract the component
+	NORTH_COMPONENT = 111;
+	VERTICAL_COMPONENT = 112;
+	VECTOR_GRID = 113;  // not a well developed concept in Intrepid V5.0 as yet
+	// start of FFT only options
+	TOTAL_MAGNETIC_INTENSITY = 114;  // go from vector components back to a TMI
+}
+enum QuaternionProduct_list {
+	QUATERNION_REAL=200;
+	QUATERNION_I=201;
+	QUATERNION_J=202;
+	QUATERNION_K=203;
+	QUATERNION_NORMAL = 204;
+	QUATERNION_ROLL = 205;  // rotation matrix and euler angles
+	QUATERNION_PITCH = 206;
+	QUATERNION_YAW = 207;
+}
+enum ScalarProduct_list {
+	COMPONENTS_NONE=0;
+	SIGNAL_MAGNITUDE=1;
+	REAL_PART=2;  // some complex number stuff as well
+	IMAGINARY_PART=3;
+	PHASE_ANGLE=4;
+}
+// possible dynamic filter on the signal as it is read from the database
+enum filter_methods {
+	None=0;
+	 Convolve=1;
+	 Naudy=2;  // despiking
+	 AntiAlias=3;
+	 LaCosteRC=4;  // smoothing and also no chance of an introduced trend!
+}
+// list of ways to store a date in an integer field
+enum date_styles {
+	YYYYMMDD=0;
+	DDMMYYYY=1;
+	YYMMDD=2;
+	JDAY=3;
+	DECIMAL_YEAR=4;
+}
+// a base station magnetometer also has a clock, so we can sync with the airborne readings
+enum diurnal_styles {
+	FLIGHT_DATE_TIME=0;
+	JULIAN_TIME=1;
+}
+// TODO Em 2D tensor products

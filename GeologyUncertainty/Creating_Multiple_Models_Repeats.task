@@ -1,0 +1,647 @@
+# Have geomodeller batch create 30 or more geology models
+#  using Macros and paramenter substitution, via the Repeat outer loop
+#-----------------Set Project Boundaries------------------------ 
+#  set up a well monitoring array of boreholes, prior to predicting the geophysical response
+# this example will not run without extra data that is specified to be imported
+# use this example as a template for your own case study
+#  execute  geomodellerbatch -batch Creating_Multiple_Models_Repeats.task
+# or        jfmanager -batch Creating_Multiple_Models_Repeats.task
+
+name: "Oil_reservoir"
+description: "Automate_batch_Model"
+Repeat {
+thickness ["_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m" "_50m" "_90m" "_120m"]
+Formations ["Water" "Water" "Water" "Carbonated_Water" "Carbonated_Water" "Carbonated_Water" "Water" "Water" "Water" "Carbonated_Water" "Carbonated_Water" "Carbonated_Water" "Water" "Water" "Water" "Carbonated_Water" "Carbonated_Water" "Carbonated_Water" "Water" "Water" "Water" "Carbonated_Water" "Carbonated_Water" "Carbonated_Water" "Water" "Water" "Water" "Carbonated_Water" "Carbonated_Water" "Carbonated_Water"]
+Times ["Time1" "Time1" "Time1" "Time1" "Time1" "Time1" "Time2" "Time2" "Time2" "Time2" "Time2" "Time2" "Time3" "Time3" "Time3" "Time3" "Time3" "Time3" "Time4" "Time4" "Time4" "Time4" "Time4" "Time4" "Time5" "Time5" "Time5" "Time5" "Time5" "Time5"]
+GeomodellerTask {
+    CreateProject {
+        name: "Uthmaniyah_1"
+        author: "Chloe"
+        date: "16/6/2015  0: 0: 0"
+        projection { map_projection: "WGS 84 / UTM zone 39N"}
+        version: "2.0"
+        units: meters
+        precision: 1.0
+        Extents {
+            xmin: 299730
+            ymin: 2756000
+            zmin: -3000
+            xmax: 352130
+            ymax: 2817000
+            zmax: 1000
+		}
+        deflection2d: 0.001
+        deflection3d: 0.001
+        discretisation: 10.0
+        referenceTop: false
+        CustomDTM {
+            Extents {
+                xmin: 299730
+                ymin: 2756000
+                xmax: 352130
+                ymax: 2817000
+            }
+            name: "Topography"
+            filename {
+             	Grid_Name: "./SRTM/Projected_SRTM.ers"
+            }
+			nx: 5
+            ny: 5
+        }
+    }
+}
+#---------------------------------------------------------------
+#-----------------------Create Formations-----------------------
+#---------------------------------------------------------------
+GeomodellerTask {
+    CreateFormation {
+        name: "Tertiary"
+        red: 255
+        green: 230
+        blue: 153
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Cretaceous_Yamama"
+        red: 255
+        green: 192
+        blue: 0.0
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Cretaceous_Sulaiy"
+        red: 237
+        green: 125
+        blue: 49
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Upper_Jurassic_Caprock"
+        red: 128
+        green: 0.0
+        blue: 0.0
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Jurassic_Reservoir"
+        red: 8
+        green: 78
+        blue: 147
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Triassic"
+        red: 83
+        green: 130
+        blue: 52
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Permian"
+        red: 127
+        green: 128
+        blue: 0.0
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Natural_Gas"
+        red: 206
+        green: 0.0
+        blue: 205
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Oil"
+        red: 158
+        green: 33
+        blue: 238
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Water"
+        red: 0.0
+        green: 178
+        blue: 238
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Carbonated_Water"
+        red: 0.0
+        green: 204
+        blue: 153
+    }
+}
+GeomodellerTask {
+    CreateFormation {
+        name: "Well"
+        red: 237
+        green: 28
+        blue: 36
+    }
+}
+#---------------------------------------------------------------
+#------------------Set Stratigraphic Pile-----------------------
+#---------------------------------------------------------------
+ GeomodellerTask {
+    SetSeries {
+        name: "Permian_series"
+        position: 1
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Permian_series"
+        formation: "Permian"
+    }
+} 
+GeomodellerTask {
+    SetSeries {
+        name: "Triassic_series"
+        position: 2
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Triassic_series"
+        formation: "Triassic"
+    }
+}
+GeomodellerTask {
+    SetSeries {
+        name: "Reservoir_series"
+        position: 3
+        relation: "erode"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Reservoir_series"
+        formation: "Jurassic_Reservoir"
+    }
+} 
+GeomodellerTask {
+    SetSeries {
+        name: "Gas_Oil_Water_series"
+        position: 4
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Gas_Oil_Water_series"
+        formation: "$Formations"
+    }
+} 
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Gas_Oil_Water_series"
+        formation: "Oil"
+    }
+} 
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Gas_Oil_Water_series"
+        formation: "Natural_Gas"
+    }
+} 
+GeomodellerTask {
+    SetSeries {
+        name: "CapRock_series"
+        position: 5
+        relation: "erode"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "CapRock_series"
+        formation: "Upper_Jurassic_Caprock"
+    }
+} 
+GeomodellerTask {
+    SetSeries {
+        name: "Above_reservoir_series"
+        position: 6
+        relation: "onlap"
+    }
+}    
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Above_reservoir_series"
+        formation: "Cretaceous_Sulaiy"
+    }
+} 
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Above_reservoir_series"
+        formation: "Cretaceous_Yamama"
+    }
+} 
+GeomodellerTask {
+    AddFormationToSeries {
+        series: "Above_reservoir_series"
+        formation: "Tertiary"
+    }
+}
+#---------------------------------------------------------------
+#-----------------------Create Sections-------------------------
+#---------------------------------------------------------------
+GeomodellerTask {
+    CreateSection {
+        name: "Section_EW1"
+        degrees: 1
+        direction: 90
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 300107.39
+                y: 2792720.00
+                z: 0.0
+            }
+            Point {
+                x: 350998.67
+                y: 2792720.00
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_EW2"
+        degrees: 1
+        direction: 90
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 300107.39
+                y: 2815432.60
+                z: 0.0
+            }
+            Point {
+                x: 351658.37
+                y: 2815432.60
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_EW3"
+        degrees: 1
+        direction: 90
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 300767.09
+                y: 2761242.80
+                z: 0.0
+            }
+            Point {
+                x: 350810.18
+                y: 2761242.80
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_EW4"
+        degrees: 1
+        direction: 90
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 300807.52
+                y: 2803089.80
+                z: 0.0
+            }
+            Point {
+                x: 351388.56
+                y: 2803089.80
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_EW5"
+        degrees: 1
+        direction: 90
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 300807.50
+                y: 2778219.40
+                z: 0.0
+            }
+            Point {
+                x: 351388.56
+                y: 2778219.40
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_EW6"
+        degrees: 1
+        direction: 90
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 301182.63
+                y: 2769824.80
+                z: 0.0
+            }
+            Point {
+                x: 351190.80
+                y: 2769824.80
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_NS1"
+        degrees: 1
+        direction: 180
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 328883.50
+                y: 2756162.49
+                z: 0.0
+            }
+            Point {
+                x: 328883.50
+                y: 2816721.51
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_NS2"
+        degrees: 1
+        direction: 180
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 348005.10
+                y: 2757086.53
+                z: 0.0
+            }
+            Point {
+                x: 348005.10
+                y: 2816464.58
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_NS3"
+        degrees: 1
+        direction: 180
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 341959.60
+                y: 2756611.80
+                z: 0.0
+            }
+            Point {
+                x: 341959.60
+                y: 2816335.99
+                z: 0.0
+            }
+        }
+    }
+}
+GeomodellerTask {
+    CreateSection {
+        name: "Section_NS4"
+        degrees: 1
+        direction: 180
+        dip: -90.0
+
+        PointList {
+            Point {
+                x: 315866.80
+                y: 2756270.22
+                z: 0.0
+            }
+            Point {
+                x: 315866.80
+                y: 2816444.31
+                z: 0.0
+            }
+        }
+    }
+}
+#---------------------------------------------------------------
+#----------------Import 2D data onto Sections---Base Model------
+#---------------------------------------------------------------
+
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW1"
+        filename: "./Section_EW1/SectionEW1$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW2"
+        filename: "./Section_EW2/SectionEW2$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW3"
+        filename: "./Section_EW3/SectionEW3$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW4"
+        filename: "./Section_EW4/SectionEW4$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW5"
+        filename: "./Section_EW5/SectionEW5$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW6"
+        filename: "./Section_EW6/Section_EW6.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_NS1"
+        filename: "./Section_NS1/SectionNS1$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_NS2"
+        filename: "./Section_NS2/SectionNS2$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_NS3"
+        filename: "./Section_NS3/SectionNS3$thickness.data"
+        spatial_location_error: 1
+    }
+}
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_NS4"
+        filename: "./Section_NS4/SectionNS4$thickness.data"
+        spatial_location_error: 1
+    }
+}
+#---------------------------------------------------------------
+#----------------Import 2D data onto Sections---TIME Model------
+#---------------------------------------------------------------
+
+GeomodellerTask {
+    Import2dDataToSection {
+        section: "Section_EW1"
+        filename: "./Time_data_section_EW1/SectionEW1_$Formations_$Times.data"
+        spatial_location_error: 1
+    }
+}
+#---------------------------------------------------------------
+#-------------------------Import Drillholes---------------------
+#---------------------------------------------------------------
+
+GeomodellerTask {
+    LoadDrillholes {
+        precision: 1.0
+        collarFile: "./Wells/Wells_Collars_200m.csv"
+	  	surveyFile: "./Wells/Wells_Survey_200m.csv"
+	  	geologyFile: "./Wells/Wells_Geology_200m.csv"
+        collarAliases {
+        	node: "HoleID" 
+			node: "X"
+			node: "Y"
+			node: "Z"
+			node: "DEPTH"
+        }
+	surveyAliases {
+        	node: "HoleID"
+			node: "DIP"
+			node: "BEARING"
+			node: "DISTANCE"
+        }
+	geologyAliases {
+        	node: "HoleID"
+			node: "FROM"
+			node: "TO"
+			node: "LITHOLOGY"
+        }
+    }
+}
+#---------------------------------------------------------------
+#----------------------------Compute Model----------------------
+#---------------------------------------------------------------
+
+GeomodellerTask {
+    ComputeModel {
+        SeriesList {
+            node: "All"
+        }
+        SectionList {
+            node: "All"
+        }
+        Extents { 
+		 xmin: 299730
+            ymin: 2756000
+            zmin: -3000
+            xmax: 352130
+            ymax: 2817000
+            zmax: 1000
+        }
+        radius: 10.0
+    }
+}
+#---------------------------------------------------------------
+#-----------------------Add geophysical Properties--------------
+#---------------------------------------------------------------
+
+
+
+#---------------------------------------------------------------
+#--------------------------Export Lithology Voxet---------------
+#---------------------------------------------------------------
+GeomodellerTask {
+    SaveLithologyVoxet {
+        nx: 100
+	    ny: 100
+	    nz: 400
+        LithologyVoxetFileStub: "./Litho_Voxet/LithoVoxet_$Formations$thickness_$Times"
+    }
+}
+#---------------------------------------------------------------
+#--------------------------Save As Model------------------------
+#---------------------------------------------------------------
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./Models_Final/Models_$Formations$thickness_$Times/Models_$Formations$thickness_$Times.xml"
+    }
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+

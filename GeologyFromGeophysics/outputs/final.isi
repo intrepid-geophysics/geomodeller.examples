@@ -1,0 +1,68 @@
+MetaData Begin
+	Name	= final.sg
+	Version	= "Intrepid invbatch v4.0.0 product for Windows (x64) by PELAGIAN optimised build f9b0729c848f "
+	Lithology Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= Lithology
+		Units	= "Lithology"
+	Lithology End
+	Density Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= Density
+		Units	= "none"
+
+	Density End
+	Susceptibility Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= Susceptibility
+		Units	= "none"
+
+	Susceptibility End
+	RemenenceEast Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= RemenenceEast
+		Units	= "none"
+
+	RemenenceEast End
+	RemenenceNorth Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= RemenenceNorth
+		Units	= "none"
+
+	RemenenceNorth End
+	RemenenceDown Begin
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Primitive	= voxet
+		Alias	= RemenenceDown
+		Units	= "none"
+
+	RemenenceDown End
+	Extensions Begin
+		LithologyMapping Begin
+			Map = {
+				"1" "Pitfield_Volcanics" "255a147r000g211b"
+				"2" "Saint_Arnaud_Group" "255a209r094g237b"
+				"3" "Castlemaine_Group" "255a098r184g255b"
+				"4" "Natte_Yallock_Granite_Outer" "255a255r000g000b"
+				"5" "Natte_Yallock_Granite_Inner" "255a205r038g038b"
+				"6" "Black_Bottom_Granite_1" "255a237r161g172b"
+				"7" "Black_Bottom_Granite_2" "255a255r105g105b"
+				"8" "Black_Bottom_Granite_3" "255a255r061g149b"
+				"9" "Ercildoun_Granite" "255a255r098g070b"
+				"10" "Early_Cainozoic_Surface" "255a138r100g008b"
+				"11" "Newer_Volcanics" "255a255r214g000b"
+}
+		LithologyMapping End
+	Extensions End
+MetaData End
