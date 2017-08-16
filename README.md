@@ -3,11 +3,18 @@
 Lots of simple examples of using the batch interface to Geomodeller.
 
 ## Getting Started
+
 Once you have installed geomodeller, there are several ways to access the scripting language to run a repeatable process as captured in the "task" files from within an executing Geomodeller GUI session -
     
+### Run Tasks From The GUI
+
 In the Navigator view of Geomodeller, locate a task file you wish to launch, choose the right most green icon, with a white arrow, choose Run Configurations, choose the plus (+), add Name, choose a task, set the working directory, choose Apply. Or click right, and the Run Asoption is available. 
 
 This is the standard toolkit support for launching processes from within Geomodeller, that is also used behind the scenes for long running tasks.
+
+Interactive GUI Execution of any of the batch tasks is now also supported in the Navigator/ view of your projects. Once tasks are executing OK, check the output, by running geomodeller and opening the created project.
+	
+### Run Tasks In Batch
 
 Alternatively, a CMD window can be opened, by navigating to geophysics>3DInversion>Create Command Window. This command window inherits all the path and environment variables required to execute the "geomodellerbatch" and "invbatch" etc tools. The PATH environment variable can be examined, and will show an entry something like
 
@@ -15,13 +22,6 @@ Alternatively, a CMD window can be opened, by navigating to geophysics>3DInversi
 
 You can also set up a reference to the same bin directory, by modifying your system parameters, so that you can launch a command window from your windows start menu you also need to run "geomodellerbatch" in this command shell, and verify that the executable and jvm.dll is in the "path"
 
-## Create Task Files from an existing project
-
-With V4.0, you can now convert any Geomodeller geology model back to its original sparse observations and the creation steps for defining the formations, faults and the geological pile.
-File>Save batch script Options for refactoring your model, to eliminate any sections are also supported.
-
-Interactive GUI Execution of any of the batch tasks is now also supported in the Navigator/ view of your projects. Once tasks are executing OK, check the output, by running geomodeller and opening the created project.
-	
 Geology Run Instruction:  anything with geology modelling with the following command:
 	
 	geomodellerbatch name_ofprocess.task
@@ -33,6 +33,11 @@ Geophysics Run Instruction: anything to with geophysics modelling with the follo
 There is cross over to the geophysics processing available within Intrepid using the same philosophy and approach
 
 A lot more access to processing and auto-generating interpretions from geophysical datasets are accessible via this same protbuf messaging system.
+
+## Create Task Files From An Existing Project
+
+With V4.0, you can now convert any Geomodeller geology model back to its original sparse observations and the creation steps for defining the formations, faults and the geological pile.
+File>Save batch script Options for refactoring your model, to eliminate any sections are also supported.
 
 ## API
 
