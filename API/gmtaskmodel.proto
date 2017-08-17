@@ -1130,8 +1130,10 @@ message CreateMeshGrid_GMT {
     optional sint32 nx = 21 [ default = 20];  // number of cells in X direction
 	optional sint32 ny = 22 [ default = 20];
 	optional sint32 nz = 23 [ default = 20];
+	optional bool AddGeologyField = 8 [default=false]; // useful, when bringing in a foreign mesh grid in the first place
+	optional string ReportFile = 16 [ default = "create_meshgrid.rpt"];  // here is where the results are listed
 
-    optional string log = 99 [default ="create_meshgrid.rpt"];
+    optional string log = 99 [default ="create a mesh grid"];
 }
 
 //####
@@ -1797,6 +1799,41 @@ message GetComputedGradientAtXYZ_GMT {
     repeated AddPoint3d_GMT Point = 2;  // list of 3d query points
 	optional string log = 255;
 }
+enum Distribution_Type {
+        TopFormation_Gradient = 1; // linear, p1 = starting value at top, p2 = gradient
+        TopAndBottom = 2;  //  p1 = top value, p2 = bottom value, linear interpolate
+        DepthParameter_Gradient = 3; //  p1 = depth, p2 = value at that depth, p3 = gradient
+        BottomFormation_Gradient = 4; // linear, p1 = starting value at bottom, p2 = gradient going back up
+        }
+//  ###
+//  method to populate a mesh grid with a prescribed property distribution
+// requires a lithology field and a computed geology model
+// already setup in the meshgrid
+//  eg will create a velocity model, a density distribution
+// by formation, and by use of linear gradients
+//  OK for any regular 3D grid
+//  OK for a point cloud, unfinished for semi-regular etc
+// if repeatedly used, each innvocation adds another "ExternalDriftField_NUM"
+// so far, this method is pretty slow to do its business
+// depth is positive upwards in Geomodeller
+
+message ComputeExternalDriftField_GMT {
+	message Formation_Distribution {
+	    required string formation = 1 ;
+	    optional Distribution_Type Type = 2;  // one of 3 ways to specify a distribution
+		optional double p1 = 3 [default = 0.0]; // the gradient is in units of delta / meter
+	    optional double p2 = 4 [default = 0.0];
+	    optional double p3 = 5 [default = 0.0];
+	}
+
+    required SourceMeshGrid_GMT MeshGrid_Source = 1;
+    repeated Formation_Distribution required_drift_function = 3;
+    optional ctm.Distance_Units DepthUnit = 4 [ default = meters];
+    optional ctm.PropertyType Property_Type = 5 [ default = Density];
+    optional ctm.MeshGrid_TypeMeshGrid TypeMeshGrid = 13 [default= MeshGrid_VERTEX];
+    optional string output_report_file = 99 [default ="ComputeExternalDriftField.rpt"];
+    optional string log = 255;
+}
 //  ###
 //  AXIAL surface support
 enum FoldType {
@@ -2069,6 +2106,7 @@ message GeomodellerTask {
     optional BuildTripleLines_GMT BuildTripleLines = 53; // where do all the formations, faults, boundaries meet??
 	optional PrismFeFLOWTriangulation_GMT PrismFeFLOWTriangulation = 67;
     optional MeshUnitForGeophys_GMT MeshUnitForGeophys = 111;
+    optional ComputeExternalDriftField_GMT ComputeExternalDriftField = 114;
 
     optional ComputeVariogram_GMT ComputeVariogram = 120;
     optional ImportTripleLines_GMT ImportTripleLines = 130; // where do all the formations, faults, boundaries meet??

@@ -96,17 +96,6 @@ InversionTask {
 			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean:0.000001; stddev: 0.0;}}
 			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.4784; stddev: 0.2392;}}
 			
-			LithologyProperty { lithology: "Newer_Volcanics"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Ercildoun_Granite"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Castlemaine_Group"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Pitfield_Volcanics"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.0; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Newer_Volcanics"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Ercildoun_Granite"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
@@ -211,7 +200,6 @@ InversionTask {
 		PreserveVerticalRelationshipTest: true;
 		PreserveVerticalDensityGradientTest: false;
 		CommonalityTest { SetWeights: LocalAbundance; Allow: true; }
-		CommonalityVolumeTest { SetWeights: none; Allow: false; }
 		VolumeRatioTest { SetWeights: none; Allow: false; }
 		ShapeRatioTest { SetWeights: none; Allow: false; IncludeAboveTopoFaces: false; IncludeOutsideFaces: false; }
 		DilationOrErosionFilter { Rate: 5000; Allow: false; }

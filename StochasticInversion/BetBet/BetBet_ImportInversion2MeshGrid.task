@@ -20,7 +20,7 @@ GeomodellerTask {
 GeomodellerTask {
     LoadMeshGrid{
     	SourceType: File;
-        File_Name: "Case_Joint/run2/final.sg"; # 
+        File_Name: "basement_geology_060605f/Case_Joint/run2/final.sg"; # 
 		MeshGrid_Name: "3DInversion";
 		FileType: FT_VOXET;
 	#	header_records: 2;
@@ -41,8 +41,7 @@ GeomodellerTask {
         FileType: FT_IGMESH;  # export these     
       }
 	OutputMeshType: ODT_SemiRegularMesh3D
-	OutFileType: FT_ASCII;  # FT_VOXET?
-#	OutDataFormat: DF_GOCADSGRID
+	OutFileType: FT_ASCII;
 	OutDataFormat: DF_CSV
 	OutFileName: "BetBet_VariableDepthDensity.csv"
   }

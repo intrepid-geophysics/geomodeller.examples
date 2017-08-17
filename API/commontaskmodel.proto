@@ -597,7 +597,7 @@ enum PropertyType {
 	IP_TIME_DECAY = 21;
 	// now for geometry pertubation types, rather than material properties
 	Commonality = 3;			// geological laws
-	CommonalityVolume = 4;
+	CommonalityVolume = 4;  // deprecated at V4, not easy to make work
 	ShapeRatio = 5;
 	VolumeRatio = 6;
 	PreserveVerticalRelationship = 11;

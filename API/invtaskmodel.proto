@@ -348,7 +348,7 @@ message RunControl_GMT {
 	optional ShapeRatioTest_GMT ShapeRatioTest = 4;          
 	optional VolumeRatioTest_GMT VolumeRatioTest = 5;
 	optional CommonalityTest_GMT CommonalityTest = 6; 
-	optional CommonalityVolumeTest_GMT CommonalityVolumeTest = 7;
+	optional CommonalityVolumeTest_GMT CommonalityVolumeTest = 7;  // deprecated at V4
 	optional DilationOrErosionFilter_GMT DilationOrErosionFilter = 8; 
 	optional HomogeneousFilter_GMT HomogeneousFilter = 9; 
 

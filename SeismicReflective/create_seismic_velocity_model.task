@@ -1,0 +1,59 @@
+#Batch Test of drift / function specification of a velocty model
+
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "A6Completed_Project/A6Completed_Project.xml"
+    log: "Opening project for creating/adding a velocity model"
+  }
+}
+GeomodellerTask {
+	CreateMeshGrid {
+		CreateDestinationType: Project;
+		AddGeologyField: true;  # here is where the current geology is created in the voxet
+		OutputMeshType: ODT_RegularMesh3D;
+		MeshGrid_Name : "SeismicProperties";
+		FileType: FT_IGMESH;
+#		Field_Name: "Lithology"; #  adding a litho field is redundent, as we add the geology of current model., also this new field would not have litho at all, just a zero
+		dx: 500; 
+		dy: 500;
+		dz: 200; 
+		Extents {	    	
+	           xmin: 100000.0;
+	           ymin: 2000000.0;
+	           zmin: -80000;
+	           	xmax: 110000.0;
+	            ymax: 2010000.0;
+	            zmax: 2000;
+			}
+		#	nx: 165;			
+		#	ny: 212;
+		#	nz: 200;
+		log: "creating voxet representation of A6"
+		}
+}
+
+# new command to allow arithmetic and functions to create property distributions
+GeomodellerTask {
+	ComputeExternalDriftField {
+	MeshGrid_Source {
+		SourceType: Project;
+		MeshGrid_Name:  "SeismicProperties";
+	}   	    
+	DepthUnit: meters;
+	Property_Type: SonicVelocity;
+	output_report_file: "ComputeExternalDriftField.rpt";
+	required_drift_function {formation: "Dyke";Type:TopAndBottom; p1: 5000; p2: 6000;}
+	required_drift_function {formation: "Granite";Type:TopAndBottom; p1: 6400; p2: 6500;}
+	required_drift_function {formation: "UpperCover";Type:TopFormation_Gradient; p1: 4500; p2: -0.0025;}
+	required_drift_function {formation: "MiddleCover";Type:TopFormation_Gradient; p1: 4700; p2: -0.0025;}
+	required_drift_function {formation: "LowerCover";Type:TopFormation_Gradient; p1: 5000; p2: -0.0025;}
+	required_drift_function {formation: "Basement";Type:TopAndBottom; p1: 6000; p2: 6100;}
+	}
+}
+
+GeomodellerTask {
+    SaveProjectAs {
+        filename: "./TutA/TutA_velocity_model.xml"
+    }
+}

@@ -1,0 +1,32 @@
+DatasetHeader Begin
+	LastUpdated	= Mon Aug 07 11:54:45 GMT 2017
+	Version	= "5.0"
+	DataSetType	= ERStorage
+	DataType	= Raster
+	HeaderOffset	= 0
+	CoordinateSpace Begin
+		Projection	= "MGA50"
+		CoordinateType	= EN
+		Units	= "METERS"
+		Datum	= "GDA94"
+		Rotation	= 0:0:0 
+	CoordinateSpace End
+	ByteOrder	= LSBFirst
+	RasterInfo Begin
+		CellType	= IEEE4ByteReal
+		NrOfLines	= 200
+		NrOfCellsPerLine	= 510
+		NrOfBands	= 1
+		NullCellValue	= -99999.00000000
+		CellInfo Begin
+			Xdimension	=             100
+			Ydimension	=             100
+		CellInfo End
+		RegistrationCellX	= 0
+		RegistrationCellY	= 0
+		RegistrationCoord Begin
+			Eastings	=   508976.794017
+			Northings	=    7512032.2963
+		RegistrationCoord End
+	RasterInfo End
+DatasetHeader End

@@ -44,8 +44,6 @@ InversionTask {
 			LithologyProperty { lithology: "Crust"; index_voxet_key: 2; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.670000; stddev: 0.070000;}}
 			LithologyProperty { lithology: "Basin"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 0.000000;}}
 			LithologyProperty { lithology: "Crust"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 0.000000;}}
-			LithologyProperty { lithology: "Basin"; property: CommonalityVolume; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Crust"; property: CommonalityVolume; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Basin"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.001000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Crust"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Basin"; property: ShapeRatio; ProbabilityDistributionFunction {type: LogNormalDistribution; mean: 0.250000; stddev: 0.050000;}}
@@ -90,7 +88,6 @@ InversionTask {
 		PreserveTopology: false;
 		PreserveVerticalRelationshipTest: true;
 		CommonalityTest { SetWeights:GlobalCommonality; Allow:true;}
-		CommonalityVolumeTest { SetWeights:LocalAbundance; Allow:true;}
 		VolumeRatioTest { SetWeights:LocalAbundance; Allow:true;}
 		ShapeRatioTest { SetWeights:LocalAbundance; Allow:true; IncludeAboveTopoFaces:true; IncludeOutsideFaces:true;}
 	}
