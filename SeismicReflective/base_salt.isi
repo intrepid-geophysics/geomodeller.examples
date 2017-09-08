@@ -1,0 +1,10 @@
+MetaData Begin
+	Name	= base_salt.grd
+	Version	= "Intrepid Project Manager Tool v5.6.2 intrepid_v5 for Windows (x64) by PELAGIAN optimised build d755d6802519 "
+	base_salt.grd Begin
+		GroupBy	= no
+		DataType	= IEEE4ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+	base_salt.grd End
+MetaData End

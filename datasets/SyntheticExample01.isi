@@ -1,0 +1,158 @@
+MetaData Begin
+	Name	= SyntheticExample01.gdb
+	Version	= "Intrepid Project Manager Tool v6.0.0 product for Windows (x64) by PELAGIAN optimised build b7d99434c701+ "
+	X Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= X
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	X End
+	Y Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Y
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Y End
+	elev Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	elev End
+	tmi Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	tmi End
+	Bxx Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Bxx End
+	Byy Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Byy End
+	Bzz Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Bzz End
+	Bxy Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Bxy End
+	Bxz Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Bxz End
+	Byz Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		Width	= 10
+		Decimals	= 1
+		DisplayNullAs	= 99999
+	Byz End
+	Tensor Begin
+		GroupBy	= no
+		DataType	= Tensor
+		ByteOrder	= LSBFirst
+		Bands	= 1
+		CoordinateSystemType	= "NED"
+		Width	= 16
+		DisplayNullAs	= 99999
+		Units	= "Eotvos"
+	Tensor End
+	GS_Fiducial Begin
+		GroupBy	= no
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= Fiducial
+		Width	= 16
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	GS_Fiducial End
+	GS_Line Begin
+		GroupBy	= yes
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= LineNumber
+		Width	= 16
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	GS_Line End
+	GS_StrLine Begin
+		GroupBy	= yes
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Width	= 16
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	GS_StrLine End
+	GS_LType Begin
+		GroupBy	= yes
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= LineType
+		Width	= 16
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	GS_LType End
+	GS_Flight Begin
+		GroupBy	= yes
+		DataType	= IEEE8ByteReal
+		ByteOrder	= LSBFirst
+		Alias	= FlightNumber
+		Width	= 16
+		Decimals	= 4
+		DisplayNullAs	= 99999
+	GS_Flight End
+	GS_Date Begin
+		GroupBy	= yes
+		DataType	= Date
+		ByteOrder	= LSBFirst
+		Alias	= DateCode
+		Width	= 16
+		DisplayNullAs	= 99999
+	GS_Date End
+MetaData End

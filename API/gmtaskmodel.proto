@@ -213,7 +213,9 @@ message CreateProject_GMT {
     optional ctm.Vertical_Units Zunits = 10 [ default = meters_elevation];
     optional double precision = 12 [default = 1.0];			// Precision for the project in units
 
-    required ctm.BoundingBox Extents = 14;
+    optional ctm.BoundingBox Extents = 14; //must have this if not building from voxet
+
+    optional SourceMeshGrid_GMT CreateFromVoxet = 15; //Generate project from voxet
 
     optional double deflection2d = 16 [default = 0.001];
     optional double deflection3d = 17 [default = 0.001];
@@ -973,12 +975,14 @@ message SaveLithologyVoxet_GMT {
 //  write the current computed model for your project geology gradient components
 //  writes all the query results to a voxet file  , also stores the Lithology rank
 // calls two methods, optional for the Potential voxet, always for the gradients
+//  a significant clique of users (hydrogeologists) are interested in the trends being recast to the 3 Euler Angles
+//  Intrepid generally use Quaternions for this transformation, as part of the underlying tensor support
 message SavePotentialGradientVoxet_GMT {
 		required int32 nx = 1;  // number of cells in X direction
 		required int32 ny = 2;
 		required int32 nz = 3;
 		optional bool Just_Gradients = 5 [default = true]; // isopotential numbers not very interesting, vector of trend is however.
-		optional bool OneVoxet_Lithology = 6 [default = false]; // just do the current pile
+		optional bool OneVoxet_Lithology = 6 [default = false]; // just do the current pile, if true, split into seperate voxets by formation
 		required string VoxetFileStub = 4;  //  a Gocad voxet will be created with this as the stub name
 		optional string log = 15 [default ="save_potentialvoxet.rpt"];
 }
@@ -1103,9 +1107,10 @@ message SourceMeshGrid_GMT {
     optional string MeshGrid_Name = 3;  //  mesh grid
     // also supports the VTK formats  vtp, vtu, vtr
     optional ctm.DfaFileType FileType = 4 [ default = FT_IGMESH];
-    optional string Field_Name = 5;  // not necessarily used
+    optional string Field_Name = 5;  // not necessarily used eg LogCond, LogRes, Density
     optional sint32 header_records = 6 [default = 0];  // for some ASCII grids,
     optional string log = 255 [default ="source_meshgrid.rpt"];
+    optional bool isElevationMeasure = 11 [default=true];  // assume the positive value in the grid file is an elevation, false for a depth
 }
 //####
 /// Create a mesh grid with the given file name. This will create all the supported formats.
@@ -1679,40 +1684,79 @@ message Export3DShapes_GMT {
 //###
 enum SiteType3D {
     VRML_Site = 0;  // mostly deprecated
-    PDF3D_Site = 1;
+    PDF3D_Site = 1;  // the older method - now deprecated
     PDF3D_direct = 2;  // try the new vtk to pdf methods for vtp's, only at vtk V8, so not yet
+	ADOBE_PRC = 3;  // The PRC file format (ISO 14739-1) - the one to use!!
 }
 enum GeomodellerDataType {
    Structure = 1;  // Geological structures, formation surfaces
    	Model = 2;  // 3d shapes
    	MeshGrid = 3;  // stuff from the mesh grids
    	DrillHoles = 4;
+   	Inversion_Result = 5;
    	All_Parts = 10;
 }
 
-/// Export  GeoModeller to VRML or PDF3d.
+/// Export  GeoModeller to VRML, PDF3d.
 // Converting VTP files to PDF3D
 // based upon an existing utility that is already shipping, but undocumented
 //  vtp2pdf3d.exe, now converetd over to the standard API
 // extensions to convert other VTK data formats to vtp are required for meshgrids support.
 // basically, surfaces are converted to lines and wireframes
 // you should have a previously opened geomodeller project to exercise this option
-//  if you run without an open project, your options are limired to lists of files that you supply
+//  if you run without an open project, your options are limited to lists of files that you supply
 message ExportProjectSite_GMT {
 	repeated GeomodellerDataType dataType = 1;
 	optional SiteType3D myTypeSite = 2 [default = PDF3D_Site];
     optional string Name = 3;  //  unit name
+    // vrml options - old school, so deprecated now
     optional string VRMLFile_Name = 4;  //  vrml file name
     optional bool DoTextureEnhancement = 6 [default = true]; // texture DEF image ImageTexture
     optional bool AddLighting = 7 [default = false]; // add a camera, light, based upon a box,  maximum box dimension of your data, to its centre
 
     // pdf3d options
+    // workflow A
     repeated string vtp_files = 10; // list of vtp files from your project, if you want to do them from a list
 	optional string output_pdf3d = 11 [default ="myProject.pdf"];
-	optional string output_u3d = 12 [default ="myProject.u3d"];
-	optional string output_ifx = 13 [default ="myProject.idtf"];  // also a possibility
+	optional string output_u3d = 12 [default ="myProject.u3d"];  // deprecated
+//	optional string output_ifx = 13 [default ="myProject.idtf"];  // deprecated
+	// workflow B
 	optional string output_png = 14 [default ="myProject.png"];  // also done
-	optional string output_report_file = 20 [default ="ExportProjectSite.rpt"];
+// PRC options - prefered route, as it is now ISO
+	optional string output_prc = 15 [default ="myProject.prc"];  // new option
+// meshgrids include triangulated surfaces, vertex/point clouds so far
+	repeated  SourceMeshGrid_GMT MeshGrid_Source = 20;  // name of igmesh
+	optional double solution_radius = 21 [default = 5.0];  // radius of the ball at each solution site in the point cloud
+// Inversion results include  vertex/point clouds, voxets
+	// so far, just one set of results / pdf
+	optional string Inversion_Case = 30 [default ="Case1"];
+	optional string Inversion_Run = 31 [default ="Run1"];
+	optional string Inversion_Product = 32 [default = "final.vo"];
+	// probably not for the current way inversion results are stored,
+	// wait till they show up in a meshgrid as a point cloud
+	optional string Inversion_AEM = 40 [default ="EM2DInv"];
+	repeated string Line_Number = 41 ;
+	repeated int32 Iteration = 42 ;
+// the graphic presentation stuff
+	optional bool AddTicks = 60 [default = false]; //
+	optional bool AddSections = 61 [default = false];
+    optional ctm.BoundingBox Extents = 62;
+    optional double VerticalExaggeration = 63 [default = 1.0];
+    optional int32 PageHeightPixels = 70 [default = 700];
+    optional int32 PageWidthPixels = 71 [default = 920];
+    // background colour
+    optional double background_red = 72 [default = 200.0];
+    optional double background_green = 73 [default = 200.0];
+    optional double background_blue = 74 [default = 200.0];
+    optional string view_name = 75 [default ="DefaultView"];
+    optional bool ShowToolBar = 76 [default = true];   // enable visibility of ToolBar
+	optional bool ShowNavigationPanel = 77 [default = false];     // enable visibility of Navigation Panel
+	optional bool SetOrthogonalProjection = 78 [default = false];
+	// or
+	optional bool SetPerspectiveProjection = 79 [default = true];
+ 	optional double field_of_view = 80 [default = 45.0]; // 0 to 180 degrees
+	optional string ReportFile = 90 [default ="ExportProjectSite.rpt"];
+
 	optional string log = 255;
 }
 //#
@@ -1799,7 +1843,9 @@ message GetComputedGradientAtXYZ_GMT {
     repeated AddPoint3d_GMT Point = 2;  // list of 3d query points
 	optional string log = 255;
 }
+//  ###
 enum Distribution_Type {
+	// concept of gradient is standard, so for a density, "g/cc" / meter, usually a negative number as up is positive
         TopFormation_Gradient = 1; // linear, p1 = starting value at top, p2 = gradient
         TopAndBottom = 2;  //  p1 = top value, p2 = bottom value, linear interpolate
         DepthParameter_Gradient = 3; //  p1 = depth, p2 = value at that depth, p3 = gradient
@@ -1812,8 +1858,9 @@ enum Distribution_Type {
 //  eg will create a velocity model, a density distribution
 // by formation, and by use of linear gradients
 //  OK for any regular 3D grid
-//  OK for a point cloud, unfinished for semi-regular etc
+//  OK for a point cloud, unfinished for semi-regular, unstructured etc
 // if repeatedly used, each innvocation adds another "ExternalDriftField_NUM"
+// recent change is to name the new field in the meshgrid after its property Type.
 // so far, this method is pretty slow to do its business
 // depth is positive upwards in Geomodeller
 

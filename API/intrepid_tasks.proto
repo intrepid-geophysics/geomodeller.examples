@@ -1622,11 +1622,12 @@ enum diskUsageRules {
 message grid_subset_INT {
 		// subset support during fft filtering ops
 		// option to define a box explicitly
+		// you can just also force an explicit expansion of your grid, as we always do 120% by default
 	optional double XLower           =1;  // all default to NULL
 	optional double XUpper           =2;
 	optional double YLower           =3;
 	optional double YUpper           =4;
-	optional double FFT_BorderPercentExpansion         =5 [ default =120]; // subset border in percentage
+	optional double FFT_BorderPercentExpansion         =5 [ default =120]; // subset expansion of grid border in percentage ( padding)
 	optional string SubsetGridName    =6 [ default = "subset.ers"];
 	// option to define a square subset in terms of cells, for purpose of a moving window power spectra
 	optional int32 NumberCellsForFFTPower = 7 [ default = 32];  // should be power of 2 eg 32,64,128 etc
@@ -2774,6 +2775,7 @@ enum Dyke_Style // what style of modelling code to use?
 	DS_TRIANGLES = 0; //  triangular facets
 	DS_SKELETON_SHEET = 1; // limit sheet formulae
 	DS_PRISM = 2; // prism formulae
+	DS_PIPES = 3; // sequence of pipes formulae
 }
 //####
 // main methods for computing rapid forward model response for dykes

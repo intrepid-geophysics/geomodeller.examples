@@ -1,0 +1,46 @@
+# the Riverlans, South Australia, AEM survey, frequency Domain, using the RESOLVE system
+#  2.5D AEM inversion product and results delivery
+# plot out a line of pridicted Log Conductivity results using a point cloud on a section,
+# no support as yet for intermediate result plotting, by iteration number
+# show where the drill holes area as well.
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./Riverland_Sub_EWG_Train/Riverland_Sub_EWG_Train.xml"
+    log: "Opening project for prc export"
+  }
+}
+
+GeomodellerTask {
+  ExportProjectSite {
+  	myTypeSite: ADOBE_PRC;
+	dataType: [Inversion_Result,MeshGrid,DrillHoles];
+#	Inversion_AEM: "EM2DInv/EM2DInv_1/Inversion_01";
+	Line_Number: ["Line_0031003"];
+#	Iteration: 30;
+	MeshGrid_Source {
+		SourceType: Project;
+		MeshGrid_Name: "EM2DInv04_SmthSecs_S31003";
+		Field_Name: "LogCond";  #  LogRes etc
+	}
+	ShowNavigationPanel: true;
+	ShowToolBar: true;
+	SetPerspectiveProjection: true;
+	field_of_view: 90.0;
+	view_name: "RiverLand";
+	VerticalExaggeration: 3.0
+	solution_radius: 5.0;
+	AddTicks: true;
+	AddSections: true;
+	PageHeightPixels: 700;
+	PageWidthPixels: 1000;
+	background_red: 100.0;	
+	background_green: 200.0;	
+	background_blue: 100.0;	
+	output_prc: "Riverland.prc"
+	output_pdf3d: "Riverland.pdf"
+	ReportFile: "resolve.rpt"
+    log: "Open, then dump to adobe prc syntax, the project"
+  }
+}
+

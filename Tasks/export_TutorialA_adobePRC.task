@@ -1,0 +1,35 @@
+# this is the test of the Geomodeller export to PRC
+# uses the Project, and allows a list fo selected data types and converts them to the newer PRC/ISO syntax
+# aim is to convert any mesh to a triangulated rendition etc
+
+GeomodellerTask {
+  OpenProjectNoGUI {
+    filename: "./A6Completed_Project/A6Completed_Project.xml"
+    log: "Opening project for prc export"
+  }
+}
+
+GeomodellerTask {
+  ExportProjectSite {
+  	myTypeSite: ADOBE_PRC;
+	dataType: [Structure,Model,MeshGrid,DrillHoles];
+	output_prc: "tutorialA.prc"
+	ShowNavigationPanel: true;
+	ShowToolBar: true;
+	SetPerspectiveProjection: true;
+	field_of_view: 60.0;
+	view_name: "TutorialA";
+	VerticalExaggeration: 1.0
+	AddTicks: true;
+	AddSections: true;
+	PageHeightPixels: 680;
+	PageWidthPixels: 1024;
+	background_red: 100.0;	
+	background_green: 200.0;	
+	background_blue: 100.0;	
+	ReportFile: "tutorialA_prc_Export.rpt"
+	output_pdf3d: "A6Completed_Project.pdf"
+    log: "Open, then dump to adobe prc syntax, the project"
+  }
+}
+

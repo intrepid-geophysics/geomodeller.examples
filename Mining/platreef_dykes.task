@@ -1,0 +1,836 @@
+name: "Geology of Potgietersrus limb of Bushveld complex - study of dyke interactions."
+description: "Sections, Pile, Interface, Foliations, Litho Properties, no meshgrids (except DTM), or computed geology"
+GeomodellerTask {
+  CreateProject {
+    CustomDTM {
+      name: "srtm_survey_expanded"
+      filename {
+        Grid_Name: "srtm_survey_expanded.ers"
+      }
+      Extents {
+        xmin: 683000
+        ymin: 7330000
+        xmax: 703000
+        ymax: 7360000
+      }
+      nx: 5
+      ny: 5
+      isElevationMeasure: true
+    }
+    name: "Potgietersrus"
+    author: "develop-des"
+    date: "27/10/2011 18:22:20"
+    projection {
+      geographic2DCS: "WGS 84 / UTM zone 35S"
+      map_projection: "WGS 84 / UTM zone 35S"
+    }
+    version: "1.0"
+    precision: 1
+    Extents {
+      xmin: 683000
+      ymin: 7330000
+      zmin: -3000
+      xmax: 703000
+      ymax: 7360000
+      zmax: 2000
+    }
+    deflection2d: 0.001
+    deflection3d: 0.0001
+    discretisation: 1000000
+    referenceTop: true
+  }
+  CreateDyke {
+    name: "Dyke5"
+    red: 31
+    green: 177
+    blue: 170
+    LithologyProperty {
+      lithology: "Dyke5"
+      property: Susceptibility
+      ProbabilityDistributionFunction {
+        type: LogNormal
+        mean: 0.0008975
+        stddev: 0.0014708962282519167
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateDyke {
+    name: "Dyke4"
+    red: 237
+    green: 154
+    blue: 73
+    LithologyProperty {
+      lithology: "Dyke4"
+      property: Susceptibility
+      ProbabilityDistributionFunction {
+        type: LogNormal
+        mean: 0.0025533333333333332
+        stddev: 0.0041109285244739216
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateDyke {
+    name: "Dyke1"
+    red: 66
+    green: 205
+    blue: 128
+    LithologyProperty {
+      lithology: "Dyke1"
+      property: Susceptibility
+      ProbabilityDistributionFunction {
+        type: LogNormal
+        mean: 0.00019
+        stddev: 0.00019798989873223328
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateDyke {
+    name: "Dyke6"
+    red: 24
+    green: 116
+    blue: 205
+    LithologyProperty {
+      lithology: "Dyke6"
+      property: Susceptibility
+      ProbabilityDistributionFunction {
+        type: LogNormal
+        mean: 0.000492
+        stddev: 0.00054769517069260345
+      }
+    }
+  }
+}
+GeomodellerTask {
+  CreateDyke {
+    name: "Dyke7"
+    red: 84
+    green: 107
+    blue: 47
+    LithologyProperty {
+      lithology: "Dyke7"
+      property: Susceptibility
+      ProbabilityDistributionFunction {
+        type: LogNormal
+        mean: -1.0000000000000003e-005
+        stddev: 9.8994949366116653e-005
+      }
+    }
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Dyke5_Series"
+    position: 1
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddDykeToSeries {
+    series: "Dyke5_Series"
+    dyke: "Dyke5"
+    asBase: true
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Dyke4_Series"
+    position: 2
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddDykeToSeries {
+    series: "Dyke4_Series"
+    dyke: "Dyke4"
+    asBase: true
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Dyke1_Series"
+    position: 3
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddDykeToSeries {
+    series: "Dyke1_Series"
+    dyke: "Dyke1"
+    asBase: true
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Dyke6_Series"
+    position: 4
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddDykeToSeries {
+    series: "Dyke6_Series"
+    dyke: "Dyke6"
+    asBase: true
+  }
+}
+GeomodellerTask {
+  SetSeries {
+    name: "Dyke7_Series"
+    position: 5
+    relation: "erode"
+  }
+}
+GeomodellerTask {
+  AddDykeToSeries {
+    series: "Dyke7_Series"
+    dyke: "Dyke7"
+    asBase: true
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 691940.28869025374
+      v: 7336181.5333778365
+    }
+    direction: 140
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy0"
+    thickness: 173.7
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 60
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 691940.28869025374
+        v: 7336181.5333778365
+      }
+      Point {
+        u: 691907.58669025369
+        v: 7336162.6533778366
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 689441.916
+      v: 7333582.424
+    }
+    direction: 136.39233330971075
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy1"
+    thickness: 393.1
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 48
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 689441.916
+        v: 7333582.424
+      }
+      Point {
+        u: 689394.284
+        v: 7333542.456
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 700140.282
+      v: 7348587.315
+    }
+    direction: 125.40950979921264
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy2"
+    thickness: 393.1
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 73.2
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 700140.282
+        v: 7348587.315
+      }
+      Point {
+        u: 700104.858
+        v: 7348536.725
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 699049.12
+      v: 7346287.212
+    }
+    direction: 130.56556102220011
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy3"
+    thickness: 131.6
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 65
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 699049.12
+        v: 7346287.212
+      }
+      Point {
+        u: 699043.36
+        v: 7346280.348
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 697907.837
+      v: 7344131.827
+    }
+    direction: 134.38405339397315
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy4"
+    thickness: 471.7
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 56
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 697907.837
+        v: 7344131.827
+      }
+      Point {
+        u: 697852.583
+        v: 7344076.573
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 696200.115
+      v: 7341692.313
+    }
+    direction: 142.72456628648564
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy6"
+    thickness: 393.1
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 67.7
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 696200.115
+        v: 7341692.313
+      }
+      Point {
+        u: 696151.905
+        v: 7341654.647
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke5"
+    Point {
+      u: 694834.759
+      v: 7340124.68
+    }
+    direction: 145.73931244582826
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy7"
+    thickness: 131.6
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 55
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke5"
+    PointList {
+      Point {
+        u: 694834.759
+        v: 7340124.68
+      }
+      Point {
+        u: 694826.421
+        v: 7340118.84
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke4"
+    Point {
+      u: 689601.955
+      v: 7350398.009
+    }
+    direction: 170.0200985549636
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy8"
+    thickness: 273
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 40
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke4"
+    PointList {
+      Point {
+        u: 689601.955
+        v: 7350398.009
+      }
+      Point {
+        u: 689564.985
+        v: 7350391.491
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke4"
+    Point {
+      u: 693058.4
+      v: 7352682.454
+    }
+    direction: 171.01067950811674
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy9"
+    thickness: 189.6
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 38
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke4"
+    PointList {
+      Point {
+        u: 693058.4
+        v: 7352682.454
+      }
+      Point {
+        u: 693037.6
+        v: 7352678.786
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke4"
+    Point {
+      u: 698529.938
+      v: 7354445.672
+    }
+    direction: 171.65656507634472
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy10"
+    thickness: 978.1
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 40
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke4"
+    PointList {
+      Point {
+        u: 698529.938
+        v: 7354445.672
+      }
+      Point {
+        u: 698353.422
+        v: 7354414.548
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke1"
+    Point {
+      u: 685708.083799733
+      v: 7341670.9295554068
+    }
+    direction: 161.057
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy11"
+    thickness: 180
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 69
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke1"
+    PointList {
+      Point {
+        u: 685708.083799733
+        v: 7341670.9295554068
+      }
+      Point {
+        u: 685681.415799733
+        v: 7341661.2235554066
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke1"
+    Point {
+      u: 697435.26362883847
+      v: 7347862.780251001
+    }
+    direction: 160.132
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy12"
+    thickness: 109.7
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 70
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke1"
+    PointList {
+      Point {
+        u: 697435.26362883847
+        v: 7347862.780251001
+      }
+      Point {
+        u: 697440.63962883851
+        v: 7347864.7362510012
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke6"
+    Point {
+      u: 692334.423
+      v: 7340158.415
+    }
+    direction: 95.426910068549461
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy13"
+    thickness: 227.5
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 70.5
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke6"
+    PointList {
+      Point {
+        u: 692334.423
+        v: 7340158.415
+      }
+      Point {
+        u: 692331.897
+        v: 7340129.545
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke6"
+    Point {
+      u: 693442.454
+      v: 7344468.059
+    }
+    direction: 100.50198207715788
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy15"
+    thickness: 109.7
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 55.9
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke6"
+    PointList {
+      Point {
+        u: 693442.454
+        v: 7344468.059
+      }
+      Point {
+        u: 693441.506
+        v: 7344462.681
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke6"
+    Point {
+      u: 695071.864189586
+      v: 7350020.4464445924
+    }
+    direction: 99.980402493387231
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy16"
+    thickness: 131.6
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 80.5
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke6"
+    PointList {
+      Point {
+        u: 695071.864189586
+        v: 7350020.4464445924
+      }
+      Point {
+        u: 695070.100189586
+        v: 7350010.4404445924
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke6"
+    Point {
+      u: 692080.23668624833
+      v: 7331721.3374993326
+    }
+    direction: 99.930108027823124
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy17"
+    thickness: 140.6
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 85.5
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke6"
+    PointList {
+      Point {
+        u: 692080.23668624833
+        v: 7331721.3374993326
+      }
+      Point {
+        u: 692078.47268624837
+        v: 7331711.3314993326
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke7"
+    Point {
+      u: 689952.3092456609
+      v: 7343834.9008758338
+    }
+    direction: 200.35599321724445
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy18"
+    thickness: 60
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 70.4
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke7"
+    PointList {
+      Point {
+        u: 689952.3092456609
+        v: 7343834.9008758338
+      }
+      Point {
+        u: 689932.21924566093
+        v: 7343842.2128758337
+      }
+    }
+  }
+}
+GeomodellerTask {
+  AddDykeStructuralDataToSection {
+    section: "SurfaceTopography"
+    dyke_name: "Dyke7"
+    Point {
+      u: 702841.897
+      v: 7344716.41
+    }
+    direction: 166.10764134982719
+    strike: 0
+    Provenance: field_observation
+    observationID: "Naudy19"
+    thickness: 55
+    OrientationMethod: DIPAZIMUTH
+    polarity: Reverse_Polarity
+    dip: 80
+  }
+}
+GeomodellerTask {
+  AddInterfaceToSection {
+    section: "SurfaceTopography"
+    topFormation: "Dyke7"
+    PointList {
+      Point {
+        u: 702841.897
+        v: 7344716.41
+      }
+      Point {
+        u: 702827.263
+        v: 7344713.83
+      }
+    }
+  }
+}
+GeomodellerTask {
+    ComputeModel {
+        FaultList {
+            node: "All"
+        }
+        SectionList {
+            node: "All"
+        }
+        SeriesList {
+            node: "All"
+        }
+        radius: 10.0
+    }
+}
+GeomodellerTask {
+    GetModelSummary {
+        filename: "Potgietersrus.rpt"
+    }
+}
+GeomodellerTask {
+  SaveProjectAs {
+    filename: "out/platreef_dykes.xml"
+  }
+}
+GeomodellerTask {
+  CloseProjectNoGUI {
+    filename: "Potgietersrus"
+  }
+}

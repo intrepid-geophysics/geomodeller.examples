@@ -512,7 +512,7 @@ message SetFixedCells_GMT {
 	optional ctm.BoundingBox box = 10; // set all cells within this box, not in the GUI as an option
 	optional ctm.RepeatedString drillholes = 11;  // fix cells containing selected drillholes
 	optional double radius = 12; // radius of influence of fixed drillholes
-	repeated int32 provenances = 13; // fix cells that the provenance of contact data is listed
+	optional ctm.RepeatedInt32 provenances = 13; // fix cells that the provenance of contact data is listed
 
 	optional string log = 17;
 }

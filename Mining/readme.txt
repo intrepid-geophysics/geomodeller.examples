@@ -24,3 +24,8 @@ Very simple methods are shown to demostrate how easy it is to create a regional 
 then add the detail of faults and further geology refienments. 
 We give some rock properties, that are derived from back analysis of the observed geophysics.
 Determining the geology from AEM 2.5D inversion, can also be tied into parts of this region.
+
+The third example comes from South Africa - The Bushveld complex and platinium.
+Dykes are important in this area, and we present a variation on Tutorial K, but redone
+to boostrap from nothing much to a dyke network in one easy step. This is one of the test sites for
+the next generation magnetic gradient tensor observations.
