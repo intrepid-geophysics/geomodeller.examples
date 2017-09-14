@@ -1,105 +1,123 @@
 name: "Bet Bet Victoria,  gravity/TMI joint inversion "
 description: "LITHOLOGICALLY CONSTRAINED INVERSION OF MAGNETIC AND GRAVITY DATA SETS"
-	"By D. FitzGerald, A. Guillen, R. Lane, R. Seikel & P. McInerney,  KEGS 2007."
-  "This variation has a density vs depth law for Castlemaine_Group,"
-  "and also uses an sgrid instead of a regular 3D grid, to bias near surface responses"
-  "The top part of the model will be discretized with the cell size set in NewCase. Starting from topo_part_boundary_at, the lower_z_cell_size"
-  "will be used, multiplied by geometric_factor for increasing cell size with depth"
+	"By D. FitzGerald, A. Guillen, R. Lane, R. Seikel & P. McInerney"
+  "KEGS 2007."
+  "Uses a semiregular 3D grid (sgrid)"
+  "Dual temperature mode is off"
+  "Uses preserve topology and homogeneousFilter"
+ 
 auditfile: "Bet_Bet_inversion.audit"
-
 InversionTask {
 	NewCase {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-				# try 500,500,250 for more detailed example, and boost the number of iterations by 10
-		x_cell_size:1000.0;
-		y_cell_size:1000.0;
-		z_cell_size:400.0;  # set coarse for auto-testing
-		east_minimum_voxet:715590;
-		east_maximum_voxet:748360;
-		north_minimum_voxet:5863500.;
-		north_maximum_voxet:5920400.;
-		elevation_minimum_voxet:-10000.0;
-		elevation_maximum_voxet:1000.0;
-		VariableZResolution {  # used to do finer work at the topography level, also turn to a sgrid for greater control at depths
+		case: "Case_Random";
+		x_cell_size:1000.000000;
+		y_cell_size:1000.000000;
+		z_cell_size:20.000000;
+		east_minimum_voxet:715590.000000;
+		east_maximum_voxet:747590.000000;
+		north_minimum_voxet:5863500.000000;
+		north_maximum_voxet:5919500.000000;
+		elevation_minimum_voxet:-9950.000000;
+		elevation_maximum_voxet:850.000000;
+		VariableZResolution {
 			use_variable_z_resolution: true;
-			topo_part_boundary_at: 1000.0;
-			lower_z_cell_size: 400.0;
-			geometric_factor: 1.2;
+			topo_part_boundary_at: -10.000000;
+			lower_z_cell_size: 253.636465;
+			geometric_factor: 1.110000;
 		}
 		ObservedGridList {
 			ObservedGrid {
-				type: Gdd;
-				mean_elevation: 0.0;
-				compute_surface_style: OnTopographyWithClearance;
-				compute_surface_z_sampling: 100.0;
-				precision: 0.1;
 				grid: "./data/bet_bet_sba_500m_padded_uc0pt5km_1vd_for_inversion_1000m_cells_residual_Eo.ers";
+				type: Gdd;
+				compute_surface_style: OnTopographyWithClearance;
+				mean_elevation: 0.000000;
+				compute_surface_z_sampling: 20.000000;
 				Interpolate: false;
+				precision: 0.100000;
 				Match_Trend: true;
 				Match_Trend_Degree: 1;
 				Match_Trend_Rate: 2000;
 				Output_Trends: true;
 			}
 			ObservedGrid {
+				grid: "./data/bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual.ers";
 				type: TMI;
-				mean_elevation: 100.0;
-				compute_surface_z_sampling: 100.0;
+				compute_surface_style: OnTopographyWithClearance;
+				mean_elevation: 0.000000;
+				compute_surface_z_sampling: 20.000000;
 				Interpolate: false;
-				precision: 0.3;
+				precision: 0.300000;
 				Match_Trend: true;
 				Match_Trend_Degree: 1;
 				Match_Trend_Rate: 10000;
 				Output_Trends: false;
-				grid: "./data/bb_tmidpi94_uc0pt5km_for_inversion_1000m_cells_residual.ers";
-				}
+			}
 		}
 	}
 	CaseControl {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		SetReferenceDensity: 2.67;
-		SetAboveTopoDensity: 2.67;
+		case: "Case_Random";
+		SetReferenceDensity: 2.670000;
+		SetAboveTopoDensity: 2.670000;
 		UseRelativeGravityChanges: false;
-		SetReferenceMagneticField { Magnitude: 60117; Inclination: -68.5; Declination: 10.8; }
+		SetReferenceMagneticField { Magnitude: 60117.000000; Inclination: -68.500000; Declination: 10.800000; }
 		SetLaw {
-			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.87; stddev: 0.001;}}
-			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.73; stddev: 0.001;}}
-			####################  here it is
-			LithologyProperty { lithology: "Castlemaine_Group"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.7; stddev: 0.0;depthvaluepairs: "200,2.5,6000,2.8";}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.55; stddev: 0.001;}}
-			LithologyProperty { lithology: "Ercildoun_Granite"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.0;}}
+			LithologyProperty { lithology: "Newer_Volcanics"; property: Movable; fixed: false; index_voxet_key: 11}
+			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Movable; fixed: false; index_voxet_key: 10}
+			LithologyProperty { lithology: "Ercildoun_Granite"; property: Movable; fixed: false; index_voxet_key: 9}
+			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: Movable; fixed: false; index_voxet_key: 8}
+			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: Movable; fixed: false; index_voxet_key: 7}
+			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Movable; fixed: false; index_voxet_key: 6}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Movable; fixed: false; index_voxet_key: 5}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Movable; fixed: false; index_voxet_key: 4}
+			LithologyProperty { lithology: "Castlemaine_Group"; property: Movable; fixed: false; index_voxet_key: 3}
+			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Movable; fixed: false; index_voxet_key: 2}
+			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Movable; fixed: false; index_voxet_key: 1}
+			LithologyProperty { lithology: "Newer_Volcanics"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.6; stddev: 0.001;}}
 			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.67; stddev: 0.001;}}
-			LithologyProperty { lithology: "Newer_Volcanics"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.60; stddev: 0.0010000;}}
-			
+			LithologyProperty { lithology: "Ercildoun_Granite"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.55; stddev: 0.001;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.62; stddev: 0.001;}}
+			LithologyProperty { lithology: "Castlemaine_Group"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.7; stddev: 0.001;}}
+			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.73; stddev: 0.001;}}
+			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Density; ProbabilityDistributionFunction {type: NormalDistribution; mean: 2.87; stddev: 0.001;}}
 			LithologyProperty { lithology: "Newer_Volcanics"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.01; stddev: 0.005;}}
-			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0;}}
+			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0;}}
 			LithologyProperty { lithology: "Ercildoun_Granite"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.01; stddev: 0.002;}}
 			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.01; stddev: 0.002;}}
 			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.01; stddev: 0.002;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.00002; stddev: 0.00002;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.00005; stddev: 0.00002;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.008; stddev: 0.00002;}}
-			LithologyProperty { lithology: "Castlemaine_Group"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.00005; stddev: 0.002;}}
-			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.00005; stddev: 0.00002;}}
-			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.0001; stddev: 0.00005;}}
-			
-			LithologyProperty { lithology: "Newer_Volcanics"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0.0;}}
-			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0;}}
-			LithologyProperty { lithology: "Ercildoun_Granite"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.1; stddev: 0.0;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.1; stddev: 0.0;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.1; stddev: 0.0;}}
-			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0.0;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0.0;}}
-			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0.0;}}
-			LithologyProperty { lithology: "Castlemaine_Group"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.000001; stddev: 0.0;}}
-			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean:0.000001; stddev: 0.0;}}
-			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.4784; stddev: 0.2392;}}
-			
+			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 2e-005; stddev: 2e-005;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 5e-005; stddev: 2e-005;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.008; stddev: 2e-005;}}
+			LithologyProperty { lithology: "Castlemaine_Group"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 5e-005; stddev: 0.002;}}
+			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 5e-005; stddev: 2e-005;}}
+			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Susceptibility; ProbabilityDistributionFunction {type: LogNormal; mean: 0.0001; stddev: 5e-005;}}
+			LithologyProperty { lithology: "Newer_Volcanics"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Ercildoun_Granite"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.1; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_3"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.1; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_2"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.1; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_1"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Castlemaine_Group"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 1e-006; stddev: 0; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Pitfield_Volcanics"; property: Remanence; ProbabilityDistributionFunction {type: LogNormal; mean: 0.4784; stddev: 0.2392; inclination: 0; declination: 0;}}
+			LithologyProperty { lithology: "Newer_Volcanics"; preserve: {node:false;node:true;node:true;node:true;node:true;node:true;node:true;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Early_Cainozoic_Surface"; preserve: {node:false;node:false;node:true;node:true;node:true;node:true;node:true;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Ercildoun_Granite"; preserve: {node:false;node:false;node:false;node:true;node:true;node:true;node:true;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_3"; preserve: {node:false;node:false;node:false;node:false;node:true;node:true;node:true;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_2"; preserve: {node:false;node:false;node:false;node:false;node:false;node:true;node:true;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Black_Bottom_Granite_1"; preserve: {node:false;node:false;node:false;node:false;node:false;node:false;node:true;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Inner"; preserve: {node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:true;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Natte_Yallock_Granite_Outer"; preserve: {node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:true;node:true;node:true;}}
+			LithologyProperty { lithology: "Castlemaine_Group"; preserve: {node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:true;node:true;}}
+			LithologyProperty { lithology: "Saint_Arnaud_Group"; preserve: {node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:true;}}
+			LithologyProperty { lithology: "Pitfield_Volcanics"; preserve: {node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;node:false;}}
 			LithologyProperty { lithology: "Newer_Volcanics"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Early_Cainozoic_Surface"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Ercildoun_Granite"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
@@ -133,58 +151,22 @@ InversionTask {
 			LithologyProperty { lithology: "Castlemaine_Group"; property: VolumeRatio; ProbabilityDistributionFunction {type: LogNormal; mean: 1.000000; stddev: 0.050000;}}
 			LithologyProperty { lithology: "Saint_Arnaud_Group"; property: VolumeRatio; ProbabilityDistributionFunction {type: LogNormal; mean: 1.000000; stddev: 0.050000;}}
 			LithologyProperty { lithology: "Pitfield_Volcanics"; property: VolumeRatio; ProbabilityDistributionFunction {type: LogNormal; mean: 1.000000; stddev: 0.050000;}}
-
 		}
 	}
 }
-# demonstartion of fixing cells in the model, basically turn on most options
-InversionTask {
-		SetFixedCells: {
-		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
-		SURFACE: true;
-		MappedObservations: true;
-		geology : { node : "Pitfield_Volcanics"; }
-		drillholes: {
-		node: ["101012", "101014","101016", "101017","101018","101021","101022",
-		 "101023","102","106575","106576","111404","111483","113476", "113477", "114206",
-		 "115172","116010","121","122905","125474","125965","126056","126057",
-		 "126058","126059","126893","128297","129888","130954","132017","134952",
-		 "139988","143637","144530","301881","301882","301883","301884","301885",
-		 "301886","301887","301888","301889","301894","301895","301896","301897",
-		 "301919","301926","301927","301928","301929","301930","301931","301932",
-		 "301933","301934","301935","301936","301937","301938","301939","301940",
-		 "303372","303373","303389","303390","303391","307664","307670","312514",
-		 "315846","330663","330664","330665","330666","330667","330668","330669",
-		 "330670","330671","330672","330673","330674","330675","330676","330677",
-		 "330678","330679","330680","330681","330682","330683","330684","330685",
-		 "330686","330687","330688","330689","330690","330691","330692","330707",
-		 "330711","330712","330714","330715","330716","46071","46072", "48017",
-		 "49922","49930","49935","53379","54471","54472","59598","61900","61902",
-		 "61905","62796","62803","62807","65432","74238","75589","75599","75600",
-		 "75601","75603","75649","75828","75830","75831","75833","77346","8007672",
-		 "8010280","8010281","84758","84759","84760","89395"];
-		}
-		radius: 250;
-		xyzfile: {node:"./data/basalt_holes_reformatted_for_SetFixedCells_060603.xyz";
-			node:"./data/basement_outcrop_masked_6_eroded_5x100m_resampled_500m.xyz"}
-	}
-}
-
 InversionTask {
 	NewRun {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		NumberOfIterations: 200000;
 	}
 }
 InversionTask {
 	RunControl {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		NumberOfIterations: 200000;
 		LithologyInitialiseStyle: FromModel;
 		DensityInitialiseStyle: FromLawRandom;
@@ -194,14 +176,14 @@ InversionTask {
 		AllowNeighbourPropertyDifferentCheck: false;
 		Seed: 1135314798;
 		ProbabilityOfPropertyChangeOnly: 50;
-		SetDualTemperatureMode: true;
-		LargeMisfitRMSThresholdFactor: 1.0;
-		LargeMisfitTemperature: 1.0;
-		Mode1TemperatureFactor: 1.0;
-		Mode1Duration: 100;
-		Mode2TemperatureFactor: 1000000.0;
-		Mode2Duration: 99900;
-		AllowGeophysicalTests: true;  # this is the key flag to force the geophysics to be used
+		SetDualTemperatureMode: false;
+		LargeMisfitRMSThresholdFactor: 1.000000;
+		LargeMisfitTemperature: 1.000000;
+		Mode1TemperatureFactor: 1.000000;
+		Mode1Duration: 50000;
+		Mode2TemperatureFactor: 1000.000000;
+		Mode2Duration: 10000;
+		AllowGeophysicalTests: true;
 		AllowGeologicalTests: true;
 		PreserveTopology: true;
 		PreserveVerticalRelationshipTest: true;
@@ -216,11 +198,168 @@ InversionTask {
 	}
 }
 InversionTask {
+	SetFixedCells: {
+		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+		case: "Case_Random";
+		run: "Run1";
+		drillholes: {
+		node: "101012";
+		node: "101014";
+		node: "101016";
+		node: "101017";
+		node: "101018";
+		node: "101021";
+		node: "101022";
+		node: "101023";
+		node: "102";
+		node: "106575";
+		node: "106576";
+		node: "111404";
+		node: "111483";
+		node: "113476";
+		node: "113477";
+		node: "114206";
+		node: "115172";
+		node: "116010";
+		node: "121";
+		node: "122905";
+		node: "125474";
+		node: "125965";
+		node: "126056";
+		node: "126057";
+		node: "126058";
+		node: "126059";
+		node: "126893";
+		node: "128297";
+		node: "129888";
+		node: "130954";
+		node: "132017";
+		node: "134952";
+		node: "139988";
+		node: "143637";
+		node: "144530";
+		node: "301881";
+		node: "301882";
+		node: "301883";
+		node: "301884";
+		node: "301885";
+		node: "301886";
+		node: "301887";
+		node: "301888";
+		node: "301889";
+		node: "301894";
+		node: "301895";
+		node: "301896";
+		node: "301897";
+		node: "301919";
+		node: "301926";
+		node: "301927";
+		node: "301928";
+		node: "301929";
+		node: "301930";
+		node: "301931";
+		node: "301932";
+		node: "301933";
+		node: "301934";
+		node: "301935";
+		node: "301936";
+		node: "301937";
+		node: "301938";
+		node: "301939";
+		node: "301940";
+		node: "303372";
+		node: "303373";
+		node: "303389";
+		node: "303390";
+		node: "303391";
+		node: "307664";
+		node: "307670";
+		node: "312514";
+		node: "315846";
+		node: "330663";
+		node: "330664";
+		node: "330665";
+		node: "330666";
+		node: "330667";
+		node: "330668";
+		node: "330669";
+		node: "330670";
+		node: "330671";
+		node: "330672";
+		node: "330673";
+		node: "330674";
+		node: "330675";
+		node: "330676";
+		node: "330677";
+		node: "330678";
+		node: "330679";
+		node: "330680";
+		node: "330681";
+		node: "330682";
+		node: "330683";
+		node: "330684";
+		node: "330685";
+		node: "330686";
+		node: "330687";
+		node: "330688";
+		node: "330689";
+		node: "330690";
+		node: "330691";
+		node: "330692";
+		node: "330707";
+		node: "330711";
+		node: "330712";
+		node: "330714";
+		node: "330715";
+		node: "330716";
+		node: "46071";
+		node: "46072";
+		node: "48017";
+		node: "49922";
+		node: "49930";
+		node: "49935";
+		node: "53379";
+		node: "54471";
+		node: "54472";
+		node: "59598";
+		node: "61900";
+		node: "61902";
+		node: "61905";
+		node: "62796";
+		node: "62803";
+		node: "62807";
+		node: "65432";
+		node: "74238";
+		node: "75589";
+		node: "75599";
+		node: "75600";
+		node: "75601";
+		node: "75603";
+		node: "75649";
+		node: "75828";
+		node: "75830";
+		node: "75831";
+		node: "75833";
+		node: "77346";
+		node: "8007672";
+		node: "8010280";
+		node: "8010281";
+		node: "84758";
+		node: "84759";
+		node: "84760";
+		node: "89395";
+		}
+		radius: 500.000000;
+		xyzfile: {
+		node: "./data/basement_outcrop_masked_6_eroded_5x100m_resampled_500m.xyz";
+		}
+	}
+}
+InversionTask {
 	Run {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		Number_CPUs: 3;
 	}
 }
-			

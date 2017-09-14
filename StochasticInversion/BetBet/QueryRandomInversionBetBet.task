@@ -8,9 +8,9 @@ auditfile: "Bet_Bet_inversion.audit"
 InversionTask {
 	MakeSuperSummaryStats {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
+		case: "Case_Random";
 		RunInterval {
-			run: "run2";
+			run: "Run1";
 			start_iterations: 10000;
 			end_iterations: 200000;
 		}
@@ -23,9 +23,9 @@ InversionTask {
 InversionTask {
 	MakeEvolutionMovie  {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
+		case: "Case_Random";
 		RunInterval {
-			run: "run2";
+			run: "Run1";
 			start_iterations: 10000;
 			end_iterations: 200000;
 			}
@@ -41,15 +41,15 @@ InversionTask {
 			doLog: false;  # linear
 		}
 		Section: "5900000_mN";
-		movie: "EvolutionMovie_Case_Joint_run2_5900000_mN";
+		movie: "EvolutionMovie_Case_Random_Run1_5900000_mN";
 	}
 }	
 
 InversionTask {
 	MakeSectionImage   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		get_function {  # use default super summary voxet created above
 			statistical_field: MeanDensity;
 			transform: GetField;
@@ -66,14 +66,14 @@ InversionTask {
 		Scaling {
 			doLog: false;  # linear
 		}
-		image: "run2_SSSVoxet95_neg1000_mAHD_MeanDensity_LithologyColours.jpg";		
+		image: "Run1_SSSVoxet95_neg1000_mAHD_MeanDensity_LithologyColours.jpg";		
 	}
 }
 InversionTask {
 	MakeAllSectionImages   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		get_function {  # use default super summary voxet created above
 			statistical_field: MeanDensity;
 			transform: GetField;
@@ -89,14 +89,14 @@ InversionTask {
 		Scaling {
 			doLog: false;  # linear
 		}
-	#	image: "run2_SSSVoxet95_neg1000_mAHD_MeanDensity_LithologyColours.jpg";		
+	#	image: "Run1_SSSVoxet95_neg1000_mAHD_MeanDensity_LithologyColours.jpg";		
 	}
 }				
 InversionTask {
 	MakeHistogram   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		voxet: "final.sg";
 		lithology_field: "Lithology";
 		property_field: "Density";
@@ -111,8 +111,8 @@ InversionTask {
 InversionTask {
 	MakeHistogram   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		voxet: "final.sg";
 		lithology_field: "Lithology";
 		property_field: "RemenenceEast";
@@ -126,8 +126,8 @@ InversionTask {
 InversionTask {
 	MakeHistogram   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		voxet: "final.sg";
 		lithology_field: "Lithology";
 		property_field: "RemenenceNorth";
@@ -141,8 +141,8 @@ InversionTask {
 InversionTask {
 	MakeHistogram   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		voxet: "final.sg";
 		lithology_field: "Lithology";
 		property_field: "RemenenceDown";
@@ -157,8 +157,8 @@ InversionTask {
 InversionTask {
 	MakeSurfaceShells   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		inputvoxet: "final.sg";
 		inputfield: "Lithology";
 		operand: EQ;
@@ -179,8 +179,8 @@ InversionTask {
 InversionTask {
 	MakeSurfaceShells   {
 		filename: "./basement_geology_060605f/basement_geology_060605f.xml";
-		case: "Case_Joint";
-		run: "run2";
+		case: "Case_Random";
+		run: "Run1";
 		inputvoxet: "initial.sg";
 		inputfield: "Lithology";
 		operand: EQ;

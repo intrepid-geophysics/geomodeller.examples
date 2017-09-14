@@ -11,7 +11,7 @@ auditfile: "Bet_Bet_inversion.audit"
 
 GeomodellerTask {
   OpenProjectNoGUI {
-    filename: "./basement_geology_060605f/basement_geology_060605f.xml";
+    filename: "basement_geology_060605f/basement_geology_060605f.xml";
   }
 }
 
@@ -20,7 +20,7 @@ GeomodellerTask {
 GeomodellerTask {
     LoadMeshGrid{
     	SourceType: File;
-        File_Name: "basement_geology_060605f/Case_Joint/run2/final.sg"; # 
+        File_Name: "basement_geology_060605f/Case_Random/Run1/final.sg";
 		MeshGrid_Name: "3DInversion";
 		FileType: FT_VOXET;
 	#	header_records: 2;
