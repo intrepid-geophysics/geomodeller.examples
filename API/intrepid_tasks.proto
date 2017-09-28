@@ -1029,7 +1029,7 @@ message Terrain_Correction_QuadTree_INT {
 	optional bool DumpCalculationSurfaces = 43 [default = false];
 	optional int32 DumpGridsforEveryNthObservation = 44 [default = 0]; // put 0 to disable
 }
-	// Levelling
+	// Levelling, also used for marine gravity
 message Land_Loop_Reduction_Principal_Facts {
 	optional string InputCG5Data = 1; // file with CG5 raw data
 	repeated string InputFieldData = 2; // observed field gravity data.. either AGSO ASCII format, or ASCII CG3
