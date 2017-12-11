@@ -283,7 +283,7 @@ message Export_INT {
  *  2. Both have a fiducial field to allow interpolation.
  *  3. Both have whole number Fiducial intervals.
  *  4. Values where the fiducial fields from each data base where the fiducial values don't overlap each other within
- *1 fiducial increment are set to NULL.
+ *			1 fiducial increment are set to NULL.
  *  5. If a key exists in the to data base but no match is found in the from data base set the corresponding line
  *data to all missing.
  */
@@ -301,14 +301,16 @@ enum DB_Operations {
 	Rename = 9;  // rename the "input" to the "output"
 	RemoveDuplicates = 10;  // NOT DONE
 	Spawn = 11;  // fire off new processes  // NOT DONE
-	Statistics = 12;  // do long form statistics on the input dataset
-	tTest = 13;  // compare two populations for statistical equivalence
-	CopyTable = 14;  // same as save as in dbedit, convert from one database format to another ge *.edi to *..DIR
-	CopyGrid = 15;   // same as dbedit SaveAs, but grid format change only
+	LineStatistics = 12;  // do statistics by line on the input dataset
+	ShortStatistics = 13;  // do short form statistics on the input dataset
+	Statistics = 14;  // do long form statistics on the input dataset
+	tTest = 15;  // compare two populations for statistical equivalence
+	CopyTable = 20;  // same as save as in dbedit, convert from one database format to another ge *.edi to *..DIR
+	CopyGrid = 21;   // same as dbedit SaveAs, but grid format change only
 	//surfaces jDF_NODDY, jDF_LAS, jDF_StanfordPLY_File_Format,jDF_DXF_AUTOCAD, jDF_BREP,jDF_VULCAN, jDF_GOCAD:	// This is actually the tsurf
-	CopySurface = 16;   // does any triangulated surface copy basically (ts, dxf, vulcan, etc), format switcher
-	CopyMeshGrid = 17;   // does an igmesh copy basically
-	CopyVoxet = 18;   // voxet create like
+	CopySurface = 22;   // does any triangulated surface copy basically (ts, dxf, vulcan, etc), format switcher
+	CopyMeshGrid = 23;   // does an igmesh copy basically
+	CopyVoxet = 24;   // voxet create like
 	//  unfinished
 	// zip
 	// email
@@ -586,35 +588,35 @@ enum Cluster_Algorithm {
 	 	ResplitClustering=3;  // clustering analysis, micro clustering and fusion of the clusters resplitting and reforming.
 	 	Anisotropic=4; // look for fault planes, Ouillon method  ie Landers Earthquake, recurse while yuo break up the point cloud
 	 }
+
 message ClusterControl_INT {
-	optional  Cluster_Algorithm ClusterAlgorithm = 1 [default = IsoClustering]; // indicating the clustering analysis level.
-	optional double PerDistance = 2 [default = 900.0];      // Part of the horizontal distance with respect to Dx of the points that belong to the same cluster
+	optional Cluster_Algorithm ClusterAlgorithm = 1 [default = IsoClustering]; // indicating the clustering analysis level.
+	optional double PerDistance = 2 [default = 900.0]; // Part of the horizontal distance with respect to Dx of the points that belong to the same cluster
 	 													// It is used to calculate MaxDis, the maximum distance allowed for two solutions to belong in the same initial cluster.
 	optional double MaximumSeparationClusterToFirstPoint = 3 [default = 50.0]; // maximum a centre of a cluster can be from at least one observation
-	optional double Factor_MaxRadius_Confidence = 4 [ default = 1.2]; //Factor that multiplies any pair clusters radii, to examine a possible first fusion.
+	optional double Factor_MaxRadius_Confidence = 4 [default = 1.2]; //Factor that multiplies any pair clusters radii, to examine a possible first fusion.
 		// It is used to calculate MaxDisFus, the maximum distance allowed for two clusters to be fused. Recommended to be equal or bigger than one.
-	optional int32 Minimum_Number_Points  = 5 [default = 5];  // Eliminates clusters (and the associated points) with less than MinNumPoiClu
+	optional int32 Minimum_Number_Points = 5 [default = 5];  // Eliminates clusters (and the associated points) with less than MinNumPoiClu
 																// to improve the significance of the statistical analysis of the clusters
-	optional double Location_Uncertainty = 6 [ default = 1.0];  //for anisotropic fault cluster, stop when location out of plane is less than this
+	optional double Location_Uncertainty = 6 [default = 1.0];  //for anisotropic fault cluster, stop when location out of plane is less than this
 	 //for anisotropic fault cluster, stop when number of resursion steps exceeds this, if not before
 	 // for horizontal fusion, you are joining, not splitting, stop after this manner leve;ls of recursion  typical value is 9, should be odd
-	optional int32 Maximum_Recursion_Steps = 7 [ default = 500];
-	optional int32 Frequency_Cluster_Forming_Reports = 8 [ default = 11];  // for anisotropic forming, at what freq to report the cluster state?
-	optional bool Post_recursion_filtering_checks 			= 9 [default = true];  //control post culling of plate clusters
-	optional bool Cull_cluster_uncertainties 			= 10 [default = true];  // cull bad ones with high uncertainty
-	optional bool Restrict_Plate_Dips 			= 11 [default = true];  // blow away any with bad dis
-	optional int32 MaximumDipRange = 12 [ default = 20];  // for anisotropic forming, at what freq to report the cluster state?
-
-// The rest are deprecated
-enum Cluster_Level {
+	optional int32 Maximum_Recursion_Steps = 7 [default = 500];
+	optional int32 Frequency_Cluster_Forming_Reports = 8 [default = 11];  // for anisotropic forming, at what freq to report the cluster state?
+	optional bool Post_recursion_filtering_checks = 9 [default = true];  //control post culling of plate clusters
+	optional bool Cull_cluster_uncertainties = 10 [default = true];  // cull bad ones with high uncertainty
+	optional bool Restrict_Plate_Dips = 11 [default = true];  // blow away any with bad dis
+	optional int32 MaximumDipRange = 12 [ default = 20];
+	// The rest are deprecated
+	enum Cluster_Level {
 	 	zeroStage =0;  // no clustering analysis
 	 	firstStage=1;  // first stage clustering analysis, micro clustering
 	 	secondStage=2;  // second stage clustering analysis, micro clustering and fusion of the clusters.
 	 	thirdStage=3; // third stage clustering analysis, micro clustering and fusion of the clusters resplitting and reforming.
-	 }
-	optional  Cluster_Level ClusterLevel = 71 [default = secondStage];
-	 													// It is used to calculate MaxDis, the maximum distance allowed for two solutions to belong to the same cluster.	 									// calculate MaxDisFus, the maximum distance allowed for two clusters to be fused. Recommended to be equal or bigger than one.
+	}
+	optional Cluster_Level ClusterLevel = 71 [default = secondStage];
 }
+
 // 3d openGL visualization window of the before/after cluster
 message View3D_Points {
 //  3D visualization, an OpenGL 3D VTK display window

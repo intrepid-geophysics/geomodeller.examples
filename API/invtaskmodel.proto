@@ -102,6 +102,8 @@ message NewProjectFromVoxet_GMT {
 	optional bool dynamicSelection = 15 [default = true];
 	optional bool referenceTop = 16 [default = true];
 	optional int32 external_null = 17  [default = -9999];	  	// Undefined value used in external voxet
+	optional bool loadvoxetintoproject = 18 [default = false];  // Add the voxet into the built project
+	optional bool zflipvoxet = 19 [default = false];            // Reverse z layer order
 
 }
 
