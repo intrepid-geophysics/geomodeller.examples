@@ -590,7 +590,7 @@ enum Cluster_Algorithm {
 	 }
 
 message ClusterControl_INT {
-	optional Cluster_Algorithm ClusterAlgorithm = 1 [default = IsoClustering]; // indicating the clustering analysis level.
+	optional Cluster_Algorithm ClusterAlgorithm = 1 [default = Anisotropic]; // indicating the clustering analysis level.
 	optional double PerDistance = 2 [default = 900.0]; // Part of the horizontal distance with respect to Dx of the points that belong to the same cluster
 	 													// It is used to calculate MaxDis, the maximum distance allowed for two solutions to belong in the same initial cluster.
 	optional double MaximumSeparationClusterToFirstPoint = 3 [default = 50.0]; // maximum a centre of a cluster can be from at least one observation
@@ -696,7 +696,7 @@ message ClusterAnalysis_INT {
 	optional ctm.MeasuredGrid_INT InputGridName	= 3;  // possible original grid dataset !
 	// either on shore or off-shore ( Bathymetry)
 	optional ctm.MeasuredGrid_INT ElevationGridName		= 4;  // primary surface topography grid,
-	optional ClusterDatasetType ClusterType = 5 [ default = Tensor_2DFaults];
+	optional ClusterDatasetType ClusterType = 5 [ default = Generic3D];
 	optional ClusterControl_INT Cluster=8;
 	optional View3D_Points view = 10;
 	//  earthquake proint locations, are often presented in lat/long.. no good for clustering
@@ -2562,9 +2562,11 @@ message Subset_INT {
 	optional string ReportFile = 6; // a name for a comprehensive report file from any process
 	// spatial test options
 	optional string CLIP_POLY = 10; // optional closed polygon(s) ... confusion about this, as actually the above POLY does the clipping
-	//  clipping regular box shape
-	optional ctm.BoundingBox2D Box = 11;
-	// clipping box via centroid, extent and angle
+	//  or a clipping regular box shape
+	optional ctm.BoundingBox2D Box = 11;  // can be a geodetic or projected
+	// or a geodetic box
+	optional ctm.GeodeticBox2D GeoBox = 14;
+	// or a clipping box via centroid, extent and angle
 	optional ctm.RotatableBoundingBox2D rotatableBox = 12;
 	// or Allow an arbitrary polygon as an XY array
 	optional XY_Region region = 13;

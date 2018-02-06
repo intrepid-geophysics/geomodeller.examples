@@ -286,6 +286,7 @@ enum DataFormat
 	DF_VTK=61;
 	DF_PETREL=62;
 	DF_VARIOGRAM=63;
+	DF_FEM=65;
 }
 //  system wide data types for gridded data
 enum GridDataTypes {
@@ -549,6 +550,7 @@ enum SectionDataType {
 	intersection = 5; //ModelSession_Intersection)
 	fond = 6; //ModelSession_FOND)
 	dyke = 7;
+	region = 8; //ModelSession_Region
 }
 // model object type
 enum GeologyObsType3D {  // mostly for CSV file importing
@@ -661,6 +663,7 @@ message ProbabilityDistributionFunction_GMT {
 	optional int32 percentage = 6 [ default = 100];  // muti-modal sets
 	// original design wants XYZ depth funtion, from a smoothed reference surface
 	optional string depthvaluepairs = 7; // property varying with depth, only valid for density
+	// currently not implimented
 	optional string input_voxet = 8;  // take a predefined/external property voxet distribution
 	optional string input_voxet_field = 9; // field to use in that voxet
 	optional string input_grid = 10;
@@ -933,7 +936,7 @@ enum VectorProduct_list {
 	EAST_COMPONENT = 110;  //gridding, of a vector field, extract the component
 	NORTH_COMPONENT = 111;
 	VERTICAL_COMPONENT = 112;
-	VECTOR_GRID = 113;  // not a well developed concept in Intrepid V5.0 as yet
+	VECTOR_GRID = 113;  // jump into a formal grid of vectors for a potential field
 	// start of FFT only options
 	TOTAL_MAGNETIC_INTENSITY = 114;  // go from vector components back to a TMI
 }

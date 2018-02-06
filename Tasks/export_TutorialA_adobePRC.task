@@ -12,7 +12,7 @@ GeomodellerTask {
 GeomodellerTask {
   ExportProjectSite {
   	myTypeSite: ADOBE_PRC;
-	dataType: [Structure,Model,MeshGrid,DrillHoles];
+	dataType: [Structure,Model,DrillHoles];
 	output_prc: "tutorialA.prc"
 	ShowNavigationPanel: true;
 	ShowToolBar: true;

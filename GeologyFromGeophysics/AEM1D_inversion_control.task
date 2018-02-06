@@ -1,4 +1,5 @@
-INV {
+AEMTask {
+INV_1D {
 	Inversion_Control {
 		Ppm_Convert:1.0;
 		Altimeter_Difference:0.0;
@@ -115,4 +116,4 @@ INV {
 		X_Target:734792.5592365451;
 		Y_Target:7171655.4292866085;
 	}
-}
+}}

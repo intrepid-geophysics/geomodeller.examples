@@ -355,8 +355,9 @@ message CreateFault_GMT {
     //  fault thickness is notionally always zero
     // can be thicker, but renedered as a mid-fault surface
     //  attribute can be passed to third party models eg FEFLOW
-    optional double Thickness = 6 [default = 0.0];  // default is infinetly thin
-    optional string log = 5 [default ="create_fault.rpt"];
+    optional double Thickness = 6 [default = 0.0];  // default is infinitely thin
+    // not litho properties for faults
+    optional string log = 9 [default ="create_fault.rpt"];
 }
 // add the Elliptical limits to the fault
 // actually the API allows for a full ellipsoid with the declination, inclination of the ellipsoid
@@ -412,6 +413,21 @@ message ExportSection_GMT {
     required string section = 1;
     required string filename = 2;
     optional string log = 3 [default ="export_section.rpt"];
+}
+
+enum Formats2D{
+	FT_SHP = 0;
+	FT_MAPINFO = 1;
+	FT_ASCIIBRGM = 2;
+	FT_CSV = 4;
+}
+
+message Export2DData_GMT {
+    required string section = 1;
+    required string filename = 2;
+    required Formats2D format = 3;
+    required ctm.SectionDataType type = 4 [ default = contact];
+    optional string log = 5 [default ="export_2D_data.rpt"];
 }
 
 //####
@@ -881,6 +897,55 @@ message CompositeDrillholes_GMT {
 	optional double  densityBackground = 16;	// Background value for the density field
 
 	optional string log = 30 [default ="composite_drillholes.rpt"];
+}
+
+// # Create two new drillholes C_A and C_B that query the mesh grid.
+// DrillholeQueryMeshGrid_GMT {
+//      source_drillhole: ["A", "B"]
+//      new_drillhole_name: "C"
+//      sample_spacing: 5.0
+//      meshgrid_name: "Model"
+//      meshgrid_fields: ["Potential","GradientX"]
+//  }
+//
+// # Add fields to the existing drillhole
+// DrillholeQueryMeshGrid_GMT {
+//      source_drillhole: ["A", "B"]
+//      meshgrid_name: "Model"
+//      meshgrid_fields: ["Potential","GradientX"]
+//  }
+//
+// This following example will query the meshgrid
+// fields into all existing drillholes. No new drillholes
+// will be created.  An error will be thrown if there
+// is a new_drillhole_name or sample_spacing option
+// provided.
+//
+// DrillholeQueryMeshGrid_GMT {
+//      meshgrid_name: "Model"
+//      meshgrid_fields: ["Potential","GradientX"]
+//  }
+//
+message DrillholeQueryMeshGrid_GMT {
+
+    // If not provided all drillholes will query the mesh grid.
+    repeated string source_drillhole = 1;
+
+    // If not specified fields will be added to the input drillholes
+    optional string new_drillhole_name = 2;
+
+    // If not specified existing geometry will be used
+    // If specified a new drill will always be created.
+    optional double sample_spacing = 3;
+
+    // Must be provided
+    optional string meshgrid_name = 20;
+
+    // If not specified all meshgrid fields will be added to the drillhole
+    repeated string meshgrid_fields = 21;
+
+    optional string log = 99;
+
 }
 
 message ImportSeismicCommon {
@@ -1633,6 +1698,7 @@ message ExportModel_GMT {
 	optional sint32 dy = 11 [default = 100];
 	optional sint32 dz = 12 [default = 100];
 	optional sint32 dxy = 13 [default = 100]; // only for surface 2D queries
+	optional double VariableZ_Factor = 17 [ default = 1];
 	optional string ReportFile = 16 [ default = "export_model.rpt"];  // here is where the results are listed
 	optional string log = 255;
 }
@@ -1727,6 +1793,7 @@ message ExportProjectSite_GMT {
 // meshgrids include triangulated surfaces, vertex/point clouds so far
 	repeated  SourceMeshGrid_GMT MeshGrid_Source = 20;  // name of igmesh
 	optional double solution_radius = 21 [default = 5.0];  // radius of the ball at each solution site in the point cloud
+    optional double grid_shrink_factor = 22 [default = 0.5]; // Shrink factor for voxet and quad grids
 // Inversion results include  vertex/point clouds, voxets
 	// so far, just one set of results / pdf
 	optional string Inversion_Case = 30 [default ="Case1"];
@@ -1760,13 +1827,40 @@ message ExportProjectSite_GMT {
 	optional string log = 255;
 }
 //#
+//  a 2D presentation graphics report
+// aim is for the API to support bulk automation on a project with many sections.
+// currently, no way to specify a Font!!
+message Axis_Control_GMT {
+	enum direction {
+		u = 0;
+		v = 1;
+	}
+	required Axis_Control_GMT Axis = 1;
+	optional double step = 2 [ default = -1.0];
+	optional sint32 Decimal_Number = 32 [default =1];
+	optional string Title = 4;  // You add this expression to the ${section.name} to the Axis Title box. You can type other titles before and after.
+}
+message Presentation2D_Graphics_GMT {  // note stub only at present
+    optional string Section_Name = 1;  // eg Section1, nominated section only
+    // or
+    optional bool DoAllSections = 2 [default = false];
+    optional AddPoint2d_GMT Title_Position = 3; // in u/v section coods eg -400, -8400
+    optional bool Axis_Graduation = 4 [default = true];  // ticks
+    optional bool Axis_Labels = 5 [default = true];
+    optional bool Axis_Titles = 6 [default = false];
+    repeated Axis_Control_GMT Axis_Control = 7;
+    optional string output_graphics_file_stub = 8 [default ="section_name.png"];
+ 	optional string log = 255;
+}
+//#
 //  a 2D surface triangulation mesh, is turned into a 3D FEM layered mesh,
 // using a vertical downward colums extrapolation approach
 //  numer of layers to use.  Uses existing open Project's 3D geology model
 message PrismFeFLOWTriangulation_GMT {
     required string input_fem_mesh_file = 1;
-    optional sint32 Number_Layers = 2 [ default = 50];
-    optional string output_mesh = 3 [default ="fem_3d.mesh"];
+    optional sint32 Number_Layers = 2 [ default = 20];
+    optional double VariableZ_Factor = 5 [ default = 1];
+    optional string output_mesh = 3 [default ="mesh_3d.fem"];
     optional string output_report_file = 4 [default ="prism_fem_mesh_report.rpt"];
  	optional string log = 255;
 }
@@ -2119,6 +2213,8 @@ message GeomodellerTask {
 // drill holes
     optional LoadDrillholes_GMT LoadDrillholes=38;
     optional CompositeDrillholes_GMT CompositeDrillholes = 60;
+
+
 // properties
 	optional ctm.ProbabilityDistributionFunction_GMT ProbabilityDistributionFunction = 70;
 	optional ctm.LithologyProperty_GMT LithologyProperty = 71;
@@ -2150,6 +2246,7 @@ message GeomodellerTask {
     optional Export3DShapes_GMT Export3DShapes = 42;
     optional ExportModel_GMT ExportModel = 65;
     optional ExportProjectSite_GMT ExportProjectSite = 50;  //
+    optional Presentation2D_Graphics_GMT Presentation2D_Graphics = 62;
     optional BuildTripleLines_GMT BuildTripleLines = 53; // where do all the formations, faults, boundaries meet??
 	optional PrismFeFLOWTriangulation_GMT PrismFeFLOWTriangulation = 67;
     optional MeshUnitForGeophys_GMT MeshUnitForGeophys = 111;
@@ -2158,5 +2255,9 @@ message GeomodellerTask {
     optional ComputeVariogram_GMT ComputeVariogram = 120;
     optional ImportTripleLines_GMT ImportTripleLines = 130; // where do all the formations, faults, boundaries meet??
     optional CloseProjectNoGUI_GMT CloseProjectNoGUI = 140;
+
+    optional DrillholeQueryMeshGrid_GMT DrillholeQueryMeshGrid = 150;
+    optional Export2DData_GMT Export2DData = 151;
+
     optional string log = 255;
 }

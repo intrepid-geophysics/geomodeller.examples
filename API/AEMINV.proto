@@ -1,159 +1,191 @@
-//  set up language specification for genralized Airborne ElectroMagnetics processin, forward models and inversion
-// support 1D, Apparent Resistivity & Moksha 2.5D inversion,
+// set up language specification for genralized Airborne ElectroMagnetics processing, forward models and inversion
+// support Apparent Resistivity, Moksha 1D, Moksha 2D & Moksha 2.5D inversion,
 // first implementation, June 2017
 // author Mathew Roth, 2017
 
 syntax = "proto3";
 package AEMInversion;
+option cc_enable_arenas = true;
 
-message INV_EM {
-	Inversion_Control_EM Inversion_Control = 1;
-	message Inversion_Control_EM {
-		double Ppm_Convert = 1; //[default =1.0];				//Ppm_Convert
-		double Altimeter_Difference = 2; //[default=0.0];		//alt_var
-		bool All_Lines = 3;										//all_lines
-		repeated string Inversion_Targets_Invlog = 4;			//inversion_log_file
-		repeated string Inversion_Targets_Dat_File = 5;			//target_location_file
-		repeated string Target_Data_File = 6;					//data_file
-		repeated int32 Target_Number = 7;						//ntarget
-		string Data_File_Header = 8;							//title_line
-		repeated int32 Inversion_Number = 9;
-	}
-	Tuning_EM Tuning = 2;
-	message Tuning_EM {
-		//READ_CONTROL_FILE
-		int32 INV_Control = 1; 		//NOINV=0 NO INVERSION=1 INVERSION PROCEEDS=-1 Forward model Only with No Comparison to Data
-		User_Parameters_EM User_Parameters = 2;
-		message User_Parameters_EM {
-			//AIR_LAY(CALC)
-			string Title = 1;									//TITLE:			Title Line
-			int32 Number_Of_Transmitters = 2; 					//NTX:			Number of Transmitters
-			int32 Max_Number_Of_Channels = 3; 					//NCHNL:		Maximum no. of transmitters
-			int32 Max_Number_Of_NSX = 4;						//NSX:			Number of digitised points in waveform including endpoints
-			int32 Waveform_Descriptor = 5;						//ISW:			TDEM or FDEM system indicator
-			int32 FD_3D_Control = 6;							//DO3D_I:		2=Use old FD data from OUTPUT.FRQ, 1=Compute new sheet model, 0= Compute Layered 1/2 space model only
-			int32 Output_Voltages_Profile = 7;					//PRFL:			1=OUTPUT VOLTAGES IN PROFILE MODE, 0=OUTPUT VOLTAGES IN TEMPORAL MODE
-			int32 DC_Normalization_Control = 8;					//DC_NORM:		2=Absolute Units instead of PPM, 1=Norm wrt corresponding DC component, 0=Norm wrt total DC component
-			int32 Norm_Conversion_Factor = 9;					//IUNITS:		1=nT,2=pT,3=fT
-			int32 Stop_The_Program = 10;						//ISTOP:		1=Stop program, 0=otherwise
-			//TIME DOMAIN ISW>0
-			int32 Number_Of_Reciever_Channels = 11;				//NCHNL:		Number of receiver channels
-			int32 Offtime = 12;									//OFFTIME:		Delay between pulses
-			repeated double Digitised_Time = 13;				//TXON^:		digitised time (in milliseconds)
-			repeated double Transmitter_Current = 14;			//TXAMP^:		transmitter current (in amps) at time TXON(J)
-			repeated double Zero_To_Peak_Current_Amplitude = 15;//TXAMP_FD^:	zero to peak current amplitude for ISW = 0
-			repeated int32 TDerivative_of_Current = 16;			//TXDER^:		time derivative of transmitter current
-			double Frequency_Bipolar_Wave = 17;					//TXFREQ:			Frequency of Bipolar square wave when ISW=0
-			repeated double Centre_RX_Window = 18;				//TMS^:			centre of RX window gates in millisec
-			repeated double Width_RX_Window = 19;				//WTMS^:		Width of Rx Window Gates
-			//FREQUENCY DOMAIN ISW=0
-			int32 Number_Frequencies = 20;						//NFREQ:		Number of Frequencies
-			repeated double List_Of_Frequencies = 21;			//FREQ^:		Frequencies listed
-			//Flight Path Information
-			double Flight_Path_Angle = 22;						//FANGLE:		Flight path angle wrt North
-			repeated double Transmitter_Altitude = 23;			//ALT^:			Altitude of transmitter locations
-			repeated double Tx_North = 24;						//NORTH^:		North Coordinate of transmitter location
-			repeated double Tx_East = 25;						//EAST^:		East Coordinate of transmitter location
-			int32 Tx_Position_Number = 26;						//NSTAT:		number of transmitter data positions
-			int32 Level =  27;									//LEVEL:		1=Altitude is constant,0=Not constant
-			repeated double Distance_Between_Transmitters = 28;	//DSTAT^:		Distance between J+1 and Jth positions
-			repeated double Transmitter_Incline = 29;			//TXCLN^:		angle in degrees that transmitter dipole axis makes with the vertical. Must have one for each Frequency
-			int32 Number_of_Rx_Positions = 30;					//NRX:			number of receiver positions per transmitter position (3 components are calculated for each RX position.)
-			double Transmitter_Area = 31;						//TXAREA:		Area of Transmitter Loop
-			int32 Number_Of_Turns = 32;							//NTRN:			Number of Transmitter Loop Turns
-			double Reciever_Area = 33;							//RXAREA:		Area of Reciever Loop
-			repeated double T_Rx_Seperation_Z = 34;				//RZ_OFFSET^:	Vertical Offset of Reciever J
-			repeated double T_Rx_Seperation_Along = 35;			//RX_OFFSET^:	Inline Horizontal Offset of Reciever J
-			repeated double T_Rx_Seperation_Across = 36;		//RY_OFFSET^:	Transverse Horizontal Offset of Reciever J
-			int32 Number_Of_Layers = 37;						//NLAYER:		Number of Layers including host. Negative for Cole-Cole
-			Layer_stats_EM Layer_Stats = 38;
-			message Layer_stats_EM {
-				repeated double Thickness = 1;					//THICK^:		Thickness of Layer J (does not include lowest layer)
-				repeated double Resistivity = 2;				//RES^:			Resistivity of Layer J
-				repeated double Chargeability = 3;				//CHRG^:		Chargeability of Layer J
-				repeated double Time_Constant = 4;				//CTAU^:		Time Constant of Layer J
-				repeated double Frequency_Constant = 5;			//CFREQ^:		Frequency Constant of Layer J
-			}
-		}
-		int32 Maximum_Iterations = 3;							//ITERS:		Maximum Iterations per Inversion
-		double Estimate_Of_Signal_To_Noise_Ratio = 4;			//BND:			Estimate of Signal to Noise Ratio
-		double Alpha1 = 5;										//ALPHA1:		The first derivative objective function damping parameter
-		double Alpha2 = 6;										//ALPHA2:		The second derivative objective function damping parameter
-		int32 Number_of_Sectors = 7;							//NSEC:			Number of sectors
-		Layer_Info_EM Layer_Info = 8;
-		message Layer_Info_EM {
-			repeated double Upper_Depth_Sector_Limit = 1;		//dep_sec1^:
-			repeated double Lower_Depth_Sector_Limit = 2;		//dep_sec2^:
-		}
-		repeated double Layer_Resistivity_Guesses = 9;			//vo_sec^:
-		repeated double Lower_Resistivity_Bound = 10;			//vl_sec^:		Lower bound for the layer resitivities in the section
-		repeated double Upper_Resistivity_Bound = 11;			//vu_sec^:		Upper bound for the layer resitivities in the section
-		double Maximum_Apparent_Res = 12;						//unreasonable_value:		Aparrent Resistivity value below whihc app_res calcualtion is unacceptable
-		int32 Half_Space_Switch = 13; 							//IHSWITCH:		0=Use interpreters guess, 1=User defined half space, 2=Estimate half space
-		TimeInfo_EM TimeInfo =14;
-		message TimeInfo_EM{
-			repeated int32 Early_Time_Channel = 1;				//CHE^:			Earliest time window number to be used in inversion per NTX
-			repeated int32 Late_Time_Channel = 2;				//CHL^:			Earliest time window number to be used in inversion	per NTX
-		}
-		int32 No_Of_Chl_Weights = 15;							//NWCH:			Number of time channel weights not equal to 1.0
-		Channel_Weights_EM Channel_Weights = 16;
-		message Channel_Weights_EM {
-			repeated int32 Channel_No = 1;						//NCH^:			Channel number
-			repeated double New_Channel_Weight = 2;				//WWT^:			Weighting
-			}
-		int32 No_Of_Layer_Weights = 17;
-		repeated Layer_Weights_EM Layer_Weights = 18;			//NLL:			Number of layer weights not equal to 1.0
-		message Layer_Weights_EM {
-			repeated int32 Layer_No = 1;						//NCH^:			Layer number
-			repeated double New_Layer_Weight = 2;				//WWT^:			Weighting
-		}
-		double Smoothing_Par = 19;								//DSMOOTH:		Lateral Smoothing Parameter
-		double Number_of_Samples = 20;							//STND:			Number of Samples per single Inversion
-		double Reslimit_Factor = 21;							//res_lim_factor:
-		int32 Depth_Limit = 22;									//depth_limit:
-		bool Ort_Smoothing = 23;								//ort_process:	Is Ort to be used
-		Ort_Smoothing_Parameters_EM Ort_Smoothing_Parameters = 24;
-		message Ort_Smoothing_Parameters_EM {
-			string Ort_Data_File = 1;							//Used for the Ort Statistics, can be the whole file
-			double Goodness_Dv_Fit_Limit = 2;					//Give goodness dv of fit up to this limit
-			int32 Nort_Check = 3;								//Check if data fits within specified vaule up to this Channel
-			double Factor_Fit = 4;								//Checks if data fitted to within factor_fit of principal component
-			double Factor_Noise =5;								//Lateral smoothing factor_noise*estimated*noise
-			bool Int_Smooth = 6;								//1=Signifies that line smoothing is done in pieces (where possible)
-			double Ppm_Convert_Ort = 7;
-		}
-		bool Files_Overwrite = 25; //[default = true];			//overwrite
-		bool Variable_Altitude = 26;							//ALT_VAR
-		repeated double Noise_Transmitter_1 = 27;				//EST_NOISE
-		double Transmitter_Time_1 = 28;
-		repeated double Noise_Transmitter_2 = 29;				//EST_NOISE
-		double Transmitter_Time_2 = 30;							//TXTIME
-	}
-	repeated ChannelZ_EM ChannelZ = 3;
-	message ChannelZ_EM {
-		int32 Max_No_Channels = 1;
-		Noise_Data_X_EM Noise_Data_X = 2;
-		message Noise_Data_X_EM {
-			repeated double Noise_X = 1;
-			repeated double Multiple_X = 2;
-			//double NOTUSED = 3;				/If the channel is not used, NOTUSED=-999.000, otherwise NOTUSED is empty
-		}
-		Noise_Data_Z_EM Noise_Data_Z = 3;
-		message Noise_Data_Z_EM {
-			repeated double Noise_Z = 1;
-			repeated double Multiple_Z = 2;
-			//double NOTUSED = 3;				//If the channel is not used, NOTUSED=-999.000, otherwise NOTUSED is empty
-		}
-		int32 Start_Channel = 4;
-		int32 End_Channel = 5;
-		//string title = 6 [default = Noise];
-	}
-	EM1DInv_target_EM EM1DInv_target = 5;
-	message EM1DInv_target_EM {
-		repeated double X_Target = 2;
-		repeated double Y_Target = 3;
-	}
+enum EM_Options {
+	Unset_EM_Options = 0;
+	Apparent_Conductivity = 1;
+	Inversion_1D = 2;
+	Inversion_2D = 3;
+	Forward_2D = 4;
 }
+
+enum EM_Domain {
+	Unset_EM_DOMAIN = 0;
+	Frequency_Domain=1;			//0
+	Time_Domain =2;				//1
+	Time_Derivative = 3;		//2
+	Current_STEP = 4;			//3
+	Bipolar_Square_Wave = 5;	//4
+}
+
+enum Respone_Type {
+	Unset_Respone_Type = 0;
+	Impulse = 1;
+	Step = 2;
+}
+
+message Exectuable_Args_EM {
+	bool restart = 1;
+	bool reduce_Fourier_Transform = 2;
+	bool resample_Measured_Signal = 3;
+	bool Use_Apparent_Resistivity = 4;
+	bool compute_In_Double_Precision = 5;
+	double Sensitivity_Distance = 6;
+}
+
+message Report_Result_Structure_EM {
+	string Inversion_Control_Filename = 1;
+	string Project_Basename = 2;										//basename
+	int32 Project_Basenumber = 3;										//basenumber
+}
+
+message User_Parameters_EM {
+	string System_Control_Filename = 1;									//system_control_file.getName()						//Is given as ("user_parameters_added_" + system_filename)
+	int32 Number_of_Dimensions = 2; 									//dim												//Expects either 1 or 2
+	string Full_Path_To_Template = 3;									//system_file.getPath()								//Path to the template file for the specified survey type
+	int32 Survey_Type = 4;							// enum??			//config.getISW/config.getISW2D						//Can be found as either config.getISW or config.getISW2D
+	bool Do_X = 5;														//doX												//Whether X should be respected during inversion (automatic false during 1D)
+	bool Do_Y = 6;														//doY												//Whether Y should be respected during inversion (automatic false during 1D)
+	bool Do_Z = 7;														//doZ												//Whether Z should be respected during inversion
+	Respone_Type System_Response_Type = 8;								//config.getSystemResponseType						//Whether the response is a step (2) or impulse (1)
+	bool Is_3D_Inversion = 9;											//is3Dinversion
+	int32 Output_Units_Style = 10;										//parameters.outputUnitsStyle						//Given by parameters.outputUnitsStyle
+	int32 Output_Units = 11;											//parameters.outputUnits							//Given by parameters.outputUnits
+	repeated int32 Number_Channels = 12;								//config.getNumberChannels(txindex)					//Number of channels in the (txindex)th transmitter
+	repeated double Offtime = 13;										//config.getOfftime(txindex)						//Offtime for the jth transmitter
+	double config_pitch = 14;											//config.getPitch									//The Pitch of the flightpath
+	repeated double System_Tx_Area = 15;								//config.getSystem_TXAREA(txindex)					//The area of the (txindex)th transmitter
+	repeated double System_Rx_Area = 16;								//config.getSystem_RXAREA(txindex)					//The area of the (txindex)th reciever
+	int32 System_Unit_Normalisation_Style = 17;							//config.getSystemUnitNormalisationStyle			//The style of unit normalistaion
+	int32 System_Unit_Type = 18;										//config.getSystemUnitType							//The type of unit used in the system
+	double Vertical_Offset = 19;										//config.getVerticaloffset							//getVerticaloffset
+	double Along_Offset = 20;											//config.getAlongoffset								//getAlongoffset
+	double Across_Offset = 21;											//config.getAcrossoffset							//getAcrossoffset
+	int32 Number_Of_Transmitters = 22;									//config.getNumberTransmitters
+	int32 Max_Channels = 23;											//config.getMaxChannels
+	int32 Max_Waveform_Samples = 24;									//config.getMaxWaveformSamples
+	repeated int32 System_Waveform_Time_Lengths = 25;					//config.getSystem_waveformTimes(txindex).length	//The length of the array returned by config.getSystem_waveformTimes at corresponding indices (txindex)
+	repeated int32 System_Waveform_X_Lengths = 26;						//config.getSystem_waveformX(txindex).length		//As above but for config.getSystem_waveformX
+	repeated string Data_File = 27;										//outputDir//outputfile								//Repeated strings containing all the data to be used for the inversion
+	repeated double System_Waveform_X = 29;								//config.getSystem_waveformX(txindex)[i] 			//Responses simply continue from i=1 to i=System_Waveform_X_Lengths		and then from txindex=1 to txindex=max. To be reconstructed into seperate dimensions with the lengths given above
+	repeated double System_Waveform_Y = 30;								//config.getSystem_waveformY(txindex)[i] 			//Responses simply continue from i=1 to i=System_Waveform_X_Lengths 	and then from txindex=1 to txindex=max. To be reconstructed into seperate dimensions with the lengths given above
+	repeated double System_Waveform_Width = 31;							//config.getSystem_waveformWidths(txindex)[i] 		//Responses simply continue from i=1 to i=System_Waveform_Time_Lengths 	and then from txindex=1 to txindex=max. To be reconstructed into seperate dimensions with the lengths given above
+	repeated double System_Waveform_Time = 32;							//config.getSystem_waveformTimes(txindex)[i] 		//Responses simply continue from i=1 to i=System_Waveform_Time_Lengths 	and then from txindex=1 to txindex=max. To be reconstructed into seperate dimensions with the lengths given above
+	repeated double System_Frequency = 33;								//config.getSystem_frequency(txindex)[i]			//Given as a 1D array, to be reconstructed into seperate dimensions with the lengths given as Number_Channels for each txindex
+	repeated double System_Frequency_Rz_Offset = 34;					//config.getSystem_frequencyRzOffset(txindex)[i]	//Given as a 1D array, to be reconstructed into seperate dimensions with the lengths given as Number_Channels for each txindex
+	repeated double System_Frequency_Rx_Offset = 35;					//config.getSystem_frequencyRxOffset(txindex)[i]	//Given as a 1D array, to be reconstructed into seperate dimensions with the lengths given as Number_Channels for each txindex
+	repeated double System_Frequency_Ry_Offset = 36;					//config.getSystem_frequencyRyOffset(txindex)[i]	//Given as a 1D array, to be reconstructed into seperate dimensions with the lengths given as Number_Channels for each txindex
+	repeated double System_Frequency_Transmitter_Incline = 37;			//config.getSystem_frequencyTxcln(txindex)[i]		//Given as a 1D array, to be reconstructed into seperate dimensions with the lengths given as Number_Channels for each txindex
+	int32 Number_Of_Waveform_Source_Points = 38;						//nsx_expected
+	repeated double Centre_Of_Target_Area_X = 39;						//xstats.mean()
+	repeated double Centre_Of_Target_Area_Y = 40;						//ystats.mean()
+}
+
+message Tuning_File_EM {
+	int32 Number_Of_Initial_Layers = 1;									//config.getNumberInitialLayers()					//Number of initial layers
+	repeated double Initial_Layer_Resistivity_Guess = 2;				//config.getInitialLayerResistivity()[i]			//Array with size of number of initial layers
+	repeated double Initial_Layer_Depth = 3;							//config.getInitialLayerDepth()[i]					//Initial Layer depth of layer with size of Number of Layers
+	repeated double Initial_Layer_Upper_Bound = 4;						//config.getInitialLayerUpperBound()[i]				//Initial Layer upper bound of layer with size of Number of Layers
+	repeated double Initial_Layer_Lower_Bound = 5;						//config.getInitialLayerLowerBound()[i]				//Initial Layer lower bound of layer with size of Number of Layers
+	bool Apparent = 6;													//type												//Inversion is 1, Apparent is 2
+	int32 Maximum_Iterations = 7;										//parameters.max_iterations							//Maximum iterations to be allowed in solving
+	double Snr_Estimate = 8;											//parameters.snr_estimate_2D/1D						//Either 1D or 2D estimate for the SNR
+	double Rsvt_Estimate_2D = 9;										//parameters.rsvt0_2D								//The RSVT criteria
+	double Damping_Alpha_1 = 10;										//parameters.damping_alpha1							//Damping parameter Alpha1
+	double Damping_Alpha_2 = 11;										//parameters.damping_alpha2							//Damping parameter Alpha2
+	repeated int32 Start_Channel = 12;									//config.getStart_channel(txindex)					//Starting channel(s) for each transmitter, if not domain==1, should be processed with Startch=(Start+1)/2
+	repeated int32 End_Channel = 13;									//config.getEnd_channel(txindex)					//Ending channel(s) for each transmitter, if not domain==1, should be processed with Endch=(End+1)/2
+	double Lateral_Smoothing = 14;										//parameters.lateral_smoothing						//A lateral smoothing control
+	double Data_Smoothing = 15;											//parameters.data_smoothing							//A data smoothing parameter
+	int32 Depth_Limit = 16;												//parameters.depth_limit_1D/2D						//Depth Limit from either 1D or 2D
+	repeated double Noise_Scale_Factor = 17;							//config.getScaleFactor(txindex)					//Scaling factor for the impact of noise, one per transmitter
+	repeated bool Has_Em_Field_X = 18;									//config.hasEmFieldX(txindex)						//Does the EM field exist in X? One for each transmitter
+	repeated bool Has_Em_Field_Y = 19;									//config.hasEmFieldY(txindex)						//Does the EM field exist in Y? One for each transmitter
+	repeated bool Has_Em_Field_Z = 20;									//config.hasEmFieldZ(txindex)						//Does the EM field exist in Z? One for each transmitter
+	repeated double Noise_In_X = 21;									//config.getNoiseX(txindex)[i]						//Noise in X direction, one entry per channel per transmitter
+	repeated double Noise_In_Y = 22;									//config.getNoiseY(txindex)[i]						//Noise in Y direction, one entry per channel per transmitter
+	repeated double Noise_In_Z = 23;									//config.getNoiseZ(txindex)[i]						//Noise in Z direction, one entry per channel per transmitter
+	repeated double Noise_Factor_In_X = 24;								//config.getNoiseFactorX(txindex)					//Noise Factor in X , one entry per transmitter
+	repeated double Noise_Factor_In_Y = 25;								//config.getNoiseFactorY(txindex)					//Noise Factor in Y , one entry per transmitter
+	repeated double Noise_Factor_In_Z = 26;								//config.getNoiseFactorZ(txindex)					//Noise Factor in Z , one entry per transmitter
+	repeated double Final_Transmitter_Time = 27;						//config.findFinalTime(txindex) 					//Final transmitter time, one per transmitter
+	int32 Mesh_Param_ITypeZ = 28;										//config.getITypeZ									//Mesh Parameter ITypez
+	double Mesh_Param_Dx = 29;											//config.getDx										//Mesh Parameter Dx
+	double Mesh_Param_Dz =30;											//config.getDz										//Mesh Parameter Dz
+	int32 Zlist_Size = 31;												//zlist.size										//Number of entries in the zlist array
+	repeated double Zlist_Entry = 32;									//zlist.get(i)										//Each entry in the zlist vector
+	int32 Mesh_Padding = 33;											//config.getPadding									//Mesh Padding
+	bool Split_Lines = 34;												//config.getSplitLines								//Split Lines switch
+	int32 Split_Length = 35;											//config.getSplitLength
+	int32 Split_Overlap = 36;											//config.getSplitOverlap
+	int32 Convergence_Criteria = 37;									//config.getCnvrg
+	int32 Percent_Convergence = 38;										//config.getPctncv
+	double Alphas = 39;													//config.getAlphas
+	double Alpha_X = 40;												//config.getAlphax
+	double Alpha_Z = 41;												//config.getAlphaZ
+	int32 Damping_Factor = 42;											//config.getDamping
+	bool TGSVD = 43;													//config.getTGSVD
+	double TGSVD_BND = 44;												//config.getTGSVD_BND
+	bool Use_Reference_Model = 45;										//config.getUseReferenceModel
+	double Half_Space_Resistivity = 46;									//config.getHalfSpaceResistivity
+	bool Joint_IP_Inversion = 47;										//config.getJointIP_Inversion
+	double Chargeable_Layer_Depth = 48;									//config.getChargeableLayerDepth
+	int32 Start_At_Iteration = 49;										//config.getStartAtIteration
+	double Startup_Chargeability = 50;									//config.getStartupChargeability
+	double Chargeability_Upper_Bound = 51;								//config.getChargeabilityUpperBound
+	bool Overwrite_Previous_Run = 52;												//Always true										//true = previous inversion run overwritten, false = new inversion number is created
+}
+
+message Channels_File_EM {
+	int32 Noise_Start_Channel = 1;										//parameters.start_channel
+	int32 Noise_End_Channel = 2;										//parameters.end_channel
+}
+
+
+message Apparent_Conductivity_EM {
+	EM_Domain Domain = 1;														//config.getDomain
+	Exectuable_Args_EM Executable_Args = 3;
+	}
+message Inversion_1D_EM {
+	EM_Domain Domain = 1;													//config.getDomain
+	Exectuable_Args_EM Executable_Args = 3;
+	Report_Result_Structure_EM Report_Result_Structure = 4;
+	User_Parameters_EM User_Parameters = 5;
+	Tuning_File_EM Tuning_File = 6;
+	Channels_File_EM Channels_File = 7;
+	}
+message Inversion_2D_EM {
+	EM_Domain Domain = 1;													//config.getDomain
+	Exectuable_Args_EM Executable_Args = 3;
+	Report_Result_Structure_EM Report_Result_Structure = 4;
+	User_Parameters_EM User_Parameters = 5;
+	Tuning_File_EM Tuning_File = 6;
+	Channels_File_EM Channels_File = 7;
+	}
+message Forward_2D_EM {
+	EM_Domain Domain = 1;													//config.getDomain
+	Exectuable_Args_EM Executable_Args = 3;
+	}
 message AEMTask {
-	INV_EM INV = 1;
+	Apparent_Conductivity_EM Apparent_Conductivity = 1;
+	Inversion_1D_EM Inversion_1D = 2;
+	Inversion_2D_EM Inversion_2D = 3;
+	Forward_2D_EM Forward_2D = 4;
+	bool Parser_Information = 8;
+	//Writes out each field to be retrieved as it reads it. Helpful with debugging.
+	bool Default_Information = 9;	
+	//Since Google Protobuf came out with "proto3" default values are removed, and anytime a default value is set 
+	//(eg. a Boolean to false, or an int to 0), it simply does not encode it. Therefore it is impossible to tell if
+	//a value was set to its default or not set at all. Setting this option to true will dispaly warnings when defaults
+	//are used, and hence when you may have forgotten an input.
+	bool Comparison_Testing = 10;
+	//When this is true, the program will be able to take two arguments, one being the task file, and the other the legacy input files.
+	//While executing, the program will attempt to print all data that it reads in exactly the same format regardless of the source.
+	//This will allow you to test if a task file is providing the same data as the legacy files.
 }
