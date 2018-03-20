@@ -1,4 +1,4 @@
-# GeoModeller Examples (BETA)
+# GeoModeller Examples
 
 Lots of simple examples of using the batch interface to GeoModeller.
 
