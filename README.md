@@ -150,4 +150,4 @@ An audit trail (including potential return values) is written to "geomodeller-ba
 
 Quite a lot of the sub-tasks used in GeoModeller uses this message passing scheme so you may spot automatically generated *.task files appearing in your work directories.
 
-(c) 2017 Intrepid Geophysics
+(c) 2017-2018 Intrepid Geophysics
