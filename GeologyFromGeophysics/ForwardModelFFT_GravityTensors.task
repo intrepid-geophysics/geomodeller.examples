@@ -9,7 +9,7 @@ InversionTask {
 	  fields {    node: "Density"  }
 	  InputVoxetAlreadyProperty: true
 	  product: GravityTensors
-	  coordsys: END
+	  CoordinateSystemType: END
 	  drape_elevation_grid: "./fwd_BG_FFT/Run1/compute_Surface_2.ers"
 	  output_gridname: "./fwd_BG_FFT/Run1/calculated_GravityTensors_2.ers"
 	  expansionmethod: Mirror

@@ -45,7 +45,7 @@ GeomodellerTask {
     }
     refine_mesh {
         lloyd {time_limit: 20}
-        perturb {time_limits: 20}
+        perturb {time_limit: 20}
         exude {time_limit: 20}
     }
 

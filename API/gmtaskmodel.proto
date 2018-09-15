@@ -622,6 +622,15 @@ message CreateSection_GMT {
 }
 
 //####
+/// Create a png of a seg-y dataset, will be clipped by project extents
+message CreateSegYThumbnail_GMT {
+    required string filename = 1;
+    optional double standarddeviation = 2 [default = 3.0];
+    optional double colourmap = 3 [default = 2.0];
+    optional string log = 4;
+}
+
+//####
 /// Create a new interface on a section given a list of points in UV space.
 /// Requires the section name and the top and bottom formation that the
 /// interface points separate.
@@ -1172,10 +1181,12 @@ message SourceMeshGrid_GMT {
     optional string MeshGrid_Name = 3;  //  mesh grid
     // also supports the VTK formats  vtp, vtu, vtr
     optional ctm.DfaFileType FileType = 4 [ default = FT_IGMESH];
+    optional ctm.DataFormat Format = 13 [ default = DF_UNKNOWN];
     optional string Field_Name = 5;  // not necessarily used eg LogCond, LogRes, Density
     optional sint32 header_records = 6 [default = 0];  // for some ASCII grids,
     optional string log = 255 [default ="source_meshgrid.rpt"];
     optional bool isElevationMeasure = 11 [default=true];  // assume the positive value in the grid file is an elevation, false for a depth
+    optional string UBC_Header = 12;  //  data source file name eg an Intrepid database
 }
 //####
 /// Create a mesh grid with the given file name. This will create all the supported formats.
@@ -1227,6 +1238,7 @@ message ExportMeshGrid_GMT {
 	// FT_IGMESH,
     optional ctm.DfaFileType OutFileType = 4 [ default = FT_IGMESH];
     optional ctm.DataFormat OutDataFormat = 5 [ default = DF_VTK];
+    optional string Field = 6;  //  choose field to export for ubc
     optional ctm.BoundingBox Extents = 21;
     optional int32 nx = 22 [ default = 20];  // number of cells in X direction
 	optional int32 ny = 23 [ default = 20];
@@ -2258,6 +2270,7 @@ message GeomodellerTask {
 
     optional DrillholeQueryMeshGrid_GMT DrillholeQueryMeshGrid = 150;
     optional Export2DData_GMT Export2DData = 151;
+    optional CreateSegYThumbnail_GMT CreateSegYThumbnail = 152;
 
     optional string log = 255;
 }

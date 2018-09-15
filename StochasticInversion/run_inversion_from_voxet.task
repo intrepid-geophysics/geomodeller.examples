@@ -46,9 +46,9 @@ InversionTask {
 			LithologyProperty { lithology: "Crust"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.000000; stddev: 0.000000;}}
 			LithologyProperty { lithology: "Basin"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.001000; stddev: 1.000000;}}
 			LithologyProperty { lithology: "Crust"; property: Commonality; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Basin"; property: ShapeRatio; ProbabilityDistributionFunction {type: LogNormalDistribution; mean: 0.250000; stddev: 0.050000;}}
+			LithologyProperty { lithology: "Basin"; property: ShapeRatio; ProbabilityDistributionFunction {type: LogNormal; mean: 0.250000; stddev: 0.050000;}}
 			LithologyProperty { lithology: "Crust"; property: ShapeRatio; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
-			LithologyProperty { lithology: "Basin"; property: VolumeRatio; ProbabilityDistributionFunction {type: LogNormalDistribution; mean: 0.250000; stddev: 0.050000;}}
+			LithologyProperty { lithology: "Basin"; property: VolumeRatio; ProbabilityDistributionFunction {type: LogNormal; mean: 0.250000; stddev: 0.050000;}}
 			LithologyProperty { lithology: "Crust"; property: VolumeRatio; ProbabilityDistributionFunction {type: Weibull; mean: 0.200000; stddev: 1.000000;}}
 		}
 	}
@@ -70,10 +70,11 @@ InversionTask {
 		LithologyInitialiseStyle: FromModel;
 		DensityInitialiseStyle: FromVoxet;
 		SusceptibilityInitialiseStyle: FromVoxet;
-		property_voxet: "./bdga1/Case6/Run1/Model.vo";
+		property_voxet_density: "./bdga1/Case6/Run1/Model.vo";
+		property_voxet_susceptibility: "./bdga1/Case6/Run1/Model.vo";
 		property_voxet_field_density: "Density";
 		property_voxet_field_susceptibility: "Susceptibility";		
-		RemenantMagnetizationInitialiseStyle: FromLawMean;
+		RemanentMagnetizationInitialiseStyle: FromLawMean;
 		PropertyChangeOnFixedCell: true;
 		AllowNeighbourPropertyDifferentCheck: true;
 		Seed: 1234;

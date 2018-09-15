@@ -7,7 +7,7 @@ ForwardModelFromVoxet {
   InputVoxetAlreadyProperty: true
   OutputVoxelName: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/final_GravityTensors.vo"
   product: GravityTensors
-  coordsys: END
+  CoordinateSystemType: END
   drape_elevation_grid: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/compute_Surface_1.ers"
   output_gridname: "Salt-Original-Exported_task/EXPORT/Case1_cloned2/Run1/calculated_GravityTensors_1.ers"
   expansionmethod: Mirror

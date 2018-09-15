@@ -13,7 +13,7 @@ InversionTask {
         InputVoxetAlreadyProperty: 	false;	#  is the voxet a litho model, or a density model
         LanczosTaper:  				true;			
         product:  					Magnetism;
-        coordsys: 					END;
+        CoordinateSystemType: 					END;
         mean_elevation:				670;		# height to calculate forward model at
         #IGRF {					
         #     Magnitude: 50000

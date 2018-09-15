@@ -8348,7 +8348,8 @@ GeomodellerTask {
     ExportModel {
         dx: 300  # main way to specify surface triangulation precision
 		dy: 300
-		dz: 200  # 25 layers 
+		dz: 200  # 25 layers , when =200, and z_factor = 1
+		VariableZ_Factor: 1.1; # a geometric progression with increasing size with depth
         output_directory: "Zermat_layered"
         export3D {
         	Feflow_Layered: true;

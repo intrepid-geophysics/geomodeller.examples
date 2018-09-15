@@ -14,13 +14,13 @@
 IntrepidTask {
 	WormE {
 		InputGridName {
-			grid: "IR_gravity_anomaly_Australia_trimmed.ers";
+			grid: "${cookbook}/Continental_Scale/CS_3_GRIDS/IR_gravity_anomaly_Australia_3200.ers";
 			type: Gravimetry;
 			Band: 1;
-			mean_elevation: 1.0;
+			mean_elevation: 200.0;
 		}
 		ElevationGridName {
-			grid: "aus_dem_lam.ers";
+			grid: "${cookbook}/Continental_Scale/CS_3_GRIDS/aus_dem_lam.ers";
 			type: Elevation;
 		}
 # it is possible to specify a smaller internal area , define Darling Fault zone

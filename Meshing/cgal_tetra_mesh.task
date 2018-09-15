@@ -80,7 +80,7 @@ GeomodellerTask {
   GenerateMeshReport {
     #output_report_file: "infinite_report.rpt"; #commented beacuase there is another output file
     # do a vtk polydata hull report
-    input_mesh_file: "./New Project50.vtu";
+    input_mesh_file: "./2FormationsSimple50.vtu";
     vtk: true;
     sharp_angle_threshold: 20;
     facet_angle_threshold { first: 20; second: 70;}

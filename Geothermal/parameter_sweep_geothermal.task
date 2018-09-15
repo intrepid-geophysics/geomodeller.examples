@@ -37,7 +37,7 @@ InversionTask {
 		LithologyPropertyToSweep {lithology:"ZtoC"; property: ThermalConductivity;}
 		#LithologyPropertyToSweep {lithology:"BLS"; property: HeatProductionRate;}  # restrict for testing
 		LithologyPropertyToSweep {lithology:"granites1"; property: HeatProductionRate;}
-		Number_CPUs: 5;
+		Number_CPUs: 2;
 		Number_Permutations: 2;
 		GenerateTasks_ThenStop: false;
 		ThermalUncertaintyStudy {	

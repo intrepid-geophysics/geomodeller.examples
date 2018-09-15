@@ -44,10 +44,10 @@ InversionTask {
 			LithologyProperty { lithology: "Intrusion"; property: Movable; fixed: false;index_voxet_key: 3}
 			LithologyProperty { lithology: "F2"; property: Movable; fixed: false;index_voxet_key: 2}
 			LithologyProperty { lithology: "G1"; property: Movable; fixed: false;index_voxet_key: 1}
-			LithologyProperty { lithology: "F1"; property: Susceptibility; ProbabilityDistributionFunction {type: Normal; mean: 0.010000; stddev: 0.010000;}}
-			LithologyProperty { lithology: "Intrusion"; property: Susceptibility; ProbabilityDistributionFunction {type: Normal; mean: 0.080000; stddev: 0.050000;}}
-			LithologyProperty { lithology: "F2"; property: Susceptibility; ProbabilityDistributionFunction {type: Normal; mean: 0.001000; stddev: 0.010000;}}
-			LithologyProperty { lithology: "G1"; property: Susceptibility; ProbabilityDistributionFunction {type: Normal; mean: 0.020000; stddev: 0.010000;}}
+			LithologyProperty { lithology: "F1"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.010000; stddev: 0.010000;}}
+			LithologyProperty { lithology: "Intrusion"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.080000; stddev: 0.050000;}}
+			LithologyProperty { lithology: "F2"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.001000; stddev: 0.010000;}}
+			LithologyProperty { lithology: "G1"; property: Susceptibility; ProbabilityDistributionFunction {type: NormalDistribution; mean: 0.020000; stddev: 0.010000;}}
 		}
 	}
 }
@@ -70,7 +70,7 @@ InversionTask {
 		SusceptibilityInitialiseStyle: FromLawMean;
 		RemanentMagnetizationInitialiseStyle: FromLawMean;
 		method: Spatial;
-		Interpolate: false;
+#		Interpolate: false;
 		expansionmethod: Mirror;
 		horizontalexpansionfactor: 100;
 		verticalexpansionfactor: 400;

@@ -1,18 +1,21 @@
-# reproduce Roger Clifton,  slope spectrum work
+# reproduce Roger Clifton,  random dipole forward model
 # this is the one in the paper where the buried ellipsoid has a TMI respone calculated
 # Magnetic depths to basalts - extension of Spector Grant method, Exploration Geophysics, 2014, 2016
-InversionTask {
-	ForwardModelFromRandomDipole {  #  uses FFTW,  new V5.0 syntax, compatible with the Geomodeller as well
-       # input_voxet:				"./data/Model-5d/Case1/run1/initial.vo";  # from geomodeller
-        # fields {        			node: "Lithology";   }
+# demo sgrid is 128*128*100, so it is not too big
+# this is an Intrepid task file accessing the random_dipoles tool
+MagneticTask {
+	ForwardModelFromRandomDipole {  #  uses FFTW,  new V6.0 syntax, compatible with the Geomodeller as well
         POSC_CoordinateSystem: 		"GDA94/MGA53";
-        #drape_elevation_grid:		"./data/Avaanna.ers";  # force forward model into real world coords
-        output_gridname:			"ComputedTMIGrid.ers"
-         OutputVoxelName:			"./data/magnetism.vo"
-         coordsys: 					END;
-        survey_plane:				0;		# roger initially has top of voxet, as obs plane
+        	output_gridname:	"ellipsoidTMIGrid_2016.ers"
+         	OutputVoxelName:	"./data/ellipsoid_magnetism.vo"
+		OutputDipolePoints: 	"sill_random_points..DIR"
+		KernelResponseName: 	"corner_dipole_model.vo";
+		Dipole_Locale: 		di_Corners;  # option to push the kernel response to the 8 corners
+         CoordinateSystemType: 					END;
+        survey_plane:				80;		#  obs plane
         IGRF {						Date: "28/1/2016";	}
 		seed: 						1234567;  	# seed value for random number generator
+		dipole_density: 0.09  # 2% of sill cells to have a dipole
 		NS_Kernel_Size:				251;  # horizontal dimension,  500 is current maximum
 		EW_Kernel_Size:				251;  # horizontal dimension,
 		VERTICAL_Kernel_Size:		101;  # vertical no of points dimension,
@@ -20,7 +23,11 @@ InversionTask {
 		NS_Step_Size:				20;  # ns horizontal dimension,  sample spacing
 		EW_Step_Size:				20;  # ew horizontal dimension,
 		VERTICAL_Step_Size: 		10;  # vertical dimension,
-		Check_Print: 				true;
+		origin {  x: 600000; y: 11000000; z: 100 }  # position the model where you want, z is a depth below surface
+		force_ellipse_constraint: true;
+		PrimaryEllipsoidStrikeAxis: 45;
+		Check_Print: 		true
+		ReportFile: "ellipsoid.rpt";
 	}
 }
 

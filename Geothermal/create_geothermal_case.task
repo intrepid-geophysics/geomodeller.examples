@@ -1,16 +1,16 @@
 ## warning, following com mand has been withdrawn from the protobuf language!!
-InversionTask {
-	CreateCaseFromLithologyVoxet {
-		inputvoxet: "testArea_2suites.vo";	
-		case: "Case_1";
-		new_project: "testArea_2suites_imported\testArea_2suites_imported.xml";
-		formation { index: 1; field: "aboveC";	}  # map interger number inside voxet to formation name
-		formation { index: 2; field: "ZtoC";	}
-		formation { index: 3; field: "basement";	}
-		formation { index: 4; field: "BLS";	}
-		formation { index: 5; field: "granites1";	}
-	}
-}
+#InversionTask {
+#	CreateCaseFromLithologyVoxet {
+#		inputvoxet: "testArea_2suites.vo";	
+#		case: "Case_1";
+#		new_project: "testArea_2suites_imported\testArea_2suites_imported.xml";
+#		formation { index: 1; field: "aboveC";	}  # map interger number inside voxet to formation name
+#		formation { index: 2; field: "ZtoC";	}
+#		formation { index: 3; field: "basement";	}
+#		formation { index: 4; field: "BLS";	}
+#		formation { index: 5; field: "granites1";	}
+#	}
+#}
 ## this one is OK, so if you have aforeign voxet with an integer code for lithologies, yo have to use Geomodeller to match the formation name to the code
 InversionTask {
 	ForwardModelTemperatureForCreateCaseFromVoxet {	
