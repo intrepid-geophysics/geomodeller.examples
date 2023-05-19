@@ -142,7 +142,7 @@ The often neglected job of working on ways to best estimate bulk physical proper
 
 ## Stochastic Inversion
 
-From the original 2007 development work, by Richard Lane, we present the BetBet study from central Victoria. The whole process encompasses taking your best effort 3D geology model, and then using both Gravty and magnetic data to drive constrained stochastic inversion processes and genertate millions of equally likely but with small differences. The method for generating Histogram Stats, Movies and Liklihood plots are also captured in the task files.
+From the original 2007 development work, by Richard Lane, we present the BetBet study from central Victoria. The whole process encompasses taking your best effort 3D geology model, and then using both Gravity and magnetic data to drive constrained stochastic inversion processes and genertate millions of equally likely but with small differences. The method for generating Histogram Stats, Movies and Liklihood plots are also captured in the task files.
  
 ## Tasks
 
